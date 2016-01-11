@@ -50,46 +50,8 @@ c     set process id using slepton types
         i3 = int(powheginput("fin1"))
         i4 = int(powheginput("fin2"))
 
-        ! channels with two neutralinos or two charginos in final state
-        if (      ((i3.eq.1000022).and.(i4.eq.1000022))
-     &       .or. ((i3.eq.1000022).and.(i4.eq.1000023))
-     &       .or. ((i3.eq.1000022).and.(i4.eq.1000025))
-     &       .or. ((i3.eq.1000022).and.(i4.eq.1000035))
-     
-     &       .or. ((i3.eq.1000023).and.(i4.eq.1000023))
-     &       .or. ((i3.eq.1000023).and.(i4.eq.1000025))
-     &       .or. ((i3.eq.1000023).and.(i4.eq.1000035))
-     
-     &       .or. ((i3.eq.1000025).and.(i4.eq.1000025))
-     &       .or. ((i3.eq.1000025).and.(i4.eq.1000035))
-     
-     &       .or. ((i3.eq.1000035).and.(i4.eq.1000035))
-     
-     &       .or. ((i3.eq.1000024).and.(i4.eq.-1000024))
-     &       .or. ((i3.eq.1000024).and.(i4.eq.-1000037))
-     &       .or. ((i3.eq.1000037).and.(i4.eq.-1000037)) ) then
-          mixed_channels = .false.
-
         ! channels with one neutralino and one chargino in final state
-        else if ( ((i3.eq.1000022).and.(i4.eq.-1000024))
-     &       .or. ((i3.eq.1000022).and.(i4.eq.1000024))
-     &       .or. ((i3.eq.1000022).and.(i4.eq.-1000037))
-     &       .or. ((i3.eq.1000022).and.(i4.eq.1000037))
-
-     &       .or. ((i3.eq.1000023).and.(i4.eq.-1000024))
-     &       .or. ((i3.eq.1000023).and.(i4.eq.1000024))
-     &       .or. ((i3.eq.1000023).and.(i4.eq.-1000037))
-     &       .or. ((i3.eq.1000023).and.(i4.eq.1000037))
-     
-     &       .or. ((i3.eq.1000025).and.(i4.eq.-1000024))
-     &       .or. ((i3.eq.1000025).and.(i4.eq.1000024))
-     &       .or. ((i3.eq.1000025).and.(i4.eq.-1000037))
-     &       .or. ((i3.eq.1000025).and.(i4.eq.1000037))
-     
-     &       .or. ((i3.eq.1000035).and.(i4.eq.-1000024))
-     &       .or. ((i3.eq.1000035).and.(i4.eq.1000024))
-     &       .or. ((i3.eq.1000035).and.(i4.eq.-1000037))
-     &       .or. ((i3.eq.1000035).and.(i4.eq.1000037)) ) then
+        if ( ((i3.eq.1000022).and.(i4.eq.-1000024)) ) then
           mixed_channels = .true.
 
         else
@@ -105,20 +67,8 @@ c     set process id using slepton types
         print*, "                                                    "
         if     (i3.eq.1000022) then
           print*, "             q                         n1           "
-        elseif (i3.eq.1000023) then
-          print*, "             q                         n2           "
-        elseif (i3.eq.1000025) then
-          print*, "             q                         n3           "
-        elseif (i3.eq.1000035) then
-          print*, "             q                         n4           "
         elseif (i3.eq.-1000024) then
           print*, "             q                         x1-          "
-        elseif (i3.eq.1000024) then
-          print*, "             q                         x1+          "
-        elseif (i3.eq.-1000037) then
-          print*, "             q                         x2-          "
-        elseif (i3.eq.1000037) then
-          print*, "             q                         x2+          "
         endif
         print*, "              \                       /             "
         print*, "               \                     /              "
@@ -131,20 +81,8 @@ c     set process id using slepton types
         print*, "              /                       \             "
         if     (i4.eq.1000022) then
           print*, "             q*                        n1           "
-        elseif (i4.eq.1000023) then
-          print*, "             q*                        n2           "
-        elseif (i4.eq.1000025) then
-          print*, "             q*                        n3           "
-        elseif (i4.eq.1000035) then
-          print*, "             q*                        n4           "
         elseif (i4.eq.-1000024) then
           print*, "             q*                        x1-          "
-        elseif (i4.eq.1000024) then
-          print*, "             q*                        x1+          "
-        elseif (i4.eq.-1000037) then
-          print*, "             q*                        x2-          "
-        elseif (i4.eq.1000037) then
-          print*, "             q*                        x2+          "
         endif 
         print*, "                                                    "
         print*, "===================================================="
