@@ -1,0 +1,5 @@
+Um einen neuen Prozess zu erzeugen:
+- Ordner Template kopieren und umbenennen
+- proc_card.dat in ./Cards editieren
+- in der Konsole ./bin/newprocess ausführen 
+  (davor nicht ./bin/standalone verwenden!)

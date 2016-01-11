@@ -1,0 +1,10 @@
+      data gForceBW(  -1,   7) / .False./
+      data gForceBW(  -1,   8) / .False./
+      data gForceBW(  -1,   9) / .False./
+      data gForceBW(  -1,  10) / .False./
+      data gForceBW(  -1,  11) / .False./
+      data gForceBW(  -1,  12) / .False./
+      data gForceBW(  -1,  13) / .False./
+      data gForceBW(  -1,  14) / .False./
+      data gForceBW(  -1,  15) / .False./
+      data gForceBW(  -1,  16) / .False./
