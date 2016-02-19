@@ -5,7 +5,7 @@ c The user must set nlegborn to the appropriate value for his process.
 c for neutralino pair production
         integer nlegborn,nlegreal
         
-        parameter (nlegborn=4)
+        parameter (nlegborn=5)
         parameter (nlegreal=nlegborn+1)
 
 c ndiminteg is the dimensionality of the full real integral

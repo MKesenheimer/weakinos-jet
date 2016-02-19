@@ -353,7 +353,8 @@ c endif preprocessor condition "if defined(CHECK_FORM_MAD) || defined(FORM_BORN)
         endif
 
         ! restore flavor list
-        bflav = flavc
+        bflav = flavc 
+        
         p = pc
         
 c ---------------------------- End Madgraph Born -----------------------
@@ -385,9 +386,10 @@ c endif preprocessor condition "if defined(CHECK_FORM_MAD) || defined(MAD_BORN)"
 #if defined(CHECK_FORM_MAD) && defined(FORM_BORN)
         born = fborn
 #endif
-#if defined(FORM_BORN)
-	born = fborn
-#endif
+!#if defined(FORM_BORN)
+!	born = fborn
+!#endif
+
 
 #ifdef DEBUG1
         if(counter < 5) then

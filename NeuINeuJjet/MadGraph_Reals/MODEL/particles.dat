@@ -28,8 +28,8 @@ sl      sl~       S        D      MSL   WSL     T    sl   1000003
 sr      sr~       S        D      MSR   WSR     T    sr   2000003
 cl      cl~       S        D      MCL   WCL     T    cl   1000004
 cr      cr~       S        D      MCR   WCR     T    cr   2000004
-b1      b1~       S        D      MB1   WB1     T    b1   1000005
-b2      b2~       S        D      MB2   WB2     T    b2   2000005
+b1      b1~       S        D      MBL   WB1     T    b1   1000005
+b2      b2~       S        D      MBR   WB2     T    b2   2000005
 t1      t1~       S        D      MT1   WT1     T    t1   1000006
 t2      t2~       S        D      MT2   WT2     T    t2   2000006
 

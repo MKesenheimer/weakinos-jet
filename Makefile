@@ -69,11 +69,11 @@ clean-libs:
 	cd $(SLHA) && make clean
 
 clean clean-all: clean-libs
-	cd neuIchaJ && make clean-all
+	cd NeuINeuJjet && make clean-all
 
 print-info:
 	$(info )
-	$(info --> Now change into directory neuIchaJ and type)
+	$(info --> Now change into directory NeuINeuJjet and type)
 	$(info     "make clean-results && make -j4 do" to run the program)
 	
 ########################################################################

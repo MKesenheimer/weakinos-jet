@@ -77,11 +77,11 @@ c
       double precision     g
       common /COUPL_BASIC/ g,gg   
 c
-c      double precision     hmass, wmass, zmass, amass
+c      double precision     hmass, wmass, zmass, amass,
       double precision     wmass, zmass, amass,
-     &                     tmass, cmass, bmass, lmass
+     &                     tmass, bmass, lmass
       common /COUPL_MASS/  wmass, zmass, amass,
-     &                     tmass, cmass, bmass, lmass
+     &                     tmass, bmass, lmass
 
       double precision     wwidth, zwidth, 
      &                     twidth, lwidth, awidth
