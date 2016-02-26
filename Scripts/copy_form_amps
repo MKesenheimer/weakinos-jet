@@ -1,10 +1,10 @@
 #!/bin/bash
 
 WORKINGDIR=${PWD}
-PROCDIR="neuIchaJ"
-INITIAL1="dubar"
-INITIAL2="udbar"
-FINAL="n1x1_test"
+PROCDIR="NeuINeuJjet"
+INITIAL1="uubar"
+INITIAL2="ddbar"
+FINAL="n1n1j"
 
 # copies the squaredME files generated with FormCalc to the right places
 # and calls the rename scripts to rename the files and their contents

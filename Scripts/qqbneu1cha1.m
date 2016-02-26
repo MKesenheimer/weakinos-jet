@@ -20,7 +20,7 @@ ClearProcess[]
 time1 = SessionTime[]
 
 
-CalcProcess = "udbar";
+CalcProcess = "dubar";
 
 (*Process definitions*)
 If[CalcProcess === "dubar",

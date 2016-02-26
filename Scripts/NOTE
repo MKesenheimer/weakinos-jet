@@ -29,7 +29,10 @@ Skript copy_form_amps:
 - Kopiert alle benötigten FormCalc-Dateien für die virtuellen Amplituden
   und führt Änderungen an den Dateien durch. Das Skript benennt alle 
   Dateien um und ersetzt in den Dateien Variablennamen durch individuelle 
-  Variablen.
+  Variablen. Das Skript wurde für qq -> neu neu jet modifiziert.
+  
+Skript copy_form_ampsOLD:
+- unmodifiziertes Skript für den qq -> neu cha Prozess.
   
 Skript mad_rename_script
 - wird in die Ordner ../(PROZESS)/MadGraph_Reals/SubProcesses/rename_script
@@ -42,7 +45,12 @@ Datei proc_card.dat
 - Process Card, mit der die MadGraph Amplituden erzeugt wurden.
 
 Skript qqbneu1cha1.m
-- Mathematica Script, mit dem die FormCalc Amplituden erzeugt wurden.
+- Mathematica Script, mit dem die FormCalc Amplituden für qq -> neu cha
+  erzeugt wurden.
+  
+Skript qqbtoneuneujet.m
+- Mathematica Script, mit dem die FormCalc Amplituden für qq -> neu neu jet
+  erzeugt werden.
   
 Skript make_pretty
 - kann aufgerufen werden um die MadGraph Amplituden hübscher zu machen.
