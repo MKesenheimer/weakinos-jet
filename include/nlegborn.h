@@ -13,17 +13,18 @@ c if there are undecayed resonances, we need extra variables to pilot
 c the resonance's masses
 c -4: (p,E) conservation 
 c +2: x1 x2 
-c -1: azimuthal-integration  
+c -1: azimuthal-integration, UPDATE: We need to integrate over one 
+c azimuthal degree of freedom in Real_osres_phsp
 
         integer ndiminteg
-        parameter (ndiminteg=(nlegreal-2)*3-4+2-1)
+        !parameter (ndiminteg=(nlegreal-2)*3-4+2) ! -1
 
+        parameter (ndiminteg=7)
+
+        
         integer maxprocborn,maxprocreal,maxflow
         parameter (maxprocborn=999,maxprocreal=999,maxflow=10)
 
         integer maxalr
         parameter (maxalr=maxprocreal*nlegreal*(nlegreal-1)/2)
-
-        
-        
 c############### nlegborn header #######################################

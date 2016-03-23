@@ -5,17 +5,13 @@ c weakino pair production
 c############### init_couplings subroutine #############################
 c setup SM and MSSM parameters in PhysPars.h
 c requires encoded process ID in lprup(1)
-
       subroutine init_couplings
         implicit none
-
 #include "PhysPars.h"
 #include "LesHouches.h"
 #include "pwhg_st.h"
 #include "pwhg_math.h"
 #include "nlegborn.h"
-
-
         double precision powheginput
         external powheginput
         ! final state IDs
@@ -29,10 +25,10 @@ c requires encoded process ID in lprup(1)
         print*, "extracted from process ID: ", lprup(1)
         print*, "the final state pair: ", id_fin1, ", ", id_fin2
 #endif
-        
+
         ! set PhysPars parameters
         call set_phys_params
-        ! set madgraph parameters. 
+        ! set madgraph parameters.
         ! Note: calling this subroutine for the first time reads from 
         ! the provided slha file.
         call set_madgraph_params
@@ -71,15 +67,59 @@ c requires encoded process ID in lprup(1)
           wwidth = par_Wwidth ! madgraph
           call set_madgraph_params
         endif
-        
-        ! set general MadGraph couplings
-        call set_general_couplings(id_fin1,id_fin2)
+
         ! set remaining FormCalc parameters
         call set_formcalc_params
-#if defined(DSUB_II) || defined(DSUB_II_TEST)
+
+        ! hack to overwrite the madgraph alpha 
+        ! (par_alpha is the one we want to use)
+        if(alfa .ne. alpha) then
+          alpha = par_alpha
+          call set_madgraph_params
+        endif
+
+        ! set general MadGraph couplings
+        call set_general_couplings(id_fin1,id_fin2)
         ! set the parameters for treating the on-shell resonances
-        call set_osres_params
+        !call set_osres_params
+
+
+        ! Print out all parameters if you want
+        if(verbose) then
+          print*
+          print*, "===================================================="
+          print*, "             set POWHEG parameters                  "
+          print*, "===================================================="
+          print*
+          print*, "Z mass          = ",par_Zmass
+          print*, "W mass          = ",par_Wmass
+          print*, "Z width         = ",par_Zwidth
+          print*, "W width         = ",par_Wwidth
+          print*, "1/alpha         = ",1d0/par_alpha
+          print*
+          print*, "final state masses = ", par_Fin1mass
+          print*, "                     ", par_Fin2mass
+          print*
+          !print*, "OS regulator WREG = ", wreg
+          print*        
+#ifdef DEBUGQ
+          print*
+          print*, "===================================================="
+          print*, "             set FormCalc parameters                "
+          print*, "===================================================="
+          print*
+          call printFormcalcModelParameters
+          print*
+          print*
+          print*, "===================================================="
+          print*, "             set MadGraph parameters                "
+          print*, "===================================================="
+          print*
+          call printMadgraphModelParameters
+          print*
 #endif
+        endif
+        
         
         ! check if the MadGraph parameters are the same as the ones
         ! used by FormCalc
@@ -88,6 +128,7 @@ c requires encoded process ID in lprup(1)
      &      (WZ                 .ne. zwidth       ) .or.
      &      (WW                 .ne. wwidth       ) .or.
      &      (alfa               .ne. alpha        ) .or.
+     &      (EL                 .ne. dreal(gal(1))) .or.
      &      (dabs(MNeu(1))      .ne. dabs(mn1)    ) .or.
      &      (dabs(MNeu(2))      .ne. dabs(mn2)    ) .or.
      &      (dabs(MNeu(3))      .ne. dabs(mn3)    ) .or.
@@ -143,45 +184,35 @@ c requires encoded process ID in lprup(1)
      &      (VCha(1,1)          .ne. vvmix(1,1)   ) .or.
      &      (VCha(1,2)          .ne. vvmix(1,2)   ) .or.
      &      (VCha(2,1)          .ne. vvmix(2,1)   ) .or.
-     &      (VCha(2,2)          .ne. vvmix(2,2)   ) .or.
-     &      (EL                 .ne. dreal(gal(1))) ) then
+     &      (VCha(2,2)          .ne. vvmix(2,2)   ) ) then
           print*, "Error: Madgraph uses parameters different to "
      &          //"PhysPars.h or FormCalc paramaters"
           stop
         endif
-        
-        ! Print out all parameters if you want
-        if(verbose) then
-          print*
-          print*, "===================================================="
-          print*, "             set POWHEG parameters                  "
-          print*, "===================================================="
-          print*
-          print*, "Z mass          = ",par_Zmass
-          print*, "W mass          = ",par_Wmass
-          print*, "Z width         = ",par_Zwidth
-          print*, "W width         = ",par_Wwidth
-          print*, "1/alpha         = ",1d0/par_alpha
-          print*
-          print*, "final state masses = ", par_Fin1mass
-          print*, "                     ", par_Fin2mass
-          print*        
-#ifdef DEBUGQ
-          print*
-          print*, "===================================================="
-          print*, "             set FormCalc parameters                "
-          print*, "===================================================="
-          print*
-          call printFormcalcModelParameters
-          print*
-          print*
-          print*, "===================================================="
-          print*, "             set MadGraph parameters                "
-          print*, "===================================================="
-          print*
-          call printMadgraphModelParameters
-          print*
-#endif
+
+        ! check if all paramaters are properly set
+        if ( (par_alpha    .eq. invalid) .or.
+     &       (par_Zmass    .eq. invalid) .or.
+     &       (par_Wmass    .eq. invalid) .or.
+     &       (par_Zwidth   .eq. invalid) .or.
+     &       (par_Wwidth   .eq. invalid) .or.
+     &       (par_Zmass2   .eq. invalid) .or.
+     &       (par_Wmass2   .eq. invalid) .or.
+     &       (par_Fin1mass .eq. invalid) .or.
+     &       (par_Fin2mass .eq. invalid) ) then
+          print*,"WARNING: One or more parameters are not set:"
+          print*,"par_alpha: ",par_alpha
+          print*,"par_Zmass: ",par_Zmass
+          print*,"par_Wmass: ",par_Wmass
+          print*,"par_Zwidth: ",par_Zwidth
+          print*,"par_Wwidth: ",par_Wwidth
+          print*,"par_Zmass2: ",par_Zmass2
+          print*,"par_Wmass2: ",par_Wmass2
+          print*,"par_Fin1mass: ",par_Fin1mass
+          print*,"par_Fin2mass: ",par_Fin2mass
+          print*,"If possible set the invalid parameters in "//
+     &           "powheg.input"
+          stop
         endif
 
         ! init LoopTools
@@ -190,25 +221,18 @@ c requires encoded process ID in lprup(1)
         call ltini
         !call setversionkey(0)
         print*
-
       end
-
 c############### end subroutine init_couplings #########################
 
 c############### subroutine init_madgraph_params #######################
 c sets the Madgraph parameters
-
       subroutine set_madgraph_params
         implicit none
-        
 #include "PhysPars.h"
-        
         character*100 slhafilename
-        
         logical called, readslha
         data called/.false./
         save called
-        
         ! reads from slha file only when called this subroutine
         ! for the first time. When this subroutine is called
         ! more than once, the SM Input parameters can be overwritten
@@ -221,23 +245,17 @@ c sets the Madgraph parameters
           called   = .true.
           readslha = .true.
         endif
-
         call setpara(slhafilename,readslha)
-      
       end
-
 c############### end subroutine init_madgraph_params ###################
 
 c############### subroutine set_ebe_couplings ##########################
 c set the madgraph and formcalc couplings event by event
-
       subroutine set_ebe_couplings
         implicit none
-
 #include "PhysPars.h"
 #include "pwhg_st.h"
 #include "pwhg_math.h"
-
         ! MadGraph
         ! QCD coupling constant
         alphaS = st_alpha
@@ -246,9 +264,8 @@ c set the madgraph and formcalc couplings event by event
         GG(2)  = -G
         ! e.m. coupling
         alpha  = par_alpha
-        Gal(1)      = dcmplx(dsqrt(alpha*4d0*pi))
-        Gal(2)      = dcmplx(dsqrt(alpha*4d0*pi))
-
+        Gal(1) = dcmplx(dsqrt(alpha*4d0*pi))
+        Gal(2) = dcmplx(dsqrt(alpha*4d0*pi))
         ! FormCalc
         ! QCD coupling
         AlfaS  = alphaS
@@ -258,35 +275,27 @@ c set the madgraph and formcalc couplings event by event
         Alfa = par_alpha
         Alfa2   = Alfa**2
         EL = dsqrt(Alfa*4d0*pi)
-        
         ! initialize the counter term wich cures the susy breaking
         ! introduced by DR
         call init_susy_restore
-        
 #ifdef DEBUGQ
         print*,"AlfaS: ", AlfaS
         print*,"Alfa:  ", Alfa
         stop
 #endif
-        
-        
         return
       end
-
 c############### end subroutine set_ebe_couplings ######################
 
 c############### set_phys_params subroutine ############################
 c extracts mass and mixing matrices from slhadata
 c assumes slhadata to be filled already
 c sets the PhysPars.h parameters
-
       subroutine set_phys_params
         implicit none
-
 #include "PhysPars.h"
 #include "pwhg_math.h"
 #include "LesHouches.h"
-        
         double precision powheginput
         external powheginput
         integer i,j,k   ! loops
@@ -306,7 +315,7 @@ c sets the PhysPars.h parameters
         par_Zmass2   = invalid
         par_Wmass2   = invalid
         par_Zwidth   = invalid
-        par_Zwidth   = invalid
+        par_Wwidth   = invalid
         par_Fin1mass = invalid
         par_Fin2mass = invalid
 
@@ -349,6 +358,8 @@ c sets the PhysPars.h parameters
         sinW        = dsqrt(1d0-par_Wmass**2/par_Zmass**2)
         par_alpha   = dsqrt(2d0)*par_Wmass**2*sinW**2*par_gf/pi
 #endif
+        !print*,1/par_alpha
+        !stop
         par_Zmass2  = par_Zmass**2
         par_Wmass2  = par_Wmass**2
 
@@ -363,6 +374,18 @@ c sets the PhysPars.h parameters
             endif
           endif
         enddo
+
+        if( par_Wwidth .eq. invalid) then
+          print*, "WARNING: W-width not found in SLHA file."
+          print*, "         Use zero width."
+          par_Wwidth = 0D0
+        endif
+
+        if( par_Zwidth .eq. invalid) then
+          print*, "WARNING: Z-width not found in SLHA file."
+          print*, "         Use zero width."
+          par_Zwidth = 0D0
+        endif
         
 #ifdef DEBUGQ
         print*, "par_Zwidth", par_Zwidth
@@ -415,6 +438,13 @@ c sets the PhysPars.h parameters
             stop
         end select
         
+        if( (dabs(par_Fin1mass) + dabs(par_Fin2mass)) .lt. par_Zmass )
+     &  then
+          print*, "Error: Final state masses low, W/Z decays might "//
+     &            "be more suitable"
+          stop
+        endif
+        
         ! Sfermion masses
         do i=1,2     ! left, right
           do j=1,4   ! type (nu,e,u,d)
@@ -457,7 +487,8 @@ c b quark mass
 #endif
 
         ! top mass
-        par_MT  = dreal(Mass_Mf(3,3))
+        !par_MT  = dreal(Mass_Mf(3,3))
+        par_MT = dreal(SMInputs_Mt)
 
 c particle widths from SLHA-file
 c NOTE: FormCalc does not use squark widths in the current software 
@@ -514,48 +545,19 @@ c version.
         print*, "go width   =", par_Glwidth
         stop
 #endif
-
-        ! check if all paramaters are properly set
-        if ( (par_alpha    .eq. invalid) .or.
-     &       (par_Zmass    .eq. invalid) .or.
-     &       (par_Wmass    .eq. invalid) .or.
-     &       (par_Zwidth   .eq. invalid) .or.
-     &       (par_Wwidth   .eq. invalid) .or.
-     &       (par_Zmass2   .eq. invalid) .or.
-     &       (par_Wmass2   .eq. invalid) .or.
-     &       (par_Fin1mass .eq. invalid) .or.
-     &       (par_Fin2mass .eq. invalid) ) then
-          print*, "One or more parameters are not set:"
-          print*,"par_alpha: ",par_alpha
-          print*,"par_Zmass: ",par_Zmass
-          print*,"par_Wmass: ",par_Wmass
-          print*,"par_Zwidth: ",par_Zwidth
-          print*,"par_Wwidth: ",par_Wwidth
-          print*,"par_Zmass2: ",par_Zmass2
-          print*,"par_Wmass2: ",par_Wmass2
-          print*,"par_Fin1mass: ",par_Fin1mass
-          print*,"par_Fin2mass: ",par_Fin2mass
-          stop
-        endif
-        
       end
-
 c############### end subroutine set_phys_params ########################
 
 c############### set_params subroutine #################################
 c extracts mass and mixing matrices from slhadata
 c assumes slhadata to be filled already
 c sets the FormCalc parameters
-
       subroutine set_formcalc_params
         implicit none
-
 #include "PhysPars.h"
 #include "pwhg_math.h"
-        
         double precision powheginput
         external powheginput
-
         integer i,j,k,l ! loops
         real ident(4,4) ! identity matrix
         real eps        ! auxilliary variable for checking unitarity of ZNeu
@@ -563,7 +565,6 @@ c sets the FormCalc parameters
         real cM1        ! (checkLimitMinus 1) lower limit -"-
         real cP0        ! (checkLimitPlus 0) upper limit for checking unitarity
         real cM0        ! (checkLimitMinus 0) lower limit -"-
-
         ! Avoid multiple calls to this subroutine.
         logical called
         data called/.false./
@@ -765,9 +766,7 @@ c MadGraphs couplings.f as well.
         AlfaSMZ = SMInputs_AlfasMZ
         EL = dsqrt(4*pi*Alfa)
         GS = dsqrt(4*pi*AlfaS)
-
       end
-
 c############### end subroutine set_params #############################
 
 c############### init_susy_restore subroutine ##########################
@@ -783,12 +782,10 @@ c the counter terms at amplitude squared niveau is implemented in
 c ddbar_SquaredME.F and uubar_SquaredME.F.
       subroutine init_susy_restore
         implicit none
-        
 #include "PhysPars.h"
 #include "pwhg_st.h"
 #include "pwhg_math.h"
 #include "susy_restore.h"
-
         ! the counter term for quark-squark-gluino is not needed here
         dZgs1y = 0 ! gs*Alfas/(3D0*Pi)
         ! counter term for quark-squark-neutralino yukawa coupling
@@ -825,5 +822,4 @@ c ddbar_SquaredME.F and uubar_SquaredME.F.
 #endif
         return
       end
-      
 c############### end init_susy_restore subroutine ######################

@@ -99,7 +99,7 @@ c levi-civita symbol
       
 
 c denominator function needed by FormCalc
-      double precision function  Den(x,y)
+      double precision function Den(x,y)
         implicit none
         double precision x,y
         Den = 1/(x-y)
@@ -131,6 +131,19 @@ c error-determination (taken from btilde-routines)
         double precision tot,etot2
         integer n
         calc_error = dsqrt((etot2/n-(tot/n)**2)/n)
+      end
+
+      
+c factorial
+      integer function factorial(n)
+        implicit none
+        integer n,m,i
+        factorial=1
+        m=1
+        do i=1,n
+          m=m*i
+        enddo
+        factorial=m
       end
 
 
@@ -259,5 +272,111 @@ c gibt das Vorzeichen einer reellen Zahl zurück (+-1)
           signum = -1D0
         endif
       end
+
+
+c transforms a lower case character string to an upper case
+      subroutine to_uppercase(str1,upper1)
+        implicit none
+        character*100 str1, upper1
+        integer j
+#ifdef DEBUGQ
+        print*,str1
+#endif
+        do j=1,len(trim(str1))
+          ! convert both strings to uppercase
+          if(str1(j:j) .ge. "a" .and. str1(j:j) .le. "z") then
+            upper1(j:j) = achar(iachar(str1(j:j)) - 32)
+          else
+            upper1(j:j) = str1(j:j)
+          endif
+        enddo
+#ifdef DEBUGQ
+        print*,upper1
+#endif
+#ifdef DEBUGQ
+        upper1 = str1
+#endif
+      end
       
+
+c sorts the entries of an integer list in decreasing order
+      subroutine sorti(list,lgth)
+        implicit none
+        integer i,j,n,t,lgth
+        parameter (n=100)
+        integer b(n), list(n)
+        if(lgth.gt.n) then
+          print*,"error in sorti: increase n = ",n
+          print*,"lgth = ",lgth
+          stop
+        endif  
+        do i=1,lgth
+          b(i) = list(i)
+        enddo
+        do i=1,lgth
+          do j=i,lgth
+            if(b(i)<b(j)) then
+              t = b(j)
+              b(j) = b(i)
+              b(i) = t
+            endif
+          enddo
+        enddo
+        do i=1,lgth
+          list(i) = b(i)
+        enddo
+      end 
+      
+c sorts the entries of an integer list in decreasing order and keep track
+c of sorting in ilist
+c bevor sorting:
+c list(1) = 5
+c list(2) = 6
+c list(3) = 4
+c after sorting:
+c list(1) = 6, ilist(1) = 2
+c list(2) = 5, ilist(2) = 1
+c list(3) = 4, ilist(3) = 3
+      subroutine sortit(list,ilist,lgth)
+        implicit none
+        integer i,j,n,t,it,lgth
+        parameter (n=100)
+        integer b(n), list(n),ilist(n)
+        if(lgth.gt.n) then
+          print*,"error in sorti: increase n = ",n
+          print*,"lgth = ",lgth
+          stop
+        endif  
+        do i=1,lgth
+          b(i) = list(i)
+          ilist(i) = i
+        enddo
+        do i=1,lgth
+          do j=i,lgth
+            if(b(i)<b(j)) then
+              t = b(j)
+              it = ilist(j)
+              b(j) = b(i)
+              ilist(j) = ilist(i)
+              b(i) = t
+              ilist(i) = it
+            endif
+          enddo
+        enddo
+        do i=1,lgth
+          list(i) = b(i)
+        enddo
+      end
+
+c stops the program if gets called for n times (useful for debugging)
+      subroutine nstop(n)
+        integer n,i
+        save i
+        i = i + 1
+        if(i.ge.n) then
+          i = 0
+          stop
+        endif
+      end
+
 c############### end functions #########################################

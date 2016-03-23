@@ -4,7 +4,8 @@
 # General Conventions for Makefiles
 SHELL = /bin/sh
 .SUFFIXES:
-.SUFFIXES: .c .f .F .cc .cpp .h .inc .o .a
+.SUFFIXES: .c .f .F .cc .cpp .h .hh .inc .o .a
+.DEFAULT_GOAL := all
 
 ########################################################################
 ## Flags
@@ -16,13 +17,15 @@ CC  =  gcc
 FCFLAGS  = -g
 CXXFLAGS = -g
 CFLAGS   = -g
+LDFLAGS  = -ff2c -g
 
 # recommended compiler flags
 REC_FCFLAGS   = -fno-automatic -fno-range-check
-REC_FCFLAGS  += -ffixed-line-length-none -lgfortran -ff2c -DU77EXT=0 -DQuad=0
+REC_FCFLAGS  += -ffixed-line-length-none -lgfortran -DU77EXT=0 -DQuad=0
+REC_FCFLAGS  += -ff2c -fno-second-underscore
 REC_FCFLAGS  += $(FCFLAGS)
 REC_CXXFLAGS  = -fomit-frame-pointer -ffast-math -Wall -m64
-REC_CXXFLAGS += $(CXFLAGS)
+REC_CXXFLAGS += $(CXXFLAGS)
 REC_CFLAGS    = -fomit-frame-pointer -ffast-math -Wall -m64
 REC_CFLAGS   += -DNOUNDERSCORE=0 -DBIGENDIAN=0
 REC_CFLAGS   += $(CFLAGS)
@@ -46,7 +49,7 @@ PDFSTATIC = none
 #STATICLIBSLHAPDF = /opt/lib/libLHAPDF.a
 
 ## choose analysis: none, default
-ANALYSIS = none
+ANALYSIS = default
 
 ## path to LHAPDF config executable
 LHAPDF_CONFIG = lhapdf-config
@@ -54,16 +57,25 @@ LHAPDF_CONFIG = lhapdf-config
 ## path to fastjet config executable
 FASTJET_CONFIG = fastjet-config
 
-## path to fortran libraries
-ifeq ($(UNAME), Darwin)
-  #Mac OSX
-  LIBGFORTRANPATH = /usr/local/lib
-  LIBSTDCPPPATH   = /usr/local/lib
-else
-  #Linux
-  LIBGFORTRANPATH = /usr/lib/gcc/x86_64-linux-gnu/4.8
-  LIBSTDCPPPATH   = /usr/lib/gcc/x86_64-linux-gnu/4.8
-endif
+## Pythia8
+# if you want to use Pythia8 instead of Pythia6 uncomment the following
+#USE_PYTHIA8 = yes
+# path to pythia8-config executable
+# (uncomment only if you want to use a locally installed Pythia8)
+#PYTHIA8_CONFIG = pythia8-config
+
+# (not necessary anymore)
+## path to fortran and c++ libraries
+# (use $locate libstdc++.a to find the library)
+#ifeq ($(UNAME), Darwin)
+#  #Mac OSX
+#  LIBGFORTRANPATH = /usr/local/lib
+#  LIBSTDCPPPATH   = /usr/local/lib
+#else
+#  #Linux 
+#  LIBGFORTRANPATH = /usr/lib/gcc/x86_64-linux-gnu/4.8
+#  LIBSTDCPPPATH   = /usr/lib/gcc/x86_64-linux-gnu/4.8
+#endif
 
 ## warning for type-conversions -> basically useless, as those occur in
 ## too many places
@@ -75,9 +87,14 @@ endif
 ## Use -O2 to be on the safe side
 OPT = -O2
 
-### generate directory build and run, if not yet existing
+### generate directory build, if not yet existing
 $(shell mkdir -p build)
-$(shell mkdir -p run)
+
+### version control
+GV = $(shell git rev-parse --short HEAD)
+$(shell echo "      subroutine print_version" > ../version.f)
+$(shell echo "        print*,'        git version $(GV)'" >> ../version.f)
+$(shell echo "      end" >> ../version.f)
 
 ########################################################################
 ## Runtime flags
@@ -125,6 +142,11 @@ USRFLAGS += -D NEGLECT_SWIDTH
 ########################################################################
 
 ########################################################################
+## Runtime flags which should not be changed (don't touch this unless
+## you know what you do!) 
+CHANNEL += -D NIXJ
+
+########################################################################
 ## Paths
 
 WORKINGDIR = $(shell pwd)/..
@@ -138,9 +160,12 @@ VIRT    = $(SUBWORKINGDIR)/FormCalc_Virtuals
 VIRTSUB = $(VIRT)/udbar_n1x1_squaredme $(VIRT)/dubar_n1x1_squaredme
 REALSUB  = $(REAL)/SubProcesses_nIxJ
 MODIFIED = $(WORKINGDIR)/POWHEG_mod
+SCRIPTS  = $(WORKINGDIR)/Scripts
 
 FJ     = $(TOOLS)/fastjet
-PY     = $(TOOLS)/pythia
+PY     = $(TOOLS)/pythia6425
+PY8    = $(TOOLS)/pythia8215
+PYF    = $(TOOLS)/pythiafortran
 HER    = $(TOOLS)/herwig
 LT     = $(TOOLS)/LoopTools-2.12
 SLHA   = $(TOOLS)/SLHALib-2.2
@@ -149,39 +174,25 @@ MADMODEL  = $(REAL)/MODEL
 
 # includes
 UINCLUDE    = $(WORKINGDIR)/include
+SINCLUDE    = $(SUBWORKINGDIR)/include
 PINCLUDE    = $(PWHGDIR)/include
 VINCLUDE    = $(VIRT)/include
 MDINCLUDE   = $(REAL)/include
 SLHAINCLUDE = $(SLHA)/src
 LTINCLUDE   = $(LT)/src/include
+PY8INCLUDE  = $(PY8)/include
 
 ########################################################################
 ## search for the files and set paths
 
-vpath %.f $(PWHGDIR) $(WORKINGDIR) $(TOOLS)/functions $(DHELAS) $(PY) $(HER)
+vpath %.f $(PWHGDIR) $(WORKINGDIR) $(TOOLS)/functions $(DHELAS) $(PY) $(PYF) $(HER)
 vpath %.F $(WORKINGDIR) $(TOOLS)/FormCalcTools $(DHELAS)
 vpath %.F $(VIRT)/RenConsts $(VIRTSUB)
 vpath %.F $(MADMODEL) $(REALSUB)
 vpath %.f $(MADMODEL) $(REALSUB)
 vpath %.f $(MODIFIED)
-vpath %.cc $(FJ)
+vpath %.cc $(FJ) $(PY8) $(PYF)
 vpath %.o $(SUBWORKINGDIR)/build
-
-########################################################################
-## Libraries
-#not necessary anymore
-#LIBS  += $(LIBGFORTRANPATH)/libgfortranbegin.a
-#LIBS  += $(LIBGFORTRANPATH)/libgfortran.a
-#LIBS  += $(LIBSTDCPPPATH)/libstdc++.a
-
-### LibSLHA in Tools/SLHALib-2.2 ###
-LIBS   += $(TOOLS)/libSLHA.a
-
-### LoopTools in Tools/Looptools-2.12 ###
-LIBS  += $(TOOLS)/libooptools.a
-
-### DHELAS in Tools/DHELAS ###
-LIBS  += $(TOOLS)/libdhelas3.a
 
 ########################################################################
 ## Source files
@@ -212,21 +223,34 @@ ifdef USE_FASTJET
   ifeq ($(FASTJET_CONFIG),)
     $(error cannot find fastjet-config (did you install fastjet?))
   endif
-  LIBS += $(shell $(FASTJET_CONFIG) --libs --plugins ) -lstdc++
+  LIBS += $(shell $(FASTJET_CONFIG) --libs --plugins )
   FJCXXFLAGS  += $(shell $(FASTJET_CONFIG) --cxxflags)
   PWHGANALYSIS+= fastjetfortran.o
-  # fastjetsisconewrap.o fastjetktwrap.o
+endif
+
+# the user choosed to use Pythia8
+ifeq ("$(USE_PYTHIA8)","yes")
+# the user choosed to use a locally installed Pythia8
+ifdef PYTHIA8_CONFIG
+  LIBS += $(shell $(PYTHIA8_CONFIG) --libs --plugins )
+  PYCXXFLAGS  += $(shell $(PYTHIA8_CONFIG) --cxxflags)
+else
+  LIBS += $(TOOLS)/libpythia8.a
+  PYCXXFLAGS += -I$(PY8INCLUDE)
+endif
+  PWHGANALYSIS+= pythiafortran.o
 endif
 
 ### USER Files ###
 USER = Born.o Born_phsp.o Born_lh.o Reals.o Reals_lh.o Virtuals.o \
-       init_processes.o init_couplings.o
+       init_processes.o init_couplings.o \
+       phi1_2.o version.o
 
 ### Functions in Tools/functions/
-FUNC = hep2pwg.o funcprocess.o Print.o funcbasic.o
+FUNC = funcprocess.o Print.o funcbasic.o off_to_on.o
 
-### MadGraph Amplitudes
-MADOBJ = couplings.o hardstop.o printout.o read_slha.o \
+### MadGraph mandatory files
+MMADOBJ = couplings.o hardstop.o printout.o read_slha.o \
 	set_general_couplings.o 
 
 ### Formcalc Files in Tools/FormcalcTools/###
@@ -236,25 +260,28 @@ FORMCALC = VecSet.o
 PWHG = pwhg_main.o pwhg_init.o btilde.o utils.o gen_Born_phsp.o	\
 	test_Sudakov.o pt2maxreg.o maxrat.o Bornzerodamp.o		\
 	random.o boostrot.o bra_ket_subroutines.o			\
-	init_phys.o powheginput.o pdfcalls.o sigcollremn.o		\
+	init_phys.o powheginput.o sigcollremn.o		\
 	pwhg_bookhist-multi.o pwhg_analysis_driver.o checkmomzero.o	\
-	setstrongcoupl.o integrator.o newunit.o mwarn.o		\
+	setstrongcoupl.o integrator.o mwarn.o		\
 	sigcollsoft.o validflav.o decidemerging.o          		\
 	loadstorenlo.o setlocalscales.o ubprojections.o      	\
 	mint_upb.o reshufflemoms.o opencount.o
+
 # possible modified POWHEG-files
 PWHG += cernroutines_mod.o find_regions.o gen_real_phsp.o	\
 	sigborn.o sigreal.o sigsoftvirt.o			\
 	sigvirtual.o bbinit.o LesHouches.o 		\
 	LesHouchesreg.o gen_index.o lhefwrite.o		\
-	gen_radiation.o sigremnants.o pwhgreweight.o 
+	gen_radiation.o sigremnants.o pwhgreweight.o \
+	pdfcalls.o newunit_mod.o
+	
 	
 
 ### LHEF ###
 # analyze LHEF output
-LHEF = lhef_analysis.o boostrot.o random.o cernroutines.o		\
+LHEF = lhef_analysis.o boostrot.o random.o cernroutines_mod.o		\
      opencount.o powheginput.o pwhg_bookhist-multi.o 			\
-     lhefread.o newunit.o pwhg_analysis_driver.o 			\
+     lhefread.o newunit_mod.o pwhg_analysis_driver.o 			\
      funcprocess.o init_couplings.o Print.o				\
      bra_ket_subroutines.o off_to_on.o funcbasic.o
 
@@ -263,18 +290,25 @@ LHEF = lhef_analysis.o boostrot.o random.o cernroutines.o		\
 # NOTE: pythia-6.4.25-decay.f is based on POWHEG-BOX/pythia-6.4.25.f,
 # to which we applied a simple patch to enable slepton decays
 # (for clarity a separate patch file is included which is not needed otherwise)
-PYTHIA = main-PYTHIA.o setup-PYTHIA-lhef.o pythia6428.o	\
-	boostrot.o powheginput.o init_couplings.o funcprocess.o 	\
-	pwhg_bookhist-multi.o lhefread.o newunit.o pdfdummies.o		\
-	pwhg_analysis_driver.o random.o cernroutines.o opencount.o	\
+PYTHIA = boostrot.o powheginput.o init_couplings.o funcprocess.o 	\
+	pwhg_bookhist-multi.o lhefread.o newunit_mod.o pdfdummies.o		\
+	pwhg_analysis_driver.o random.o cernroutines_mod.o opencount.o	\
 	bra_ket_subroutines.o off_to_on.o funcbasic.o Print.o
+ifeq ("$(USE_PYTHIA8)","yes")
+  # TODO:
+  PYTHIA += main-PYTHIA_mod.o
+else
+  PYTHIA += main-PYTHIA.o setup-PYTHIA-lhef.o
+  PYTHIA += pythia-6.4.25-decay.o
+  #PYTHIA += pythia6428.o
+endif
 
 ### HERWIG ###
 # this is work in progress
 HERWIG = main-HERWIG.o setup-HERWIG-lhef.o herwig6510.o boostrot.o 	\
      opencount.o powheginput.o pwhg_bookhist-multi.o random.o		\
-     lhefread.o newunit.o pwhg_analysis_driver.o 			\
-     funcprocess.o init_couplings.o cernroutines.o			\
+     lhefread.o newunit_mod.o pwhg_analysis_driver.o 			\
+     funcprocess.o init_couplings.o cernroutines_mod.o			\
      bra_ket_subroutines.o off_to_on.o funcbasic.o
 
 # MadGraph born amplitudes
@@ -387,34 +421,54 @@ VIRTUALS += CalcRenConst.o udbar_n1x1_abbr0h.o udbar_n1x1_abbr0s.o	\
           dubar_n1x1_vert.o dubar_n1x1_vert_Sfe5.o
 
 SOURCESMAIN = $(PWHG) $(PDFPACK) $(USER) $(PWHGANALYSIS) $(FUNC) $(VIRTUALS)  \
-	$(FORMCALC) $(MADOBJ)
+	$(FORMCALC) $(MMADOBJ) $(MADOBJ)
 
-SOURCESLHEF = $(LHEF) $(PWHGANALYSIS) $(MADOBJ)
+SOURCESLHEF = $(LHEF) $(PWHGANALYSIS) $(MMADOBJ)
 
-SOURCESPYTHIA = $(PYTHIA) $(PWHGANALYSIS)  $(MADOBJ)
+SOURCESPYTHIA = $(PYTHIA) $(PWHGANALYSIS) $(MMADOBJ)
 
-SOURCESHERWIG = $(HERWIG) $(PWHGANALYSIS)  $(MADOBJ)
+SOURCESHERWIG = $(HERWIG) $(PWHGANALYSIS) $(MMADOBJ)
           
 # Additional FormCalc Files (maybe custom ones)
 #VIRTUALS += BornEps_n1x1.o
 
 ########################################################################
+## Libraries
+### LibSLHA in Tools/SLHALib-2.2 ###
+LIBS += $(TOOLS)/libSLHA.a
+
+### LoopTools in Tools/Looptools-2.12 ###
+LIBS += $(TOOLS)/libooptools.a
+
+### DHELAS in Tools/DHELAS ###
+LIBS += $(TOOLS)/libdhelas3.a
+
+#not necessary anymore
+#LIBS += $(LIBGFORTRANPATH)/libgfortranbegin.a
+#LIBS += $(LIBGFORTRANPATH)/libgfortran.a
+#LIBS += $(LIBSTDCPPPATH)/libstdc++.a
+
+### Libraries for linking c++ code
+LIBS += -ldl -lstdc++
+
+########################################################################
 ## combine all flags, libraries and includes
 
-ALL_FCFLAGS   = $(REC_FCFLAGS) $(OPT) $(WARN) $(CPP) $(DEBUG) $(USRFLAGS)
+ALL_FCFLAGS   = $(REC_FCFLAGS) $(OPT) $(WARN) $(CPP) $(DEBUG) $(USRFLAGS) $(CHANNEL)
 ALL_FCFLAGS  += -I$(UINCLUDE) -I$(PINCLUDE) -I$(LTINCLUDE) -I$(MDINCLUDE)
 ALL_FCFLAGS  += -I$(WORKINGDIR) -I$(VINCLUDE) -I$(SLHAINCLUDE)
+ALL_FCFLAGS  += -I$(SINCLUDE)
 
 ALL_CFLAGS    = $(REC_CFLAGS) $(OPT)
 ALL_CFLAGS   += -I$(LTINCLUDE)
 
-ALL_CXXFLAGS  = $(REC_CXXFLAGS) $(FJCXXFLAGS) $(OPT)
+ALL_CXXFLAGS  = $(REC_CXXFLAGS) $(OPT)
 
-LINKER = $(CPPFLAGS) $(LIBS) $(LDFLAGS) 
+LINKER = $(CPPFLAGS) $(LIBS) $(LDFLAGS)
 
 HEADERS  = $(wildcard *.h $(UINCLUDE)/*.h  $(PINCLUDE)/*.h $(VINCLUDE)/*.h)
 HEADERS += $(wildcard *.h $(LTINCLUDE)/*.h $(SLHAINCLUDE)/*.h)
-HEADERS += $(wildcard *.h $(MDINCLUDE)/*.h)
+HEADERS += $(wildcard *.h $(MDINCLUDE)/*.h $(SINCLUDE)/*.h)
 HEADERS += $(wildcard *.inc $(MDINCLUDE)/*.inc $(UINCLUDE)/*.inc)
      
 ########################################################################
@@ -428,9 +482,13 @@ HEADERS += $(wildcard *.inc $(MDINCLUDE)/*.inc $(UINCLUDE)/*.inc)
 	@echo "Compiling:" $<
 	@$(FC) $(ALL_FCFLAGS) -c -o build/$@ $<
 
-%.o: %.cc
+pythiafortran.o: pythiafortran.cc
 	@echo "Compiling:" $<
-	@$(CXX) $(ALL_CXXFLAGS) -c -o build/$@ $^
+	@$(CXX) $(ALL_CXXFLAGS) $(PYCXXFLAGS) -c -o build/$@ $^
+
+fastjetfortran.o: fastjetfortran.cc
+	@echo "Compiling:" $<
+	@$(CXX) $(ALL_CXXFLAGS) $(FJCXXFLAGS) -c -o build/$@ $^
 
 %.o: %.c $(HEADERS)
 	@echo "Compiling:" $<
@@ -441,7 +499,7 @@ HEADERS += $(wildcard *.inc $(MDINCLUDE)/*.inc $(UINCLUDE)/*.inc)
 ## type make -j4 [rule] to speed up the compilation
 
 pwhg_main_nixj: $(SOURCESMAIN)
-	$(FC) $(ALL_FCFLAGS) $(patsubst %,build/%,$(SOURCESMAIN)) $(LINKER) -o $@ 
+	$(FC) $(ALL_FCFLAGS) $(patsubst %,build/%,$(SOURCESMAIN)) $(LINKER) -o $@
 
 lhef_analysis:$(SOURCESLHEF)
 	$(FC) $(ALL_FCFLAGS) $(patsubst %,build/%,$(SOURCESLHEF)) $(LINKER) -o $@ 
@@ -453,21 +511,32 @@ main-PYTHIA-lhef: $(SOURCESPYTHIA)
 main-HERWIG-lhef: $(SOURCESHERWIG)
 	$(FC) $(ALL_FCFLAGS) $(patsubst %,build/%,$(SOURCESHERWIG)) $(LINKER) -o $@
 
-all: pwhg_main_nixj lhef_analysis main-PYTHIA-lhef
+merge-pwg-stat: 
+	$(FC) $(TOOLS)/programs/merge-pwg-stat.f -o $@
+
+merge-data: 
+	$(FC) $(TOOLS)/programs/merge-data.f -o $@
+
+copy-scripts:
+	cp $(SCRIPTS)/runparallel.sh  $(SUBWORKINGDIR) && \
+	cp $(SCRIPTS)/clean_rundir.sh $(SUBWORKINGDIR) && \
+	cp $(SCRIPTS)/reweight.sh     $(SUBWORKINGDIR) && \
+	cp $(SCRIPTS)/merge.sh        $(SUBWORKINGDIR)
+
+all: pwhg_main_nixj copy-scripts merge-pwg-stat merge-data lhef_analysis main-PYTHIA-lhef
 
 clean:
-	rm -f build/*.o
+	rm -f build/*.o pwhg_main_nixj lhef_analysis main-PYTHIA-lhef merge-pwg-stat merge-data runparallel.sh clean_rundir.sh reweight.sh merge.sh
 
 clean-results:
-	cd testrun && rm -f *.out *.lhe *.top *.gp *.eps *.dat FlavRegList	\
-	bornequiv realequiv realequivregions pwhg_checklimits   	\
-	virtequiv
+	find ./testrun ! \( -name '*.slha' -o -name '*.input' -o -name 'pwgseeds.dat' \) \
+	-type f -exec rm -f {} +
 	
 clean-all: clean clean-results
 	rm -f pwhg_main_nixj lhef_analysis main-PYTHIA-lhef
 
-do-pwhg do: pwhg_main_nixj
-	cd testrun && cp pwgseedsdat pwgseeds.dat && ../pwhg_main_nixj
+do-pwhg do: pwhg_main_nixj copy-scripts merge-pwg-stat merge-data
+	cd testrun && ../pwhg_main_nixj
 
 do-lhef: lhef_analysis
 	cd testrun && ../lhef_analysis

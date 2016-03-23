@@ -10,13 +10,15 @@ CC  =  gcc
 FCFLAGS  = -g
 CXXFLAGS = -g
 CFLAGS   = -g
+LDFLAGS  = -ff2c -g
 
 # recommended compiler flags
 REC_FCFLAGS   = -fno-automatic -fno-range-check
-REC_FCFLAGS  += -ffixed-line-length-none -lgfortran -ff2c -DU77EXT=0 -DQuad=0
+REC_FCFLAGS  += -ffixed-line-length-none -lgfortran -DU77EXT=0 -DQuad=0
+REC_FCFLAGS  += -ff2c -fno-second-underscore
 REC_FCFLAGS  += $(FCFLAGS)
 REC_CXXFLAGS  = -fomit-frame-pointer -ffast-math -Wall -m64
-REC_CXXFLAGS += $(CXFLAGS)
+REC_CXXFLAGS += $(CXXFLAGS)
 REC_CFLAGS    = -fomit-frame-pointer -ffast-math -Wall -m64
 REC_CFLAGS   += -DNOUNDERSCORE=0 -DBIGENDIAN=0
 REC_CFLAGS   += $(CFLAGS)
@@ -48,10 +50,13 @@ TOOLS   = $(WORKINGDIR)/Tools
 LT     = $(TOOLS)/LoopTools-2.12
 SLHA   = $(TOOLS)/SLHALib-2.2
 DHELAS = $(TOOLS)/DHELAS
+PYTHIA = $(TOOLS)/pythia8215
 
 ALL_FCFLAGS  = $(REC_FCFLAGS) $(OPT) $(WARN)
 
 libs: libdhelas3.a liblooptools.a libSLHA.a print-info
+
+all: libs pastegnudata
 
 libdhelas3.a:
 	cd $(DHELAS) && make FC="$(FC)" F77="$(FC)" XFFLAGS="$(ALL_FCFLAGS)"
@@ -61,20 +66,27 @@ liblooptools.a:
 
 libSLHA.a:
 	cd $(SLHA) && make FC="$(FC)" F77="$(FC)" FFLAGS="$(ALL_FCFLAGS)" CXXFLAGS="$(REC_CXXFLAGS)" CFLAGS="$(REC_CFLAGS)"
+	
+libpythia.a:
+	cd $(PYTHIA) && make CXX="$(CXX)" CXXFLAGS="$(REC_CXXFLAGS)" && make install
+	
+pastegnudata:
+	cd ./plot-aux && $(FC) pastegnudata.f -o $@
 
 clean-libs:
 	cd $(TOOLS) && rm -f *.a
 	cd $(LT) && make clean
 	cd $(DHELAS) && make clean
 	cd $(SLHA) && make clean
+	cd $(PYTHIA) && make distclean
 
 clean clean-all: clean-libs
 	cd NeuINeuJjet && make clean-all
 
 print-info:
 	$(info )
-	$(info --> Now change into directory NeuINeuJjet and type)
-	$(info     "make clean-results && make -j4 do" to run the program)
+	$(info --> Now change into directory neuIneuJ, neuIchaJ or chaIchaJ)
+	$(info     and type "make clean-results && make -j4 do" to run the program)
 	
 ########################################################################
 #                       -*- End of Makefile -*-                        #

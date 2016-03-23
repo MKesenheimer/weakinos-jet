@@ -4,7 +4,7 @@ function exitmessage {
 echo " genplot called with $narg arguments $fil1 $fil2 $out"
 echo "usage: genplots.sh file1 file2 nameoutput"
 echo "   or: genplots.sh file nameoutput"
-exit -1
+exit 0
 }
 
 function check {
@@ -15,13 +15,10 @@ then
 fi
 }
 
-narg=`echo $* | wc -w`
-echo narg=$narg
-
-case $narg in
+case $# in
  2) fil2=$1 ; out=$2 ; check $fil2 ;;
  3) fil1=$1 ; fil2=$2 ; out=$3 ; check $fil1 ; check $fil2 ;;
-*) exitmessage ;;
+ *) exitmessage ;;
 esac
 
 >genplots.gp
