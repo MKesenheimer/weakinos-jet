@@ -30,7 +30,8 @@ c and the Jacobi factor for the phase space volume
         logical lresult
         !local variable for propagator momentum
         double precision kn_prop(0:3)
-
+        ! phase space borders
+        double precision sijmin
         !added for debugging purposes
         !particle flavors, distrust that particular flavour ?
         integer bflav(nlegborn)
@@ -86,30 +87,26 @@ c and the Jacobi factor for the phase space volume
         kn_cmpborn(3,2) = -kn_cmpborn(0,1)
 
         p12(:) = kn_cmpborn(:,1) + kn_cmpborn(:,2)
-
+        sijmin = (kn_masses(4)+kn_masses(5))**2
+        
         ! generate four-momenta in the cms frame
         ! for the particles produced in the Born process,
         ! calculates the Jacobi factor for the phase space volume
         ! we don't want to integrate over phi, so we provide 0 for xphi
         ! (see phi1_2.f)
         
-	! subroutine R2phsp_s2(psgen,x2,xth,xphi,s2min,m1,bwmass,bwwidth,
+        ! subroutine R2phsp_s2(psgen,x2,xth,xphi,s2min,m1,bwmass,bwwidth,
         ! &                     p0,p1,p2,jac)
-	
-	call R2phsp_s2(0,xborn(3),xborn(4),xborn(5),
-     &		0D0,
-     &		kn_masses(3),0D0,0D0,p12,kn_cmpborn(:,3),kn_prop,jac)
- 
+        call R2phsp_s2(0,xborn(3),xborn(4),xborn(5),
+     &                sijmin,
+     &                kn_masses(3),0D0,0D0,p12,kn_cmpborn(:,3),kn_prop,jac)
         kn_jacreal = kn_jacreal*jac
 
 
         !subroutine R2phsp(xth,xphi,m1,m2,p0,p1,p2,jac)
-        
         call R2phsp(xborn(6),xborn(7),kn_masses(4),kn_masses(5),kn_prop,
-     &		kn_cmpborn(:,4),kn_cmpborn(:,5),jac)
-     
+     &                kn_cmpborn(:,4),kn_cmpborn(:,5),jac)
         kn_jacreal = kn_jacreal*jac
-              
         
         ! physical phase space jacobian ((2*Pi)**(3n-4), n=2)
         kn_jacborn = kn_jacborn/(2D0*pi)**2
@@ -122,8 +119,6 @@ c and the Jacobi factor for the phase space volume
         vec(2) = 0
         vec(3) = 1
 
-                       
-        
         ! calculate momenta kn_pborn in the laboratory frame
         ! boost kn_cmpborn (CM) -> kn_pborn (lab. frame)
         call mboost(nlegborn-2,vec,beta,kn_cmpborn(0,3),kn_pborn(0,3))
@@ -132,10 +127,10 @@ c and the Jacobi factor for the phase space volume
            kn_pborn(nu,1) = kn_xb1*kn_beams(nu,1)
            kn_pborn(nu,2) = kn_xb2*kn_beams(nu,2)
         enddo
-	
+        
         call check_4conservation(kn_pborn,nlegborn,2,lresult)
         if(.not.lresult) kn_jacborn = 0D0
-	
+        
 #ifdef DEBUG1
         print*,"bjorken x:"
         print*,"kn_xb1 = ", kn_xb1
@@ -168,7 +163,6 @@ c and the Jacobi factor for the phase space volume
         !call check_4conservation(kn_cmpborn,nlegborn) ! MK: commented
         call check_4conservation(kn_pborn,nlegborn,2,lresult)
 #endif
-
       end
 c############### end subroutine born_phsp ##############################
 
@@ -205,7 +199,6 @@ c############### subroutine born_suppression ###########################
         print*, "bornsuppfact = ", fact
         !stop
 #endif
-
       end
 c############### end subroutine born_suppression #######################
 
@@ -275,6 +268,5 @@ c############### subroutine set_fac_ren_scales #########################
 
         muf1 = muref
         mur1 = muref
-
       end
 c############### end subroutine set_fac_ren_scales #####################

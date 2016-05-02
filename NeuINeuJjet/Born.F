@@ -7,15 +7,11 @@ c############### setborn subroutine ####################################
 c sets Born cross section
 c Born contribution:
 c parton parton -> weakino weakino
-
       subroutine setborn(p,bflav,born,bornjk,bmunu)
         implicit none
-
 #include "pwhg_math.h"
 #include "nlegborn.h"
 #include "PhysPars.h"
-
-
         integer bflav(nlegborn)
         double precision p(0:3,nlegborn), bornjk(nlegborn,nlegborn)
         double precision bmunu(0:3,0:3,nlegborn), born, colcf
@@ -49,8 +45,6 @@ c parton parton -> weakino weakino
 
         ! debugging
         integer counter
-     
-
 
         if (init_born) then
            print*
@@ -73,26 +67,21 @@ c parton parton -> weakino weakino
       !    print*,"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
       !    stop
       !  endif
-      
-      
-      
-              !if(verbose) then
+
+        !if(verbose) then
           ! calculate kinematics only for debug purpose
           s = momsum2sq(p(0:3,1), p(0:3,2))
           t = momsum2sq(p(0:3,1),-p(0:3,3))
           u = momsum2sq(p(0:3,2),-p(0:3,3))
         !endif
-	
-	!print*,"~~~~~~~~~~~~~~~~"
-	!print*,"s = ",s
-	!print*,"~~~~~~~~~~~~~~~"
+        
+        !print*,"~~~~~~~~~~~~~~~~"
+        !print*,"s = ",s
+        !print*,"~~~~~~~~~~~~~~~"
 
         ! check four momentum conservation
         call check_4conservation(p, nlegborn, 1, lresult)
-
-              
-
-               
+    
 #if !defined(FORM_BORN) && !defined(MAD_BORN)
         print*,"Error: Preprocessor flag FORM_BORN or"
      &       //" MAD_BORN not set in Makefile."
@@ -101,12 +90,10 @@ c parton parton -> weakino weakino
         
 #if defined(CHECK_FORM_MAD) || defined(FORM_BORN)
 c ---------------------------- Formcalc Born ---------------------------
-
         ! store flavor list, so we can operate on it without
         ! affecting the other program
         flavc = bflav
         pc = p
-
         
         ! calculate the couplings for this PS point
         call set_ebe_couplings
@@ -185,19 +172,17 @@ c ---------------------------- Formcalc Born ---------------------------
         ! final state gluon  
         elseif(((bflav(1).ne.0).and.(bflav(2).ne.0)).and.
      &       (bflav(5).eq.0)) then
-	  symfac = 72    
-	  helicities = 10824014 
-	endif
-        
-        
+          symfac = 72    
+          helicities = 10824014 
+        endif
 
-	       !dd -> neu neu jet 
+        !dd -> neu neu jet 
         if(     ((bflav(1).eq.1 .and. bflav(2).eq.-1) .or.
      &           (bflav(1).eq.-1 .and. bflav(2).eq.1)) .and. 
      &           (bflav(3).eq.1000022 .and. bflav(4).eq.1000022) ) then
-	  call ddbar_n1n1j_squaredME(fc_result, helicities, flags)
+          call ddbar_n1n1j_squaredME(fc_result, helicities, flags)
           goto 20
-       !uu -> neu neu jet
+        !uu -> neu neu jet
         elseif(((bflav(1).eq.-2 .and. bflav(2).eq.2) .or.
      &           (bflav(1).eq.2 .and. bflav(2).eq.-2)) .and. 
      &           (bflav(3).eq.1000022 .and. bflav(4).eq.1000022) ) then
@@ -281,10 +266,7 @@ c ---------------------------- Formcalc Born ---------------------------
      &           (bflav(3).eq.1000022 .and. bflav(4).eq.1000022) ) then
           call dbarg_n1n1j_squaredME(fc_result, helicities, flags)
           goto 20
-
-      
-           
-      
+          
         else
           print*, "ERROR: Wrong flavor structure in subroutine setborn."
           print*, "bflav = ", bflav
@@ -295,27 +277,22 @@ c ---------------------------- Formcalc Born ---------------------------
         
         !fc_result ist set to a small number, preferably machineepsilon
         !because setting it to 0 leads to runtime problems during the
-        !integration part	
-	
+        !integration part        
 
  20   continue
         
         if(fc_result(1).eq.0) then
           fc_result(1) = 1.d-16
-	endif
-	
-	if(fc_result(2).eq.0) then
-	  fc_result(2) = 1.d-16
-	endif
+        endif
         
-       
+        if(fc_result(2).eq.0) then
+          fc_result(2) = 1.d-16
+        endif
         
         born = fc_result(1)/symfac ! take spin and colour factors into account
         fborn = born
 
-       
-        
-	print*,"bflav(1), bflav(2) and born",bflav(1),bflav(2),fborn
+        print*,"bflav(1), bflav(2) and born",bflav(1),bflav(2),fborn
         
         if (verbose) then
           print*, "process: ", bflav
@@ -340,7 +317,6 @@ c ---------------------------- Formcalc Born ---------------------------
         ! restore flavor list
         bflav = flavc
         p = pc
-        
 c ---------------------------- End FormCalc Born -----------------------
 c endif preprocessor condition "if defined(CHECK_FORM_MAD) || defined(FORM_BORN)"
 #endif
@@ -348,7 +324,6 @@ c endif preprocessor condition "if defined(CHECK_FORM_MAD) || defined(FORM_BORN)
 
 #if defined(CHECK_FORM_MAD) || defined(MAD_BORN)
 ! ---------------------------- MadGraph Born ---------------------------
-
         ! store flavor list, so we can operate on it without
         ! affecting the other program
         flavc = bflav
@@ -381,16 +356,10 @@ c endif preprocessor condition "if defined(CHECK_FORM_MAD) || defined(FORM_BORN)
 
         ! restore flavor list
         bflav = flavc 
-        
         p = pc
-        
 c ---------------------------- End Madgraph Born -----------------------
 c endif preprocessor condition "if defined(CHECK_FORM_MAD) || defined(MAD_BORN)"
 #endif
-
-
-
- 
 
 ! If the program calculates both madgraph and formcalc borns (preprocessor flag CHECK_FORM_MAD)
 ! the user can choose which born amplitude powheg should use (formcalc or madgraph)
@@ -434,5 +403,4 @@ c endif preprocessor condition "if defined(CHECK_FORM_MAD) || defined(MAD_BORN)"
 #endif
 
       end
-
 c############### end setborn subroutine ################################
