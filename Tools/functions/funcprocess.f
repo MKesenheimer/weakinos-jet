@@ -186,7 +186,8 @@ c pick SUSY masses relevant for specific initial state
         case(0) ! gluon
           M1 = 0
         case default
-          write(*,*) "encountered unhandled incoming quark ID ", id
+          write(*,*) "funcprocess.f: encountered unhandled incoming "//
+     &               "quark ID ", id
           stop
         end select
         
@@ -207,7 +208,8 @@ c pick SUSY masses relevant for specific initial state
         case(0) !gluon
           M2 = 0
         case default
-          write(*,*) "encountered unhandled incoming quark ID ", id
+          write(*,*) "funcprocess.f: encountered unhandled incoming"//
+     &               " quark ID ", id
           stop
         end select
         

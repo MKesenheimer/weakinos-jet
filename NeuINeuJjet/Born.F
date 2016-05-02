@@ -74,8 +74,7 @@ c parton parton -> weakino weakino
       !    stop
       !  endif
       
-        ! check four momentum conservation
-        call check_4conservation(p, nlegborn, 1, lresult)
+      
       
               !if(verbose) then
           ! calculate kinematics only for debug purpose
@@ -87,7 +86,13 @@ c parton parton -> weakino weakino
 	!print*,"~~~~~~~~~~~~~~~~"
 	!print*,"s = ",s
 	!print*,"~~~~~~~~~~~~~~~"
-    
+
+        ! check four momentum conservation
+        call check_4conservation(p, nlegborn, 1, lresult)
+
+              
+
+               
 #if !defined(FORM_BORN) && !defined(MAD_BORN)
         print*,"Error: Preprocessor flag FORM_BORN or"
      &       //" MAD_BORN not set in Makefile."
@@ -278,35 +283,39 @@ c ---------------------------- Formcalc Born ---------------------------
           goto 20
 
       
+           
       
         else
           print*, "ERROR: Wrong flavor structure in subroutine setborn."
           print*, "bflav = ", bflav
           stop
-          fc_result(1) = 1.d-15
-          fc_result(2) = 1.d-15
+          fc_result(1) = 1.d-16
+          fc_result(2) = 1.d-16
         endif
         
         !fc_result ist set to a small number, preferably machineepsilon
         !because setting it to 0 leads to runtime problems during the
-        !integration part
-        
-        if(fc_result(1).eq.0) then
-          fc_result(1) = 1.d-15
-	endif
-	
-	if(fc_result(2).eq.0) then
-          fc_result(2) = 1.d-15
-	endif
-	
+        !integration part	
 	
 
  20   continue
         
+        if(fc_result(1).eq.0) then
+          fc_result(1) = 1.d-16
+	endif
+	
+	if(fc_result(2).eq.0) then
+	  fc_result(2) = 1.d-16
+	endif
+        
+       
+        
         born = fc_result(1)/symfac ! take spin and colour factors into account
         fborn = born
 
-
+       
+        
+	print*,"bflav(1), bflav(2) and born",bflav(1),bflav(2),fborn
         
         if (verbose) then
           print*, "process: ", bflav
@@ -380,20 +389,7 @@ c endif preprocessor condition "if defined(CHECK_FORM_MAD) || defined(MAD_BORN)"
 #endif
 
 
-#ifdef CHECK_FORM_MAD
-        ! compare the formcalc and madgraph amplitudes  !error : 1d-09
-        if( (abs((fborn - mborn)/(fborn + mborn)) > 2) ) then ! the relative error is probably larger for smaller amplitudes
-          print*, "Error: formcalc and madgraph borns are too different"
-          print*, "in process: ", bflav
-          print*, "born (formcalc) = ", fborn
-          print*, "born (madgraph) = ", mborn
-          print*, "rel. err. = ", abs((fborn - mborn)/(fborn + mborn))
-          print*
-          print*, "Check input parameters or spin and colour factors in"
-     &          //" formcalc amplitudes."
-          stop
-        endif
-#endif
+
  
 
 ! If the program calculates both madgraph and formcalc borns (preprocessor flag CHECK_FORM_MAD)
@@ -405,7 +401,21 @@ c endif preprocessor condition "if defined(CHECK_FORM_MAD) || defined(MAD_BORN)"
         born = fborn
 #endif
 
-
+#ifdef CHECK_FORM_MAD
+        ! compare the formcalc and madgraph amplitudes  !error : 1d-09
+        if( (abs((fborn - mborn)/(fborn + mborn)) > 2) ) then ! the relative error is probably larger for smaller amplitudes
+          print*, "Error: formcalc and madgraph borns are too different"
+          print*, "in process: ", bflav
+          print*, "born (formcalc) = ", fborn
+          print*, "born (madgraph) = ", mborn
+          print*, "born (used)     = ", born
+          print*, "rel. err. = ", abs((fborn - mborn)/(fborn + mborn))
+          print*
+          print*, "Check input parameters or spin and colour factors in"
+     &          //" formcalc amplitudes."
+          stop
+        endif
+#endif
 
 #ifdef DEBUG1
         if(counter < 10) then
