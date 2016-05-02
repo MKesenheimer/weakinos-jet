@@ -206,7 +206,7 @@ c requires encoded process ID in lprup(1)
           print*,"par_Zmass: ",par_Zmass
           print*,"par_Wmass: ",par_Wmass
           print*,"par_Zwidth: ",par_Zwidth
-          print*,"par_Wwidth: ",par_Wwidth
+          
           print*,"par_Zmass2: ",par_Zmass2
           print*,"par_Wmass2: ",par_Wmass2
           print*,"par_Fin1mass: ",par_Fin1mass
@@ -282,7 +282,7 @@ c set the madgraph and formcalc couplings event by event
 #ifdef DEBUGQ
         print*,"AlfaS: ", AlfaS
         print*,"Alfa:  ", Alfa
-        stop
+        !stop
 #endif
         return
       end
@@ -306,7 +306,7 @@ c sets the PhysPars.h parameters
         integer error
         character*100 slhafilename
         ! final state IDs
-        integer id_fin1, id_fin2
+        integer id_fin1, id_fin2, id_fin3
         ! weinberg angle
         double precision sinW
         
@@ -319,6 +319,7 @@ c sets the PhysPars.h parameters
         par_Wwidth   = invalid
         par_Fin1mass = invalid
         par_Fin2mass = invalid
+
 
         ! get SLHA filename
         call powheginputstring("SLHA",slhafilename)
@@ -344,7 +345,8 @@ c sets the PhysPars.h parameters
           endif
           print*
         enddo
-        stop
+        !stop
+        !i need it to continue
 #endif
 
         ! SM parameters from SLHA-file
@@ -416,7 +418,7 @@ c sets the PhysPars.h parameters
           case (2000011) ! slepton+
             par_Fin1mass = dreal(Mass_MSf(2,2,1))  
           case default
-            write(*,*) "encountered unknown particle ID ", id_fin1
+            write(*,*) "encountered unknown particle ID for fin1 ", id_fin1
             stop
         end select
         select case(abs(id_fin2))
@@ -435,11 +437,11 @@ c sets the PhysPars.h parameters
           case (2000011) ! slepton-
             par_Fin2mass = dreal(Mass_MSf(2,2,1))
           case default
-            write(*,*) "encountered unknown particle ID ", id_fin2
+            write(*,*) "encountered unknown particle ID for fin2", id_fin2
             stop
         end select
+
         
-        if( (dabs(par_Fin1mass) + dabs(par_Fin2mass)) .lt. par_Zmass )
      &  then
           print*, "Error: Final state masses low, W/Z decays might "//
      &            "be more suitable"
@@ -544,8 +546,12 @@ c version.
         print*, "sd_L width =", par_Sfwidth(1,4,1)
         print*, "sd_R width =", par_Sfwidth(2,4,1)
         print*, "go width   =", par_Glwidth
-        stop
+        !stop
+        !continue pls
 #endif
+     &       (par_Fin2mass .eq. invalid)) then
+     
+          
       end
 c############### end subroutine set_phys_params ########################
 

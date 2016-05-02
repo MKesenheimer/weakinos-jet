@@ -28,6 +28,17 @@ c and the Jacobi factor for the phase space volume
         integer nu
         ! check 4-momentum conservation
         logical lresult
+        !local variable for propagator momentum
+        double precision kn_prop(0:3)
+
+        !added for debugging purposes
+        !particle flavors, distrust that particular flavour ?
+        integer bflav(nlegborn)
+        !mandelstam s
+        double precision s
+         ! function to calculate the squared momentum sum
+        double precision momsq, momsum3sq, momsum2sq
+        external momsq, momsum2sq, momsum3sq
 
         ! reset the jacobians
         jac = 1D0
@@ -47,8 +58,8 @@ c and the Jacobi factor for the phase space volume
         kn_masses(4) = dabs(par_Fin2mass)
         kn_masses(5) = 0d0
 
-        ! lower bound on the mass of the final state
-        kn_minmass = kn_masses(3) + kn_masses(4)
+        ! lower bound on the mass of the final state 2->3 process
+        kn_minmass = kn_masses(3) + kn_masses(4) + kn_masses(5)
 
 
 #ifdef DEBUG1
@@ -81,9 +92,24 @@ c and the Jacobi factor for the phase space volume
         ! calculates the Jacobi factor for the phase space volume
         ! we don't want to integrate over phi, so we provide 0 for xphi
         ! (see phi1_2.f)
-        call R2phsp(xborn(3),0D0,kn_masses(3),kn_masses(4),p12,
-     &               kn_cmpborn(:,3),kn_cmpborn(:,4),jac)
-        kn_jacborn = kn_jacborn*jac
+        
+	! subroutine R2phsp_s2(psgen,x2,xth,xphi,s2min,m1,bwmass,bwwidth,
+        ! &                     p0,p1,p2,jac)
+	
+	call R2phsp_s2(0,xborn(1),xborn(2),xborn(3),
+     &		0D0,
+     &		kn_masses(3),0D0,0D0,p12,kn_cmpborn(:,3),kn_prop,jac)
+ 
+        kn_jacreal = kn_jacreal*jac
+
+
+        !subroutine R2phsp(xth,xphi,m1,m2,p0,p1,p2,jac)
+        
+        call R2phsp(xborn(1),0D0,kn_masses(4),kn_masses(5),kn_prop,
+     &		kn_cmpborn(:,4),kn_cmpborn(:,5),jac)
+     
+        kn_jacreal = kn_jacreal*jac
+              
         
         ! physical phase space jacobian ((2*Pi)**(3n-4), n=2)
         kn_jacborn = kn_jacborn/(2D0*pi)**2
@@ -96,6 +122,8 @@ c and the Jacobi factor for the phase space volume
         vec(2) = 0
         vec(3) = 1
 
+                       
+        
         ! calculate momenta kn_pborn in the laboratory frame
         ! boost kn_cmpborn (CM) -> kn_pborn (lab. frame)
         call mboost(nlegborn-2,vec,beta,kn_cmpborn(0,3),kn_pborn(0,3))
@@ -104,11 +132,10 @@ c and the Jacobi factor for the phase space volume
            kn_pborn(nu,1) = kn_xb1*kn_beams(nu,1)
            kn_pborn(nu,2) = kn_xb2*kn_beams(nu,2)
         enddo
-
-        ! check four momentum conservation
+	
         call check_4conservation(kn_pborn,nlegborn,2,lresult)
         if(.not.lresult) kn_jacborn = 0D0
-
+	
 #ifdef DEBUG1
         print*,"bjorken x:"
         print*,"kn_xb1 = ", kn_xb1
@@ -124,14 +151,24 @@ c and the Jacobi factor for the phase space volume
         print*,"kn_pborn(2) = ", kn_pborn(:,2)
         print*,"kn_pborn(3) = ", kn_pborn(:,3)
         print*,"kn_pborn(4) = ", kn_pborn(:,4)
+        print*,"kn_pborn(5) = ", kn_pborn(:,5)
         print*,"center of mass frame:"
         print*,"kn_cmpborn(1) = ", kn_cmpborn(:,1)
         print*,"kn_cmpborn(2) = ", kn_cmpborn(:,2)
         print*,"kn_cmpborn(3) = ", kn_cmpborn(:,3)
         print*,"kn_cmpborn(4) = ", kn_cmpborn(:,4)
-#endif
-      end
-
+        print*,"kn_cmpborn(5) = ", kn_cmpborn(:,5)
+        print*,"kn_prop(cm system?) = ", kn_prop
+        print*," "
+        print*,"four momentum check in lab frame:"
+        !call check_4conservation(kn_pborn,nlegborn) ! MK: commented
+        call check_4conservation(kn_pborn,nlegborn,2,lresult)
+        print*," "
+        print*,"four momentum check in cm frame:"
+        !call check_4conservation(kn_cmpborn,nlegborn) ! MK: commented
+        call check_4conservation(kn_pborn,nlegborn,2,lresult)
+      
+	
 c############### end subroutine born_phsp ##############################
 
 c############### subroutine born_suppression ###########################

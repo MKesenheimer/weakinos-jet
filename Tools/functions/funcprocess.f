@@ -96,9 +96,7 @@ c verbose = 4: No output at all, but set the variable lresult
         ! check up to single precision of incoming energy
         eps = 1d-10*pi(0)
         
-        ! reset the variable "first" if this routine gets called with
-        ! a higher verbosity level
-        if(verbose.gt.0) first = .true.
+#ifdef DEBUGQ
 
         if( first .and.(
      &      (dabs(pi(0) - pf(0)) .gt. dabs(eps)) .or.
@@ -144,11 +142,12 @@ c pick SUSY masses relevant for specific initial state
       subroutine set_process(id, M1, M2, M3, M4)
         implicit none
 #include "PhysPars.h"
-        integer id(4)
+        integer id(5)
         double precision M1, M2, M3, M4
         
         M3 = par_Fin1mass
         M4 = par_Fin2mass
+
         
         select case(abs(id(1)))
         case(1) ! d
@@ -186,7 +185,7 @@ c pick SUSY masses relevant for specific initial state
           print*, "top quarks not implemented yet."
           stop
         case(0) !gluon
-          M1 = 0
+          M2 = 0
         case default
           write(*,*) "encountered unhandled incoming quark ID ", id
           stop
@@ -198,6 +197,7 @@ c pick SUSY masses relevant for specific initial state
         print*,"M2",M2
         print*,"M3",M3
         print*,"M4",M4
+   
 #endif
       end
 c############### end subroutine set_squark_params ######################

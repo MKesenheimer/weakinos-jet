@@ -109,7 +109,8 @@ c
       print*, "[DEBUG] bwmix  = ", bwmix
       print*, "[DEBUG] uumix  = ", uumix
       print*, "[DEBUG] vvmix  = ", vvmix
-      stop
+      !stop
+      !continue pls
 #endif
      
       sin2w  = One-(wm/zmass)**2
@@ -220,7 +221,8 @@ c
       print*, "[DEBUG] wb2    = ", wb2
       print*, "[DEBUG] wt1    = ", wt1
       print*, "[DEBUG] wt2    = ", wt2
-      stop
+      !stop
+      !continue pls
 #endif
       
 ! Set Higgs couplings manually to zero
