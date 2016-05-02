@@ -12,6 +12,7 @@ c requires encoded process ID in lprup(1)
 #include "pwhg_st.h"
 #include "pwhg_math.h"
 #include "nlegborn.h"
+#include "osres.h"
         double precision powheginput
         external powheginput
         ! final state IDs
@@ -81,7 +82,7 @@ c requires encoded process ID in lprup(1)
         ! set general MadGraph couplings
         call set_general_couplings(id_fin1,id_fin2)
         ! set the parameters for treating the on-shell resonances
-        !call set_osres_params
+        call set_osres_params
 
 
         ! Print out all parameters if you want
@@ -100,7 +101,7 @@ c requires encoded process ID in lprup(1)
           print*, "final state masses = ", par_Fin1mass
           print*, "                     ", par_Fin2mass
           print*
-          !print*, "OS regulator WREG = ", wreg
+          print*, "OS regulator WREG = ", wreg
           print*        
 #ifdef DEBUGQ
           print*
@@ -823,3 +824,54 @@ c ddbar_SquaredME.F and uubar_SquaredME.F.
         return
       end
 c############### end init_susy_restore subroutine ######################
+
+c############### subroutine set_osres_params ###########################
+c set the paramaters for treating the on-shell resonances
+      subroutine set_osres_params
+        implicit none
+#include "PhysPars.h"
+#include "osres.h"
+        integer i
+        double precision m_avrg, ewi
+        double precision powheginput
+        external powheginput
+
+        osresM(1) = mdl
+        osresM(2) = mdl
+        osresM(3) = mul
+        osresM(4) = mul
+#ifdef NINJ
+        osresM(5) = mdr
+        osresM(6) = mdr
+        osresM(7) = mur
+        osresM(8) = mur
+#endif
+        
+#if defined(DSUB_I) || defined(DSUB_II) || defined(DSUB_II_TEST)
+        m_avrg = 0D0
+        do i=1,nosres
+          m_avrg = m_avrg + osresM(i)
+        enddo
+        m_avrg = m_avrg/nosres
+
+        ! set the width of the immediate particle (regulator wreg)
+        ewi  = 1D-2 ! (default)
+        if(powheginput("#ewi").gt.0) then
+          ewi = powheginput("ewi")
+        endif
+        wreg = ewi*m_avrg ! Prospino like definition
+#else
+        wreg = 0D0
+#endif
+
+        
+#ifdef DEBUGQ
+        print*,"wreg : ", wreg
+        do i=1,nosres
+          print*,"osresID: ", osresID(i)
+          print*,"osresM : ", osresM(i)
+        enddo 
+        stop
+#endif
+      end
+c############### end subroutine set_osres_params #######################

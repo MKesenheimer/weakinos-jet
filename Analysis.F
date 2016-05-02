@@ -14,9 +14,9 @@ c book all histograms, will be filled later
         double precision powheginput
         external powheginput
         double precision mm, mp, ptm, ptp, ptjm, ptjp, em, ep, ym, yp
-        double precision mdm, mdp, ptdm, ptdp
+        double precision mdm, mdp, ptdm, ptdp, edm, edp
         double precision phim, phip
-        integer n1, n2
+        integer n1, n2, n3
         character*4 cstr(ndecay)
         data cstr/"dec1","dec2","dec3","dec4"/
         ! correlations
@@ -55,31 +55,35 @@ c book all histograms, will be filled later
           
         ! number of bins
         n1 = 80
-        ! mass(A+B)
+        ! mass(A+B), binwidth = 10GeV
         mm = dabs(par_Fin1mass) + dabs(par_Fin2mass)
         mp = mm + 800D0
-        ! Pt(A), Pt(B)
+        ! Pt(A), Pt(B), Pt(miss), binwidth = 10GeV
         ptm = 0D0
-        ptp = ptm + 504D0
-        ! Pt(J)
+        ptp = ptm + 800D0
+        ! Pt(J), binwidth = 2.5GeV
         ptjm = 0D0
-        ptjp = ptjm + 100D0
-
+        ptjp = ptjm + 200D0
+        ! Pt(decI), binwidth = 10GeV
+        ptdm = 0D0
+        ptdp = ptdm + 800D0
+        
         ! number of bins
         n2 = 40
-        ! eta(A)
-        em = -3D0
-        ep = em + 6D0
-        ! y(A)
+        n3 = 48
+        ! eta(A), eta(B), eta(J), binwidth = 0.25
+        em = -5D0
+        ep = em + 10D0
+        ! eta(decI), binwidth = 0.125
+        edm = -3D0
+        edp = edm + 6D0
+        ! y(A), binwidth = 0.2
         ym = -4D0
         yp = ym + 8D0
-        ! mass(decI+decJ)
+        ! mass(decI+decJ), binwidth = 2.5GeV
         mdm = 0D0
         mdp = mdm + 200D0
-        ! Pt(decI)
-        ptdm = 0D0
-        ptdp = ptm + 500D0
-        ! dPhi(decI+decJ)
+        ! dPhi(decI+decJ), binwidth = 2pi/40 ~ 0.15708
         phim = -pi
         phip = pi
 
@@ -114,9 +118,9 @@ c book all histograms, will be filled later
      &                     (mdp-mdm)/n1,mdm,mdp)
           do i=1,ndecay
             call bookupeqbins("Pt("//cstr(i)//")",
-     &                       (ptdp-ptdm)/n2,ptdm,ptdp)
+     &                       (ptdp-ptdm)/n1,ptdm,ptdp)
             call bookupeqbins("eta("//cstr(i)//")",
-     &                       (ep-em)/n2,em,ep)
+     &                       (edp-edm)/n3,edm,edp)
           enddo
           ! decay cuts
           call bookupeqbins("xsec(Dcuts)",1d0,-0.5d0,0.5d0)
@@ -127,9 +131,9 @@ c book all histograms, will be filled later
           call bookupeqbins("Pt(miss)",(ptp-ptm)/n1,ptm,ptp)
           do i=1,ndecay
             call bookupeqbins("Pt("//cstr(i)//",Dcuts)",
-     &                       (ptdp-ptdm)/n2,ptdm,ptdp)
+     &                       (ptdp-ptdm)/n1,ptdm,ptdp)
             call bookupeqbins("eta("//cstr(i)//",Dcuts)",
-     &                       (ep-em)/n2,em,ep)
+     &                       (edp-edm)/n3,edm,edp)
           enddo
         endif
       end
@@ -175,20 +179,21 @@ c calculate quantities that shall be plotted and fill histograms
         ! decay list of finA and finB
         integer ihep_decchainA(nhep,0:2), ihep_decchainB(nhep,0:2)
         integer num_decchainA, num_decchainB
+        ! the considered decay chains
+        character*100 str_user_decchainA, str_user_decchainB
+        integer user_decchainA(100,0:2), user_decchainB(100,0:2)
+        save user_decchainA, user_decchainB
+        integer nmothersA, nmothersB
+        save nmothersA, nmothersB
+        integer nmatchA, nmatchB
         ! decays
         ! number of decay products to consider
         integer ndecay
         parameter (ndecay = 4)
         ! IDs of decay products
-        ! iid_dec: saves the user requested order of decay products
-        integer id_dectemp(ndecay)
-        integer id_dec(ndecay), iid_dec(ndecay)
-        save id_dec, iid_dec
-        ! total number of decay products in final state (w/ channel A and B)
-        integer nfinal, nfinalA, nfinalB
-        save nfinal
+        integer id_dec(ndecay)
+        save id_dec
         ! momenta, pt, eta, y of decay products
-        double precision ptemp(0:3,ndecay) ! temporary momenta
         double precision p_dec(0:3,ndecay), pt_dec(ndecay)
         double precision eta_dec(ndecay), y_dec(ndecay)
         double precision phi_dec(ndecay), dphi_decIdecJ
@@ -199,34 +204,39 @@ c calculate quantities that shall be plotted and fill histograms
         ! handling the decays
         character*4 cstr(ndecay)
         data cstr/"dec1","dec2","dec3","dec4"/
-        ! decay switch (which decay process do we want to observe? see below)
-        integer sdec
-        save sdec
         ! counter to keep track how many decays and cuts have took place
         ! is used to determine the branching ratios of the decays
-        integer counter_decays, counter_dcuts(ndecay)
-        save counter_decays, counter_dcuts
+        integer cnt_decays_tot, cnt_decays(ndecay), cnt_decays_proc
+        save cnt_decays_tot, cnt_decays, cnt_decays_proc
+        ! acces the branching corrected ratios of PYTHIA (this is set in setup-PYTHIA-lhef.f)
+        double precision bratio
+        common/pybratio/bratio
         ! variables for missing energy
-        double precision p_miss(0:3), pt_miss
+        double precision p_miss(0:3), pt_miss, pt_miss1
         ! cuts
         ! ptJmin is a technical cut
-        double precision mJmin
+        integer mJmin
         double precision ptJmin, etaJmax, R
         common /jetcuts/ptJmin, etaJmax, R
+        ! physical Jet Cuts
+        double precision ptJminPhys
         ! decay cuts
         double precision RDsepmin
         double precision RDmin(ndecay), RDsep(ndecay,ndecay)
         double precision ptDmin, etaDmax
         double precision ptmissmin
         save ptDmin, etaDmax
-        logical JcutsPassed, DcutsPassed(0:ndecay)
+        logical JcutsPassed, DcutsPassed
         ! flags for decay
         logical fdecA, fdecB, decayed
         save fdecA, fdecB, decayed
         ! number of events processed
         integer nevents
         ! indices
-        integer mu, i, j
+        integer mu, i, j        
+        ! debug
+        logical isvetoed
+        isvetoed = .true.
 
         ! at first call
         if (ini) then
@@ -249,34 +259,33 @@ c calculate quantities that shall be plotted and fill histograms
           do i=1,ndecay
             id_dec(i) = int(powheginput(cstr(i))) ! if zero: don't observe this decay
           enddo
-          ! number of finale states, this is used to determine the 
-          ! correct decay channel.
-          if(powheginput("#nfinal").gt.0) then
-            nfinal = powheginput("nfinal")
-          else
-            print*, "Warning in Analysis.F: nfinal not found:"//
-     &              " using default value 6..."
-            nfinal = 6
-          endif
-          ! switch to distinguish different combinations of decay IDs
-          ! sdec = 0: all decay IDs are different
-          ! sdec = 1: two decay IDs are the same, the other different
-          ! sdec = 2: two pairs
-          ! sdec = 3: three decay IDs are the same
-          ! ...
-          ! sdec = 1/2(ndecay-1)(ndecay): all decay IDs are the same 
-          sdec = 0
-          do i=1,ndecay
-            do j=i+1,ndecay
-              if(id_dec(i).ne.0 .and. id_dec(i).eq.id_dec(j)) then
-                sdec = sdec + 1
-              endif
-            enddo
+          ! the considered decay chain
+          call powheginputstring("chainA",str_user_decchainA)
+          call store_decchain(str_user_decchainA,user_decchainA)
+          call powheginputstring("chainB",str_user_decchainB)
+          call store_decchain(str_user_decchainB,user_decchainB)
+          ! count the number of mothers in the user_decchainA
+          nmothersA = 0
+          nmothersB = 0
+          do i=1,nhep
+            if(user_decchainA(i,0) .ne. 0) then
+              nmothersA = nmothersA + 1
+            else
+              exit
+            endif  
+          enddo
+          do i=1,nhep
+            if(user_decchainB(i,0) .ne. 0) then
+              nmothersB = nmothersB + 1
+            else
+              exit
+            endif  
           enddo
           ! init the counters
-          counter_decays = 1 ! to not divide by zero
+          cnt_decays_tot = 1 ! to not divide by zero
+          cnt_decays_proc = 0
           do i=1,ndecay
-            counter_dcuts(i) = 0
+            cnt_decays(i) = 0
           enddo
           ! extract final state types from process id
           call decode_pair(lprup(1),id_finA,id_finB)
@@ -304,11 +313,13 @@ c calculate quantities that shall be plotted and fill histograms
         ! should not be in if(ini)... since we want to make sure
         ! that the variables are always filled
         ! jet cuts
-        mJmin    = 1D0
+        mJmin    = 1
         ptJmin   = 1D0
         etaJmax  = 4.5D0
         R        = 0.4D0
         mjets    = 40
+        ! physical pt_Jet cut (for pt_miss)
+        ptJminPhys = 20D0
         ! lepton cuts
         ptDmin   = 10D0 ! physical cut
         etaDmax  = 2.5D0
@@ -322,7 +333,8 @@ c calculate quantities that shall be plotted and fill histograms
           print*, "cuts in analysis routines"
           print*
           print*, "cuts (jet):"
-          print*, "hardest jet   p_t >",ptJmin," GeV"
+          print*, "hardest jet p_t (selection) >",ptJmin," GeV"
+          print*, "hardest jet p_t (physical)  >",ptJminPhys," GeV"
           print*, "hardest jet |eta| <",etaJmax
           print*, "radius parameter R = ",R
           print*
@@ -395,21 +407,15 @@ c calculate quantities that shall be plotted and fill histograms
         ! find out if allowed decay took place
         call isdecayed(id_finA,fdecA)
         call isdecayed(id_finB,fdecB)
-        if (fdecA.or.fdecB) then
+        if (fdecA.and.fdecB) then
           decayed = .true.
-          counter_decays = counter_decays + 1
+          cnt_decays_tot = cnt_decays_tot + 1
         else
           decayed = .false.
         endif
         
         ! handle the decay products
         if(decayed) then
-c choose:
-c determine the momenta of the decay products via pt ordering (mostly untested): PTORDERED
-c or use the ihep list filled by pythia to get the momenta: IHEPSEARCH
-c#define PTORDERED
-#define IHEPSEARCH
-#ifdef IHEPSEARCH
           ! store the whole decay chain of the final states in an array 
           ! and search for the decay products we want
           call getihep(id_finA,2,.true.,ihep_finA)
@@ -446,68 +452,123 @@ c#define PTORDERED
               num_decchainB = 0
             endif  
           enddo
+          
           ! reset
           p_dec(:,:) = 0D0
-          nfinalA = 0
-          nfinalB = 0
-          ! now check if there are the requested particles in the 
-          ! decay chain.
+          nmatchA = 0
+          nmatchB = 0
+          
+          do i=1,nhep-num_decchainA
+          do j=1,nmothersA
+            ! if the mothers are the same, check the daughters
+            if(idhep(ihep_decchainA(i,0)).eq.user_decchainA(j,0)) then
+              if((idhep(ihep_decchainA(i,1)).eq.user_decchainA(j,1).and.
+     &            idhep(ihep_decchainA(i,2)).eq.user_decchainA(j,2)).or.
+     &           (idhep(ihep_decchainA(i,1)).eq.user_decchainA(j,2).and.
+     &            idhep(ihep_decchainA(i,2)).eq.user_decchainA(j,1)))
+     &           then
+                   nmatchA = nmatchA + 1
+              endif  
+            endif  
+          enddo
+          enddo
+
+          do i=1,nhep-num_decchainB
+          do j=1,nmothersB
+            ! if the mothers are the same, check the daughters
+            if(idhep(ihep_decchainB(i,0)).eq.user_decchainB(j,0)) then
+              if((idhep(ihep_decchainB(i,1)).eq.user_decchainB(j,1).and.
+     &            idhep(ihep_decchainB(i,2)).eq.user_decchainB(j,2)).or.
+     &           (idhep(ihep_decchainB(i,1)).eq.user_decchainB(j,2).and.
+     &            idhep(ihep_decchainB(i,2)).eq.user_decchainB(j,1)))
+     &           then
+                   nmatchB = nmatchB + 1
+              endif  
+            endif  
+          enddo
+          enddo
+          
+          ! now check if the requested particles are in the decay chain.
           ! remember: dec1 and dec2 are assumed to be daughters of finA,
           ! dec3 and dec4 are assumed to be daughters of finB
           do i=1,nhep-num_decchainA
-            ! count the number of stable decay products
-            if(idhep(ihep_decchainA(i,0)).ne.0 .and.
-     &         isthep(ihep_decchainA(i,0)).eq.1 ) then
-              nfinalA = nfinalA + 1
-            endif
             ! if the momentum of the first decay particle was not already
             ! assigned and the ihep pdg number is equal to the 
             ! requested decay number id_dec
             if(p_dec(0,1).eq.0D0 .and.
      &         idhep(ihep_decchainA(i,0)).eq.id_dec(1)) then
               call get4momentum_ihep(ihep_decchainA(i,0),p_dec(:,1))
+              isvetoed = .false.
             endif
             ! same for second decay product
             if(p_dec(0,2).eq.0D0 .and.
      &         idhep(ihep_decchainA(i,0)).eq.id_dec(2)) then
               call get4momentum_ihep(ihep_decchainA(i,0),p_dec(:,2))
+              isvetoed = .false.
             endif
           enddo
           ! decay chain of final state particle B
           do i=1,nhep-num_decchainB
-            ! count the number of stable decay products
-            if(idhep(ihep_decchainB(i,0)).ne.0 .and.
-     &         isthep(ihep_decchainB(i,0)).eq.1) then
-              nfinalB = nfinalB + 1
-            endif
             ! if the momentum of the first decay particle was not already
             ! assigned and the ihep pdg number is equal to the 
             ! requested decay number id_dec
             if(p_dec(0,3).eq.0D0 .and.
      &         idhep(ihep_decchainB(i,0)).eq.id_dec(3)) then
               call get4momentum_ihep(ihep_decchainB(i,0),p_dec(:,3))
+              isvetoed = .false.
             endif
             ! same for second decay product
             if(p_dec(0,4).eq.0D0 .and.
      &         idhep(ihep_decchainB(i,0)).eq.id_dec(4)) then
               call get4momentum_ihep(ihep_decchainB(i,0),p_dec(:,4))
+              isvetoed = .false.
             endif
           enddo
-          ! if the number of requested decay IDs is not the sum of the
-          ! number of reconstructed decay IDs, sort out the event
-          if((nfinalA+nfinalB).ne.nfinal) then
-            !print*,"vetoed",nfinalA+nfinalB,nfinal
-            !print*
-            p_dec(:,:) = 0D0
-          endif  
-#ifdef DEBUGQ
-          if(p_dec(0,1).ne.0D0 .or. p_dec(0,2).ne.0D0) then
-          print*,"Decay chain of A", id_finA
-          print*,id_finA,p_finA
-          do i=1,2
-          if(p_dec(0,i).ne.0D0) then
-          print*,id_dec(i),p_dec(:,i)
+          ! check if the decay chain matches
+          if(nmothersA.ne.nmatchA) then
+            p_dec(:,1:2) = 0D0
+            isvetoed = .true.
           endif
+          if(nmothersB.ne.nmatchB) then
+            p_dec(:,3:4) = 0D0
+            isvetoed = .true.
+          endif 
+          ! increment the counter of how many decays took place
+          ! this is used to calculate the branching ratio
+          ! do this before cuts are applied
+          do i=1,ndecay
+            ! number of decays of individual particles
+            if(p_dec(0,i).ne.0D0) then
+              cnt_decays(i) = cnt_decays(i) + 1
+            endif
+          enddo
+          ! number of decays with correct final state particles
+          if(p_dec(0,1).ne.0D0 .and. p_dec(0,2).ne.0D0 .and.
+     &       p_dec(0,3).ne.0D0 .and. p_dec(0,4).ne.0D0) then
+            cnt_decays_proc = cnt_decays_proc + 1
+          endif
+          ! final test: check if we have the correct decay channel
+          ! p_dec is only filled if the requested particle was found
+          ! in the decay chain
+          ! (all requested momenta must be filled)
+          ! if the decay ID is not specified in powheg.input, don't
+          ! take its momentum into account
+          do i=1,ndecay
+            if(p_dec(0,i).eq.0D0 .and. id_dec(i).ne.0) then
+              p_dec(:,:) = 0D0
+              isvetoed = .true. 
+            endif
+          enddo
+
+#ifdef DEBUGQ
+          if(.not.isvetoed) then
+          print*,"number of good decays: ",cnt_decays_proc
+          print*,"number of total decays: ",cnt_decays_tot
+          print*,"BR of total process: ",real(cnt_decays_proc)/real(cnt_decays_tot)
+          print*,"Decay chain of A", id_finA
+          !print*,id_finA,p_finA
+          do i=1,2
+          !print*,id_dec(i),p_dec(:,i)
           enddo
           do j=1,nhep-num_decchainA
           if(idhep(ihep_decchainA(j,0)) .ne. 0) then
@@ -515,15 +576,11 @@ c#define PTORDERED
      &       idhep(ihep_decchainA(j,1)),idhep(ihep_decchainA(j,2))
           endif
           enddo
-          print*
-          endif
-          if(p_dec(0,3).ne.0D0 .or. p_dec(0,4).ne.0D0) then
+
           print*,"Decay chain of B", id_finB
-          print*,id_finB,p_finB
+          !print*,id_finB,p_finB
           do i=3,4
-          if(p_dec(0,i).ne.0D0) then
-          print*,id_dec(i),p_dec(:,i)
-          endif
+          !print*,id_dec(i),p_dec(:,i)
           enddo
           do j=1,nhep-num_decchainB
           if(idhep(ihep_decchainB(j,0)) .ne. 0) then
@@ -533,100 +590,6 @@ c#define PTORDERED
           enddo
           print*
           endif
-#endif
-#endif
-#ifdef PTORDERED
-          ! sort the momenta of the decay products by pt and get the
-          ! largest contributions -> the decay products with largest pt
-          ! are the one we want
-          ! Note: these routines to assign pt ordered momenta to the 
-          ! decay products are totally general. It is straight forward
-          ! to extend these routines to five or more decay products,
-          ! though the algorithm gets a bit more complicated.
-          ! The idea is the following: We sort the momenta for every
-          ! particle ID by pt. The particles with the largest pt are
-          ! the decay products. If we have two or more particles with
-          ! the same ID (say id_dec(1) = 11 and id_dec(2) = 11), the 
-          ! particle with id_dec(1) gets the momentum with largest pt
-          ! and the particle with id_dec(2) gets the momentum with
-          ! second largest pt.
-          ! TODO: optimize with invariant mass reconstruction of mother!
-          ! book keeping: sort the decay IDs in decreasing order, but 
-          ! ignore zeros, this simplifies the following momenta assignment
-          do i=1,ndecay
-            ! sort zero entries to the end of the list    
-            if(id_dec(i).eq.0) id_dec(i) = -999
-          enddo  
-          ! sort list id_dec and keep track of sorting in list iid_dec
-          call sortit(id_dec,iid_dec,ndecay)
-          do i=1,ndecay
-            ! replace -999 with zero   
-            if(id_dec(i).eq.-999) id_dec(i) = 0
-          enddo
-          ! first assign the largest pt for every particle ID...
-          do i=1,ndecay
-            call get4momentum_sortedpt(id_dec(i),1,p_dec(:,i))
-          enddo
-          ! ... then overwrite:
-          ! all decay IDs are the same
-          if(sdec.eq.((ndecay-1)*(ndecay)/2)) then
-            do i=1,ndecay
-              call get4momentum_sortedpt(id_dec(i),i,p_dec(:,i))
-            enddo
-          endif
-          ! one pair
-          ! since the list id_dec(i) is sorted, the two IDs must be next to each other
-          if(sdec.eq.1) then
-            do i=1,ndecay-1
-              if(id_dec(i).eq.id_dec(i+1)) then
-                call get4momentum_sortedpt(id_dec(i),1,p_dec(:,i))     ! largest Pt
-                call get4momentum_sortedpt(id_dec(i+1),2,p_dec(:,i+1)) ! second largest Pt
-              endif  
-            enddo
-          endif
-          ! two pairs
-          if(sdec.eq.2) then
-            ! (no loops for ndecay = 4, but for arbitrary number > 4)
-            do i=1,ndecay-3
-              do j=i+2,ndecay-1
-                if((id_dec(i).eq.id_dec(i+1)) .and. 
-     &             (id_dec(j).eq.id_dec(j+1))) then
-                  call get4momentum_sortedpt(id_dec(i),1,p_dec(:,i))     ! largest Pt
-                  call get4momentum_sortedpt(id_dec(i+1),2,p_dec(:,i+1)) ! second largest Pt
-                  call get4momentum_sortedpt(id_dec(j),1,p_dec(:,j))     ! largest Pt
-                  call get4momentum_sortedpt(id_dec(j+1),2,p_dec(:,j+1)) ! second largest Pt
-                endif
-              enddo
-            enddo  
-          endif
-          ! three are equal
-          if(sdec.eq.3) then
-            do i=1,ndecay-2
-              if((id_dec(i).eq.id_dec(i+1)) .and. 
-     &           (id_dec(i+1).eq.id_dec(i+2))) then
-                call get4momentum_sortedpt(id_dec(i),1,p_dec(:,i))     ! largest Pt
-                call get4momentum_sortedpt(id_dec(i+1),2,p_dec(:,i+1)) ! second largest Pt
-                call get4momentum_sortedpt(id_dec(i+2),3,p_dec(:,i+2)) ! third largest Pt
-              endif  
-            enddo
-          endif
-          ! for ndecay>4: TODO
-          ! four decay IDs are equal
-          ! pair of three and two
-          ! ...
-          ! reverse the sorting to get back to the order the user requested
-          do i=1,ndecay
-            do mu=0,3
-              ptemp(mu,i) = p_dec(mu,i)
-            enddo
-            id_dectemp(i) = id_dec(i)
-          enddo
-          do i=1,ndecay
-            do mu=0,3
-              p_dec(mu,iid_dec(i)) = ptemp(mu,i)
-            enddo
-            id_dec(iid_dec(i)) = id_dectemp(i)
-          enddo
 #endif
 
           ! assign observables for the decay products
@@ -665,20 +628,40 @@ c#define PTORDERED
             enddo
             call getinvmass(p_decIdecJ,m_decIdecJ)
           endif
-          ! calculate missing Pt
-          p_miss(:) = 0D0
-          pt_miss   = 0D0
-          ! a experimental-like approach: negative momentum sum
-          ! of all detectable particles, this is missing P since the
-          ! incoming partons have momentum sum 0
-          do i=1,ndecay
-            if(isdetectable(id_dec(i))) then
-              do mu=0,3
-                p_miss(mu) = p_miss(mu) - p_dec(mu,i)
+          
+          ! calculate missing Pt if event is not vetoed 
+          ! (not the correct final state or whatever)
+          if(.not.isvetoed) then
+            p_miss(:) = 0D0
+            pt_miss   = 0D0
+            ! a experimental-like approach: negative momentum sum
+            ! over all preselected and detectable particles.
+            ! this is missing p since the incoming partons have 
+            ! momentum sum 0
+            do i=1,ndecay
+              if(isdetectable(id_dec(i))) then
+                do mu=0,3
+                  p_miss(mu) = p_miss(mu) - p_dec(mu,i)
+                enddo
+              endif
+            enddo
+            pt_miss1 = pt(p_miss(:)) ! store for debugging
+            ! add the detectable jets
+            if(mjets.ge.mJmin) then
+              do i=1,mjets
+                if(kt(i).gt.ptJminPhys .and. eta(i).lt.etaJmax) then
+                  p_miss(0) = p_miss(0) - pj(4,i)
+                  do mu=1,3
+                    p_miss(mu) = p_miss(mu) - pj(mu,i)
+                  enddo
+                endif
               enddo
             endif
-          enddo
-          pt_miss = pt(p_miss(:))
+            pt_miss = pt(p_miss(:))
+#ifdef DEBUGQ
+              print*,pt_miss1,pt_miss
+#endif
+          endif
         endif
         
         ! fill histograms
@@ -709,27 +692,32 @@ c#define PTORDERED
           call filld("eta(J,Jcuts)",eta(1),dsig)
         endif
         
-        ! determine if lepton cuts have passed
-        do i=0,ndecay
-          DcutsPassed(i) = .true.
-        enddo
+        ! if the branching ratios for the decays are modified in PYTHIA 
+        ! by hand correct the weight here:
+        ! NOTE: If a modified decay is requested, the
+        ! variable bratio should be set in setup-PYTHIA-lhef.f.
+        if(bratio.eq.0D0) then
+          bratio = 1D0
+        endif  
+        dsig(:) = dsig(:)*bratio
+        
+        ! determine if decay cuts have passed
+        DcutsPassed = .true.
+        if(isvetoed) DcutsPassed = .false.
+        if(.not.decayed) DcutsPassed = .false.
+        if(pt_miss.le.ptmissmin) DcutsPassed = .false.
         do i=1,ndecay
-          ! apply cut only if decay ID is not empty
-          if(id_dec(i).ne.0) then
-            if(pt_dec(i).le.ptDmin) DcutsPassed(i) = .false.
-            if(dabs(eta_dec(i)).ge.etaDmax) DcutsPassed(i) = .false.
-            if(RDmin(i).le.RDsepmin) DcutsPassed(i) = .false.
-            ! store in DcutsPassed(0) if all cuts have passed
-            ! (only for observable decay products)
-            if(.not.DcutsPassed(i) .and. isdetectable(id_dec(i))) then
-              DcutsPassed(0) = .false.
-            endif  
+          ! apply cut only if decay ID is not empty and if particle
+          ! is detectable (don't take cuts of neutrinos.. into account)
+          if(isdetectable(id_dec(i)) .and. id_dec(i).ne.0) then
+            if(pt_dec(i).le.ptDmin) DcutsPassed = .false.
+            if(dabs(eta_dec(i)).ge.etaDmax) DcutsPassed = .false.
+            if(RDmin(i).le.RDsepmin) DcutsPassed = .false.
           endif  
         enddo
         
-        ! decay histogramms
+        ! histogramms for decay products, no cuts
         if(decayed) then
-          ! no cuts
           call filld("dPhi("//cstr(corI)//"+"//cstr(corJ)//")",
      &               dphi_decIdecJ,dsig)
           call filld("mass("//cstr(corI)//"+"//cstr(corJ)//")",
@@ -738,53 +726,48 @@ c#define PTORDERED
             call filld("Pt("//cstr(i)//")",pt_dec(i),dsig)
             call filld("eta("//cstr(i)//")",eta_dec(i),dsig)
           enddo
-          ! fill the invariant mass histogramm only if decay products
-          ! decI and decJ have passed the cuts
-          if(DcutsPassed(corI).and.DcutsPassed(corJ)) then
-            call filld("dPhi("//cstr(corI)//"+"//cstr(corJ)//",Dcuts)",
+        endif
+        
+        ! histogramms for decay products, with Dcuts
+        if(DcutsPassed) then
+          call filld("dPhi("//cstr(corI)//"+"//cstr(corJ)//",Dcuts)",
      &                 dphi_decIdecJ,dsig)
-            call filld("mass("//cstr(corI)//"+"//cstr(corJ)//",Dcuts)",
+          call filld("mass("//cstr(corI)//"+"//cstr(corJ)//",Dcuts)",
      &                 m_decIdecJ,dsig)
-          endif
-          ! fill the other histogramms for every decay product individually
           do i=1,ndecay
-            if(DcutsPassed(i)) then
-              counter_dcuts(i) = counter_dcuts(i) + 1
-              call filld("Pt("//cstr(i)//",Dcuts)",pt_dec(i),dsig)
-              call filld("eta("//cstr(i)//",Dcuts)",eta_dec(i),dsig)
-            endif
+            call filld("Pt("//cstr(i)//",Dcuts)",pt_dec(i),dsig)
+            call filld("eta("//cstr(i)//",Dcuts)",eta_dec(i),dsig)
           enddo
-          ! cross section with decay cuts
-          if(DcutsPassed(0)) then
-            call filld("xsec(Dcuts)",0d0,dsig)
-          endif
-          ! missing pt, only if decayed = true and all observable decay 
-          ! products are visible in the final state
-          if(DcutsPassed(0) .and. pt_miss.ge.ptmissmin) then
-            call filld("Pt(miss)",pt_miss,dsig)
+          call filld("xsec(Dcuts)",0d0,dsig)
+          call filld("Pt(miss)",pt_miss,dsig)
+          !print*,"cuts passed"
+        endif
+        
+        !if(.not.isvetoed .and. .not.DcutsPassed) then
+        !  print*,"cuts not passed"
+        !endif  
+
+        ! print the ratio of the number of requested decays and the total
+        ! number of decays (this is the branching ratio).
+        ! this could be used to compare with the branching ratio of 
+        ! the SLHA file.
+        ! do not overload the screen
+        if(mod(nevents,20000).eq.1) then
+          if(WHCPRG.eq."PYTHIA") then
+            print*
+            print*,"BR(finA/B->dec(i)+X) = ",
+     &             (real(cnt_decays(1:ndecay)))/cnt_decays_tot
+            print*,"BR(finA->dec(1)+dec(2)+X) x "//
+     &             "BR(finB->dec(3)+dec(4)+X) = ",
+     &             (((real(cnt_decays(1)))/cnt_decays_tot)*
+     &              ((real(cnt_decays(3)))/cnt_decays_tot))
+            print*, "BR(proc,Dcuts) x bratio = ",
+     &              (real(cnt_decays_proc))/cnt_decays_tot*bratio
+            print*
           endif
         endif
         
-#ifdef DEBUGQ
-          if(DcutsPassed(0) .and. pt_miss.ge.ptmissmin) then
-          print*
-          print*,"p_miss",p_miss(:)
-          print*,"pt_miss",pt_miss
-          endif
-#endif
-
-        ! print the ratio of decays that passed the cuts and the total
-        ! number of decays.
-        ! this could be used to determine how good the cut is or to
-        ! compare with the branching ratio of the SLHA file.
-        if(mod(nevents,20000).eq.1) then
-          if(WHCPRG.eq."PYTHIA") then
-            print*,"BR_cuts(finA+finB->dec(i)+X) [%] = ",
-     &             (real(counter_dcuts(1:ndecay))*100)/counter_decays
-          endif
-        endif
-
-        ! increment number of events processed
+        ! increment number of events processed (for printing informations)
         nevents = nevents + 1
       end
 c############### end subroutine analysis ###############################
@@ -1489,3 +1472,42 @@ c momentum in the frame where the jet has zero rapidity
         enddo
       end
 c############### end subroutine computeptrel ###########################
+
+
+c############### subroutine store_decchain #############################
+      subroutine store_decchain(str_user_decchain,user_decchain)
+        ! the considered decay chains
+        character*100 str_user_decchain
+        integer user_decchain(100,0:2)
+        ! operations on strings of decay chains
+        character*10 substr
+        integer npos,len1
+        
+        user_decchain(:,:) = 0
+        
+        len1 = len(trim(str_user_decchain))
+        
+        do i=1,len(trim(str_user_decchain))
+          ! get the mother (string in front of "->")
+          npos = index(str_user_decchain,"->")
+          substr = str_user_decchain(1:npos-1)
+          ! convert string to int
+          read(substr(:),*) user_decchain(i,0)
+          str_user_decchain = str_user_decchain(npos+2:len1)
+          ! get the first daughter
+          npos = index(str_user_decchain,",")
+          substr = str_user_decchain(1:npos-1)
+          read(substr(:),*) user_decchain(i,1)
+          str_user_decchain = str_user_decchain(npos+1:len1)
+          ! get the second daughter
+          npos = index(str_user_decchain,";")
+          substr = str_user_decchain(1:npos-1)
+          read(substr(:),*) user_decchain(i,2)
+          str_user_decchain = str_user_decchain(npos+1:len1)
+          print*,user_decchain(i,0),"->",user_decchain(i,1),user_decchain(i,2)
+          if(len(trim(str_user_decchain)).eq.0) then
+            exit
+          endif
+        enddo
+      end
+c############### end subroutine store_decchain #########################

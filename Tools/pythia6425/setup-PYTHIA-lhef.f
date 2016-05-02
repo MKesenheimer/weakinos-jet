@@ -150,11 +150,12 @@ c     hands over sm parameters from init_couplings to pythia
       !mstp(111) = 1               ! with hadronization
       print*, "hadronisation control mstp(111):      ", mstp(111)
       ! decays without hadronization need a patched pythia code
-      mstp(41) = 1               ! force all resonance decays
       !mstp(41) = 0               ! prevent all resonance decays
+      mstp(41) = 1               ! force all resonance decays
+      !mstp(41) = 2               ! on or off depending on their individual MDCY values
       print*, "resonance decays:                     ", mstp(41)
       !mstp(64) = 3   ! use lambda_mc for is shower > 6.4.19
-      !mstp(64) = 1   ! use lambda_msbar (default)
+      mstp(64) = 1   ! use lambda_msbar (default)
       ! number of warnings printed on the shell
       mstu(26) = 20
       !call pylist(12)  ! to see the pythia decay table
@@ -190,12 +191,56 @@ c     initialize pythia
       external pycomp
       integer maxev
       common/mcmaxev/maxev
+      integer idc
+      logical charginodecays
+      data charginodecays/.true./
       nevhep=0
       ! read the header first, so lprup is set
       call lhefreadhdr(97)
-      ! make pi0 stable as in herwig default
+      ! make pi0 stable as in herwig default: 
+      ! mdcy(pycomp(PDG_IDnumber),1) = 1 -> not stable
+      ! mdcy(pycomp(PDG_IDnumber),1) = 0 -> stable
       mdcy(pycomp(111),1)=0
-      if (lprup(1).eq.10015)  mdcy(pycomp(15),1)=0
+      ! we don't want to simulate decays for the chargino pair-procution
+      ! processes (to get the right jet-distribution in Analysis.f)
+      ! TODO: check!
+      if(.not. charginodecays .and.
+     &   (abs(lprup(1)).eq.137137 .or. abs(lprup(1)).eq.124137 .or.
+     &    abs(lprup(1)).eq.137124 .or. abs(lprup(1)).eq.137124)) then
+        mdcy(pycomp(1000024),1)=0
+        mdcy(pycomp(1000037),1)=0
+        print*,"WARNING: Charginos are stable. If you want to "//
+     &         "simulate decays, set charginodecays to true."
+      endif    
+      ! MK: new for p p -> n2 x1+ -> e+ e- mu+ nu_mu
+      !=================================================================
+      ! force or prevent decays, see page 417 in PY-manual.
+      ! this method is highly dependent on the used SUSY parameter 
+      ! point, so be careful!
+      ! uncomment call pylist(12) to see the pythia decay table and
+      ! to determine which idc "decay number" should be set or unset
+      ! IMPORTANT NOTE: Changing the BR of W & Z changes the BR of 
+      ! the weakino decays!
+
+      ! W should decay always in (mu,v_mu)
+      do idc=190,209
+        mdme(idc,1)=0
+      enddo
+      mdme(207,1)=1
+
+      ! Z should decay always in (e+,e-)
+      !do idc=174,189
+      !  mdme(idc,1)=0
+      !enddo
+      !mdme(182,1)=1
+
+      ! n2 should decay always in (n0,Z0)
+      !mdme(5271,1)=1
+      !mdme(5272,1)=0
+      
+      ! x1 should decay always in (n1,W+)
+      !mdme(5266,1)=1
+      !=================================================================
       end
 
 
@@ -228,7 +273,14 @@ c     writes pythia analysis output into .top file
       character *100 filename
       integer lprefix
       common/cpwgprefix/pwgprefix,lprefix
-      filename=pwgprefix(1:lprefix)//'POWHEG+PYTHIA-output'
+      ! catch the modified branching ratio
+      double precision bratio
+      common/pybratio/bratio
+      if(bratio.eq.1D0) then
+        filename=pwgprefix(1:lprefix)//'POWHEG+PYTHIA-output'
+      else
+        filename=pwgprefix(1:lprefix)//'POWHEG+PYTHIA-output_BR'
+      endif  
       call pwhgsetout
       call pwhgtopout(filename)
       close(99)
@@ -244,9 +296,17 @@ c     jumps to next event and calls analysis
       integer mint
       real *8 vint
       common/pyint1/mint(400),vint(400)
+      integer mdcy,mdme,kfdp
+      double precision brat
+      common/pydat3/mdcy(500,3),mdme(8000,2),brat(8000),kfdp(8000,5)
       ! check parameters
       logical verbose
       parameter (verbose=.false.)
+      ! pass the modified branching ratio to Analysis.f
+      double precision bratio
+      common/pybratio/bratio
+      ! default value
+      bratio = 1D0
       if(mint(51).ne.0) then
          if(verbose) then
             print*, 'killed event'
@@ -258,6 +318,15 @@ c     jumps to next event and calls analysis
       endif
       nevhep=nevhep+1
       if(abs(idwtup).eq.3) xwgtup=xwgtup*xsecup(1)
+      ! MK: new for p p -> n2 x1+ -> e+ e- mu+ nu_mu
+      !=================================================================
+      !bratio = bratio*brat(5266) ! BR(x2+ -> n1 W+)
+      bratio = bratio*brat(207)  ! BR(W -> mu v_mu)
+      !bratio = bratio*brat(5271) ! BR(n2 -> n1 Z0)
+      !bratio = bratio*brat(182)  ! BR(Z -> e+ e-)
+      !print*,bratio
+      !stop
+      !=================================================================
       call analysis(xwgtup)
       call pwhgaccumup
       end
