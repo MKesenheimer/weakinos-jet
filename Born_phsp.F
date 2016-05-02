@@ -70,7 +70,7 @@ c and the Jacobi factor for the phase space volume
         ! calculate the parton momentum fractions kn_xb1, kn_xb2
         ! the squared CM energy of the Born process sborn
         ! and the jacobi factor of the PS volume
-        call x1x2phspace(kn_sbeams,kn_minmass,xborn(1),kn_xb1,kn_xb2,
+        call x1x2phspace(kn_sbeams,kn_minmass,xborn(1:2),kn_xb1,kn_xb2,
      &                   kn_sborn,jac)
         kn_jacborn = kn_jacborn*jac
 
@@ -96,7 +96,7 @@ c and the Jacobi factor for the phase space volume
 	! subroutine R2phsp_s2(psgen,x2,xth,xphi,s2min,m1,bwmass,bwwidth,
         ! &                     p0,p1,p2,jac)
 	
-	call R2phsp_s2(0,xborn(1),xborn(2),xborn(3),
+	call R2phsp_s2(0,xborn(3),xborn(4),xborn(5),
      &		0D0,
      &		kn_masses(3),0D0,0D0,p12,kn_cmpborn(:,3),kn_prop,jac)
  
@@ -105,7 +105,7 @@ c and the Jacobi factor for the phase space volume
 
         !subroutine R2phsp(xth,xphi,m1,m2,p0,p1,p2,jac)
         
-        call R2phsp(xborn(1),0D0,kn_masses(4),kn_masses(5),kn_prop,
+        call R2phsp(xborn(6),xborn(7),kn_masses(4),kn_masses(5),kn_prop,
      &		kn_cmpborn(:,4),kn_cmpborn(:,5),jac)
      
         kn_jacreal = kn_jacreal*jac
