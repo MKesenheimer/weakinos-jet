@@ -13,6 +13,8 @@ c     set process id using slepton types
 #include "LesHouches.h"
 #include "Flags.h"
 #include "pwhg_st.h"
+#include "pwhg_flst_add.h"
+#include "osres.h"
 
         integer i1,i2,i3,i4,i5,k,ii(5)
         equivalence (i1,ii(1)),(i2,ii(2)),(i3,ii(3)),(i4,ii(4)),
@@ -65,8 +67,9 @@ c     set process id using slepton types
         print*
         print*, "===================================================="
         print*, "        neutralino/chargino pair production         "
-        print*, "      final states: ", i3, i4
-        print*, "                                                    "
+        call print_version
+        print*, "        final states: ", i3, i4
+        print*
         if     (i3.eq.1000022) then
           print*, "             q                         n1           "
         elseif (i3.eq.-1000024) then

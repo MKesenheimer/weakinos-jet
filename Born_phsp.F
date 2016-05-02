@@ -167,8 +167,9 @@ c and the Jacobi factor for the phase space volume
         print*,"four momentum check in cm frame:"
         !call check_4conservation(kn_cmpborn,nlegborn) ! MK: commented
         call check_4conservation(kn_pborn,nlegborn,2,lresult)
-      
-	
+#endif
+
+      end
 c############### end subroutine born_phsp ##############################
 
 c############### subroutine born_suppression ###########################
@@ -204,8 +205,8 @@ c############### subroutine born_suppression ###########################
         print*, "bornsuppfact = ", fact
         !stop
 #endif
-      end
 
+      end
 c############### end subroutine born_suppression #######################
 
 c############### subroutine set_fac_ren_scales #########################
@@ -276,5 +277,4 @@ c############### subroutine set_fac_ren_scales #########################
         mur1 = muref
 
       end
-
 c############### end subroutine set_fac_ren_scales #####################

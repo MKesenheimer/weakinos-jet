@@ -206,7 +206,7 @@ c requires encoded process ID in lprup(1)
           print*,"par_Zmass: ",par_Zmass
           print*,"par_Wmass: ",par_Wmass
           print*,"par_Zwidth: ",par_Zwidth
-          
+          print*,"par_Wwidth: ",par_Wwidth
           print*,"par_Zmass2: ",par_Zmass2
           print*,"par_Wmass2: ",par_Wmass2
           print*,"par_Fin1mass: ",par_Fin1mass
@@ -440,8 +440,8 @@ c sets the PhysPars.h parameters
             write(*,*) "encountered unknown particle ID for fin2", id_fin2
             stop
         end select
-
         
+        if( (dabs(par_Fin1mass) + dabs(par_Fin2mass)) .lt. par_Zmass )
      &  then
           print*, "Error: Final state masses low, W/Z decays might "//
      &            "be more suitable"
@@ -549,9 +549,6 @@ c version.
         !stop
         !continue pls
 #endif
-     &       (par_Fin2mass .eq. invalid)) then
-     
-          
       end
 c############### end subroutine set_phys_params ########################
 

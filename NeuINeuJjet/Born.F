@@ -74,7 +74,7 @@ c parton parton -> weakino weakino
       !    stop
       !  endif
       
-      
+        ! check four momentum conservation
         call check_4conservation(p, nlegborn, 1, lresult)
       
               !if(verbose) then
@@ -87,14 +87,7 @@ c parton parton -> weakino weakino
 	!print*,"~~~~~~~~~~~~~~~~"
 	!print*,"s = ",s
 	!print*,"~~~~~~~~~~~~~~~"
-
-        ! check four momentum conservation
-     
-        call check_4conservation(p, nlegborn)
-  
-              
-
-               
+    
 #if !defined(FORM_BORN) && !defined(MAD_BORN)
         print*,"Error: Preprocessor flag FORM_BORN or"
      &       //" MAD_BORN not set in Makefile."
