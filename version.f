@@ -1,3 +1,3 @@
       subroutine print_version
-        print*,'        git version b716462'
+        print*,'        git version 9ecd246'
       end
