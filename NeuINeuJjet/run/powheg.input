@@ -40,9 +40,9 @@ lhans2 10042        ! CTeQ6l1 PDF LO, pdf set for hadron 2 (LHA numbering)
 use-old-grid    0    ! if 1 use old grid if file pwggrids.dat is present (0 regenerate)
 use-old-ubound  0    ! if 1 use norm of upper bounding function stored in pwgubound.dat if present (0 regenerate)
 
-ncall1   200000        ! number of calls for initializing the integration grid
-itmx1    4           ! number of iterations for initializing the integration grid
-ncall2   200000        ! number of calls for computing the integral and finding upper bound
+ncall1   500         ! number of calls for initializing the integration grid
+itmx1    1           ! number of iterations for initializing the integration grid
+ncall2   0           ! number of calls for computing the integral and finding upper bound
 itmx2    4           ! number of iterations for computing the integral and finding upper bound
 foldcsi  2           ! number of folds on csi integration
 foldy    2           ! number of folds on  y  integration

@@ -15,6 +15,7 @@ c parton parton -> weakino weakino
 #include "nlegborn.h"
 #include "PhysPars.h"
 
+
         integer bflav(nlegborn)
         double precision p(0:3,nlegborn), bornjk(nlegborn,nlegborn)
         double precision bmunu(0:3,0:3,nlegborn), born, colcf
@@ -31,7 +32,7 @@ c parton parton -> weakino weakino
         ! indices
         integer j,k,nmu,nnu
         ! kinematics: mandelstam variables, quark masses, weakino masses
-        double precision s, t, u, MassQ1, MassQ2, MassF1, MassF2
+        double precision s, t, u, MassQ1, MassQ2, MassF1, MassF2, MassF3
         ! phase space
         double precision ex, ey, ez, psNorm
         ! function to calculate the squared momentum sum
@@ -43,13 +44,11 @@ c parton parton -> weakino weakino
         logical verbose
         logical init_born
         data init_born/.true./
-#ifdef DEBUGQ
-#define DEBUG1
+
         ! debugging
         integer counter
-        data counter/0/
-        save counter
-#endif
+     
+
 
         if (init_born) then
            print*
@@ -60,27 +59,38 @@ c parton parton -> weakino weakino
            verbose = .false.
         endif
 
-        if (.not.( (abs(bflav(2)).eq.abs(bflav(1)))
-     &      .or.   (abs(bflav(2)+bflav(1)).eq.1) )) then
-          print*,"~~~~~~~~~~~~~~~~~~~ATTENTION~~~~~~~~~~~~~~~~~~~~~~"
-          print*,"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-          print*, "Error in fct. setborn: invalid initial state"
-          print*, "bflav(1) = ", bflav(1)
-          print*, "bflav(2) = ", bflav(2)
-          print*,"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-          print*,"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-          !stop
-        endif
-
-        ! check four momentum conservation
-        call check_4conservation(p, nlegborn)
-        
-        !if(verbose) then
+        !this check is not needed in the current implemenation
+        !if (.not.( (abs(bflav(2)).eq.abs(bflav(1)))
+      !&      .or.   (abs(bflav(2)+bflav(1)).eq.1) )) then
+      !    print*,"~~~~~~~~~~~~~~~~~~~ATTENTION~~~~~~~~~~~~~~~~~~~~~~"
+      !    print*,"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      !    print*, "Error in fct. setborn: invalid initial state"
+      !    print*, "bflav(1) = ", bflav(1)
+      !    print*, "bflav(2) = ", bflav(2)
+      !    print*,"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      !    print*,"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      !    stop
+      !  endif
+      
+      
+      
+              !if(verbose) then
           ! calculate kinematics only for debug purpose
           s = momsum2sq(p(0:3,1), p(0:3,2))
           t = momsum2sq(p(0:3,1),-p(0:3,3))
           u = momsum2sq(p(0:3,2),-p(0:3,3))
         !endif
+	
+	!print*,"~~~~~~~~~~~~~~~~"
+	!print*,"s = ",s
+	!print*,"~~~~~~~~~~~~~~~"
+
+        ! check four momentum conservation
+     
+        call check_4conservation(p, nlegborn)
+  
+              
+
                
 #if !defined(FORM_BORN) && !defined(MAD_BORN)
         print*,"Error: Preprocessor flag FORM_BORN or"
@@ -96,6 +106,7 @@ c ---------------------------- Formcalc Born ---------------------------
         flavc = bflav
         pc = p
 
+        
         ! calculate the couplings for this PS point
         call set_ebe_couplings
 
@@ -103,8 +114,9 @@ c ---------------------------- Formcalc Born ---------------------------
         call set_process(bflav(1:4), MassQ1, MassQ2, MassF1, MassF2)
         
         ! crossing (FormCalc provides only amplitudes for qqbar 
-        ! and not for qbarq)
-        if(bflav(1).gt.0) then
+        ! and not for qbarq) crossing only if theres no gluon in the
+        ! initial state
+        if((bflav(1).gt.0).and.(bflav(2).lt.0)) then
           p(:,1) = pc(:,1)
           p(:,2) = pc(:,2)
         else
@@ -134,9 +146,16 @@ c ---------------------------- Formcalc Born ---------------------------
         ey=p(2,4)/psNorm
         ez=p(3,4)/psNorm
         call VecSet(4, MassF2, psNorm, ex,ey,ez)
+        psNorm=dsqrt(p(1,5)**2+p(2,5)**2+p(3,5)**2)
+        ex=p(1,5)/psNorm
+        ey=p(2,5)/psNorm
+        ez=p(3,5)/psNorm
+        MassF3 = 0 !gluon hardcoded as 5. particle
+        call VecSet(5, MassF3, psNorm, ex,ey,ez)
 
         ! unpolarized particles: B01010 01010 01010 01010 = D338250, FC8Guid.pdf p.49
-        helicities = 338250
+        ! unpolarized 2 -> 3 process: 01010 01010 01010 01010 01010 ---> 10824014
+        !helicities = 338250  2 -> 2 process
         ! flags: Bit0 (reset) = 1, Bit1 (loop) = 0 -> B01 = D1
         flags = 1
         
@@ -145,150 +164,153 @@ c ---------------------------- Formcalc Born ---------------------------
         fc_result(2) = 0.D0    ! virtual (not needed here)
         
         ! symmetry factor
-        if(bflav(3).eq.bflav(4)) then
+        !if(bflav(3).eq.bflav(4)) then
           ! 72 = 2*2*3*3*2 (spin factor 2, colour factor 3, equal particles in the final state 2)
-          symfac = 72d0 ! take spin and colour factors into account
-        else
+        !  symfac = 72d0 ! take spin and colour factors into account
+        !else
           ! 36 = 2*2*3*3 (spin factor 2, colour factor 3)
-          symfac = 36d0 ! take spin and colour factors into account
-        endif
+        !  symfac = 36d0 ! take spin and colour factors into account
+        !endif
         
-        if(     ((bflav(1).eq.2 .and. bflav(2).eq.-1) .or.
-     &           (bflav(1).eq.-1 .and. bflav(2).eq.2)) .and. 
-     &           (bflav(3).eq.1000022 .and. bflav(4).eq.1000024) ) then 
-          call udbar_n1x1_squaredME(fc_result, helicities, flags)
-          goto 20
-        elseif(((bflav(1).eq.-2 .and. bflav(2).eq.1) .or.
-     &           (bflav(1).eq.1 .and. bflav(2).eq.-2)) .and. 
-     &           (bflav(3).eq.1000022 .and. bflav(4).eq.-1000024) ) then
-          call dubar_n1x1_squaredME(fc_result, helicities, flags)
-          goto 20
-        elseif(((bflav(1).eq.3 .and. bflav(2).eq.-4) .or.
-     &           (bflav(1).eq.-4 .and. bflav(2).eq.3)) .and. 
-     &           (bflav(3).eq.1000022 .and. bflav(4).eq.-1000024) ) then
-          call dubar_n1x1_squaredME(fc_result, helicities, flags)
-          goto 20
-        elseif(((bflav(1).eq.-3 .and. bflav(2).eq.4) .or.
-     &           (bflav(1).eq.4 .and. bflav(2).eq.-3)) .and. 
-     &           (bflav(3).eq.1000022 .and. bflav(4).eq.1000024) ) then
-          call udbar_n1x1_squaredME(fc_result, helicities, flags)
-          goto 20
-        elseif(((bflav(1).eq.-1 .and. bflav(2).eq.1) .or.
-     &           (bflav(1).eq.1 .and. bflav(2).eq.-1)) .and. 
+        
+        ! sets the correct symmetry factor/helicity flag depending on
+        ! the gluon being in the initial or final state
+        
+        ! initial state gluon
+        if(((bflav(1).eq.0).or.(bflav(2).eq.0)).and.
+     &       (bflav(5).ne.0)) then
+          symfac = 96
+          helicities = 1955082
+        ! final state gluon  
+        elseif(((bflav(1).ne.0).and.(bflav(2).ne.0)).and.
+     &       (bflav(5).eq.0)) then
+	  symfac = 72    
+	  helicities = 10824014 
+	endif
+        
+        
+
+	       !dd -> neu neu jet 
+        if(     ((bflav(1).eq.1 .and. bflav(2).eq.-1) .or.
+     &           (bflav(1).eq.-1 .and. bflav(2).eq.1)) .and. 
      &           (bflav(3).eq.1000022 .and. bflav(4).eq.1000022) ) then
-          call udbar_n1x1_squaredME(fc_result, helicities, flags)
+	  call ddbar_n1n1j_squaredME(fc_result, helicities, flags)
           goto 20
+       !uu -> neu neu jet
         elseif(((bflav(1).eq.-2 .and. bflav(2).eq.2) .or.
      &           (bflav(1).eq.2 .and. bflav(2).eq.-2)) .and. 
      &           (bflav(3).eq.1000022 .and. bflav(4).eq.1000022) ) then
-          call udbar_n1x1_squaredME(fc_result, helicities, flags)
+          call uubar_n1n1j_squaredME(fc_result, helicities, flags)
           goto 20
-        elseif(((bflav(1).eq.-3 .and. bflav(2).eq.3) .or.
-     &           (bflav(1).eq.3 .and. bflav(2).eq.-3)) .and. 
+        !ss -> neu neu jet
+        elseif(((bflav(1).eq.3 .and. bflav(2).eq.-3) .or.
+     &           (bflav(1).eq.-3 .and. bflav(2).eq.3)) .and. 
      &           (bflav(3).eq.1000022 .and. bflav(4).eq.1000022) ) then
-          call udbar_n1x1_squaredME(fc_result, helicities, flags)
+          call ddbar_n1n1j_squaredME(fc_result, helicities, flags)
           goto 20
+        !cc  -> neu neu jet
         elseif(((bflav(1).eq.-4 .and. bflav(2).eq.4) .or.
      &           (bflav(1).eq.4 .and. bflav(2).eq.-4)) .and. 
      &           (bflav(3).eq.1000022 .and. bflav(4).eq.1000022) ) then
-          call udbar_n1x1_squaredME(fc_result, helicities, flags)
+          call uubar_n1n1j_squaredME(fc_result, helicities, flags)
           goto 20
+        !bb  -> neu neu jet
         elseif(((bflav(1).eq.-5 .and. bflav(2).eq.5) .or.
      &           (bflav(1).eq.5 .and. bflav(2).eq.-5)) .and. 
      &           (bflav(3).eq.1000022 .and. bflav(4).eq.1000022) ) then
-          call udbar_n1x1_squaredME(fc_result, helicities, flags)
+          call ddbar_n1n1j_squaredME(fc_result, helicities, flags)
           goto 20
-        elseif(((bflav(1).eq.-1 .and. bflav(2).eq.0) .or.
-     &           (bflav(1).eq.1 .and. bflav(2).eq.-0)) .and. 
+        !dg -> neu neu jet
+        elseif(((bflav(1).eq.1 .and. bflav(2).eq.0) .or.
+     &           (bflav(1).eq.0 .and. bflav(2).eq.1)) .and. 
      &           (bflav(3).eq.1000022 .and. bflav(4).eq.1000022) ) then
-          call udbar_n1x1_squaredME(fc_result, helicities, flags)
+          call dg_n1n1j_squaredME(fc_result, helicities, flags)
           goto 20
-        elseif(((bflav(1).eq.-2 .and. bflav(2).eq.0) .or.
-     &           (bflav(1).eq.2 .and. bflav(2).eq.-0)) .and. 
+        !ug -> neu neu jet
+        elseif(((bflav(1).eq.2 .and. bflav(2).eq.0) .or.
+     &           (bflav(1).eq.0 .and. bflav(2).eq.2)) .and. 
      &           (bflav(3).eq.1000022 .and. bflav(4).eq.1000022) ) then
-          call udbar_n1x1_squaredME(fc_result, helicities, flags)
+          call ug_n1n1j_squaredME(fc_result, helicities, flags)
           goto 20
-        elseif(((bflav(1).eq.-3 .and. bflav(2).eq.0) .or.
-     &           (bflav(1).eq.3 .and. bflav(2).eq.-0)) .and. 
+        !sg -> neu neu jet
+        elseif(((bflav(1).eq.3 .and. bflav(2).eq.0) .or.
+     &           (bflav(1).eq.0 .and. bflav(2).eq.3)) .and. 
      &           (bflav(3).eq.1000022 .and. bflav(4).eq.1000022) ) then
-          call udbar_n1x1_squaredME(fc_result, helicities, flags)
+          call dg_n1n1j_squaredME(fc_result, helicities, flags)
           goto 20
-        elseif(((bflav(1).eq.-4 .and. bflav(2).eq.0) .or.
-     &           (bflav(1).eq.4 .and. bflav(2).eq.-0)) .and. 
+        !cg -> neu neu jet
+        elseif(((bflav(1).eq.4 .and. bflav(2).eq.0) .or.
+     &           (bflav(1).eq.0 .and. bflav(2).eq.4)) .and. 
      &           (bflav(3).eq.1000022 .and. bflav(4).eq.1000022) ) then
-          call udbar_n1x1_squaredME(fc_result, helicities, flags)
+          call ug_n1n1j_squaredME(fc_result, helicities, flags)
           goto 20
-        elseif(((bflav(1).eq.-5 .and. bflav(2).eq.0) .or.
-     &           (bflav(1).eq.5 .and. bflav(2).eq.-0)) .and. 
+        !bg -> neu neu jet
+        elseif(((bflav(1).eq.5 .and. bflav(2).eq.0) .or.
+     &           (bflav(1).eq.0 .and. bflav(2).eq.5)) .and. 
      &           (bflav(3).eq.1000022 .and. bflav(4).eq.1000022) ) then
-          call udbar_n1x1_squaredME(fc_result, helicities, flags)
+          call dg_n1n1j_squaredME(fc_result, helicities, flags)
           goto 20
-        elseif(((bflav(1).eq.-0 .and. bflav(2).eq.1) .or.
+        !dbar g -> neu neu jet
+       elseif(((bflav(1).eq.-1 .and. bflav(2).eq.0) .or.
      &           (bflav(1).eq.0 .and. bflav(2).eq.-1)) .and. 
      &           (bflav(3).eq.1000022 .and. bflav(4).eq.1000022) ) then
-          call udbar_n1x1_squaredME(fc_result, helicities, flags)
+          call dbarg_n1n1j_squaredME(fc_result, helicities, flags)
           goto 20
-        elseif(((bflav(1).eq.-0 .and. bflav(2).eq.2) .or.
+        !ubar g -> neu neu jet
+        elseif(((bflav(1).eq.-2 .and. bflav(2).eq.0) .or.
      &           (bflav(1).eq.0 .and. bflav(2).eq.-2)) .and. 
      &           (bflav(3).eq.1000022 .and. bflav(4).eq.1000022) ) then
-          call udbar_n1x1_squaredME(fc_result, helicities, flags)
+          call ubarg_n1n1j_squaredME(fc_result, helicities, flags)
           goto 20
-        elseif(((bflav(1).eq.-0 .and. bflav(2).eq.3) .or.
+        !sbar g -> neu neu jet
+        elseif(((bflav(1).eq.-3 .and. bflav(2).eq.0) .or.
      &           (bflav(1).eq.0 .and. bflav(2).eq.-3)) .and. 
      &           (bflav(3).eq.1000022 .and. bflav(4).eq.1000022) ) then
-          call udbar_n1x1_squaredME(fc_result, helicities, flags)
+          call dbarg_n1n1j_squaredME(fc_result, helicities, flags)
           goto 20
-        elseif(((bflav(1).eq.-0 .and. bflav(2).eq.4) .or.
+        !cbar g -> neu neu jet
+        elseif(((bflav(1).eq.-4 .and. bflav(2).eq.0) .or.
      &           (bflav(1).eq.0 .and. bflav(2).eq.-4)) .and. 
      &           (bflav(3).eq.1000022 .and. bflav(4).eq.1000022) ) then
-          call udbar_n1x1_squaredME(fc_result, helicities, flags)
+          call ubarg_n1n1j_squaredME(fc_result, helicities, flags)
           goto 20
-        elseif(((bflav(1).eq.-0 .and. bflav(2).eq.5) .or.
+        !bbar g -> neu neu jet
+        elseif(((bflav(1).eq.-5 .and. bflav(2).eq.0) .or.
      &           (bflav(1).eq.0 .and. bflav(2).eq.-5)) .and. 
      &           (bflav(3).eq.1000022 .and. bflav(4).eq.1000022) ) then
-          call udbar_n1x1_squaredME(fc_result, helicities, flags)
+          call dbarg_n1n1j_squaredME(fc_result, helicities, flags)
           goto 20
-        
-        
+
+      
+      
         else
           print*, "ERROR: Wrong flavor structure in subroutine setborn."
           print*, "bflav = ", bflav
           stop
+          fc_result(1) = 1.d-15
+          fc_result(2) = 1.d-15
         endif
+        
+        !fc_result ist set to a small number, preferably machineepsilon
+        !because setting it to 0 leads to runtime problems during the
+        !integration part
+        
+        if(fc_result(1).eq.0) then
+          fc_result(1) = 1.d-15
+	endif
+	
+	if(fc_result(2).eq.0) then
+          fc_result(2) = 1.d-15
+	endif
+	
+	
 
  20   continue
         
         born = fc_result(1)/symfac ! take spin and colour factors into account
         fborn = born
 
-        ! spin and color correlations
-        do j=1,nlegborn
-          if(abs(bflav(j)).le.6) then
-          ! gluon spin correlations as in (eq. 2.8) of 1002.2581v1
-          ! (A general framework for implementing NLO calculations in [...] the POWHEG BOX)
-          ! only different from zero for processes involving gluons in 
-          ! the initial or final state.: Bmunu=0
-            if(bflav(j).eq.0) then
-              do nmu=0,3
-                do nnu=0,3
-                  bmunu(nmu,nnu,j) = 0D0
-                enddo
-              enddo
-            endif  
-          ! color correlations as in (eq. 2.6) of 1002.2581v1
-          ! (A general framework for implementing NLO calculations in [...] the POWHEG BOX)
-          ! Bij = Cf B for i != j incoming q/qbar
-            do k=j+1,nlegborn
-              if(abs(bflav(k)).le.6) then
-                colcf = cf !4/3
-              else
-                colcf = 0D0
-              endif
-                bornjk(j,k) = born*colcf
-                bornjk(k,j) = bornjk(j,k)
-            enddo
-          endif
-        enddo
+
         
         if (verbose) then
           print*, "process: ", bflav
@@ -363,8 +385,8 @@ c endif preprocessor condition "if defined(CHECK_FORM_MAD) || defined(MAD_BORN)"
 
 
 #ifdef CHECK_FORM_MAD
-        ! compare the formcalc and madgraph amplitudes
-        if( (abs((fborn - mborn)/(fborn + mborn)) > 1d-09) ) then ! the relative error is probably larger for smaller amplitudes
+        ! compare the formcalc and madgraph amplitudes  !error : 1d-09
+        if( (abs((fborn - mborn)/(fborn + mborn)) > 2) ) then ! the relative error is probably larger for smaller amplitudes
           print*, "Error: formcalc and madgraph borns are too different"
           print*, "in process: ", bflav
           print*, "born (formcalc) = ", fborn
@@ -386,19 +408,22 @@ c endif preprocessor condition "if defined(CHECK_FORM_MAD) || defined(MAD_BORN)"
 #if defined(CHECK_FORM_MAD) && defined(FORM_BORN)
         born = fborn
 #endif
-!#if defined(FORM_BORN)
-!	born = fborn
-!#endif
+
 
 
 #ifdef DEBUG1
-        if(counter < 5) then
+        if(counter < 10) then
           print*, "process: ", bflav
           print*, "s  = ", s
-          print*, "t  = ", t
-          print*, "u  = ", u
-          print*,"born = ", born
+          !print*, "t  = ", t
+          !print*, "u  = ", u
+          print*, "born (madgraph) = ", mborn
+          print*, "born (formcalc) = ", fborn
           counter = counter + 1
+        endif
+        if(counter.eq.10) then
+        print*,"counter in born.f l. 417 reached 10 --> stopping"
+        !stop
         endif
 #endif
 

@@ -19,6 +19,8 @@ CFLAGS   = -g
 
 # recommended compiler flags
 REC_FCFLAGS   = -fno-automatic -fno-range-check
+#REC_FCFLAGS  += -fcheck=all
+REC_FCFLAGS  += -fbacktrace
 REC_FCFLAGS  += -ffixed-line-length-none -lgfortran -ff2c -DU77EXT=0 -DQuad=0
 REC_FCFLAGS  += $(FCFLAGS)
 REC_CXXFLAGS  = -fomit-frame-pointer -ffast-math -Wall -m64
@@ -90,9 +92,12 @@ CPP = -cpp
 ## For debugging uncomment the following
 #DEBUG = -ggdb -pg -D DEBUG
 ## more verbose debugging
-DEBUG = -ggdb -pg -D DEBUG -D DEBUGV
+#DEBUG = -ggdb -pg -D DEBUG -D DEBUGV
 ## If you wish to show all possible debug output
 #DEBUG = -ggdb -pg -D DEBUG -D DEBUGV -D DEBUGQ -D CHECK
+#DEBUG = -ggdb -pg -D DEBUGQ -D CHECK
+#DEBUG += -D DEBUGQ
+#DEBUG += -D DEBUG1
 
 ## More debugging flags
 # Check UV finiteness in FormCalc Virtuals: -D CHECKUV
@@ -102,10 +107,14 @@ DEBUG = -ggdb -pg -D DEBUG -D DEBUGV
 # program and not while checking real amplitudes!
 USRFLAGS += -D CHECK_FORM_MAD
 
+## Used for (extensive) momenta-conservation checking 
+#USRFLAGS += -D CHECKMOM
+
 ## Additional and mandatory flags
 # Use MadGraph Borns (default): -D MAD_BORN 
 # Use FormCalc Borns: -D FORM_BORN
 USRFLAGS += -D MAD_BORN
+#USRFLAGS += -D FORM_BORN
 
 ## Treatment of quark masses and squark widths
 # The current version uses vanishing masses for the incoming quarks and
@@ -135,7 +144,9 @@ SUBWORKINGDIR = $(shell pwd)
 TOOLS   = $(WORKINGDIR)/Tools
 REAL    = $(SUBWORKINGDIR)/MadGraph_Reals
 VIRT    = $(SUBWORKINGDIR)/FormCalc_Virtuals
-VIRTSUB = $(VIRT)/udbar_n1x1_squaredme $(VIRT)/dubar_n1x1_squaredme
+VIRTSUB = $(VIRT)/uubar_n1n1j_squaredme $(VIRT)/ddbar_n1n1j_squaredme \
+$(VIRT)/ug_n1n1j_squaredme $(VIRT)/ubarg_n1n1j_squaredme \
+$(VIRT)/dg_n1n1j_squaredme $(VIRT)/dbarg_n1n1j_squaredme
 REALSUB  = $(REAL)/SubProcesses_nIxJ
 MODIFIED = $(WORKINGDIR)/POWHEG_mod
 
@@ -247,7 +258,8 @@ PWHG += cernroutines_mod.o find_regions.o gen_real_phsp.o	\
 	sigborn.o sigreal.o sigsoftvirt.o			\
 	sigvirtual.o bbinit.o LesHouches.o 		\
 	LesHouchesreg.o gen_index.o lhefwrite.o		\
-	gen_radiation.o sigremnants.o pwhgreweight.o 
+	gen_radiation.o sigremnants.o pwhgreweight.o \
+	phi1_2.o
 	
 
 ### LHEF ###
@@ -279,87 +291,73 @@ HERWIG = main-HERWIG.o setup-HERWIG-lhef.o herwig6510.o boostrot.o 	\
 
 # MadGraph born amplitudes
 MADOBJ += sborn_proc.o
-MADOBJ += b_cl_001_001.o b_cl_001_002.o b_cl_001_003.o \
-	b_cl_002_001.o b_cl_002_002.o b_cl_002_003.o \
-	b_cl_003_001.o b_cl_003_002.o b_cl_003_003.o \
-	b_cl_004_001.o b_cl_004_002.o b_cl_004_003.o \
-	b_cl_005_001.o b_cl_005_002.o b_cl_005_003.o \
-	b_cl_006_001.o b_cl_006_002.o b_cl_006_003.o \
-	b_cl_007_001.o b_cl_007_002.o b_cl_007_003.o \
-	b_cl_008_001.o b_cl_008_002.o b_cl_008_003.o \
-	b_cl_009_001.o b_cl_009_002.o b_cl_009_003.o \
-	b_cl_010_001.o b_cl_010_002.o b_cl_010_003.o \
-	b_cl_011_001.o b_cl_011_002.o b_cl_011_003.o \
-	b_cl_012_001.o b_cl_012_002.o b_cl_012_003.o \
-	b_cl_013_001.o b_cl_013_002.o b_cl_013_003.o \
-	b_cl_014_001.o b_cl_014_002.o b_cl_014_003.o \
-	b_cl_015_001.o b_cl_015_002.o b_cl_015_003.o \
-	b_cl_016_001.o b_cl_016_002.o b_cl_016_003.o \
-	b_cl_017_001.o b_cl_017_002.o b_cl_017_003.o \
-	b_cl_018_001.o b_cl_018_002.o b_cl_018_003.o \
-	b_cl_019_001.o b_cl_019_002.o b_cl_019_003.o \
-	b_cl_020_001.o b_cl_020_002.o b_cl_020_003.o \
-	b_cl_021_001.o b_cl_021_002.o b_cl_021_003.o \
-	b_cl_022_001.o b_cl_022_002.o b_cl_022_003.o \
-	b_cl_023_001.o b_cl_023_002.o b_cl_023_003.o \
-	b_cl_024_001.o b_cl_024_002.o b_cl_024_003.o \
-	b_cl_025_001.o b_cl_025_002.o b_cl_025_003.o \
-	b_cl_026_001.o b_cl_026_002.o b_cl_026_003.o \
-	b_cl_027_001.o b_cl_027_002.o b_cl_027_003.o \
-	b_cl_028_001.o b_cl_028_002.o b_cl_028_003.o \
-	b_cl_029_001.o b_cl_029_002.o b_cl_029_003.o \
-	b_cl_030_001.o b_cl_030_002.o b_cl_030_003.o \
-	b_sf_001_004.o b_sf_001_005.o b_sf_001_006.o b_sf_001_007.o b_sf_001_008.o b_sf_001_009.o \
-	b_sf_002_004.o b_sf_002_005.o b_sf_002_006.o b_sf_002_007.o b_sf_002_008.o b_sf_002_009.o \
-	b_sf_003_004.o b_sf_003_005.o b_sf_003_006.o b_sf_003_007.o b_sf_003_008.o b_sf_003_009.o \
-	b_sf_004_004.o b_sf_004_005.o b_sf_004_006.o b_sf_004_007.o b_sf_004_008.o b_sf_004_009.o \
-	b_sf_005_004.o b_sf_005_005.o b_sf_005_006.o b_sf_005_007.o b_sf_005_008.o b_sf_005_009.o \
-	b_sf_006_004.o b_sf_006_005.o b_sf_006_006.o b_sf_006_007.o b_sf_006_008.o b_sf_006_009.o \
-	b_sf_007_004.o b_sf_007_005.o b_sf_007_006.o b_sf_007_007.o b_sf_007_008.o b_sf_007_009.o \
-	b_sf_008_004.o b_sf_008_005.o b_sf_008_006.o b_sf_008_007.o b_sf_008_008.o b_sf_008_009.o \
-	b_sf_009_004.o b_sf_009_005.o b_sf_009_006.o b_sf_009_007.o b_sf_009_008.o b_sf_009_009.o \
-	b_sf_010_004.o b_sf_010_005.o b_sf_010_006.o b_sf_010_007.o b_sf_010_008.o b_sf_010_009.o \
-	b_sf_011_004.o b_sf_011_005.o b_sf_011_006.o b_sf_011_007.o b_sf_011_008.o b_sf_011_009.o \
-	b_sf_012_004.o b_sf_012_005.o b_sf_012_006.o b_sf_012_007.o b_sf_012_008.o b_sf_012_009.o \
-	b_sf_013_004.o b_sf_013_005.o b_sf_013_006.o b_sf_013_007.o b_sf_013_008.o b_sf_013_009.o \
-	b_sf_014_004.o b_sf_014_005.o b_sf_014_006.o b_sf_014_007.o b_sf_014_008.o b_sf_014_009.o \
-	b_sf_015_004.o b_sf_015_005.o b_sf_015_006.o b_sf_015_007.o b_sf_015_008.o b_sf_015_009.o \
-	b_sf_016_004.o b_sf_016_005.o b_sf_016_006.o b_sf_016_007.o b_sf_016_008.o b_sf_016_009.o \
-	b_sf_017_004.o b_sf_017_005.o b_sf_017_006.o b_sf_017_007.o b_sf_017_008.o b_sf_017_009.o \
-	b_sf_018_004.o b_sf_018_005.o b_sf_018_006.o b_sf_018_007.o b_sf_018_008.o b_sf_018_009.o \
-	b_sf_019_004.o b_sf_019_005.o b_sf_019_006.o b_sf_019_007.o b_sf_019_008.o b_sf_019_009.o \
-	b_sf_020_004.o b_sf_020_005.o b_sf_020_006.o b_sf_020_007.o b_sf_020_008.o b_sf_020_009.o \
-	b_sf_021_004.o b_sf_021_005.o b_sf_021_006.o b_sf_021_007.o b_sf_021_008.o b_sf_021_009.o \
-	b_sf_022_004.o b_sf_022_005.o b_sf_022_006.o b_sf_022_007.o b_sf_022_008.o b_sf_022_009.o \
-	b_sf_023_004.o b_sf_023_005.o b_sf_023_006.o b_sf_023_007.o b_sf_023_008.o b_sf_023_009.o \
-	b_sf_024_004.o b_sf_024_005.o b_sf_024_006.o b_sf_024_007.o b_sf_024_008.o b_sf_024_009.o \
-	b_sf_025_004.o b_sf_025_005.o b_sf_025_006.o b_sf_025_007.o b_sf_025_008.o b_sf_025_009.o \
-	b_sf_026_004.o b_sf_026_005.o b_sf_026_006.o b_sf_026_007.o b_sf_026_008.o b_sf_026_009.o \
-	b_sf_027_004.o b_sf_027_005.o b_sf_027_006.o b_sf_027_007.o b_sf_027_008.o b_sf_027_009.o \
-	b_sf_028_004.o b_sf_028_005.o b_sf_028_006.o b_sf_028_007.o b_sf_028_008.o b_sf_028_009.o \
-	b_sf_029_004.o b_sf_029_005.o b_sf_029_006.o b_sf_029_007.o b_sf_029_008.o b_sf_029_009.o \
-	b_sf_030_004.o b_sf_030_005.o b_sf_030_006.o b_sf_030_007.o b_sf_030_008.o b_sf_030_009.o 
-	
-MADOBJ += sborn_cl_001.o sborn_cl_002.o sborn_cl_003.o \
-	sborn_cl_004.o sborn_cl_005.o sborn_cl_006.o \
-	sborn_cl_007.o sborn_cl_008.o sborn_cl_009.o \
-	sborn_cl_010.o sborn_cl_011.o sborn_cl_012.o \
-	sborn_cl_013.o sborn_cl_014.o sborn_cl_015.o \
-	sborn_cl_016.o sborn_cl_017.o sborn_cl_018.o \
-	sborn_cl_019.o sborn_cl_020.o sborn_cl_021.o \
-	sborn_cl_022.o sborn_cl_023.o sborn_cl_024.o \
-	sborn_cl_025.o sborn_cl_026.o sborn_cl_027.o \
-	sborn_cl_028.o sborn_cl_029.o sborn_cl_030.o \
-	sborn_sf_001.o sborn_sf_002.o sborn_sf_003.o \
-	sborn_sf_004.o sborn_sf_005.o sborn_sf_006.o \
-	sborn_sf_007.o sborn_sf_008.o sborn_sf_009.o \
-	sborn_sf_010.o sborn_sf_011.o sborn_sf_012.o \
-	sborn_sf_013.o sborn_sf_014.o sborn_sf_015.o \
-	sborn_sf_016.o sborn_sf_017.o sborn_sf_018.o \
-	sborn_sf_019.o sborn_sf_020.o sborn_sf_021.o \
-	sborn_sf_022.o sborn_sf_023.o sborn_sf_024.o \
-	sborn_sf_025.o sborn_sf_026.o sborn_sf_027.o \
-	sborn_sf_028.o sborn_sf_029.o sborn_sf_030.o \
+MADOBJ += b_cl_001_001.o  b_cl_023_002.o  b_sf_011_006.o  b_sf_022_007.o \
+	b_cl_001_002.o  b_cl_023_003.o  b_sf_011_007.o  b_sf_022_008.o \
+	b_cl_001_003.o  b_cl_024_001.o  b_sf_011_008.o  b_sf_022_009.o \
+	b_cl_002_001.o  b_cl_024_002.o  b_sf_011_009.o  b_sf_023_004.o \
+	b_cl_002_002.o  b_cl_024_003.o  b_sf_012_004.o  b_sf_023_005.o \
+	b_cl_002_003.o  b_sf_001_004.o  b_sf_012_005.o  b_sf_023_006.o \
+	b_cl_003_001.o  b_sf_001_005.o  b_sf_012_006.o  b_sf_023_007.o \
+	b_cl_003_002.o  b_sf_001_006.o  b_sf_012_007.o  b_sf_023_008.o \
+	b_cl_003_003.o  b_sf_001_007.o  b_sf_012_008.o  b_sf_023_009.o \
+	b_cl_004_001.o  b_sf_001_008.o  b_sf_012_009.o  b_sf_024_004.o \
+	b_cl_004_002.o  b_sf_001_009.o  b_sf_013_004.o  b_sf_024_005.o \
+	b_cl_004_003.o  b_sf_002_004.o  b_sf_013_005.o  b_sf_024_006.o \
+	b_cl_005_001.o  b_sf_002_005.o  b_sf_013_006.o  b_sf_024_007.o \
+	b_cl_005_002.o  b_sf_002_006.o  b_sf_013_007.o  b_sf_024_008.o \
+	b_cl_005_003.o  b_sf_002_007.o  b_sf_013_008.o  b_sf_024_009.o \
+	b_cl_006_001.o  b_sf_002_008.o  b_sf_013_009.o   \
+	b_cl_006_002.o  b_sf_002_009.o  b_sf_014_004.o  sborn_cl_001.o \
+	b_cl_006_003.o  b_sf_003_004.o  b_sf_014_005.o  sborn_cl_002.o \
+	b_cl_007_001.o  b_sf_003_005.o  b_sf_014_006.o  sborn_cl_003.o \
+	b_cl_007_002.o  b_sf_003_006.o  b_sf_014_007.o  sborn_cl_004.o \
+	b_cl_007_003.o  b_sf_003_007.o  b_sf_014_008.o  sborn_cl_005.o \
+	b_cl_008_001.o  b_sf_003_008.o  b_sf_014_009.o  sborn_cl_006.o \
+	b_cl_008_002.o  b_sf_003_009.o  b_sf_015_004.o  sborn_cl_007.o \
+	b_cl_008_003.o  b_sf_004_004.o  b_sf_015_005.o  sborn_cl_008.o \
+	b_cl_009_001.o  b_sf_004_005.o  b_sf_015_006.o  sborn_cl_009.o \
+	b_cl_009_002.o  b_sf_004_006.o  b_sf_015_007.o  sborn_cl_010.o \
+	b_cl_009_003.o  b_sf_004_007.o  b_sf_015_008.o  sborn_cl_011.o \
+	b_cl_010_001.o  b_sf_004_008.o  b_sf_015_009.o  sborn_cl_012.o \
+	b_cl_010_002.o  b_sf_004_009.o  b_sf_016_004.o  sborn_cl_013.o \
+	b_cl_010_003.o  b_sf_005_004.o  b_sf_016_005.o  sborn_cl_014.o \
+	b_cl_011_001.o  b_sf_005_005.o  b_sf_016_006.o  sborn_cl_015.o \
+	b_cl_011_002.o  b_sf_005_006.o  b_sf_016_007.o  sborn_cl_016.o \
+	b_cl_011_003.o  b_sf_005_007.o  b_sf_016_008.o  sborn_cl_017.o \
+	b_cl_012_001.o  b_sf_005_008.o  b_sf_016_009.o  sborn_cl_018.o \
+	b_cl_012_002.o  b_sf_005_009.o  b_sf_017_004.o  sborn_cl_019.o \
+	b_cl_012_003.o  b_sf_006_004.o  b_sf_017_005.o  sborn_cl_020.o \
+	b_cl_013_001.o  b_sf_006_005.o  b_sf_017_006.o  sborn_cl_021.o \
+	b_cl_013_002.o  b_sf_006_006.o  b_sf_017_007.o  sborn_cl_022.o \
+	b_cl_013_003.o  b_sf_006_007.o  b_sf_017_008.o  sborn_cl_023.o \
+	b_cl_014_001.o  b_sf_006_008.o  b_sf_017_009.o  sborn_cl_024.o \
+	b_cl_014_002.o  b_sf_006_009.o  b_sf_018_004.o  \
+	b_cl_014_003.o  b_sf_007_004.o  b_sf_018_005.o  sborn_sf_001.o \
+	b_cl_015_001.o  b_sf_007_005.o  b_sf_018_006.o  sborn_sf_002.o  \
+	b_cl_015_002.o  b_sf_007_006.o  b_sf_018_007.o  sborn_sf_003.o \
+	b_cl_015_003.o  b_sf_007_007.o  b_sf_018_008.o  sborn_sf_004.o \
+	b_cl_016_001.o  b_sf_007_008.o  b_sf_018_009.o  sborn_sf_005.o \
+	b_cl_016_002.o  b_sf_007_009.o  b_sf_019_004.o  sborn_sf_006.o \
+	b_cl_016_003.o  b_sf_008_004.o  b_sf_019_005.o  sborn_sf_007.o \
+	b_cl_017_001.o  b_sf_008_005.o  b_sf_019_006.o  sborn_sf_008.o \
+	b_cl_017_002.o  b_sf_008_006.o  b_sf_019_007.o  sborn_sf_009.o \
+	b_cl_017_003.o  b_sf_008_007.o  b_sf_019_008.o  sborn_sf_010.o \
+	b_cl_018_001.o  b_sf_008_008.o  b_sf_019_009.o  sborn_sf_011.o \
+	b_cl_018_002.o  b_sf_008_009.o  b_sf_020_004.o  sborn_sf_012.o \
+	b_cl_018_003.o  b_sf_009_004.o  b_sf_020_005.o  sborn_sf_013.o \
+	b_cl_019_001.o  b_sf_009_005.o  b_sf_020_006.o  sborn_sf_014.o \
+	b_cl_019_002.o  b_sf_009_006.o  b_sf_020_007.o  sborn_sf_015.o \
+	b_cl_019_003.o  b_sf_009_007.o  b_sf_020_008.o  sborn_sf_016.o \
+	b_cl_020_001.o  b_sf_009_008.o  b_sf_020_009.o  sborn_sf_017.o \
+	b_cl_020_002.o  b_sf_009_009.o  b_sf_021_004.o  sborn_sf_018.o \
+	b_cl_020_003.o  b_sf_010_004.o  b_sf_021_005.o  sborn_sf_019.o \
+	b_cl_021_001.o  b_sf_010_005.o  b_sf_021_006.o  sborn_sf_020.o \
+	b_cl_021_002.o  b_sf_010_006.o  b_sf_021_007.o  sborn_sf_021.o \
+	b_cl_021_003.o  b_sf_010_007.o  b_sf_021_008.o  sborn_sf_022.o \
+	b_cl_022_001.o  b_sf_010_008.o  b_sf_021_009.o  sborn_sf_023.o \
+	b_cl_022_002.o  b_sf_010_009.o  b_sf_022_004.o  sborn_sf_024.o \
+	b_cl_022_003.o  b_sf_011_004.o  b_sf_022_005.o \
+	b_cl_023_001.o  b_sf_011_005.o  b_sf_022_006.o \
 
 
 	 
@@ -369,22 +367,20 @@ MADOBJ += sborn_cl_001.o sborn_cl_002.o sborn_cl_003.o \
 MADOBJ +=
 
 ### Virtual Amplitudes in Formcalc_Virtuals/ ###
-VIRTUALS += CalcRenConst.o udbar_n1x1_abbr0h.o udbar_n1x1_abbr0s.o	\
-          udbar_n1x1_abbr1a.o udbar_n1x1_abbr1h.o udbar_n1x1_abbr1s.o	\
-          udbar_n1x1_born.o udbar_n1x1_born_Sfe5.o			\
-          udbar_n1x1_box_Sfe5.o udbar_n1x1_box_Sfe5_Sfe6.o		\
-          udbar_n1x1_self_Sfe5.o udbar_n1x1_self_Sfe5_Sfe6.o		\
-          udbar_n1x1_self_Sfe5_Sfe6_Sfe7.o				\
-          udbar_n1x1_SquaredME.o udbar_n1x1_vert_Sfe5_Sfe6.o		\
-          udbar_n1x1_vert.o udbar_n1x1_vert_Sfe5.o			\
-          dubar_n1x1_abbr0h.o dubar_n1x1_abbr0s.o            		\
-          dubar_n1x1_abbr1a.o dubar_n1x1_abbr1h.o dubar_n1x1_abbr1s.o	\
-          dubar_n1x1_born.o dubar_n1x1_born_Sfe5.o			\
-          dubar_n1x1_box_Sfe5.o dubar_n1x1_box_Sfe5_Sfe6.o		\
-          dubar_n1x1_self_Sfe5.o dubar_n1x1_self_Sfe5_Sfe6.o		\
-          dubar_n1x1_self_Sfe5_Sfe6_Sfe7.o				\
-          dubar_n1x1_SquaredME.o dubar_n1x1_vert_Sfe5_Sfe6.o		\
-          dubar_n1x1_vert.o dubar_n1x1_vert_Sfe5.o
+VIRTUALS += CalcRenConst.o \
+dbarg_n1n1j_abbr0a.o  dbarg_n1n1j_abbr0s.o  dbarg_n1n1j_born_Sfe6.o \
+dbarg_n1n1j_abbr0h.o  dbarg_n1n1j_born.o    dbarg_n1n1j_SquaredME.o \
+dg_n1n1j_abbr0a.o  dg_n1n1j_abbr0s.o  dg_n1n1j_born_Sfe6.o \
+dg_n1n1j_abbr0h.o  dg_n1n1j_born.o    dg_n1n1j_SquaredME.o \
+ug_n1n1j_abbr0a.o  ug_n1n1j_abbr0s.o  ug_n1n1j_born_Sfe6.o \
+ug_n1n1j_abbr0h.o  ug_n1n1j_born.o    ug_n1n1j_SquaredME.o \
+ddbar_n1n1j_abbr0a.o  ddbar_n1n1j_abbr0s.o  ddbar_n1n1j_born_Sfe6.o \
+ddbar_n1n1j_abbr0h.o  ddbar_n1n1j_born.o    ddbar_n1n1j_SquaredME.o \
+ubarg_n1n1j_abbr0a.o  ubarg_n1n1j_abbr0s.o  ubarg_n1n1j_born_Sfe6.o \
+ubarg_n1n1j_abbr0h.o  ubarg_n1n1j_born.o    ubarg_n1n1j_SquaredME.o \
+uubar_n1n1j_abbr0a.o  uubar_n1n1j_abbr0s.o  uubar_n1n1j_born_Sfe6.o \
+uubar_n1n1j_abbr0h.o  uubar_n1n1j_born.o    uubar_n1n1j_SquaredME.o
+
 
 SOURCESMAIN = $(PWHG) $(PDFPACK) $(USER) $(PWHGANALYSIS) $(FUNC) $(VIRTUALS)  \
 	$(FORMCALC) $(MADOBJ)

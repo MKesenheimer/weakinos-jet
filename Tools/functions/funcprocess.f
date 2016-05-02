@@ -91,8 +91,10 @@ c check if 4 momentum conservation is fulfilled
         ! check up to double precision of incoming energy
         !eps = 1d-15*pi(0)
         eps = 1d-10*pi(0)
+        
+    
 
-#ifdef DEBUGQ
+#ifdef DEBUG1
         print*,"p1 = ", p(:,1)
         print*,"p2 = ", p(:,2)
         print*,"p3 = ", p(:,3)
@@ -103,8 +105,7 @@ c check if 4 momentum conservation is fulfilled
         print*, "Sum p out = ", pf(:)
 #endif
 
-#define CHECKMOM
-#ifdef CHECKMOM
+#if defined(CHECKMOM)
         if( (dabs(pi(0) - pf(0)) .gt. dabs(eps)) .or.
      &      (dabs(pi(1) - pf(1)) .gt. dabs(eps)) .or.
      &      (dabs(pi(2) - pf(2)) .gt. dabs(eps)) .or.
@@ -132,11 +133,12 @@ c pick SUSY masses relevant for specific initial state
 
 #include "PhysPars.h"
 
-        integer id(4)
+        integer id(5)
         double precision M1, M2, M3, M4
         
         M3 = par_Fin1mass
         M4 = par_Fin2mass
+
         
         select case(abs(id(1)))
         case(1) ! d
@@ -174,7 +176,7 @@ c pick SUSY masses relevant for specific initial state
           print*, "top quarks not implemented yet."
           stop
         case(0) !gluon
-          M1 = 0
+          M2 = 0
         case default
           write(*,*) "encountered unhandled incoming quark ID ", id
           stop
@@ -186,6 +188,7 @@ c pick SUSY masses relevant for specific initial state
         print*,"M2",M2
         print*,"M3",M3
         print*,"M4",M4
+   
 #endif
         
       end

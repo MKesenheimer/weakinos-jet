@@ -15,7 +15,9 @@
 #else
 
 	contains
+	
 
+	
 	RealType function SInvariant(i, j)
 	integer i, j
 	SInvariant =

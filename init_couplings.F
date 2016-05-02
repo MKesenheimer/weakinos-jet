@@ -165,6 +165,7 @@ c requires encoded process ID in lprup(1)
           print*
           print*, "final state masses = ", par_Fin1mass
           print*, "                     ", par_Fin2mass
+          
           print*        
 #ifdef DEBUGQ
           print*
@@ -266,7 +267,7 @@ c set the madgraph and formcalc couplings event by event
 #ifdef DEBUGQ
         print*,"AlfaS: ", AlfaS
         print*,"Alfa:  ", Alfa
-        stop
+        !stop
 #endif
         
         
@@ -296,7 +297,7 @@ c sets the PhysPars.h parameters
         integer error
         character*100 slhafilename
         ! final state IDs
-        integer id_fin1, id_fin2
+        integer id_fin1, id_fin2, id_fin3
         ! weinberg angle
         double precision sinW
         
@@ -309,6 +310,7 @@ c sets the PhysPars.h parameters
         par_Zwidth   = invalid
         par_Fin1mass = invalid
         par_Fin2mass = invalid
+
 
         ! get SLHA filename
         call powheginputstring("SLHA",slhafilename)
@@ -334,7 +336,8 @@ c sets the PhysPars.h parameters
           endif
           print*
         enddo
-        stop
+        !stop
+        !i need it to continue
 #endif
 
         ! SM parameters from SLHA-file
@@ -392,7 +395,7 @@ c sets the PhysPars.h parameters
           case (2000011) ! slepton+
             par_Fin1mass = dreal(Mass_MSf(2,2,1))  
           case default
-            write(*,*) "encountered unknown particle ID ", id_fin1
+            write(*,*) "encountered unknown particle ID for fin1 ", id_fin1
             stop
         end select
         select case(abs(id_fin2))
@@ -411,9 +414,10 @@ c sets the PhysPars.h parameters
           case (2000011) ! slepton-
             par_Fin2mass = dreal(Mass_MSf(2,2,1))
           case default
-            write(*,*) "encountered unknown particle ID ", id_fin2
+            write(*,*) "encountered unknown particle ID for fin2", id_fin2
             stop
         end select
+
         
         ! Sfermion masses
         do i=1,2     ! left, right
@@ -512,7 +516,8 @@ c version.
         print*, "sd_L width =", par_Sfwidth(1,4,1)
         print*, "sd_R width =", par_Sfwidth(2,4,1)
         print*, "go width   =", par_Glwidth
-        stop
+        !stop
+        !continue pls
 #endif
 
         ! check if all paramaters are properly set
@@ -524,7 +529,8 @@ c version.
      &       (par_Zmass2   .eq. invalid) .or.
      &       (par_Wmass2   .eq. invalid) .or.
      &       (par_Fin1mass .eq. invalid) .or.
-     &       (par_Fin2mass .eq. invalid) ) then
+     &       (par_Fin2mass .eq. invalid)) then
+     
           print*, "One or more parameters are not set:"
           print*,"par_alpha: ",par_alpha
           print*,"par_Zmass: ",par_Zmass
@@ -536,6 +542,7 @@ c version.
           print*,"par_Fin1mass: ",par_Fin1mass
           print*,"par_Fin2mass: ",par_Fin2mass
           stop
+          
         endif
         
       end
