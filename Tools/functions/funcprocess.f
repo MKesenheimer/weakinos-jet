@@ -141,11 +141,11 @@ c############### end check_4conservation subroutine ####################
 
 c############### subroutine set_squark_params ##########################
 c pick SUSY masses relevant for specific initial state
-      subroutine set_process(id, M1, M2, M3, M4)
+      subroutine set_process(id, M1, M2, M3, M4, M5)
         implicit none
 #include "PhysPars.h"
         integer id(5)
-        double precision M1, M2, M3, M4
+        double precision M1, M2, M3, M4, M5
 
         M3 = par_Fin1mass
         M4 = par_Fin2mass
@@ -165,10 +165,10 @@ c pick SUSY masses relevant for specific initial state
           print*, "top quarks not implemented yet."
           stop
         case(0) ! gluon
-          M1 = 0
+          M1 = 0D0
         case default
           write(*,*) "funcprocess.f: encountered unhandled incoming "//
-     &               "quark ID ", id
+     &               " ID ", id
           stop
         end select
         
@@ -186,21 +186,44 @@ c pick SUSY masses relevant for specific initial state
         case(6) ! t
           print*, "top quarks not implemented yet."
           stop
-        case(0) !gluon
-          M2 = 0
+        case(0) ! g
+          M2 = 0D0
         case default
-          write(*,*) "funcprocess.f: encountered unhandled incoming"//
-     &               " quark ID ", id
+          write(*,*) "funcprocess.f: encountered unhandled incoming "//
+     &               "ID ", id
           stop
         end select
-        
+
+        select case(abs(id(5)))
+        case(1) ! d
+          M5 = par_MD
+        case(2) ! u
+          M5 = par_MU
+        case(3) ! s
+          M5 = par_MS
+        case(4) ! c
+          M5 = par_MC
+        case(5) ! b
+          M5 = par_MB
+        case(6) ! t
+          print*, "top quarks not implemented yet."
+          stop
+        case(0) ! g
+          M5 = 0D0
+        case default
+          write(*,*) "funcprocess.f: encountered unhandled outgoing "//
+     &               "ID ", id
+          stop
+        end select
+
 #ifdef DEBUGQ
         print*,"id",id
         print*,"M1",M1
         print*,"M2",M2
         print*,"M3",M3
         print*,"M4",M4
-   
+        print*,"M5",M5
+        stop
 #endif
       end
 c############### end subroutine set_squark_params ######################

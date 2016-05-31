@@ -1,6 +1,6 @@
 c############### init_couplings.f ######################################
-c last modified by MK, 22.06.2015
-c weakino pair production
+c last modified by MK, 23.05.2016
+c weakino pair + jet production
 
 c############### init_couplings subroutine #############################
 c setup SM and MSSM parameters in PhysPars.h
@@ -239,7 +239,7 @@ c sets the Madgraph parameters
         ! more than once, the SM Input parameters can be overwritten
         ! with parameters from powheg.input.
         if(called) then
-          print*, "Note: Overwrite madgraph paramaters."
+          !print*, "Note: Overwrite madgraph paramaters."
           readslha = .false.
         else
           call powheginputstring("SLHA",slhafilename)
@@ -276,15 +276,25 @@ c set the madgraph and formcalc couplings event by event
         Alfa = par_alpha
         Alfa2   = Alfa**2
         EL = dsqrt(Alfa*4d0*pi)
+
+        ! set the MadGraph SUSY-QCD couplings
+        call INIT_SUSY_QCD(G)
+
         ! initialize the counter term wich cures the susy breaking
         ! introduced by DR
         call init_susy_restore
+
 #ifdef DEBUGQ
         print*,"AlfaS: ", AlfaS
         print*,"Alfa:  ", Alfa
         !stop
 #endif
-        return
+        
+#ifdef DEBUGQ
+        print*, "par_Zwidth", par_Zwidth
+        print*, "par_Wwidth", par_Wwidth
+        stop
+#endif
       end
 c############### end subroutine set_ebe_couplings ######################
 
@@ -346,7 +356,6 @@ c sets the PhysPars.h parameters
           print*
         enddo
         !stop
-        !i need it to continue
 #endif
 
         ! SM parameters from SLHA-file
@@ -354,9 +363,10 @@ c sets the PhysPars.h parameters
         par_Zmass   = dreal(SMInputs_MZ)
         par_Wmass   = dreal(Mass_MW)
         par_gf      = dreal(SMInputs_GF)
+        par_alphaMZ = 1d0/dreal(SMInputs_invAlfaMZ)
 #define SLHA_ALPHA
 #ifdef SLHA_ALPHA
-        par_alpha   = 1d0/dreal(SMInputs_invAlfaMZ)
+        par_alpha   = par_alphaMZ
 #else
         sinW        = dsqrt(1d0-par_Wmass**2/par_Zmass**2)
         par_alpha   = dsqrt(2d0)*par_Wmass**2*sinW**2*par_gf/pi
@@ -390,11 +400,6 @@ c sets the PhysPars.h parameters
           par_Zwidth = 0D0
         endif
         
-#ifdef DEBUGQ
-        print*, "par_Zwidth", par_Zwidth
-        print*, "par_Wwidth", par_Wwidth
-#endif
-        
         ! extract particle types from process id
         call decode_pair(lprup(1),id_fin1,id_fin2)
 #ifdef DEBUG
@@ -418,7 +423,7 @@ c sets the PhysPars.h parameters
           case (2000011) ! slepton+
             par_Fin1mass = dreal(Mass_MSf(2,2,1))  
           case default
-            write(*,*) "encountered unknown particle ID for fin1 ", id_fin1
+            print*, "encountered unknown particle ID for fin1 ",id_fin1
             stop
         end select
         select case(abs(id_fin2))
@@ -437,7 +442,7 @@ c sets the PhysPars.h parameters
           case (2000011) ! slepton-
             par_Fin2mass = dreal(Mass_MSf(2,2,1))
           case default
-            write(*,*) "encountered unknown particle ID for fin2", id_fin2
+            print*, "encountered unknown particle ID for fin2", id_fin2
             stop
         end select
         
@@ -447,6 +452,9 @@ c sets the PhysPars.h parameters
      &            "be more suitable"
           stop
         endif
+
+        ! mass of the jet (is used only for phsp)
+        par_Fin3mass = 0D0
         
         ! Sfermion masses
         do i=1,2     ! left, right
@@ -472,7 +480,8 @@ c sets the PhysPars.h parameters
 
 c small mass to regularize LoopTools integrals
 #define EPSMASS 1D-30
-        
+c#define EPSMASS 0D0
+
         print*,"Note (PhysPars): neglecting u,d,c,s-quark masses"
         !epsMass = powheginput("epsMass")
         par_MU = EPSMASS ! Note: setting this exactly to zero can cause 
@@ -546,8 +555,7 @@ c version.
         print*, "sd_L width =", par_Sfwidth(1,4,1)
         print*, "sd_R width =", par_Sfwidth(2,4,1)
         print*, "go width   =", par_Glwidth
-        !stop
-        !continue pls
+        stop
 #endif
       end
 c############### end subroutine set_phys_params ########################
@@ -766,7 +774,7 @@ c MadGraphs couplings.f as well.
         Alfa2   = Alfa**2
         AlfaS   = SMInputs_AlfasMZ ! dummy value, gets overwritten by set_ebe_couplings
         AlfaS2  = AlfaS**2
-        AlfaMZ  = 1D0/1.27934000D2
+        AlfaMZ  = par_alphaMZ
         AlfaSMZ = SMInputs_AlfasMZ
         EL = dsqrt(4*pi*Alfa)
         GS = dsqrt(4*pi*AlfaS)
@@ -843,7 +851,7 @@ c set the paramaters for treating the on-shell resonances
         osresM(2) = mdl
         osresM(3) = mul
         osresM(4) = mul
-#ifdef NINJ
+#ifdef NINJ_JET
         osresM(5) = mdr
         osresM(6) = mdr
         osresM(7) = mur

@@ -1,8 +1,6 @@
 c############### Analysis-dummy.f ######################################
-c last modified by MK, 07.01.2015
-c adapted from dislepton
-c open some histograms and fill them with data
-c + several auxiliary subroutines
+c last modified by MK, 23.05.2016
+c weakino pair + jet production
 
 c############### subroutine init_hist ##################################
 c book all histograms, will be filled later
@@ -17,6 +15,6 @@ c calculate quantities that shall be plotted
 c fill histograms
       subroutine analysis(dsig)
         implicit none
-        double precision dsig ! total cross section
+        double precision dsig
       end
 c############### end subroutine analysis ###############################

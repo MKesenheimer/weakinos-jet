@@ -1,6 +1,6 @@
 c############### sigosres.f ############################################
-c last modified by MK, 05.12.2015
-c weakino pair productions
+c last modified by MK, 23.05.2016
+c weakino pair + jet production
 c new file on the basis of sigremnants.f, revision 3154
 c changes not marked
 
