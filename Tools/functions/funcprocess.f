@@ -64,7 +64,8 @@ c verbose = 4: No output at all, but set the variable lresult
         double precision p(0:3,nleg) ! momentum vectors
         double precision pi(0:3) ! sum of incoming momenta
         double precision pf(0:3) ! sum of outgoing momenta
-        double precision eps ! rel. err.
+        double precision eps, rel(0:3) ! rel. err.
+        parameter (eps=1d-6)
         logical lresult
         integer verbose
         logical first
@@ -72,16 +73,32 @@ c verbose = 4: No output at all, but set the variable lresult
 
         ! reset lresult
         lresult = .true.
-        
+
+        ! first check if NaNs occured
+        do i=1,nleg
+          do j=0,3
+            if( isnan(p(j,i)) ) then
+              if(verbose.ge.2) then
+                print*,"warning: Nan occured"
+                print*,"p1 = ", p(:,1)
+                print*,"p2 = ", p(:,2)
+                print*,"p3 = ", p(:,3)
+                print*,"p4 = ", p(:,4)
+                if(nleg.eq.5 .or. nleg.eq.6) print*,"p5 = ", p(:,5)
+                if(nleg.eq.6) print*,"p6 = ", p(:,6)
+              endif
+              p(j,i) = 0D0 ! overwrite NaN with 0
+            endif  
+          enddo  
+        enddo
+
         pi(:) = 0d0
         pf(:) = 0d0
-        
         do i=1,2
           do j=0,3
             pi(j) = pi(j) + p(j,i)
           enddo  
         enddo
-        
         do i=3,nleg
           do j=0,3
             pf(j) = pf(j) + p(j,i)
@@ -91,20 +108,31 @@ c verbose = 4: No output at all, but set the variable lresult
         if(.not. (verbose.le.3 .and. verbose.ge.0) ) then
           print*, "Error: wrong verbose level ", verbose
           stop
-        endif  
-        
-        ! check up to single precision of incoming energy
-        eps = 1d-10*pi(0)
+        endif
         
         ! reset the variable "first" if this routine gets called with
         ! a higher verbosity level
         if(verbose.gt.0) first = .true.
 
+        ! calculate the relative error
+        do i=0,3
+          if(pi(i).lt.eps) then
+            rel(i) = pf(i)/pf(0)
+          elseif(pf(i).lt.eps) then
+            rel(i) = pi(i)/pi(0)
+          elseif(pi(i).lt.eps .and. pf(i).lt.eps) then
+            rel(i) = 0D0
+          else
+            rel(i) = 2D0*dabs(pi(i)-pf(i))/dabs(pi(i)+pf(i))
+          endif
+          !print*,rel(i)
+        enddo
+
         if( first .and.(
-     &      (dabs(pi(0) - pf(0)) .gt. dabs(eps)) .or.
-     &      (dabs(pi(1) - pf(1)) .gt. dabs(eps)) .or.
-     &      (dabs(pi(2) - pf(2)) .gt. dabs(eps)) .or.
-     &      (dabs(pi(3) - pf(3)) .gt. dabs(eps))) ) then
+     &      rel(0) .gt. eps .or.
+     &      rel(1) .gt. eps .or.
+     &      rel(2) .gt. eps .or.
+     &      rel(3) .gt. eps) ) then
           ! show the output only once (could be dangerous)
           if(verbose.eq.0) first = .false.
           if(verbose.eq.3) then
@@ -114,28 +142,18 @@ c verbose = 4: No output at all, but set the variable lresult
           endif
           print*, "Sum p in  = ", pi(:)
           print*, "Sum p out = ", pf(:)
+          print*, "rel. err. = ",rel(:)
           if(verbose.ge.2) then
             print*,"p1 = ", p(:,1)
             print*,"p2 = ", p(:,2)
             print*,"p3 = ", p(:,3)
             print*,"p4 = ", p(:,4)
-            if(nleg .eq. 5) print*,"p5 = ", p(:,5)
-            if(nleg .eq. 6) print*,"p6 = ", p(:,6)
+            if(nleg.eq.5 .or. nleg.eq.6) print*,"p5 = ", p(:,5)
+            if(nleg.eq.6) print*,"p6 = ", p(:,6)
           endif
           if(verbose.eq.3) stop
           lresult = .false.
         endif
-        
-        ! check if NaN occured
-        do i=1,nleg
-          do j=0,3
-            if( isnan(p(j,i)) ) then
-              print*,"warning: Nan occured"
-              lresult = .false.
-              return
-            endif  
-          enddo  
-        enddo
       end
 c############### end check_4conservation subroutine ####################
 

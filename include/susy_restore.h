@@ -12,8 +12,8 @@ c last modified by MK, 19 May 2015
         ! quark-squark-neutralino:
         !     gy -> gy + dZe1y
         !                dZe1y = - e*Alfas/(6*Pi)
-        RealType gsy,gsy2,dZgs1y,ely,ely2,dZe1y
-        common/SUSYrestore/gsy,gsy2,dZgs1y,ely,ely2,dZe1y
+        RealType dZgs1y,dZe1y
+        common/SUSYrestore/dZgs1y,dZe1y
         
 #endif
 

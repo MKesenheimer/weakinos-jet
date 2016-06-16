@@ -92,10 +92,6 @@ $PaintSE = MkDir["Diagrams"];
 DoPaint[diags_, type_, opt___] := Paint[diags, opt,
   DisplayFunction -> (Export[ToFileName[$PaintSE, name <> "." <> type <> ".pdf"], #]&)]
 
-(*SUSY Counterterm*)
-GSY = GS;
-ELY = EL(*+dZe1y*);
-
 
 Print["Born"]
 

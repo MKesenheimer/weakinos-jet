@@ -17,17 +17,17 @@ c          mk            mj
 
 c definitions
         ! store the number of resonances here
-        integer nosres, cnosres ! constant
+        integer nosres, cnosres ! constants
         ! dummy variable to initialize the array
-        parameter (cnosres=8)
+        parameter (cnosres=16)
         ! this is the human readable array which stores the id of the 
         ! on-shell resonance, e.g. "ul35", "dl35".
         ! this variable is set in init_processes
         character*4 osresID(cnosres)
-        !data osresID/"dl35","dl45","ul35","ul45"/
 
         ! the mass array of the on-shell resonant particles
         double precision osresM(cnosres)
+        double precision m_avrg
         ! the width of the on-shell resonant particle (regulator)
         ! this must be set in init_couplings.f
         double precision wreg
@@ -39,12 +39,13 @@ c definitions
         ! particles with numbers 3 & 5
         ! osreslegs(chan,1): first resonant particle (index is i used in our code)
         ! osreslegs(chan,2): second resonant particle (index is j used in our code)
-        ! osreslegs(chan,3): spectator (index is k used in our code) 
-        integer osreslegs(cnosres,1:3)
+        ! osreslegs(chan,3): spectator 1 (index is k used in our code)
+        ! osreslegs(chan,4): spectator 2 (index is l used in our code)
+        integer osreslegs(cnosres,1:4)
 
-        common/c_onshell/ osresM, osreslegs, wreg
-        common/c_onshell/ osresID
-        common/c_onshell/ nosres
+        common/c_onshell/ osresM, m_avrg, wreg  ! doubles
+        common/c_onshell/ osresID               ! characters
+        common/c_onshell/ nosres                ! integers
 
 
 #if defined(DSUB_I) || defined(DSUB_II) || defined(DSUB_II_TEST)

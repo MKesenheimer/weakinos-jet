@@ -267,29 +267,14 @@ c just set xphi to zero - the jacobian will still be correct.
         endif
         
         ! check if NaN occured
+        if(isnan(jac)) then
+          print*,"warning in phi1_2:271: NaN occured"
+          jac = 0D0
+          return
+        endif
         do i=0,3
-          if(isnan(p1(i)) .or. isnan(p2(i)) .or. isnan(jac)) then
-            print*,"warning in phi1_2:271: NaN occured"
-#ifdef DEBUGQ
-            print*,"xth",xth
-            print*,"xphi",xphi
-            print*,"m1",m1
-            print*,"m2",m2
-            print*,"p0",p0
-            print*,"s",s
-            print*,"cosTh",cosTh
-            print*,"sinTh",sinTh
-            print*,"phi",phi
-            print*,"E1",E1
-            print*,"E2",E2
-            print*,"Pabs",Pabs
-            print*,"norm",norm
-            print*,"beta",beta
-            print*,"vec",vec
-            print*,"p1",p1
-            print*,"p2",p2
-            print*,"jac",jac
-#endif
+          if(isnan(p1(i)) .or. isnan(p2(i))) then
+            print*,"warning in phi1_2:277: NaN occured"
             jac = 0D0
             return
           endif
@@ -303,9 +288,9 @@ c Massive particle p0 decaying into p1 mass m1 and p2 mass-squared s2.
 c with invariant mass of particle three s2 integrated over.
 c s2min is the minimum value of s2.
 c Vectors returned p1 and p2 are in the same frame as p0 is supplied.
-c Result is R2(s) = 1/4 * |p|/sqrts * domega
+c Result is R2(s) * ds2 = 1/4 * |p|/sqrts * domega * ds2
 c Expression evaluated is 
-c R2(s) = ds2 d^3p1/(2 E1) d^3p2/(2 E2) delta^4(p0 - p1 - p2) 
+c R2(s) * ds2 = ds2 d^3p1/(2 E1) d^3p2/(2 E2) delta^4(p0 - p1 - p2)
 c delta(p2^2-s2)
 c Parameter to select phase space importance sampling:
 c psgen=0:     flat in s2 (bwmass and bwwidth is not required)
@@ -452,9 +437,14 @@ c psgen=2:     breit wigner in s2 and flat below resonance
         endif
         
         ! check if NaN occured
+        if(isnan(jac)) then
+          print*,"warning in phi1_2:440: NaN occured"
+          jac = 0D0
+          return
+        endif
         do i=0,3
-          if(isnan(p1(i)) .or. isnan(p2(i)) .or. isnan(jac)) then
-            print*,"warning in phi1_2:438: NaN occured"
+          if(isnan(p1(i)) .or. isnan(p2(i))) then
+            print*,"warning in phi1_2:446: NaN occured"
             jac = 0D0
             return
           endif

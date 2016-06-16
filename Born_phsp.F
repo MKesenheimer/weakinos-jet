@@ -11,35 +11,35 @@ c the masses for Born and real emission,
 c and the Jacobi factor for the phase space volume
       subroutine born_phsp(xborn)
         implicit none
-
 #include "PhysPars.h"
 #include "nlegborn.h"
 #include "pwhg_kn.h"
 #include "pwhg_math.h"
-
         ! input:
         double precision xborn(ndiminteg-3)
         ! output, local variables:
         double precision vec(3),beta
         ! jacobian
         double precision jac
-        double precision MassQ1, MassQ2, MassF1, MassF2
-        double precision p12(0:3)
-        integer nu
+        double precision p12(0:3), pij(0:3)
+        integer ind,nu
+        ! final state arrangement
+        integer i,j,k
         ! check 4-momentum conservation
         logical lresult
-        !local variable for propagator momentum
-        double precision p45(0:3)
         ! phase space borders
-        double precision s45min
-        !added for debugging purposes
-        !particle flavors, distrust that particular flavour ?
-        integer bflav(nlegborn)
-        !mandelstam s
+        double precision sijmin
+        ! mandelstams
         double precision s
-         ! function to calculate the squared momentum sum
-        double precision momsq, momsum3sq, momsum2sq
-        external momsq, momsum2sq, momsum3sq
+        ! function to calculate the squared momentum sum
+        double precision dotp, momsq, momsum3sq, momsum2sq
+        external dotp, momsq, momsum2sq, momsum3sq
+        ! pseudorapidity and pt
+        double precision etajet, ptjet
+
+        ! final state arrangement
+        ! (the order how the phase space is generated)
+        i = 3; j = 5; k = 4
 
         ! reset the jacobians
         jac = 1D0
@@ -49,6 +49,9 @@ c and the Jacobi factor for the phase space volume
         print*,"xborn(1) = ", xborn(1)
         print*,"xborn(2) = ", xborn(2)
         print*,"xborn(3) = ", xborn(3)
+        print*,"xborn(4) = ", xborn(4)
+        print*,"xborn(5) = ", xborn(5)
+        print*,"xborn(6) = ", xborn(6)
 #define DEBUG1
 #endif
 
@@ -58,6 +61,7 @@ c and the Jacobi factor for the phase space volume
         kn_masses(3) = dabs(par_Fin1mass)
         kn_masses(4) = dabs(par_Fin2mass)
         kn_masses(5) = dabs(par_Fin3mass)
+        kn_masses(6) = 0D0
 
         ! lower bound on the mass of the final state 2->3 process
         kn_minmass = kn_masses(3) + kn_masses(4) + kn_masses(5)
@@ -87,49 +91,55 @@ c and the Jacobi factor for the phase space volume
         kn_cmpborn(3,2) = -kn_cmpborn(0,1)
 
         p12(:) = kn_cmpborn(:,1) + kn_cmpborn(:,2)
-        s45min = (kn_masses(4)+kn_masses(5))**2
+        sijmin = (kn_masses(i)+kn_masses(j))**2
         
         ! generate four-momenta in the cms frame
         ! for the particles produced in the Born process,
         ! calculates the Jacobi factor for the phase space volume
         ! we don't want to integrate over phi, so we provide 0 for xphi
         ! (see phi1_2.f)
-        
-        ! subroutine R2phsp_s2(psgen,x2,xth,xphi,s2min,m1,bwmass,bwwidth,
-        ! &                     p0,p1,p2,jac)
-        call R2phsp_s2(0,xborn(3),xborn(4),0D0,s45min,
-     &                 kn_masses(3),0D0,0D0,p12,kn_cmpborn(:,3),p45,jac)
+        call R2phsp_s2(0,xborn(3),xborn(4),0D0,sijmin,kn_masses(k),
+     &                 0D0,0D0,p12(:),kn_cmpborn(:,k),pij(:),jac)
+        kn_jacborn = kn_jacborn*jac
+        call R2phsp(xborn(5),xborn(6),kn_masses(i),kn_masses(j),pij(:),
+     &              kn_cmpborn(:,i),kn_cmpborn(:,j),jac)
         kn_jacborn = kn_jacborn*jac
 
-
-        ! subroutine R2phsp(xth,xphi,m1,m2,p0,p1,p2,jac)
-        call R2phsp(xborn(5),xborn(6),kn_masses(4),kn_masses(5),p45,
-     &              kn_cmpborn(:,4),kn_cmpborn(:,5),jac)
-        kn_jacborn = kn_jacborn*jac
-
-        ! cut for soft gluon
-        if(kn_cmpborn(0,5).lt.1d0) then
+        ! generation cut for soft jets
+        ! (jet has always index = 5)
+        ptjet = dsqrt(kn_cmpborn(1,5)**2+kn_cmpborn(2,5)**2)
+        if(ptjet.lt.gcut) then
           kn_jacborn = 0D0
+          !return
         endif
 
-        ! physical phase space jacobian ((2*Pi)**(3n-4), n=2)
-        kn_jacborn = kn_jacborn/(2D0*pi)**2
+        ! physical phase space jacobian ((2*Pi)**(3n-4), n=3)
+        kn_jacborn = kn_jacborn/(2D0*pi)**5
 
-        ! velocity of subsystem in laboratory frame
+        ! Boost to the LAB frame, starting at vector 3:
         beta = (kn_xb1-kn_xb2)/(kn_xb1+kn_xb2)
-
-        ! set up boost vector
         vec(1) = 0D0
         vec(2) = 0D0
         vec(3) = 1D0
-
-        ! calculate momenta kn_pborn in the laboratory frame
-        ! boost kn_cmpborn (CM) -> kn_pborn (lab. frame)
-        call mboost(nlegborn-2,vec,beta,kn_cmpborn(0,3),kn_pborn(0,3))
+        call mboost(nlegborn-2,vec,beta,kn_cmpborn(:,3),kn_pborn(:,3))
 
         do nu=0,3
            kn_pborn(nu,1) = kn_xb1*kn_beams(nu,1)
            kn_pborn(nu,2) = kn_xb2*kn_beams(nu,2)
+        enddo
+
+        ! check for NaNs
+        do ind=1,nlegborn
+          do nu=0,3
+            if(isnan(kn_pborn(nu,ind)) .or. 
+     &         isnan(kn_cmpborn(nu,ind))) then
+              print*, "Warning in Born_phsp: NaN occured."
+              print*,"kn_pborn(",nu,",",ind,")   = ",kn_pborn(nu,ind)
+              print*,"kn_cmpborn(",nu,",",ind,") = ",kn_cmpborn(nu,ind)
+              kn_jacborn = 0D0
+              return
+            endif
+          enddo
         enddo
 
         ! check four momentum conservation

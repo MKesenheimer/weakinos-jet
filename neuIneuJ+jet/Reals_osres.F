@@ -38,13 +38,13 @@ c modifies the jacobian.
         double precision corrfac
         external corrfac
         ! kinematics
-        double precision s12, sij
+        double precision s12, sij, skl
         ! breit-wigner ratios
         double precision bwratio
         ! masses
-        double precision mij, mi, mj, mk
+        double precision mij, mkl, mi, mj, mk, ml
         ! indices
-        integer i,j,k
+        integer i,j,k,l
         ! check 4-momentum conservation
         logical lresult
         ! initialization variables
@@ -119,17 +119,13 @@ c modifies the jacobian.
         call set_ebe_couplings
         
         ! set the channel-related indices i,j,k and masses mi,mj,mk,mij
-        call set_channel(chan,i,j,k,mi,mj,mk,mij)
-        
-        ! in case a weakino mass is negative
-        mi = dabs(mi)
-        mj = dabs(mj)
-        mk = dabs(mk)
-        mij = dabs(mij)
+        call set_channel(chan,i,j,k,l,mi,mj,mk,ml,mij)
 
         ! calculate the invariants
         s12  = momsum2sq(p(0:3,1),p(0:3,2)) ! invariant mass of particle 1 + 2
         sij  = momsum2sq(p(0:3,i),p(0:3,j)) ! invariant mass of particle i + j
+        skl  = momsum2sq(p(0:3,k),p(0:3,l)) ! invariant mass of particle k + l
+        mkl  = dsqrt(skl)
 
         ! this is |M_R(res)|**2 (still with on-shell resonances)
         !call sreal_proc_res(p,rflav,chan,amp)
@@ -138,12 +134,12 @@ c modifies the jacobian.
         ! (don't subtract anything if the squark is off-shell, but if 
         ! the quark is on-shell subtract the divergent part) 
         ! -> Prospino scheme 1211.0286
-        if( (s12.ge.(mij+mk)**2) .and. (mij.ge.(mi+mj)) ) then
+        if( (s12.ge.(mij+mkl)**2) .and. (mij.ge.(mi+mj)) ) then
           call off_to_on(p,chan,p_os)                             ! off_to_on the momenta p to on-shell momenta p_os        
           bwratio = (mij*wreg)**2/((sij-mij**2)**2+(mij*wreg)**2) ! calculate the ratio of the breit wigner functions
           !call sreal_proc_res(p_os,rflav,chan,ampCT)              ! new routine to calculate only the resonant matrix elements
           ampCT = bwratio*ampCT                                   ! multiply with the breit-wigner ratio
-          ampCT = corrfac(s12,mi,mj,mk,sij,mij)*ampCT             ! rescale the counter term to fit into the new ps
+          ampCT = corrfac(s12,mi,mj,mkl,sij,mij)*ampCT             ! rescale the counter term to fit into the new ps
         else
           ampCT = 0D0
         endif  
@@ -175,11 +171,8 @@ c modifies the jacobian.
           counter = counter + 1
         endif
 #endif
-        
 #else
         ampreal = 0d0
 #endif
-
       end
-      
 c############### end subroutine setosresreal ###########################

@@ -5,15 +5,19 @@ c this subroutine is in principal a 3 particle phase-space generator
 c with an additional condition, namely sij = mij**2
 c
 c kinematics:
-c                        mi
-c                        / 
-c   ____      !         /
-c  |    |  sij=mij^2   /
-c  | s  |--------------
-c  |____|\             \
-c         \             \
-c          \             \
-c          mk            mj
+c              pi
+c            /
+c           /
+c          /---- pj
+c   ____  /    !
+c  |    |/ sij = mij**2
+c  | s  |      !
+c  |____|\ skl = mkl**2
+c         \
+c          \---- pk
+c           \
+c            \
+c              pl
 c
 c restframe Rij:
 c
@@ -35,27 +39,25 @@ c       \     /
 c        \   /
 c         \ /
 c ========> <=========  
-c          |
-c          |
-c          |
-c          pk
-
+c         / \
+c        /   \
+c       /     \
+c      pk     pl
+c
       subroutine off_to_on(p,chan,p_OS)
         implicit none
-
 #include "nexternal.inc"
 #include "nlegborn.h"
 #include "pwhg_kn.h"
-
         ! momenta from PS-generator, on-shell momenta
         double precision p(0:3,nexternal),p_OS(0:3,nexternal)
         ! mass at resonance, mass of particle i,j,k
-        double precision mij, mi, mj, mk
+        double precision mij, mkl, mi, mj, mk, ml
         ! channel index (which particle should get resonant to mij)
         character*4 chan
         ! if you choose i=3, j=5, k=4: particle 3 and 5 will generate
         ! the resonance with the intermediate particle with mass mij
-        integer i,j,k
+        integer i,j,k,l
         ! external functions
         double precision kaellenSqrt
         external kaellenSqrt
@@ -66,19 +68,22 @@ c          pk
         parameter (m_pi = 4.D0*datan(1.D0))
         ! local variables
         double precision ratio
-        ! momenta in lab. frame: p12 = p1+p2, pij = pi+pj, pk = p(:,k)
-        double precision p12(0:3), pij(0:3), pk(0:3)
+        ! momenta in lab. frame: p12 = p1+p2, pij = pi+pj, pkl = pk+pl
+        double precision p12(0:3), pij(0:3), pkl(0:3)
         ! momenta in restframe of resonant particle
         double precision piRij(0:3), pjRij(0:3)
+        double precision pkRkl(0:3), plRkl(0:3)
         ! reshuffeld momenta in lab. frame (see CS-paper)
-        double precision pij_tilde(0:3), pk_tilde(0:3)
+        double precision pij_tilde(0:3), pkl_tilde(0:3)
         double precision pi_tilde(0:3), pj_tilde(0:3)
+        double precision pk_tilde(0:3), pl_tilde(0:3)
         ! indices
         integer sumi, sumj, mu
         ! invariants
-        double precision s, sqrtS, sij
-        ! boost from lab. frame into rest frame of particle i and j
+        double precision s, sqrtS, sij, skl
+        ! boost from lab. frame into rest frame of particle i,j and k,l
         double precision betaRij, vecRij(3)
+        double precision betaRkl, vecRkl(3)
         ! norm
         double precision norm
         ! tests
@@ -93,10 +98,10 @@ c          pk
         ! check 4-momentum conservation
         logical lresult
         
-        ! set the channel-related indices i,j,k and masses mi,mj,mk,mij
-        call set_channel(chan,i,j,k,mi,mj,mk,mij)
+        ! set the channel-related indices i,j,k,l and masses mi,mj,mk,ml,mij
+        call set_channel(chan,i,j,k,l,mi,mj,mk,ml,mij)
         
-        if( nexternal .ne. 5) then
+        if( nexternal .ne. 6) then
           print*, "error in subroutine off_to_on"
           print*, "nexternal = ", nexternal
           stop
@@ -109,14 +114,16 @@ c          pk
         s     = momsum2sq(p(:,1),p(:,2))   ! Q2 in CS-paper
         sqrtS = dsqrt(S)
         sij   = momsum2sq(p(:,i),p(:,j))
+        skl   = momsum2sq(p(:,k),p(:,l))
+        mkl   = dsqrt(skl)
         
         ! check if theta function was properly used
-        if(sqrtS - mij - mk .lt. 0D0) then
+        if(sqrtS - mij - mkl .lt. 0D0) then
           print*, "error in subroutine off_to_on"
           print*, "intermediate particle is not on-shell"
-          print*, "mi,mj,mk =", mi, mj, mk
+          print*, "mi,mj,mk,ml =", mi, mj, mk, ml
           print*, "sqrtS    = ", sqrtS
-          print*, "mij + mk = ", mij + mk
+          print*, "mij + mkl = ", mij + mkl
           print*, "Did you forget the Theta-function?"
           stop
         endif
@@ -129,16 +136,16 @@ c          pk
         do mu = 0,3
           p12(mu) = p(mu,1) + p(mu,2) ! Q(mu) in CS-paper
           pij(mu) = p(mu,i) + p(mu,j)
-          pk(mu)  = p(mu,k)
+          pkl(mu) = p(mu,k) + p(mu,l)
         enddo
 
-        ! definition of the momenta pij_tilde and pk_tilde in terms of  
-        ! the original momenta pi, pj and pk
+        ! definition of the momenta pij_tilde and pkl_tilde in terms of  
+        ! the original momenta pi, pj and pkl
         ratio = kaellenSqrt(s,mij**2,mk**2)/kaellenSqrt(s,sij,mk**2)
         do mu = 0,3
-          pk_tilde(mu)  = ratio*(pk(mu)-dotp(p12,pk)/s*p12(mu))
+          pkl_tilde(mu)  = ratio*(pkl(mu)-dotp(p12,pkl)/s*p12(mu))
      &                    +(s+mk**2-mij**2)/(2*s)*p12(mu)
-          pij_tilde(mu) = p12(mu)-pk_tilde(mu)
+          pij_tilde(mu) = p12(mu)-pkl_tilde(mu)
         enddo
         
         ! boost into the rest frame Rij of particle i and j
@@ -147,6 +154,13 @@ c          pk
         vecRij(1) = pij(1)/norm
         vecRij(2) = pij(2)/norm
         vecRij(3) = pij(3)/norm
+        
+        ! boost into the rest frame Rkl of particle k and l
+        norm      = dsqrt(pkl(1)**2+pkl(2)**2+pkl(3)**2)
+        betaRkl   = -norm/pkl(0)
+        vecRkl(1) = pkl(1)/norm
+        vecRkl(2) = pkl(2)/norm
+        vecRkl(3) = pkl(3)/norm
         
 #define DIRECTION_I
 #ifdef DIRECTION_I
@@ -220,6 +234,79 @@ c          pk
           piRij(sumi) = -pjRij(sumi)
         enddo
 #endif
+#define DIRECTION_K
+#ifdef DIRECTION_K
+        ! keep the direction of particle k
+        call mboost(1,vecRkl,betaRkl,p(:,k),pkRkl(:))
+        norm = dsqrt(pkRkl(1)**2+pkRkl(2)**2+pkRkl(3)**2)
+        ! get the angular info of particle k
+        if( norm .lt. eps) then
+          CosQ = 1D0
+          phi  = 0D0
+        else
+          CosQ = pkRkl(3)/norm
+          pxy   = dsqrt(pkRkl(1)**2+pkRkl(2)**2)
+          if(dabs(pxy).lt. eps) then
+            phi = 0D0
+          else if(pkRkl(1).ge.0.and.pkRkl(2).ge.0) then
+               phi = dacos(pkRkl(1)/pxy)
+          else if(pkRkl(1).ge.0.and.pkRkl(2).lt.0) then
+               phi = 2d0*m_pi-dacos(pkRkl(1)/pxy)
+          else if(pkRkl(1).lt.0.and.pkRkl(2).ge.0) then
+               phi = m_pi-dacos(dabs(pkRkl(1))/pxy)
+          else
+               phi = m_pi+dacos(dabs(pkRkl(1))/pxy)
+          endif
+        endif
+        ! construct the new momenta of the particles k and l in Rkl,
+        ! with restriction Q**2 = skl**2
+        pkRkl(0) = (mkl**2+mk**2-ml**2)/(2d0*mkl)
+        plRkl(0) = (mkl**2+ml**2-mk**2)/(2d0*mkl)
+        ! set 3-momenta
+        norm = kaellenSqrt(mkl**2,mk**2,ml**2)/(2d0*mkl)
+        pkRkl(1) = norm*dsqrt(1d0-CosQ**2)*dcos(phi)
+        pkRkl(2) = norm*dsqrt(1d0-CosQ**2)*dsin(phi)
+        pkRkl(3) = norm*CosQ
+        do sumi=1,3
+          plRkl(sumi) = -pkRkl(sumi)
+        enddo
+#endif
+#ifdef DIRECTION_L
+        ! keep the direction of particle l
+        call mboost(1,vecRkl,betaRkl,p(:,l),plRkl(:))
+        norm = dsqrt(plRkl(1)**2+plRkl(2)**2+plRkl(3)**2)
+        ! get the angular info of particle l
+        if( norm .lt. eps) then
+          CosQ = 1D0
+          phi  = 0D0
+        else
+          CosQ = plRkl(3)/norm
+          pxy   = dsqrt(plRkl(1)**2+plRkl(2)**2)
+          if(dabs(pxy).lt. eps) then
+            phi = 0D0
+          else if(plRkl(1).ge.0.and.plRkl(2).ge.0) then
+               phi = dacos(plRkl(1)/pxy)
+          else if(plRkl(1).ge.0.and.plRkl(2).lt.0) then
+               phi = 2d0*m_pi-dacos(plRkl(1)/pxy)
+          else if(plRkl(1).lt.0.and.plRkl(2).ge.0) then
+               phi = m_pi-dacos(dabs(plRkl(1))/pxy)
+          else
+               phi = m_pi+dacos(dabs(plRkl(1))/pxy)
+          endif
+        endif
+        ! construct the new momenta of the particles k and l in Rkl,
+        ! with restriction Q**2 = skl**2
+        plRkl(0) = (mkl**2+ml**2-mk**2)/(2d0*mkl)
+        pkRkl(0) = (mkl**2+mk**2-ml**2)/(2d0*mkl)
+        ! set 3-momenta
+        norm = kaellenSqrt(mkl**2,mk**2,ml**2)/(2d0*mkl)
+        plRkl(1) = norm*dsqrt(1d0-CosQ**2)*dcos(phi)
+        plRkl(2) = norm*dsqrt(1d0-CosQ**2)*dsin(phi)
+        plRkl(3) = norm*CosQ
+        do sumi=1,3
+          pkRkl(sumi) = -plRkl(sumi)
+        enddo
+#endif
         
         ! boost back into lab. frame with reshuffeld momenta:
         norm = dsqrt(pij_tilde(1)**2+pij_tilde(2)**2+pij_tilde(3)**2)
@@ -231,6 +318,16 @@ c          pk
         call mboost(1,vecRij,betaRij,piRij(:),pi_tilde(:))
         call mboost(1,vecRij,betaRij,pjRij(:),pj_tilde(:))
         
+        ! boost back into lab. frame with reshuffeld momenta:
+        norm = dsqrt(pkl_tilde(1)**2+pkl_tilde(2)**2+pkl_tilde(3)**2)
+        betaRkl   = norm/pkl_tilde(0)
+        vecRkl(1) = pkl_tilde(1)/norm
+        vecRkl(2) = pkl_tilde(2)/norm
+        vecRkl(3) = pkl_tilde(3)/norm
+        
+        call mboost(1,vecRkl,betaRkl,pkRkl(:),pk_tilde(:))
+        call mboost(1,vecRkl,betaRkl,plRkl(:),pl_tilde(:))
+        
         ! set the on-shell momenta
         do mu=0,3
           ! no changes for initial state particles
@@ -239,6 +336,7 @@ c          pk
           p_OS(mu,i) = pi_tilde(mu)
           p_OS(mu,j) = pj_tilde(mu)
           p_OS(mu,k) = pk_tilde(mu)
+          p_OS(mu,l) = pl_tilde(mu)
         enddo
 
         ! - checks -
@@ -263,11 +361,13 @@ c          pk
               print*,"pi",p(:,i)
               print*,"pj",p(:,j)
               print*,"pk",p(:,k)
+              print*,"pk",p(:,l)
               print*,"p1_OS",p_OS(:,1)
               print*,"p2_OS",p_OS(:,2)
               print*,"pi_OS",p_OS(:,i)
               print*,"pj_OS",p_OS(:,j)
               print*,"pk_OS",p_OS(:,k)
+              print*,"pk_OS",p_OS(:,l)
               stop
             endif
           enddo
@@ -282,14 +382,11 @@ c############### function corrfac ######################################
 c the remapping requires a change in the PS integration
 c and every counter term which uses the on-shell momenta should be
 c rescaled by this correction factor
-
       double precision function corrfac(shat,mi,mj,mk,sij,mij)
         implicit none
-
 #include "nexternal.inc"
 #include "nlegborn.h"
 #include "pwhg_kn.h"
-
         !input variables
         double precision shat,mi,mj,mk,sij,mij
         ! external functions
@@ -317,37 +414,39 @@ c rescaled by this correction factor
 c############### end function corrfac ##################################
 
 c############### subroutine set_channel ################################
-c this subroutine sets the indices i,j,k and the masses mi,mj,mk,mij
-c in dependence of the chan-identifier (NOTE: chan must be a
+c this subroutine sets the indices i,j,k,l and the masses mi,mj,mk,ml,
+c and mij in dependence of the chan-identifier (NOTE: chan must be a
 c character-string). The arrays osresID, osreslegs and osresM must
 c be initialized in init_couplings and in init_processes.
 c
-c                        mi
-c                        / 
-c   ____      !         /
-c  |    |  sij=mij^2   /
-c  | s  |--------------
-c  |____|\             \
-c         \             \
-c          \             \
-c          mk            mj
-
-      subroutine set_channel(chan,i,j,k,mi,mj,mk,mij)
+c              pi
+c            /
+c           /
+c          /---- pj
+c   ____  /    !
+c  |    |/ sij = mij**2
+c  | s  |      !
+c  |____|\ skl = mkl**2
+c         \
+c          \---- pk
+c           \
+c            \
+c              pl
+c
+      subroutine set_channel(chan,i,j,k,l,mi,mj,mk,ml,mij)
         implicit none
-        
 #include "PhysPars.h"
 #include "nexternal.inc"
 #include "nlegborn.h"
 #include "pwhg_math.h"
 #include "pwhg_kn.h"
 #include "osres.h"
-
         ! variable to determine the channel
         character*4 chan
         ! indices
-        integer i,j,k, ichan
+        integer i,j,k,l, ichan
         ! masses
-        double precision mij, mi, mj, mk
+        double precision mij,mkl, mi, mj, mk, ml
         double precision momsq, momsum2sq, momsum3sq, dotp
         external momsq, momsum2sq, momsum3sq, dotp
         integer levi_civita
@@ -358,18 +457,30 @@ c          mk            mj
             i = osreslegs(ichan,1)
             j = osreslegs(ichan,2)
             k = osreslegs(ichan,3)
+            l = osreslegs(ichan,4)
             mij = osresM(ichan)
-            if(i.eq.3 .and. j.eq.5 .and. k.eq.4) then
+            if(i.eq.3 .and. j.eq.5 .and. k.eq.4 .and. l.eq.6) then
               mi = par_Fin1mass
               mj = 0D0
               mk = par_Fin2mass
-            elseif(i.eq.4 .and. j.eq.5 .and. k.eq.3) then
+              ml = 0D0
+            elseif(i.eq.4 .and. j.eq.5 .and. k.eq.3 .and. l.eq.6) then
               mi = par_Fin2mass
               mj = 0D0
               mk = par_Fin1mass
-            ! TODO: erweitern
+              ml = 0D0
+            elseif(i.eq.3 .and. j.eq.6 .and. k.eq.4 .and. l.eq.5) then
+              mi = par_Fin1mass
+              mj = 0D0
+              mk = par_Fin2mass
+              ml = 0D0
+            elseif(i.eq.4 .and. j.eq.6 .and. k.eq.3 .and. l.eq.5) then
+              mi = par_Fin2mass
+              mj = 0D0
+              mk = par_Fin1mass
+              ml = 0D0
             else
-              print*,"error in set_channel: i,j,k",i,j,k
+              print*,"error in set_channel: i,j,k,l",i,j,k,l
               stop
             endif
             goto 10
@@ -377,27 +488,28 @@ c          mk            mj
         enddo
 
  10     continue
+        ! in case a weakino masses are negative
+        mi = dabs(mi)
+        mj = dabs(mj)
+        mk = dabs(mk)
+        ml = dabs(ml)
+        mij = dabs(mij)
 
         ! checks
-        if(i.eq.0 .or. j.eq.0 .or. k.eq.0) then
+        if(i.eq.0 .or. j.eq.0 .or. k.eq.0 .or. l.eq.0) then
           print*,"chan ",chan
           print*,"osreslegs(1)",osreslegs(:,1)
           print*,"osreslegs(2)",osreslegs(:,2)
           print*,"osreslegs(3)",osreslegs(:,3)
-          print*,"in set_channel: got strang values for i,j,k:",i,j,k
-          stop
-        endif
-
-        if( levi_civita(i-2,j-2,k-2) .eq. 0 ) then
-          print*, "error in subroutine off_to_on"
-          print*, "i,j,k must be in [3,4,5]"
+          print*,"osreslegs(4)",osreslegs(:,4)
+          print*,"set_channel: got strang values for i,j,k,l:",i,j,k,l
           stop
         endif
         
 #ifdef DEBUGQ
         print*,"chan",chan
-        print*,"i,j,k",i,j,k
-        print*,"mij,mi,mj,mk",mij,mi,mj,mk
+        print*,"i,j,k,l",i,j,k,l
+        print*,"mij,mi,mj,mk,ml",mij,mi,mj,mk,ml
         print*,"par_FinMasses",par_Fin1mass,par_Fin2mass
         !stop
 #endif

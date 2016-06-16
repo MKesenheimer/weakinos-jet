@@ -3,7 +3,7 @@
 WORKINGDIR=${PWD}
 PROCDIR="neuIneuJ+jet"
 DEST=${PWD}/../../${PROCDIR}
-FINAL="n1n1j"
+FINAL="n1n2j"
 INITIAL1="dbarg"
 INITIAL2="ddbar"
 INITIAL3="dg"

@@ -126,12 +126,12 @@ USRFLAGS += -D MAD_BORN
 #USRFLAGS += -D FORM_BORN
 
 ## Treatment of quark masses and squark widths
-# The current version uses vanishing masses for the incoming quarks and
-# zero widths for the internal squarks.
-# For later software versions the possibility exists to make the
-# calculations with finite b-quark mass or finite squark widths.
+# The current version uses vanishing masses for the incoming quarks.
+# Whether to neglect the squark widths or use the complex mass scheme
+# (CMS) to regularize on-shell resonances (default).
 USRFLAGS += -D NEGLECTBMASS
-USRFLAGS += -D NEGLECT_SWIDTH
+#USRFLAGS += -D NEGLECT_SWIDTH
+USRFLAGS += -D COMPLEXMASS
 # If you want to change these flags, you probably have to change a lot
 # for the FormCalc amplitudes. For example, the b-quark amplitudes are 
 # currently calculated by crossing relations from d-quark amplitudes.
@@ -158,11 +158,12 @@ USRFLAGS += -D NEGLECT_SWIDTH
 #   are added: |M_R|**2 - BW*corrfac*|M_R^OS|**2. The latter gets 
 #   integrated seperately in sigosres.f and is included at a later point
 #   to the main result.
+#USRFLAGS += -D SLICING
 #USRFLAGS += -D DR_I
 #USRFLAGS += -D DR_II
 #USRFLAGS += -D DSUB_I
 #USRFLAGS += -D DSUB_II_TEST
-USRFLAGS += -D DSUB_II
+#USRFLAGS += -D DSUB_II
 
 ########################################################################
 #           -*- no editing is required below this line -*-             #
@@ -186,7 +187,10 @@ REAL    = $(SUBWORKINGDIR)/MadGraph_Reals
 VIRT    = $(SUBWORKINGDIR)/FormCalc_Virtuals
 VIRTSUB = $(VIRT)/uubar_n1n1j_squaredme $(VIRT)/ddbar_n1n1j_squaredme \
 	$(VIRT)/ug_n1n1j_squaredme $(VIRT)/ubarg_n1n1j_squaredme \
-	$(VIRT)/dg_n1n1j_squaredme $(VIRT)/dbarg_n1n1j_squaredme
+	$(VIRT)/dg_n1n1j_squaredme $(VIRT)/dbarg_n1n1j_squaredme \
+	$(VIRT)/uubar_n1n2j_squaredme $(VIRT)/ddbar_n1n2j_squaredme \
+	$(VIRT)/ug_n1n2j_squaredme $(VIRT)/ubarg_n1n2j_squaredme \
+	$(VIRT)/dg_n1n2j_squaredme $(VIRT)/dbarg_n1n2j_squaredme
 REALSUB  = $(REAL)/SubProcesses_nInJ+jet
 MODIFIED = $(WORKINGDIR)/POWHEG_mod
 SCRIPTS  = $(WORKINGDIR)/Scripts
@@ -338,78 +342,140 @@ HERWIG = main-HERWIG.o setup-HERWIG-lhef.o herwig6510.o boostrot.o 	\
      bra_ket_subroutines.o off_to_on.o funcbasic.o
 
 # MadGraph born amplitudes
-MADOBJ += sborn_proc.o
-MADOBJ += b_cl_001_001.o    b_sf_002_009.o    b_sf_013_008.o    b_sf_021_007.o \
-	b_cl_001_002.o    b_sf_003_004.o    b_sf_013_009.o    b_sf_021_008.o \
-	b_cl_001_003.o    b_sf_003_005.o    b_sf_014_004.o    b_sf_021_009.o \
-	b_cl_002_001.o    b_sf_003_006.o    b_sf_014_005.o    b_sf_022_004.o \
-	b_cl_002_002.o    b_sf_003_007.o    b_sf_014_006.o    b_sf_022_005.o \
-	b_cl_002_003.o    b_sf_003_008.o    b_sf_014_007.o    b_sf_022_006.o \
-	b_cl_003_001.o    b_sf_003_009.o    b_sf_014_008.o    b_sf_022_007.o \
-	b_cl_003_002.o    b_sf_004_004.o    b_sf_014_009.o    b_sf_022_008.o \
-	b_cl_003_003.o    b_sf_004_005.o    b_sf_015_004.o    b_sf_022_009.o \
-	b_cl_004_001.o    b_sf_004_006.o    b_sf_015_005.o    b_sf_023_004.o \
-	b_cl_004_002.o    b_sf_004_007.o    b_sf_015_006.o    b_sf_023_005.o \
-	b_cl_004_003.o    b_sf_004_008.o    b_sf_015_007.o    b_sf_023_006.o \
-	b_cl_005_001.o    b_sf_004_009.o    b_sf_015_008.o    b_sf_023_007.o \
-	b_cl_005_002.o    b_sf_005_004.o    b_sf_015_009.o    b_sf_023_008.o \
-	b_cl_005_003.o    b_sf_005_005.o    b_sf_016_004.o    b_sf_023_009.o \
-	b_cl_006_001.o    b_sf_005_006.o    b_sf_016_005.o    b_sf_024_004.o \
-	b_cl_006_002.o    b_sf_005_007.o    b_sf_016_006.o    b_sf_024_005.o \
-	b_cl_006_003.o    b_sf_005_008.o    b_sf_016_007.o    b_sf_024_006.o \
-	b_cl_008_001.o    b_sf_005_009.o    b_sf_016_008.o    b_sf_024_007.o \
-	b_cl_008_002.o    b_sf_006_004.o    b_sf_016_009.o    b_sf_024_008.o \
-	b_cl_008_003.o    b_sf_006_005.o    b_sf_017_004.o    b_sf_024_009.o \
-	b_cl_011_001.o    b_sf_006_006.o    b_sf_017_005.o    sborn_cl_001.o \
-	b_cl_011_002.o    b_sf_006_007.o    b_sf_017_006.o    sborn_cl_002.o \
-	b_cl_011_003.o    b_sf_006_008.o    b_sf_017_007.o    sborn_cl_003.o \
-	b_cl_021_001.o    b_sf_006_009.o    b_sf_017_008.o    sborn_cl_004.o \
-	b_cl_021_002.o    b_sf_008_004.o    b_sf_017_009.o    sborn_cl_005.o \
-	b_cl_021_003.o    b_sf_008_005.o    b_sf_018_004.o    sborn_cl_006.o \
-	b_cl_022_001.o    b_sf_008_006.o    b_sf_018_005.o    sborn_cl_008.o \
-	b_cl_022_002.o    b_sf_008_007.o    b_sf_018_006.o    sborn_cl_011.o \
-	b_cl_022_003.o    b_sf_008_008.o    b_sf_018_007.o    sborn_cl_021.o \
-	b_cl_023_001.o    b_sf_008_009.o    b_sf_018_008.o    sborn_cl_022.o \
-	b_cl_023_002.o    b_sf_011_004.o    b_sf_018_009.o    sborn_cl_023.o \
-	b_cl_023_003.o    b_sf_011_005.o    b_sf_019_004.o    sborn_cl_024.o \
-	b_cl_024_001.o    b_sf_011_006.o    b_sf_019_005.o \
-	b_cl_024_002.o    b_sf_011_007.o    b_sf_019_006.o \
-	b_cl_024_003.o    b_sf_011_008.o    b_sf_019_007.o    sborn_sf_001.o \
-	b_sf_001_004.o    b_sf_011_009.o    b_sf_019_008.o    sborn_sf_002.o \
-	b_sf_001_005.o    b_sf_012_004.o    b_sf_019_009.o    sborn_sf_003.o \
-	b_sf_001_006.o    b_sf_012_005.o    b_sf_020_004.o    sborn_sf_004.o \
-	b_sf_001_007.o    b_sf_012_006.o    b_sf_020_005.o    sborn_sf_005.o \
-	b_sf_001_008.o    b_sf_012_007.o    b_sf_020_006.o    sborn_sf_006.o \
-	b_sf_001_009.o    b_sf_012_008.o    b_sf_020_007.o    sborn_sf_008.o \
-	b_sf_002_004.o    b_sf_012_009.o    b_sf_020_008.o    sborn_sf_011.o \
-	b_sf_002_005.o    b_sf_013_004.o    b_sf_020_009.o    sborn_sf_021.o \
-	b_sf_002_006.o    b_sf_013_005.o    b_sf_021_004.o    sborn_sf_022.o \
-	b_sf_002_007.o    b_sf_013_006.o    b_sf_021_005.o    sborn_sf_023.o \
-	b_sf_002_008.o    b_sf_013_007.o    b_sf_021_006.o    sborn_sf_024.o \
-	b_cl_007_001.o    b_cl_007_003.o    b_sf_007_005.o    b_sf_007_007.o \
-	b_sf_007_009.o    b_cl_007_002.o    b_sf_007_004.o    b_sf_007_006.o \
-	b_sf_007_008.o    sborn_cl_007.o    sborn_sf_007.o
-
-# real Amplitudes
-MADOBJ +=
+MADOBJ += sborn_proc.o sreal_proc.o
+MADOBJ += b_cl_001_001.o b_cl_001_002.o b_cl_001_003.o \
+	 b_cl_002_001.o b_cl_002_002.o b_cl_002_003.o \
+	 b_cl_003_001.o b_cl_003_002.o b_cl_003_003.o \
+	 b_cl_004_001.o b_cl_004_002.o b_cl_004_003.o \
+	 b_cl_005_001.o b_cl_005_002.o b_cl_005_003.o \
+	 b_cl_006_001.o b_cl_006_002.o b_cl_006_003.o \
+	 b_cl_007_001.o b_cl_007_002.o b_cl_007_003.o \
+	 b_cl_008_001.o b_cl_008_002.o b_cl_008_003.o \
+	 b_cl_021_001.o b_cl_021_002.o b_cl_021_003.o \
+	 b_cl_022_001.o b_cl_022_002.o b_cl_022_003.o \
+	 b_cl_023_001.o b_cl_023_002.o b_cl_023_003.o \
+	 b_cl_024_001.o b_cl_024_002.o b_cl_024_003.o \
+	 b_sf_001_004.o b_sf_001_005.o b_sf_001_006.o \
+	 b_sf_001_007.o b_sf_001_008.o b_sf_001_009.o \
+	 b_sf_002_004.o b_sf_002_005.o b_sf_002_006.o \
+	 b_sf_002_007.o b_sf_002_008.o b_sf_002_009.o \
+	 b_sf_003_004.o b_sf_003_005.o b_sf_003_006.o \
+	 b_sf_003_007.o b_sf_003_008.o b_sf_003_009.o \
+	 b_sf_004_004.o b_sf_004_005.o b_sf_004_006.o \
+	 b_sf_004_007.o b_sf_004_008.o b_sf_004_009.o \
+	 b_sf_005_004.o b_sf_005_005.o b_sf_005_006.o \
+	 b_sf_005_007.o b_sf_005_008.o b_sf_005_009.o \
+	 b_sf_006_004.o b_sf_006_005.o b_sf_006_006.o \
+	 b_sf_006_007.o b_sf_006_008.o b_sf_006_009.o \
+	 b_sf_007_004.o b_sf_007_005.o b_sf_007_006.o \
+	 b_sf_007_007.o b_sf_007_008.o b_sf_007_009.o \
+	 b_sf_008_004.o b_sf_008_005.o b_sf_008_006.o \
+	 b_sf_008_007.o b_sf_008_008.o b_sf_008_009.o \
+	 b_sf_021_004.o b_sf_021_005.o b_sf_021_006.o \
+	 b_sf_021_007.o b_sf_021_008.o b_sf_021_009.o \
+	 b_sf_022_004.o b_sf_022_005.o b_sf_022_006.o \
+	 b_sf_022_007.o b_sf_022_008.o b_sf_022_009.o \
+	 b_sf_023_004.o b_sf_023_005.o b_sf_023_006.o \
+	 b_sf_023_007.o b_sf_023_008.o b_sf_023_009.o \
+	 b_sf_024_004.o b_sf_024_005.o b_sf_024_006.o \
+	 b_sf_024_007.o b_sf_024_008.o b_sf_024_009.o \
+	 r_bb_nInJbb.o r_bbx_nInJbbx.o r_bbx_nInJccx.o \
+	 r_bbx_nInJddx.o r_bbx_nInJgg.o r_bbx_nInJssx.o \
+	 r_bbx_nInJuux.o r_bc_nInJcb.o r_bcx_nInJcxb.o \
+	 r_bd_nInJdb.o r_bdx_nInJdxb.o r_bg_nInJbg.o \
+	 r_bs_nInJsb.o r_bsx_nInJsxb.o r_bu_nInJub.o \
+	 r_bux_nInJuxb.o r_bxb_nInJbbx.o r_bxb_nInJccx.o \
+	 r_bxb_nInJddx.o r_bxb_nInJgg.o r_bxb_nInJssx.o \
+	 r_bxb_nInJuux.o r_bxbx_nInJbxbx.o r_bxc_nInJcbx.o \
+	 r_bxcx_nInJcxbx.o r_bxd_nInJdbx.o r_bxdx_nInJdxbx.o \
+	 r_bxg_nInJbxg.o r_bxs_nInJsbx.o r_bxsx_nInJsxbx.o \
+	 r_bxu_nInJubx.o r_bxux_nInJuxbx.o r_cb_nInJcb.o \
+	 r_cbx_nInJcbx.o r_cc_nInJcc.o r_ccx_nInJbbx.o \
+	 r_ccx_nInJccx.o r_ccx_nInJddx.o r_ccx_nInJgg.o \
+	 r_ccx_nInJssx.o r_ccx_nInJuux.o r_cd_nInJdc.o \
+	 r_cdx_nInJdxc.o r_cg_nInJcg.o r_cs_nInJcs.o \
+	 r_csx_nInJcsx.o r_cu_nInJuc.o r_cux_nInJuxc.o \
+	 r_cxb_nInJcxb.o r_cxbx_nInJcxbx.o r_cxc_nInJbbx.o \
+	 r_cxc_nInJccx.o r_cxc_nInJddx.o r_cxc_nInJgg.o \
+	 r_cxc_nInJssx.o r_cxc_nInJuux.o r_cxcx_nInJcxcx.o \
+	 r_cxd_nInJdcx.o r_cxdx_nInJdxcx.o r_cxg_nInJcxg.o \
+	 r_cxs_nInJcxs.o r_cxsx_nInJcxsx.o r_cxu_nInJucx.o \
+	 r_cxux_nInJuxcx.o r_db_nInJdb.o r_dbx_nInJdbx.o \
+	 r_dc_nInJdc.o r_dcx_nInJdcx.o r_dd_nInJdd.o \
+	 r_ddx_nInJbbx.o r_ddx_nInJccx.o r_ddx_nInJddx.o \
+	 r_ddx_nInJgg.o r_ddx_nInJssx.o r_ddx_nInJuux.o \
+	 r_dg_nInJdg.o r_ds_nInJds.o r_dsx_nInJdsx.o \
+	 r_du_nInJdu.o r_dux_nInJdux.o r_dxb_nInJdxb.o \
+	 r_dxbx_nInJdxbx.o r_dxc_nInJdxc.o r_dxcx_nInJdxcx.o \
+	 r_dxd_nInJbbx.o r_dxd_nInJccx.o r_dxd_nInJddx.o \
+	 r_dxd_nInJgg.o r_dxd_nInJssx.o r_dxd_nInJuux.o \
+	 r_dxdx_nInJdxdx.o r_dxg_nInJdxg.o r_dxs_nInJdxs.o \
+	 r_dxsx_nInJdxsx.o r_dxu_nInJdxu.o r_dxux_nInJdxux.o \
+	 r_gb_nInJbg.o r_gbx_nInJbxg.o r_gc_nInJcg.o \
+	 r_gcx_nInJcxg.o r_gd_nInJdg.o r_gdx_nInJdxg.o \
+	 r_gg_nInJbbx.o r_gg_nInJccx.o r_gg_nInJddx.o \
+	 r_gg_nInJssx.o r_gg_nInJuux.o r_gs_nInJsg.o \
+	 r_gsx_nInJsxg.o r_gu_nInJug.o r_gux_nInJuxg.o \
+	 r_sb_nInJsb.o r_sbx_nInJsbx.o r_sc_nInJcs.o \
+	 r_scx_nInJcxs.o r_sd_nInJds.o r_sdx_nInJdxs.o \
+	 r_sg_nInJsg.o r_ss_nInJss.o r_ssx_nInJbbx.o \
+	 r_ssx_nInJccx.o r_ssx_nInJddx.o r_ssx_nInJgg.o \
+	 r_ssx_nInJssx.o r_ssx_nInJuux.o r_su_nInJus.o \
+	 r_sux_nInJuxs.o r_sxb_nInJsxb.o r_sxbx_nInJsxbx.o \
+	 r_sxc_nInJcsx.o r_sxcx_nInJcxsx.o r_sxd_nInJdsx.o \
+	 r_sxdx_nInJdxsx.o r_sxg_nInJsxg.o r_sxs_nInJbbx.o \
+	 r_sxs_nInJccx.o r_sxs_nInJddx.o r_sxs_nInJgg.o \
+	 r_sxs_nInJssx.o r_sxs_nInJuux.o r_sxsx_nInJsxsx.o \
+	 r_sxu_nInJusx.o r_sxux_nInJuxsx.o r_ub_nInJub.o \
+	 r_ubx_nInJubx.o r_uc_nInJuc.o r_ucx_nInJucx.o \
+	 r_ud_nInJdu.o r_udx_nInJdxu.o r_ug_nInJug.o \
+	 r_us_nInJus.o r_usx_nInJusx.o r_uu_nInJuu.o \
+	 r_uux_nInJbbx.o r_uux_nInJccx.o r_uux_nInJddx.o \
+	 r_uux_nInJgg.o r_uux_nInJssx.o r_uux_nInJuux.o \
+	 r_uxb_nInJuxb.o r_uxbx_nInJuxbx.o r_uxc_nInJuxc.o \
+	 r_uxcx_nInJuxcx.o r_uxd_nInJdux.o r_uxdx_nInJdxux.o \
+	 r_uxg_nInJuxg.o r_uxs_nInJuxs.o r_uxsx_nInJuxsx.o \
+	 r_uxu_nInJbbx.o r_uxu_nInJccx.o r_uxu_nInJddx.o \
+	 r_uxu_nInJgg.o r_uxu_nInJssx.o r_uxu_nInJuux.o \
+	 r_uxux_nInJuxux.o sborn_cl_001.o sborn_cl_002.o \
+	 sborn_cl_003.o sborn_cl_004.o sborn_cl_005.o \
+	 sborn_cl_006.o sborn_cl_007.o sborn_cl_008.o \
+	 sborn_cl_021.o sborn_cl_022.o sborn_cl_023.o \
+	 sborn_cl_024.o \
+	 sborn_sf_001.o sborn_sf_002.o sborn_sf_003.o \
+	 sborn_sf_004.o sborn_sf_005.o sborn_sf_006.o \
+	 sborn_sf_007.o sborn_sf_008.o sborn_sf_021.o \
+	 sborn_sf_022.o sborn_sf_023.o sborn_sf_024.o
 
 # on-shell subtraction scheme
 MADOBJ +=
 
 ### Virtual Amplitudes in Formcalc_Virtuals/ ###
-VIRTUALS += CalcRenConst.o \
-	dbarg_n1n1j_abbr0a.o  dbarg_n1n1j_abbr0s.o  dbarg_n1n1j_born_Sfe6.o \
-	dbarg_n1n1j_abbr0h.o  dbarg_n1n1j_born.o    dbarg_n1n1j_SquaredME.o \
-	dg_n1n1j_abbr0a.o  dg_n1n1j_abbr0s.o  dg_n1n1j_born_Sfe6.o \
-	dg_n1n1j_abbr0h.o  dg_n1n1j_born.o    dg_n1n1j_SquaredME.o \
-	ug_n1n1j_abbr0a.o  ug_n1n1j_abbr0s.o  ug_n1n1j_born_Sfe6.o \
-	ug_n1n1j_abbr0h.o  ug_n1n1j_born.o    ug_n1n1j_SquaredME.o \
-	ddbar_n1n1j_abbr0a.o  ddbar_n1n1j_abbr0s.o  ddbar_n1n1j_born_Sfe6.o \
-	ddbar_n1n1j_abbr0h.o  ddbar_n1n1j_born.o    ddbar_n1n1j_SquaredME.o \
-	ubarg_n1n1j_abbr0a.o  ubarg_n1n1j_abbr0s.o  ubarg_n1n1j_born_Sfe6.o \
-	ubarg_n1n1j_abbr0h.o  ubarg_n1n1j_born.o    ubarg_n1n1j_SquaredME.o \
-	uubar_n1n1j_abbr0a.o  uubar_n1n1j_abbr0s.o  uubar_n1n1j_born_Sfe6.o \
-	uubar_n1n1j_abbr0h.o  uubar_n1n1j_born.o    uubar_n1n1j_SquaredME.o
+VIRTUALS += CalcRenConst.o dbarg_n1n1j_SquaredME.o dbarg_n1n1j_abbr0a.o \
+	 dbarg_n1n1j_abbr0h.o dbarg_n1n1j_abbr0s.o dbarg_n1n1j_born.o \
+	 dbarg_n1n1j_born_Sfe6.o dbarg_n1n2j_SquaredME.o dbarg_n1n2j_abbr0a.o \
+	 dbarg_n1n2j_abbr0h.o dbarg_n1n2j_abbr0s.o dbarg_n1n2j_born.o \
+	 dbarg_n1n2j_born_Sfe6.o ddbar_n1n1j_SquaredME.o ddbar_n1n1j_abbr0a.o \
+	 ddbar_n1n1j_abbr0h.o ddbar_n1n1j_abbr0s.o ddbar_n1n1j_born.o \
+	 ddbar_n1n1j_born_Sfe6.o ddbar_n1n2j_SquaredME.o ddbar_n1n2j_abbr0a.o \
+	 ddbar_n1n2j_abbr0h.o ddbar_n1n2j_abbr0s.o ddbar_n1n2j_born.o \
+	 ddbar_n1n2j_born_Sfe6.o dg_n1n1j_SquaredME.o dg_n1n1j_abbr0a.o \
+	 dg_n1n1j_abbr0h.o dg_n1n1j_abbr0s.o dg_n1n1j_born.o \
+	 dg_n1n1j_born_Sfe6.o dg_n1n2j_SquaredME.o dg_n1n2j_abbr0a.o \
+	 dg_n1n2j_abbr0h.o dg_n1n2j_abbr0s.o dg_n1n2j_born.o \
+	 dg_n1n2j_born_Sfe6.o ubarg_n1n1j_SquaredME.o ubarg_n1n1j_abbr0a.o \
+	 ubarg_n1n1j_abbr0h.o ubarg_n1n1j_abbr0s.o ubarg_n1n1j_born.o \
+	 ubarg_n1n1j_born_Sfe6.o ubarg_n1n2j_SquaredME.o ubarg_n1n2j_abbr0a.o \
+	 ubarg_n1n2j_abbr0h.o ubarg_n1n2j_abbr0s.o ubarg_n1n2j_born.o \
+	 ubarg_n1n2j_born_Sfe6.o ug_n1n1j_SquaredME.o ug_n1n1j_abbr0a.o \
+	 ug_n1n1j_abbr0h.o ug_n1n1j_abbr0s.o ug_n1n1j_born.o \
+	 ug_n1n1j_born_Sfe6.o ug_n1n2j_SquaredME.o ug_n1n2j_abbr0a.o \
+	 ug_n1n2j_abbr0h.o ug_n1n2j_abbr0s.o ug_n1n2j_born.o \
+	 ug_n1n2j_born_Sfe6.o uubar_n1n1j_SquaredME.o uubar_n1n1j_abbr0a.o \
+	 uubar_n1n1j_abbr0h.o uubar_n1n1j_abbr0s.o uubar_n1n1j_born.o \
+	 uubar_n1n1j_born_Sfe6.o uubar_n1n2j_SquaredME.o uubar_n1n2j_abbr0a.o \
+	 uubar_n1n2j_abbr0h.o uubar_n1n2j_abbr0s.o uubar_n1n2j_born.o \
+	 uubar_n1n2j_born_Sfe6.o
 
 SOURCESMAIN = $(PWHG) $(PDFPACK) $(USER) $(PWHGANALYSIS) $(FUNC) $(VIRTUALS)  \
 	$(FORMCALC) $(MMADOBJ) $(MADOBJ)
@@ -488,6 +554,7 @@ fastjetfortran.o: fastjetfortran.cc
 ########################################################################
 ## Rules, link
 ## type make -j4 [rule] to speed up the compilation
+# TODO: Try: $(addprefix ./build/, $(SOURCESMAIN))
 
 pwhg_main_ninj+jet: $(SOURCESMAIN)
 	$(FC) $(ALL_FCFLAGS) $(patsubst %,build/%,$(SOURCESMAIN)) $(LINKER) -o $@

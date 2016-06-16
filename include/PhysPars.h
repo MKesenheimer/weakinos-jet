@@ -50,5 +50,7 @@ c complex unit
         parameter (ii = (0D0,1D0))
 
 c additional parameters
+        double precision gcut
+        common/addpars/ gcut        ! generation cut for soft jets
 
 c############### end PhysPars.h ########################################

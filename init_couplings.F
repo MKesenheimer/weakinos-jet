@@ -100,6 +100,7 @@ c requires encoded process ID in lprup(1)
           print*
           print*, "final state masses = ", par_Fin1mass
           print*, "                     ", par_Fin2mass
+          print*, "                     ", par_Fin3mass
           print*
           print*, "OS regulator WREG = ", wreg
           print*        
@@ -200,7 +201,8 @@ c requires encoded process ID in lprup(1)
      &       (par_Zmass2   .eq. invalid) .or.
      &       (par_Wmass2   .eq. invalid) .or.
      &       (par_Fin1mass .eq. invalid) .or.
-     &       (par_Fin2mass .eq. invalid) ) then
+     &       (par_Fin2mass .eq. invalid) .or.
+     &       (par_Fin3mass .eq. invalid) ) then
           print*,"WARNING: One or more parameters are not set:"
           print*,"par_alpha: ",par_alpha
           print*,"par_Zmass: ",par_Zmass
@@ -211,6 +213,7 @@ c requires encoded process ID in lprup(1)
           print*,"par_Wmass2: ",par_Wmass2
           print*,"par_Fin1mass: ",par_Fin1mass
           print*,"par_Fin2mass: ",par_Fin2mass
+          print*,"par_Fin3mass: ",par_Fin3mass
           print*,"If possible set the invalid parameters in "//
      &           "powheg.input"
           stop
@@ -329,7 +332,12 @@ c sets the PhysPars.h parameters
         par_Wwidth   = invalid
         par_Fin1mass = invalid
         par_Fin2mass = invalid
+        par_Fin3mass = invalid
 
+        ! generation cut for soft jets
+        gcut = 10D0
+        print*,"Note: Using generation cut of",gcut,"GeV for jets in "//
+     &         "Phasespace"
 
         ! get SLHA filename
         call powheginputstring("SLHA",slhafilename)
@@ -359,7 +367,7 @@ c sets the PhysPars.h parameters
 #endif
 
         ! SM parameters from SLHA-file
-        print*, "note: ignoring alpha_s value given in SLHA file"
+        print*, "Note: ignoring alpha_s value given in SLHA file"
         par_Zmass   = dreal(SMInputs_MZ)
         par_Wmass   = dreal(Mass_MW)
         par_gf      = dreal(SMInputs_GF)
@@ -479,20 +487,28 @@ c sets the PhysPars.h parameters
         par_MGl = dreal(Mass_MGl)
 
 c small mass to regularize LoopTools integrals
-#define EPSMASS 1D-30
-c#define EPSMASS 0D0
-
+c#define EPSMASS 1D-30
+#ifdef EPSMASS
         print*,"Note (PhysPars): neglecting u,d,c,s-quark masses"
-        !epsMass = powheginput("epsMass")
         par_MU = EPSMASS ! Note: setting this exactly to zero can cause 
         par_MC = EPSMASS ! problems in calculating propagators, since the
         par_MD = EPSMASS ! formcalc code already neglects all light 
         par_MS = EPSMASS ! masses analytically but leaves some masses in propagators
+#else
+        par_MU = 0D0
+        par_MC = 0D0
+        par_MD = 0D0
+        par_MS = 0D0
+#endif
 
 c b quark mass
 #ifdef NEGLECTBMASS
         print*,"Note (PhysPars): neglecting b-quark mass"
+#ifdef EPSMASS
         par_MB = EPSMASS
+#else
+        par_MB = 0D0
+#endif
 #else
         ! read mass paramater from slha file
         par_MB  = dreal(Mass_Mf(4,3)) 
@@ -618,12 +634,18 @@ c MadGraphs couplings.f as well.
         do i=1,2 ! sfermion index s
           do j=1,4 ! type (nu,e,u,d)
             do k=1,3 ! generation
-              MSf(i,j,k)  = par_MSf(i,j,k)
-              MSf2(i,j,k) = MSf(i,j,k)**2
               WSf(i,j,k)  = par_Sfwidth(i,j,k)
+              MSf(i,j,k)  = par_MSf(i,j,k)
+#ifdef COMPLEXMASS
+              MSf2(i,j,k) = MSf(i,j,k)**2-ii*WSf(i,j,k)*MSf(i,j,k)
+#else
+              MSf2(i,j,k) = MSf(i,j,k)**2
+#endif
+              !print*,MSf2(i,j,k)
             enddo
           enddo
         enddo
+        !stop
        
         ! Neutralino masses
         do i=1,4 !neutralino index s
@@ -807,32 +829,15 @@ c ddbar_SquaredME.F and uubar_SquaredME.F.
         dZgs1y = 0
         dZe1y  = 0
 #endif
-        ! not needed in the current implementation, but can be 
-        ! useful for debugging purpose
-        ! the yukawa couplings
-        gsy  = gs+dZgs1y
-        ely  = el+dZe1y
-        ! the squared yukawa-couplings. Double check the code for
-        ! consistency! In the matrix elements must only occur terms
-        ! prop to Alfa**2 + Alfa**2*AlfaS (for weakino pair production)
-        ! or      AlfaS**2 + AlfaS**3 (for disquark)
-        gsy2 = gs**2+2D0*gs*dZgs1y
-        ely2 = el**2+2D0*el*dZe1y
         
 #ifdef DEBUGQ
         print*,"dZgs1y",dZgs1y
         print*,"dZe1y",dZe1y
-        print*,"GS",GS
-        print*,"GSY",GSY
-        print*,"EL",EL
-        print*,"ELY",ELY
         print*,"st_alpha", st_alpha
         print*,"AlfaS", AlfaS
         print*,"Alfa",Alfa
-        print*,"EL2/4Pi",EL**2/(4*Pi)
-        !stop
+        print*,"EL**2/4Pi",EL**2/(4*Pi)
 #endif
-        return
       end
 c############### end init_susy_restore subroutine ######################
 
@@ -843,7 +848,7 @@ c set the paramaters for treating the on-shell resonances
 #include "PhysPars.h"
 #include "osres.h"
         integer i
-        double precision m_avrg, ewi
+        double precision ewi
         double precision powheginput
         external powheginput
 
@@ -851,14 +856,24 @@ c set the paramaters for treating the on-shell resonances
         osresM(2) = mdl
         osresM(3) = mul
         osresM(4) = mul
+
+        osresM(5) = mdl
+        osresM(6) = mdl
+        osresM(7) = mul
+        osresM(8) = mul
+
 #ifdef NINJ_JET
-        osresM(5) = mdr
-        osresM(6) = mdr
-        osresM(7) = mur
-        osresM(8) = mur
+        osresM(9) = mdr
+        osresM(10) = mdr
+        osresM(11) = mur
+        osresM(12) = mur
+
+        osresM(13) = mdr
+        osresM(14) = mdr
+        osresM(15) = mur
+        osresM(16) = mur
 #endif
-        
-#if defined(DSUB_I) || defined(DSUB_II) || defined(DSUB_II_TEST)
+
         m_avrg = 0D0
         do i=1,nosres
           m_avrg = m_avrg + osresM(i)
@@ -871,18 +886,5 @@ c set the paramaters for treating the on-shell resonances
           ewi = powheginput("ewi")
         endif
         wreg = ewi*m_avrg ! Prospino like definition
-#else
-        wreg = 0D0
-#endif
-
-        
-#ifdef DEBUGQ
-        print*,"wreg : ", wreg
-        do i=1,nosres
-          print*,"osresID: ", osresID(i)
-          print*,"osresM : ", osresM(i)
-        enddo 
-        stop
-#endif
       end
 c############### end subroutine set_osres_params #######################

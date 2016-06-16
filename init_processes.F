@@ -104,7 +104,7 @@ c     set process id using slepton types
 
         print*
         print*, "===================================================="
-        print*, "        neutralino/chargino pair production         "
+        print*, "     neutralino/chargino pair + jet production      "
         call print_version
         print*, "        final states: ", i3, i4
         print*
@@ -164,7 +164,7 @@ c     set process id using slepton types
         ! (all subsequent particles are coloured)
         flst_lightpart=5
 
-        ! Born subprocesses (should be 30)
+        ! Born subprocesses (should be 30 for n1n1)
         flst_nborn=0
         do i1=-max_flav,max_flav
           do i2=-max_flav,max_flav
@@ -228,66 +228,52 @@ c     set process id using slepton types
           enddo
         enddo
 
-        ! real subprocesses (should be 175) TODO!
+        ! real subprocesses (should be 175 for n1n1)
         flst_nreal=0
         do i1=-max_flav,max_flav
           do i2=-max_flav,max_flav
             do i5=-max_flav,max_flav
-              condition=.false.
-              ! q qbar (with mixed flavor in the initial state, e.g. u dbar)
-              ! d ubar channels
-              if(mixed_channels.and.i4.lt.0) then
-                if(.not.(i1.eq.0.and.i2.eq.0)
-     &           .and. (mod(i1,2).eq.0 .or. mod(i1,2).eq.1)
-     &           .and. (mod(i2,2).eq.0 .or. mod(i2,2).eq.1) ) then   ! exclude gg
-                  if((i1.ne.0).and.(i1+i2.eq.-1).and.(i5.eq.0)) then ! q qbar -> g
-                    condition=.true.
-                  elseif((i1.eq.0).and.(i2.eq.i5-1)
-     &               .and. (mod(i2,2).eq.0 .or. mod(i2,2).eq.1)
-     &               .and. (mod(i5,2).eq.0 .or. mod(i5,2).eq.-1) ) then ! g q
-                    condition=.true.
-                  elseif((i2.eq.0).and.(i1.eq.i5-1)
-     &               .and. (mod(i1,2).eq.0 .or. mod(i1,2).eq.1)
-     &               .and. (mod(i5,2).eq.0 .or. mod(i5,2).eq.-1) ) then ! q g
-                    condition=.true.
+              do i6=-max_flav,max_flav
+                condition=.false.
+                if(.not.mixed_channels) then ! nI & nJ, xI & xJ
+                  if(i1.eq.i2 .and. i1.eq.i5 .and. i5.eq.i6) then ! q q -> n3 n4 q q
+                    condition = .true.
+                  endif
+                  if(i1.eq.-i2 .and. i1.ne.0 .and. i5.eq.-i6 ! q -q -> n3 n4 q -q, g g
+     &               .and. i5.ge.0) then
+                    condition = .true.
+                  endif
+                  if((i1.eq.i5 .or. i2.eq.i5) .and. (i1+i2).eq.(i5+i6) ! q q -> n3 n4 q q (mixed)
+     &               .and. abs(i5).lt.abs(i6) .and. i5.ne.0) then
+                    condition = .true.
+                  endif
+                  if((i1.eq.0 .or. i2.eq.0) .and. (i1+i2).eq.(i5+i6) ! g q -> n3 n4 g q
+     &               .and. i6.eq.0) then
+                    condition = .true.
+                  endif
+                  if(i1.eq.0 .and. i2.eq.0 .and. i5.eq.-i6 ! g g -> n3 n4 q -q
+     &               .and. i5.gt.0) then
+                    condition = .true.
+                  endif
+                  if(i1.eq.0 .and. i2.eq.0 .and. i5.eq.0 ! don't allow g g -> n3 n4 g g
+     &               .and. i6.eq.0) then
+                    condition = .false.
                   endif
                 endif
-              ! dbar u channels
-              elseif(mixed_channels.and.i4.gt.0) then
-                if(.not.(i1.eq.0.and.i2.eq.0)
-     &           .and. (mod(i1,2).eq.-1 .or. mod(i1,2).eq.0)
-     &           .and. (mod(i2,2).eq.-1 .or. mod(i2,2).eq.0) ) then ! exclude gg
-                  if((i1.ne.0).and.(i1+i2.eq.1).and.(i5.eq.0)) then ! q qbar -> g
-                    condition=.true.
-                  elseif((i1.eq.0).and.(i2.eq.i5+1)
-     &               .and. (mod(i2,2).eq.0 .or. mod(i2,2).eq.-1)
-     &               .and. (mod(i5,2).eq.0 .or. mod(i5,2).eq.1) ) then ! g q
-                    condition=.true.
-                  elseif((i2.eq.0).and.(i1.eq.i5+1)
-     &               .and. (mod(i1,2).eq.0 .or. mod(i1,2).eq.-1)
-     &               .and. (mod(i5,2).eq.0 .or. mod(i5,2).eq.1) ) then ! q g
-                    condition=.true.
-                  endif
+                if(condition) then
+                  flst_nreal=flst_nreal+1
+                  if(flst_nreal.gt.maxprocreal) goto 998
+                  do k=1,nlegreal
+                    flst_real(k,flst_nreal)=ii(k)
+                    ! MadGraph sorts the s and c amplitudes in a different way,
+                    ! change it here manually
+                    if(abs(i5).eq.3 .and. abs(i6).eq.4) then
+                      flst_real(5,flst_nreal)=ii(6)
+                      flst_real(6,flst_nreal)=ii(5)
+                    endif
+                  enddo
                 endif
-              ! q qbar (same flavors in the initial state)
-              else
-                if(.not.(i1.eq.0.and.i2.eq.0)) then                 ! exclude gg
-                  if((i1.ne.0).and.(i1+i2.eq.0).and.(i5.eq.0)) then ! q qbar -> g
-                    condition=.true.
-                  elseif((i1.eq.0).and.(i2.eq.i5)) then ! g q
-                    condition=.true.
-                  elseif((i2.eq.0).and.(i1.eq.i5)) then ! q g
-                    condition=.true.
-                  endif
-                endif
-              endif
-              if(condition) then
-                flst_nreal=flst_nreal+1
-                if(flst_nreal.gt.maxprocreal) goto 998
-                do k=1,nlegreal
-                  flst_real(k,flst_nreal)=ii(k)
-                enddo
-              endif
+              enddo
             enddo
           enddo
         enddo
@@ -295,16 +281,19 @@ c     set process id using slepton types
 
 #ifdef DEBUGQ
         flst_nborn = 1
-        flst_nreal = 1
-        flst_born(1,1) = -4
-        flst_born(2,1) =  3
+        flst_born(1,1) = -2
+        flst_born(2,1) = 0
         flst_born(3,1) = 1000022
-        flst_born(4,1) = -1000024
-        flst_real(1,1) = -4
+        flst_born(4,1) = 1000022
+        flst_born(5,1) = -2
+
+        flst_nreal = 1
+        flst_real(1,1) = -1
         flst_real(2,1) =  0
         flst_real(3,1) = 1000022
-        flst_real(4,1) = -1000024
-        flst_real(5,1) = -3
+        flst_real(4,1) = 1000022
+        flst_real(5,1) = 0
+        flst_real(6,1) = 0
 #endif
         
 #ifdef DEBUG
@@ -321,7 +310,6 @@ c     set process id using slepton types
         enddo
 #endif
 
-#if defined(DSUB_I) || defined(DSUB_II) || defined(DSUB_II_TEST)
         ! setup the flavor list of on-shell resonant diagrams
         call init_processes_osres
 #ifdef DEBUG
@@ -329,7 +317,6 @@ c     set process id using slepton types
         do j=1,flst_nosres
           print*,(flst_osres(k,j),k=1,nlegreal)
         enddo
-#endif
 #endif
 
         return
@@ -363,27 +350,29 @@ c ur45: right handed down-type squark gets resonant with particles 4 & 5
 #include "osres.h"
         ! local variables
         integer i1,i2
-        integer k
+        integer k,f(6)
 
         ! reset the number of on-shell resonant diagrams
         flst_nosres = 0
         ! fill the flavor list with on-shell resonant diagrams
         do i1=1,flst_nreal
-          if((flst_real(1,i1).eq.0.or.flst_real(2,i1).eq.0)
-     &       .and.flst_realres(nlegreal,i1).eq.0) then ! only for production-channels
+          do i2=1,nlegreal
+            f(i2) = flst_real(i2,i1)
+          enddo
+          if(f(5).ne.0 .and. f(6).ne.0) then
             flst_nosres=flst_nosres+1 
             do i2=1,nlegreal
               flst_osres(i2,flst_nosres) = flst_real(i2,i1) ! copy existing real
             enddo
           endif
-        enddo        
+        enddo
 
         ! fill the global variables for treating the on-shell resonances
 #if defined(NIXJ_JET) || defined(XIXJ_JET)
         ! number of resonances
-        nosres = 4 ! change cnosres in osres.h as well
+        nosres = 8 ! change cnosres in osres.h as well
 #elif defined(NINJ_JET)
-        nosres = 8
+        nosres = 16
 #else
         print*,"error: preprocessor flag NIXJ_JET, NINJ_JET or "//
      &         "XIXJ_JET not set."
@@ -402,11 +391,19 @@ c ur45: right handed down-type squark gets resonant with particles 4 & 5
         osresID(2) = "dl45"
         osresID(3) = "ul35"
         osresID(4) = "ul45"
+        osresID(5) = "dl36"
+        osresID(6) = "dl46"
+        osresID(7) = "ul36"
+        osresID(8) = "ul46"
 #ifdef NINJ_JET
-        osresID(5) = "dr35"
-        osresID(6) = "dr45"
-        osresID(7) = "ur35"
-        osresID(8) = "ur45"
+        osresID(9)  = "dr35"
+        osresID(10) = "dr45"
+        osresID(11) = "ur35"
+        osresID(12) = "ur45"
+        osresID(13) = "dr36"
+        osresID(14) = "dr46"
+        osresID(15) = "ur36"
+        osresID(16) = "ur46"
 #endif
 
         do k=1,nosres
@@ -424,34 +421,85 @@ c ur45: right handed down-type squark gets resonant with particles 4 & 5
         osreslegs(1,1) = 3
         osreslegs(1,2) = 5
         osreslegs(1,3) = 4
+        osreslegs(1,4) = 6
         
         osreslegs(2,1) = 4
         osreslegs(2,2) = 5
         osreslegs(2,3) = 3
+        osreslegs(2,4) = 6
         
         osreslegs(3,1) = 3
         osreslegs(3,2) = 5
         osreslegs(3,3) = 4
+        osreslegs(3,4) = 6
         
         osreslegs(4,1) = 4
         osreslegs(4,2) = 5
         osreslegs(4,3) = 3
-#ifdef NINJ_JET
+        osreslegs(4,4) = 6
+
+
         osreslegs(5,1) = 3
-        osreslegs(5,2) = 5
+        osreslegs(5,2) = 6
         osreslegs(5,3) = 4
+        osreslegs(5,4) = 5
         
         osreslegs(6,1) = 4
-        osreslegs(6,2) = 5
+        osreslegs(6,2) = 6
         osreslegs(6,3) = 3
+        osreslegs(6,4) = 5
         
         osreslegs(7,1) = 3
-        osreslegs(7,2) = 5
+        osreslegs(7,2) = 6
         osreslegs(7,3) = 4
+        osreslegs(7,4) = 5
         
         osreslegs(8,1) = 4
-        osreslegs(8,2) = 5
+        osreslegs(8,2) = 6
         osreslegs(8,3) = 3
+        osreslegs(8,4) = 5
+
+#ifdef NINJ_JET
+        osreslegs(9,1) = 3
+        osreslegs(9,2) = 5
+        osreslegs(9,3) = 4
+        osreslegs(9,4) = 6
+        
+        osreslegs(10,1) = 4
+        osreslegs(10,2) = 5
+        osreslegs(10,3) = 3
+        osreslegs(10,4) = 6
+        
+        osreslegs(11,1) = 3
+        osreslegs(11,2) = 5
+        osreslegs(11,3) = 4
+        osreslegs(11,4) = 6
+        
+        osreslegs(12,1) = 4
+        osreslegs(12,2) = 5
+        osreslegs(12,3) = 3
+        osreslegs(12,4) = 6
+
+
+        osreslegs(13,1) = 3
+        osreslegs(13,2) = 6
+        osreslegs(13,3) = 4
+        osreslegs(13,4) = 5
+        
+        osreslegs(14,1) = 4
+        osreslegs(14,2) = 6
+        osreslegs(14,3) = 3
+        osreslegs(14,4) = 5
+        
+        osreslegs(15,1) = 3
+        osreslegs(15,2) = 6
+        osreslegs(15,3) = 4
+        osreslegs(15,4) = 5
+        
+        osreslegs(16,1) = 4
+        osreslegs(16,2) = 6
+        osreslegs(16,3) = 3
+        osreslegs(16,4) = 5
 #endif
 
         ! the rest of the variables defined in osres.h are set

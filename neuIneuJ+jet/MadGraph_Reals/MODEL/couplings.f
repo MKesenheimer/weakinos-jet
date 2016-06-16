@@ -225,12 +225,12 @@ c
       
 ! Set Higgs couplings manually to zero
 #ifndef MAD_HIGGS
-      gh1bb = 0 
-      gh2bb = 0
-      gh3bb = 0
-      gh1tt = 0
-      gh2tt = 0
-      gh3tt = 0
+      gh1bb = 0D0
+      gh2bb = 0D0
+      gh3bb = 0D0
+      gh1tt = 0D0
+      gh2tt = 0D0
+      gh3tt = 0D0
 #endif
 
 #ifdef DEBUGQ
