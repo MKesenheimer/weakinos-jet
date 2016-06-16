@@ -152,6 +152,7 @@ c determine the doubly resonant diagrams
 #include "PhysPars.h"
 #include "nlegborn.h"
 #include "pwhg_flst.h"
+#include "pwhg_flst_add.h"
         double precision p(0:3,nlegreal)
         integer rflav(nlegreal)
         ! the real amplitudes
@@ -160,10 +161,10 @@ c determine the doubly resonant diagrams
         integer i, j
         
         print*
-        print*,"Determine the resonant diagrams..."
+        print*,"Determining the resonant diagrams..."
         
-        do i=1,flst_nreal
-          print*,"...for process: ",flst_real(:,i)
+        do i=1,flst_nosres
+          print*,"...for process: ",flst_osres(:,i)
           do j=1,nlegreal
             rflav(j) = flst_real(j,i)
           enddo
@@ -180,6 +181,7 @@ c determine the doubly resonant diagrams
 #include "PhysPars.h"
 #include "nlegborn.h"
 #include "pwhg_flst.h"
+        double precision dsigrealTest
         double precision xreal(ndiminteg)
         double precision p(0:3,nlegreal)
         integer rflav(nlegreal)
