@@ -21,6 +21,7 @@ C
       PARAMETER(THEL=NCOMB*NCROSS)
 C
 C FINAL STATES
+C
 #include "finalstate.h"
 C  
 C ARGUMENTS 
@@ -42,6 +43,12 @@ C
 
 
 C  
+
+C
+C VARIABLES TO APPLY THE DIAGRAM SUBTRACTION SCHEMES
+C
+#include "dsubtraction.h"
+C
 C GLOBAL VARIABLES
 C  
       Double Precision amp2(maxamps), jamp2(0:maxflow)
@@ -205,6 +212,12 @@ C
       COMPLEX*16 AMP(NGRAPHS), JAMP(NCOLOR)
       COMPLEX*16 W(18,NWAVEFUNCS)
 C  
+
+C
+C VARIABLES TO APPLY THE DIAGRAM SUBTRACTION SCHEMES
+C
+#include "dsubtraction.h"
+C
 C GLOBAL VARIABLES
 C  
       Double Precision amp2(maxamps), jamp2(0:maxflow)
@@ -455,7 +468,7 @@ C ----------
       CALL IOVXXX(W(1,38),W(1,100),W(1,6),GG,AMP(93))             
       CALL IOVXXX(W(1,38),W(1,102),W(1,6),GG,AMP(94))             
       CALL IOVXXX(W(1,38),W(1,104),W(1,6),GG,AMP(95))             
-      CALL IOVXXX(W(1,38),W(1,106),W(1,6),GG,AMP(96))
+      CALL IOVXXX(W(1,38),W(1,106),W(1,6),GG,AMP(96))             
       JAMP(   1) = +AMP(   1)+AMP(   2)-AMP(   3)-AMP(   4)-AMP(   7)
      &             -AMP(   8)-AMP(   9)-AMP(  10)+AMP(  11)+AMP(  12)
      &             -AMP(  13)-AMP(  14)-AMP(  17)-AMP(  18)-AMP(  19)

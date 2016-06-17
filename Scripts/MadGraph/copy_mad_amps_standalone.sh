@@ -11,6 +11,7 @@ final2="nInJ"
 #generate the lines we want to inject
 echo "C" > addfinalstates.txt
 echo "C FINAL STATES" >> addfinalstates.txt
+echo "C" >> addfinalstates.txt
 echo "#include \"finalstate.h\"" >> addfinalstates.txt
 
 echo "      if(final1.eq.final2) then ! equal final states" > addfinalstatescheck.txt
@@ -18,6 +19,13 @@ echo "        ANS(IPROC)=ANS(IPROC)/DBLE(IDEN(IPROC)*2)" >> addfinalstatescheck.
 echo "      else" >> addfinalstatescheck.txt
 echo "        ANS(IPROC)=ANS(IPROC)/DBLE(IDEN(IPROC))" >> addfinalstatescheck.txt
 echo "      endif" >> addfinalstatescheck.txt
+
+echo "C" > addsubtraction.txt
+echo "C VARIABLES TO APPLY THE DIAGRAM SUBTRACTION SCHEMES" >> addsubtraction.txt
+echo "C" >> addsubtraction.txt
+echo "#include \"dsubtraction.h\"" >> addsubtraction.txt
+echo "C" >> addsubtraction.txt
+echo "C GLOBAL VARIABLES" >> addsubtraction.txt
 
 for dir in $(ls -d */); do
     if [ "$dir" == "madME/" ]; then
@@ -63,22 +71,41 @@ for dir in $(ls -d */); do
     xxd -p $x | tr -d \\n | sed 's/202020202020200a2020202020262020202020//g' | xxd -r -p > temp
     mv temp $x
 
-    #now apply multiple changes
+    # now apply multiple changes
+    # add process name
     sed -i -e "s/MATRIX/MATRIX_${uproc}/g" $x
+    # add arguments
+    #sed -i -e "s/(P1,ANS)/(P1,ANS,WDTI)/g" $x
+    #sed -i -e "s/(P,NHEL,IC)/(P,NHEL,IC,WDTI)/g" $x
+    #sed -i -e "s/(P,NHEL(1,IHEL),JC(1))/(P,NHEL(1,IHEL),JC(1),WDTI)/g" $x
+    
+    # add finalstats.h
     sed -i -e '/PARAMETER(THEL=NCOMB\*NCROSS)/r addfinalstates.txt' $x
+    
+    #remove unnecessary variables
     sed -i -e "s/      REAL     xran1//g" $x
     sed -i -e "s/      EXTERNAL xran1//g" $x
     #sed -i -e "s/      CALL SWITCHMOM(P1,P,IC(1,IPROC),JC,NEXTERNAL)//g" $x
+    
+    # rename common blocks
     sed -i -e "s/to_amps/to_Ramps_${proc}/g" $x
     #sed -i -e "s/P,NHEL(1,IHEL)/P1,NHEL(1,IHEL)/g" $x
 
+    # add finastates-check (if equal final states divide amp by 2)
     sed -i -e "s/ANS(IPROC)=ANS(IPROC)\/DBLE(IDEN(IPROC))/marker/g" $x
     sed -i -e '/marker/r addfinalstatescheck.txt' $x
     sed -i -e 's/marker//g' $x
+    
+    # add dsubtraction.h
+    sed -i -e "s/C GLOBAL VARIABLES/marker/g" $x
+    sed -i -e '/marker/r addsubtraction.txt' $x
+    sed -i -e 's/marker//g' $x
 
+    # rename to prevent clashes with FormCalc
     sed -i -e 's/MB1/MBL/g' $x
     sed -i -e 's/MB2/MBR/g' $x
 
+    # rename to generalize
     sed -i -e 's/MN1/MNI/g' $x
     sed -i -e 's/MN2/MNJ/g' $x
 
@@ -122,4 +149,4 @@ echo ""
 echo "Check the generated files for errors and for line length violations! "
 
 #clean up
-rm addfinalstates.txt addfinalstatescheck.txt
+rm addfinalstates.txt addfinalstatescheck.txt addsubtraction.txt

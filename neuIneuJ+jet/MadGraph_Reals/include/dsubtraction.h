@@ -4,7 +4,6 @@ c Variables to apply the diagram subtractions scheme
 #define DSUBTRACTION_H
 
       character*4 CHAN                       ! distuinguish between u-, t-channels, left and right
-      double complex AMPR(NGRAPHS)           ! NGRAPHS was defined before in the madgraph .f files
       double precision MATRIX_RES            ! sum of resonant diagrams squared
       
 #if defined(DSUB_I)
