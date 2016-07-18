@@ -1,0 +1,6 @@
+           qubar        g        nI     nJ        qubar
+           qdbar        g        nI     nJ        qdbar
+           qd           qdbar    nI     nJ        g
+           qd           g        nI     nJ        qd
+           qu           qubar    nI     nJ        g
+           qu           g        nI     nJ        qu

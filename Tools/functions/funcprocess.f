@@ -157,94 +157,75 @@ c verbose = 4: No output at all, but set the variable lresult
       end
 c############### end check_4conservation subroutine ####################
 
-c############### subroutine set_squark_params ##########################
+c############### subroutine set_process ################################
 c pick SUSY masses relevant for specific initial state
-      subroutine set_process(id, M1, M2, M3, M4, M5)
+      subroutine set_process(nlegs, id, M)
         implicit none
 #include "PhysPars.h"
-        integer id(5)
-        double precision M1, M2, M3, M4, M5
+#include "nlegborn.h"
+#include "indices.h"
+        integer nlegs
+        integer id(nlegs), i
+        double precision M(nlegs)
 
-        M3 = par_Fin1mass
-        M4 = par_Fin2mass
-
-        select case(abs(id(1)))
-        case(1) ! d
-          M1 = par_MD
-        case(2) ! u
-          M1 = par_MU
-        case(3) ! s
-          M1 = par_MS
-        case(4) ! c
-          M1 = par_MC
-        case(5) ! b
-          M1 = par_MB
-        case(6) ! t
-          print*, "top quarks not implemented yet."
-          stop
-        case(0) ! gluon
-          M1 = 0D0
-        case default
-          write(*,*) "funcprocess.f: encountered unhandled incoming "//
-     &               " ID ", id
-          stop
-        end select
+        Gen(:) = 0
+        Neu(:) = 0
+        Cha(:) = 0
         
-        select case(abs(id(2)))
-        case(1) ! d
-          M2 = par_MD
-        case(2) ! u
-          M2 = par_MU
-        case(3) ! s
-          M2 = par_MS
-        case(4) ! c
-          M2 = par_MC
-        case(5) ! b
-          M2 = par_MB
-        case(6) ! t
-          print*, "top quarks not implemented yet."
-          stop
-        case(0) ! g
-          M2 = 0D0
-        case default
-          write(*,*) "funcprocess.f: encountered unhandled incoming "//
-     &               "ID ", id
-          stop
-        end select
-
-        select case(abs(id(5)))
-        case(1) ! d
-          M5 = par_MD
-        case(2) ! u
-          M5 = par_MU
-        case(3) ! s
-          M5 = par_MS
-        case(4) ! c
-          M5 = par_MC
-        case(5) ! b
-          M5 = par_MB
-        case(6) ! t
-          print*, "top quarks not implemented yet."
-          stop
-        case(0) ! g
-          M5 = 0D0
-        case default
-          write(*,*) "funcprocess.f: encountered unhandled outgoing "//
-     &               "ID ", id
-          stop
-        end select
-
+        do i=1,nlegs
+          select case(abs(id(i)))
+          case(1) ! d
+            M(i) = par_MD
+            Gen(i) = 1
+          case(2) ! u
+            M(i) = par_MU
+            Gen(i) = 1
+          case(3) ! s
+            M(i) = par_MS
+            Gen(i) = 2
+          case(4) ! c
+            M(i) = par_MC
+            Gen(i) = 2
+          case(5) ! b
+            M(i) = par_MB
+            Gen(i) = 3
+          case(6) ! t
+            print*, "top quarks not implemented yet."
+            stop
+          case(0) ! gluon
+            M(i) = 0D0
+          case(1000022)
+            Neu(i) = 1
+          case(1000023)
+            Neu(i) = 2
+          case(1000025)
+            Neu(i) = 3
+          case (1000035)
+            Neu(i) = 4
+          case(1000024)
+            Cha(i) = 1
+          case(1000037)
+            Cha(i) = 2
+          case default
+            print*, "funcprocess.f: encountered unhandled "//
+     &              "incoming ID ", id(i)
+            stop
+          endselect
+        enddo
+        
+        M(3) = par_Fin1mass
+        M(4) = par_Fin2mass
+        
 #ifdef DEBUGQ
         print*,"id",id
-        print*,"M1",M1
-        print*,"M2",M2
-        print*,"M3",M3
-        print*,"M4",M4
-        print*,"M5",M5
-        stop
+        print*,"Gen",Gen
+        print*,"Neu",Neu
+        print*,"Cha",Cha
+        print*,"M",M
+        !stop
 #endif
       end
-c############### end subroutine set_squark_params ######################
+c############### end subroutine set_process ############################
 
 c############### subroutine switchmom ##################################
 c Changes stuff for crossings (copied from MadGraph V4.5.2)

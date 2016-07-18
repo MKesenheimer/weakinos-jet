@@ -85,9 +85,6 @@ c A factor (4 Pi)^ep/Gamma(1-ep) with ep=(4-d)/2 is implied.
         ! calculate the couplings for this PS point
         call set_ebe_couplings
 
-        ! load process dependent masses
-        call set_process(flavs(1:4),MassI1,MassI2,MassO1,MassO2,MassO3)
-
         ! crossing (FormCalc provides only amplitudes for qqbar 
         ! and not for qbarq)
         if((flavs(1).gt.0 .and. flavs(2).lt.0) .or.
@@ -99,33 +96,6 @@ c A factor (4 Pi)^ep/Gamma(1-ep) with ep=(4-d)/2 is implied.
           ps(:,1) = p(:,2)
           ps(:,2) = p(:,1)
         endif
-        
-        ! calculate unit vectors and set the vectors for FormCalc
-        psNorm=dsqrt(ps(1,1)**2+ps(2,1)**2+ps(3,1)**2)
-        ex=ps(1,1)/psNorm
-        ey=ps(2,1)/psNorm
-        ez=ps(3,1)/psNorm
-        call VecSet(1, MassI1, psNorm, ex,ey,ez)
-        psNorm=dsqrt(ps(1,2)**2+ps(2,2)**2+ps(3,2)**2)
-        ex=ps(1,2)/psNorm
-        ey=ps(2,2)/psNorm
-        ez=ps(3,2)/psNorm
-        call VecSet(2, MassI2, psNorm, ex,ey,ez)
-        psNorm=dsqrt(ps(1,3)**2+ps(2,3)**2+ps(3,3)**2)
-        ex=ps(1,3)/psNorm
-        ey=ps(2,3)/psNorm
-        ez=ps(3,3)/psNorm
-        call VecSet(3, MassO1, psNorm, ex,ey,ez)
-        psNorm=dsqrt(ps(1,4)**2+ps(2,4)**2+ps(3,4)**2)
-        ex=ps(1,4)/psNorm
-        ey=ps(2,4)/psNorm
-        ez=ps(3,4)/psNorm
-        call VecSet(4, MassO2, psNorm, ex,ey,ez)
-        psNorm=dsqrt(ps(1,5)**2+ps(2,5)**2+ps(3,5)**2)
-        ex=ps(1,5)/psNorm
-        ey=ps(2,5)/psNorm
-        ez=ps(3,5)/psNorm
-        call VecSet(5, MassO3, psNorm, ex,ey,ez)
 
         ! unpolarized particles: B01110 01010 01010 01010 01010 = D15018314, FC8Guid.pdf p.49
         if(flavs(1).eq.0) then
@@ -182,12 +152,12 @@ c#define CHECKUV
         
 #ifndef NEGLECTBMASS
           print*,"ERROR: FormCalc massive b-quark amplitudes not yet "
-                 //"implemented."
+     &           //"implemented."
           stop
 #endif
 
         ! is defined in Born.F, but loads also the virtual amplitudes
-        call loadFormCalcAmps(flavs,helicities,flags,fc_result)
+        call getBVAmps(ps,flavs,helicities,flags,fc_result)
 
         ! no fake virtuals
         if(.not.flg_fakevirtuals) then

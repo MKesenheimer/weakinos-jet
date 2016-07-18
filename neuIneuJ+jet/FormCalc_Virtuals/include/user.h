@@ -19,6 +19,7 @@ c#define CUTTOOLS
 #include "model_mssm.h"
 #include "model_sm.h"
 #include "susy_restore.h"
+#include "indices.h"
 
 #endif
 

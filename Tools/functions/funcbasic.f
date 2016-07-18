@@ -14,9 +14,7 @@ c Kronecker delta
         else
           kronecker = 0d0
         endif
-        return
       end
-
 
 
 c exchanges two integers

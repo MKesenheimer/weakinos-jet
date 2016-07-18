@@ -117,13 +117,13 @@ DEBUG = -ggdb -pg -D DEBUG -D DEBUGV
 # calculation and abort if they are not: -D CHECK_FORM_MAD
 # Note: Use this only for testing born amplitudes, not for the final 
 # program and not while checking real amplitudes!
-USRFLAGS += -D CHECK_FORM_MAD
+#USRFLAGS += -D CHECK_FORM_MAD
 
 ## Additional and mandatory flags
 # Use MadGraph Borns (default): -D MAD_BORN 
 # Use FormCalc Borns: -D FORM_BORN
-USRFLAGS += -D MAD_BORN
-#USRFLAGS += -D FORM_BORN
+#USRFLAGS += -D MAD_BORN
+USRFLAGS += -D FORM_BORN
 
 ## Treatment of quark masses and squark widths
 # The current version uses vanishing masses for the incoming quarks.
@@ -131,7 +131,7 @@ USRFLAGS += -D MAD_BORN
 # (CMS) to regularize on-shell resonances (default).
 USRFLAGS += -D NEGLECTBMASS
 #USRFLAGS += -D NEGLECT_SWIDTH
-USRFLAGS += -D COMPLEXMASS
+#USRFLAGS += -D COMPLEXMASS
 # If you want to change these flags, you probably have to change a lot
 # for the FormCalc amplitudes. For example, the b-quark amplitudes are 
 # currently calculated by crossing relations from d-quark amplitudes.
@@ -185,12 +185,9 @@ SUBWORKINGDIR = $(shell pwd)
 TOOLS   = $(WORKINGDIR)/Tools
 REAL    = $(SUBWORKINGDIR)/MadGraph_Reals
 VIRT    = $(SUBWORKINGDIR)/FormCalc_Virtuals
-VIRTSUB = $(VIRT)/uubar_n1n1j_squaredme $(VIRT)/ddbar_n1n1j_squaredme \
-	$(VIRT)/ug_n1n1j_squaredme $(VIRT)/ubarg_n1n1j_squaredme \
-	$(VIRT)/dg_n1n1j_squaredme $(VIRT)/dbarg_n1n1j_squaredme \
-	$(VIRT)/uubar_n1n2j_squaredme $(VIRT)/ddbar_n1n2j_squaredme \
-	$(VIRT)/ug_n1n2j_squaredme $(VIRT)/ubarg_n1n2j_squaredme \
-	$(VIRT)/dg_n1n2j_squaredme $(VIRT)/dbarg_n1n2j_squaredme
+VIRTSUB = $(VIRT)/squaredME $(VIRT)/RenConsts
+FORMREAL = $(SUBWORKINGDIR)/FormCalc_Reals
+FORMREALSUB = $(FORMREAL)/squaredME
 REALSUB  = $(REAL)/SubProcesses_nInJ+jet
 MODIFIED = $(WORKINGDIR)/POWHEG_mod
 SCRIPTS  = $(WORKINGDIR)/Scripts
@@ -214,13 +211,15 @@ MDINCLUDE   = $(REAL)/include
 SLHAINCLUDE = $(SLHA)/src
 LTINCLUDE   = $(LT)/src/include
 PY8INCLUDE  = $(PY8)/include
+FRINCLUDE   = $(FORMREAL)/include
 
 ########################################################################
 ## search for the files and set paths
 
 vpath %.f $(PWHGDIR) $(WORKINGDIR) $(TOOLS)/functions $(DHELAS) $(PY) $(PYF) $(HER)
 vpath %.F $(WORKINGDIR) $(TOOLS)/FormCalcTools $(DHELAS)
-vpath %.F $(VIRT)/RenConsts $(VIRTSUB)
+vpath %.F $(VIRTSUB)
+vpath %.F $(FORMREALSUB)
 vpath %.F $(MADMODEL) $(REALSUB)
 vpath %.f $(MADMODEL) $(REALSUB)
 vpath %.f $(MODIFIED)
@@ -451,33 +450,24 @@ MADOBJ += b_cl_001_001.o b_cl_001_002.o b_cl_001_003.o \
 MADOBJ +=
 
 ### Virtual Amplitudes in Formcalc_Virtuals/ ###
-VIRTUALS += CalcRenConst.o dbarg_n1n1j_SquaredME.o dbarg_n1n1j_abbr0a.o \
-	 dbarg_n1n1j_abbr0h.o dbarg_n1n1j_abbr0s.o dbarg_n1n1j_born.o \
-	 dbarg_n1n1j_born_Sfe6.o dbarg_n1n2j_SquaredME.o dbarg_n1n2j_abbr0a.o \
-	 dbarg_n1n2j_abbr0h.o dbarg_n1n2j_abbr0s.o dbarg_n1n2j_born.o \
-	 dbarg_n1n2j_born_Sfe6.o ddbar_n1n1j_SquaredME.o ddbar_n1n1j_abbr0a.o \
-	 ddbar_n1n1j_abbr0h.o ddbar_n1n1j_abbr0s.o ddbar_n1n1j_born.o \
-	 ddbar_n1n1j_born_Sfe6.o ddbar_n1n2j_SquaredME.o ddbar_n1n2j_abbr0a.o \
-	 ddbar_n1n2j_abbr0h.o ddbar_n1n2j_abbr0s.o ddbar_n1n2j_born.o \
-	 ddbar_n1n2j_born_Sfe6.o dg_n1n1j_SquaredME.o dg_n1n1j_abbr0a.o \
-	 dg_n1n1j_abbr0h.o dg_n1n1j_abbr0s.o dg_n1n1j_born.o \
-	 dg_n1n1j_born_Sfe6.o dg_n1n2j_SquaredME.o dg_n1n2j_abbr0a.o \
-	 dg_n1n2j_abbr0h.o dg_n1n2j_abbr0s.o dg_n1n2j_born.o \
-	 dg_n1n2j_born_Sfe6.o ubarg_n1n1j_SquaredME.o ubarg_n1n1j_abbr0a.o \
-	 ubarg_n1n1j_abbr0h.o ubarg_n1n1j_abbr0s.o ubarg_n1n1j_born.o \
-	 ubarg_n1n1j_born_Sfe6.o ubarg_n1n2j_SquaredME.o ubarg_n1n2j_abbr0a.o \
-	 ubarg_n1n2j_abbr0h.o ubarg_n1n2j_abbr0s.o ubarg_n1n2j_born.o \
-	 ubarg_n1n2j_born_Sfe6.o ug_n1n1j_SquaredME.o ug_n1n1j_abbr0a.o \
-	 ug_n1n1j_abbr0h.o ug_n1n1j_abbr0s.o ug_n1n1j_born.o \
-	 ug_n1n1j_born_Sfe6.o ug_n1n2j_SquaredME.o ug_n1n2j_abbr0a.o \
-	 ug_n1n2j_abbr0h.o ug_n1n2j_abbr0s.o ug_n1n2j_born.o \
-	 ug_n1n2j_born_Sfe6.o uubar_n1n1j_SquaredME.o uubar_n1n1j_abbr0a.o \
-	 uubar_n1n1j_abbr0h.o uubar_n1n1j_abbr0s.o uubar_n1n1j_born.o \
-	 uubar_n1n1j_born_Sfe6.o uubar_n1n2j_SquaredME.o uubar_n1n2j_abbr0a.o \
-	 uubar_n1n2j_abbr0h.o uubar_n1n2j_abbr0s.o uubar_n1n2j_born.o \
-	 uubar_n1n2j_born_Sfe6.o
+VIRTUALS += CalcRenConst.o qdbarg_nInJqdbar_abbr0a.o qdbarg_nInJqdbar_abbr0h.o \
+	 qdbarg_nInJqdbar_abbr0s.o qdbarg_nInJqdbar_born.o qdbarg_nInJqdbar_born_Sfe6.o \
+	 qdbarg_nInJqdbar_SquaredME.o qdg_nInJqd_abbr0a.o qdg_nInJqd_abbr0h.o \
+	 qdg_nInJqd_abbr0s.o qdg_nInJqd_born.o qdg_nInJqd_born_Sfe6.o \
+	 qdg_nInJqd_SquaredME.o qdqdbar_nInJg_abbr0a.o qdqdbar_nInJg_abbr0h.o \
+	 qdqdbar_nInJg_abbr0s.o qdqdbar_nInJg_born.o qdqdbar_nInJg_born_Sfe6.o \
+	 qdqdbar_nInJg_SquaredME.o qubarg_nInJqubar_abbr0a.o qubarg_nInJqubar_abbr0h.o \
+	 qubarg_nInJqubar_abbr0s.o qubarg_nInJqubar_born.o qubarg_nInJqubar_born_Sfe6.o \
+	 qubarg_nInJqubar_SquaredME.o qug_nInJqu_abbr0a.o qug_nInJqu_abbr0h.o \
+	 qug_nInJqu_abbr0s.o qug_nInJqu_born.o qug_nInJqu_born_Sfe6.o \
+	 qug_nInJqu_SquaredME.o ququbar_nInJg_abbr0a.o ququbar_nInJg_abbr0h.o \
+	 ququbar_nInJg_abbr0s.o ququbar_nInJg_born.o ququbar_nInJg_born_Sfe6.o \
+	 ququbar_nInJg_SquaredME.o
 
-SOURCESMAIN = $(PWHG) $(PDFPACK) $(USER) $(PWHGANALYSIS) $(FUNC) $(VIRTUALS)  \
+
+REALS += 
+
+SOURCESMAIN = $(PWHG) $(PDFPACK) $(USER) $(PWHGANALYSIS) $(FUNC) $(VIRTUALS) $(REALS) \
 	$(FORMCALC) $(MMADOBJ) $(MADOBJ)
 
 SOURCESLHEF = $(LHEF) $(PWHGANALYSIS) $(MMADOBJ)
@@ -514,7 +504,7 @@ LIBS += -ldl -lstdc++
 ALL_FCFLAGS   = $(REC_FCFLAGS) $(OPT) $(WARN) $(CPP) $(DEBUG) $(USRFLAGS) $(CHANNEL)
 ALL_FCFLAGS  += -I$(UINCLUDE) -I$(PINCLUDE) -I$(LTINCLUDE) -I$(MDINCLUDE)
 ALL_FCFLAGS  += -I$(WORKINGDIR) -I$(VINCLUDE) -I$(SLHAINCLUDE)
-ALL_FCFLAGS  += -I$(SINCLUDE)
+ALL_FCFLAGS  += -I$(SINCLUDE) -I$(FRINCLUDE)
 
 ALL_CFLAGS    = $(REC_CFLAGS) $(OPT)
 ALL_CFLAGS   += -I$(LTINCLUDE)
@@ -526,6 +516,7 @@ LINKER = $(CPPFLAGS) $(LIBS) $(LDFLAGS)
 HEADERS  = $(wildcard *.h $(UINCLUDE)/*.h  $(PINCLUDE)/*.h $(VINCLUDE)/*.h)
 HEADERS += $(wildcard *.h $(LTINCLUDE)/*.h $(SLHAINCLUDE)/*.h)
 HEADERS += $(wildcard *.h $(MDINCLUDE)/*.h $(SINCLUDE)/*.h)
+HEADERS += $(wildcard *.h $(FRINCLUDE)/*.h)
 HEADERS += $(wildcard *.inc $(MDINCLUDE)/*.inc $(UINCLUDE)/*.inc)
      
 ########################################################################

@@ -66,12 +66,6 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         else
            verbose = .false.
         endif
-        
-        ! determine the resonant diagrams
-        if(.not.detcalled) then
-          detcalled = .true.
-          call deterResDiags()
-        endif
 
         ! store flavor list and momenta
         flavs = rflav
@@ -144,53 +138,3 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
 #endif
       end
 c############### end subroutine setreal ################################
-
-c############### subroutine deterResDiags ##############################
-c determine the doubly resonant diagrams
-      subroutine deterResDiags()
-        implicit none
-#include "PhysPars.h"
-#include "nlegborn.h"
-#include "pwhg_flst.h"
-#include "pwhg_flst_add.h"
-        double precision p(0:3,nlegreal)
-        integer rflav(nlegreal)
-        ! the real amplitudes
-        double precision ampreal
-        ! indices
-        integer i, j
-        
-        print*
-        print*,"Determining the resonant diagrams..."
-        
-        do i=1,flst_nosres
-          print*,"...for process: ",flst_osres(:,i)
-          do j=1,nlegreal
-            rflav(j) = flst_real(j,i)
-          enddo
-          call setreal(p,rflav,ampreal)
-          print*,ampreal
-        enddo
-      end
-c############### end subroutine deterResDiags ##########################
-
-c############### function dsigrealTest #################################
-c determine the doubly resonant diagrams
-      function dsigrealTest(xreal,rflav)
-        implicit none
-#include "PhysPars.h"
-#include "nlegborn.h"
-#include "pwhg_flst.h"
-        double precision dsigrealTest
-        double precision xreal(ndiminteg)
-        double precision p(0:3,nlegreal)
-        integer rflav(nlegreal)
-        ! the real amplitudes
-        double precision ampreal
-
-        
-
-      end
-c############### end function dsigrealTest #############################
-
-!  call mint(btilde,ndiminteg,ncall2,itmx2,ifold,imode,iun, xgrid,xint,xacc,nhits,ymax,ymaxrat,sigbtl,errbtl)

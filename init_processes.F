@@ -386,7 +386,7 @@ c ur45: right handed down-type squark gets resonant with particles 4 & 5
           stop
         endif
 
-        ! the human readable identifiers
+        ! the human readable identifiers (TODO)
         osresID(1) = "dl35"
         osresID(2) = "dl45"
         osresID(3) = "ul35"

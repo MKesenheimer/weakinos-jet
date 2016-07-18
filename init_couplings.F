@@ -30,7 +30,7 @@ c requires encoded process ID in lprup(1)
         ! set PhysPars parameters
         call set_phys_params
         ! set madgraph parameters.
-        ! Note: calling this subroutine for the first time reads from 
+        ! note: calling this subroutine for the first time reads from 
         ! the provided slha file.
         call set_madgraph_params
         
@@ -39,31 +39,31 @@ c requires encoded process ID in lprup(1)
         print*, "checking for parameters in powheg.input"
         print*, "(if given, they override SLHA SM parameters)"
         if(powheginput("#inv_alpha").gt.0) then
-          print*,"Note: using inv_alpha from powheg.input"
+          print*,"note: using inv_alpha from powheg.input"
           par_alpha = 1d0/powheginput("inv_alpha")
           alpha = par_alpha
           call set_madgraph_params ! overwrite the current madgraph alpha with the new one
         endif
         if(powheginput("#Zmass").gt.0) then
-          print*,"Note: using Zmass from powheg.input"
+          print*,"note: using Zmass from powheg.input"
           par_Zmass = powheginput("Zmass")
           zmass = par_Zmass
           call set_madgraph_params
         endif
         if(powheginput("#Wmass").gt.0) then
-          print*,"Note: using Wmass from powheg.input"
+          print*,"note: using Wmass from powheg.input"
           par_Wmass = powheginput("Wmass")
           wmass = par_Wmass
           call set_madgraph_params
         endif
         if(powheginput("#Zwidth").gt.0) then
-          print*,"Note: using Zwidth from powheg.input"
+          print*,"note: using Zwidth from powheg.input"
           par_Zwidth = powheginput("Zwidth")
           zwidth = par_Zwidth ! madgraph
           call set_madgraph_params
         endif
         if(powheginput("#Wwidth").gt.0) then
-          print*,"Note: using Wwidth from powheg.input"
+          print*,"note: using Wwidth from powheg.input"
           par_Wwidth = powheginput("Wwidth")
           wwidth = par_Wwidth ! madgraph
           call set_madgraph_params
@@ -187,7 +187,7 @@ c requires encoded process ID in lprup(1)
      &      (VCha(1,2)          .ne. vvmix(1,2)   ) .or.
      &      (VCha(2,1)          .ne. vvmix(2,1)   ) .or.
      &      (VCha(2,2)          .ne. vvmix(2,2)   ) ) then
-          print*, "Error: Madgraph uses parameters different to "
+          print*, "error: Madgraph uses parameters different to "
      &          //"PhysPars.h or FormCalc paramaters"
           stop
         endif
@@ -203,7 +203,7 @@ c requires encoded process ID in lprup(1)
      &       (par_Fin1mass .eq. invalid) .or.
      &       (par_Fin2mass .eq. invalid) .or.
      &       (par_Fin3mass .eq. invalid) ) then
-          print*,"WARNING: One or more parameters are not set:"
+          print*,"warning: One or more parameters are not set:"
           print*,"par_alpha: ",par_alpha
           print*,"par_Zmass: ",par_Zmass
           print*,"par_Wmass: ",par_Wmass
@@ -242,7 +242,7 @@ c sets the Madgraph parameters
         ! more than once, the SM Input parameters can be overwritten
         ! with parameters from powheg.input.
         if(called) then
-          !print*, "Note: Overwrite madgraph paramaters."
+          !print*, "note: Overwrite madgraph paramaters."
           readslha = .false.
         else
           call powheginputstring("SLHA",slhafilename)
@@ -336,7 +336,7 @@ c sets the PhysPars.h parameters
 
         ! generation cut for soft jets
         gcut = 10D0
-        print*,"Note: Using generation cut of",gcut,"GeV for jets in "//
+        print*,"note: Using generation cut of",gcut,"GeV for jets in "//
      &         "Phasespace"
 
         ! get SLHA filename
@@ -367,7 +367,7 @@ c sets the PhysPars.h parameters
 #endif
 
         ! SM parameters from SLHA-file
-        print*, "Note: ignoring alpha_s value given in SLHA file"
+        print*, "note: ignoring alpha_s value given in SLHA file"
         par_Zmass   = dreal(SMInputs_MZ)
         par_Wmass   = dreal(Mass_MW)
         par_gf      = dreal(SMInputs_GF)
@@ -397,13 +397,13 @@ c sets the PhysPars.h parameters
         enddo
 
         if( par_Wwidth .eq. invalid) then
-          print*, "WARNING: W-width not found in SLHA file."
+          print*, "warning: W-width not found in SLHA file."
           print*, "         Use zero width."
           par_Wwidth = 0D0
         endif
 
         if( par_Zwidth .eq. invalid) then
-          print*, "WARNING: Z-width not found in SLHA file."
+          print*, "warning: Z-width not found in SLHA file."
           print*, "         Use zero width."
           par_Zwidth = 0D0
         endif
@@ -456,7 +456,7 @@ c sets the PhysPars.h parameters
         
         if( (dabs(par_Fin1mass) + dabs(par_Fin2mass)) .lt. par_Zmass )
      &  then
-          print*, "Error: Final state masses low, W/Z decays might "//
+          print*, "Final state masses low, W/Z decays might "//
      &            "be more suitable"
           stop
         endif
@@ -489,8 +489,8 @@ c sets the PhysPars.h parameters
 c small mass to regularize LoopTools integrals
 c#define EPSMASS 1D-30
 #ifdef EPSMASS
-        print*,"Note (PhysPars): neglecting u,d,c,s-quark masses"
-        par_MU = EPSMASS ! Note: setting this exactly to zero can cause 
+        print*,"note (PhysPars): neglecting u,d,c,s-quark masses"
+        par_MU = EPSMASS ! note: setting this exactly to zero can cause 
         par_MC = EPSMASS ! problems in calculating propagators, since the
         par_MD = EPSMASS ! formcalc code already neglects all light 
         par_MS = EPSMASS ! masses analytically but leaves some masses in propagators
@@ -503,7 +503,7 @@ c#define EPSMASS 1D-30
 
 c b quark mass
 #ifdef NEGLECTBMASS
-        print*,"Note (PhysPars): neglecting b-quark mass"
+        print*,"note (PhysPars): neglecting b-quark mass"
 #ifdef EPSMASS
         par_MB = EPSMASS
 #else
@@ -528,7 +528,7 @@ c version.
               case (1000021) ! gluino
                 par_Glwidth = width(channel)
 #ifndef NEGLECT_SWIDTH
-              print*, "WARNING: FormCalc does not use squark-widths."  
+              print*, "warning: FormCalc does not use squark-widths."  
               case (1000001) ! sdown_L
                 par_Sfwidth(1,4,1) = width(channel)
               case (2000001) ! sdown_R
@@ -576,7 +576,7 @@ c version.
       end
 c############### end subroutine set_phys_params ########################
 
-c############### set_params subroutine #################################
+c############### subroutine set_formcalc_params ########################
 c extracts mass and mixing matrices from slhadata
 c assumes slhadata to be filled already
 c sets the FormCalc parameters
@@ -584,8 +584,8 @@ c sets the FormCalc parameters
         implicit none
 #include "PhysPars.h"
 #include "pwhg_math.h"
-        double precision powheginput
-        external powheginput
+        double precision powheginput, kronecker
+        external powheginput, kronecker
         integer i,j,k,l ! loops
         real ident(4,4) ! identity matrix
         real eps        ! auxilliary variable for checking unitarity of ZNeu
@@ -608,11 +608,10 @@ c if you change this, you have to change something in
 c MadGraphs couplings.f as well.
 #define NO_CKM_MIXING
 #ifdef NO_CKM_MIXING
-        print*, "Note (FormCalc): no CKM mixing"
+        print*, "note (FormCalc): no CKM mixing"
         do i=1,3
           do j=1,3
-            if(i.eq.j)  CKM(i,j) = 1D0
-            if(i.ne.j)  CKM(i,j) = 0D0
+            CKM(i,j) = kronecker(i,j)
           enddo
         enddo
 #else
@@ -628,7 +627,7 @@ c MadGraphs couplings.f as well.
 #endif
 
         ! Squark masses and widths
-        ! Note: The squark widths are not needed in the current 
+        ! note: The squark widths are not needed in the current 
         ! implementation of FormCalc. They will be initialized here
         ! anyway.
         do i=1,2 ! sfermion index s
@@ -761,7 +760,7 @@ c MadGraphs couplings.f as well.
         SW  = dsqrt(SW2)
         
         ! sin(beta), cos(beta), tan(beta)
-        ! Note: the matrix elements do not depend on TB
+        ! note: the matrix elements do not depend on TB
         !TB = HMix_TB
         TB = MinPar_TB
         CB = dabs(1.D0/dsqrt(1+TB**2))
@@ -777,7 +776,7 @@ c MadGraphs couplings.f as well.
         Mino3 = dcmplx(MinPar_M12)
         
         ! trilinear couplings
-        ! Note: the matrix elements do not depend on Af
+        ! note: the matrix elements do not depend on Af
         do i=2,4 ! type 
           do j=1,3 ! generation
             do k=1,3 ! generation
@@ -787,7 +786,7 @@ c MadGraphs couplings.f as well.
         enddo
         
         ! mass term mixing the 2 Higgs doublets
-        ! Note: the matrix elements do not depend on MUE
+        ! note: the matrix elements do not depend on MUE
         MUE  = dcmplx(HMix_MUE)
 
         ! couplings
@@ -801,7 +800,7 @@ c MadGraphs couplings.f as well.
         EL = dsqrt(4*pi*Alfa)
         GS = dsqrt(4*pi*AlfaS)
       end
-c############### end subroutine set_params #############################
+c############### end subroutine set_formcalc_params ####################
 
 c############### init_susy_restore subroutine ##########################
 c initialization of susy restoring counter terms and yukawa couplings
@@ -820,7 +819,7 @@ c ddbar_SquaredME.F and uubar_SquaredME.F.
 #include "pwhg_st.h"
 #include "pwhg_math.h"
 #include "susy_restore.h"
-        ! the counter term for quark-squark-gluino is not needed here
+        ! the counter term for quark-squark-gluino is not needed here (TODO: check!)
         dZgs1y = 0 ! gs*Alfas/(3D0*Pi)
         ! counter term for quark-squark-neutralino yukawa coupling
         dZe1y  = -el*Alfas/(6D0*Pi)
