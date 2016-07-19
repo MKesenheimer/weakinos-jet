@@ -17,7 +17,7 @@ c Kronecker delta
       end
 
 
-c exchanges two integers
+c swap two integers
       subroutine swapi(i1,i2)
         implicit none
         integer i1,i2,itmp
@@ -36,6 +36,20 @@ c squared of a four vector
         momsq = dotp(p,p)
       end
 
+
+c check odd or even integer
+      logical function iseven(n)
+        implicit none
+        integer n
+        iseven = .true.
+        if(mod(abs(n),2).eq.1) iseven = .false.
+      end
+      logical function isodd(n)
+        implicit none
+        integer n
+        isodd = .false.
+        if(mod(abs(n),2).eq.1) isodd = .true.
+      end 
 
 
 c squared of sum of 2 four vectors

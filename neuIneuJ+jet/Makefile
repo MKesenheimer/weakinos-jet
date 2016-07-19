@@ -117,7 +117,7 @@ DEBUG = -ggdb -pg -D DEBUG -D DEBUGV
 # calculation and abort if they are not: -D CHECK_FORM_MAD
 # Note: Use this only for testing born amplitudes, not for the final 
 # program and not while checking real amplitudes!
-#USRFLAGS += -D CHECK_FORM_MAD
+USRFLAGS += -D CHECK_FORM_MAD
 
 ## Additional and mandatory flags
 # Use MadGraph Borns (default): -D MAD_BORN 
@@ -276,7 +276,7 @@ endif
 ### USER Files ###
 USER = Born.o Born_phsp.o Born_lh.o Reals.o Reals_lh.o Virtuals.o 	\
        init_processes.o init_couplings.o Reals_osres.o 		\
-       Real_osres_phsp.o phi1_2.o sigosres.o version.o
+       Real_osres_phsp.o phi1_2.o sigosres.o version.o FormCalc.o
 
 ### Functions in Tools/functions/
 FUNC = funcprocess.o Print.o funcbasic.o off_to_on.o
@@ -450,22 +450,24 @@ MADOBJ += b_cl_001_001.o b_cl_001_002.o b_cl_001_003.o \
 MADOBJ +=
 
 ### Virtual Amplitudes in Formcalc_Virtuals/ ###
-VIRTUALS += CalcRenConst.o qdbarg_nInJqdbar_abbr0a.o qdbarg_nInJqdbar_abbr0h.o \
-	 qdbarg_nInJqdbar_abbr0s.o qdbarg_nInJqdbar_born.o qdbarg_nInJqdbar_born_Sfe6.o \
-	 qdbarg_nInJqdbar_SquaredME.o qdg_nInJqd_abbr0a.o qdg_nInJqd_abbr0h.o \
-	 qdg_nInJqd_abbr0s.o qdg_nInJqd_born.o qdg_nInJqd_born_Sfe6.o \
-	 qdg_nInJqd_SquaredME.o qdqdbar_nInJg_abbr0a.o qdqdbar_nInJg_abbr0h.o \
-	 qdqdbar_nInJg_abbr0s.o qdqdbar_nInJg_born.o qdqdbar_nInJg_born_Sfe6.o \
-	 qdqdbar_nInJg_SquaredME.o qubarg_nInJqubar_abbr0a.o qubarg_nInJqubar_abbr0h.o \
-	 qubarg_nInJqubar_abbr0s.o qubarg_nInJqubar_born.o qubarg_nInJqubar_born_Sfe6.o \
-	 qubarg_nInJqubar_SquaredME.o qug_nInJqu_abbr0a.o qug_nInJqu_abbr0h.o \
-	 qug_nInJqu_abbr0s.o qug_nInJqu_born.o qug_nInJqu_born_Sfe6.o \
-	 qug_nInJqu_SquaredME.o ququbar_nInJg_abbr0a.o ququbar_nInJg_abbr0h.o \
-	 ququbar_nInJg_abbr0s.o ququbar_nInJg_born.o ququbar_nInJg_born_Sfe6.o \
-	 ququbar_nInJg_SquaredME.o
+VIRTUALS += CalcRenConst.o qdbarg_nInJqdbar_SquaredME.o qdbarg_nInJqdbar_abbr0a.o \
+	 qdbarg_nInJqdbar_abbr0h.o qdbarg_nInJqdbar_abbr0s.o qdbarg_nInJqdbar_born.o \
+	 qdbarg_nInJqdbar_born_Sfe6.o qdg_nInJqd_SquaredME.o qdg_nInJqd_abbr0a.o \
+	 qdg_nInJqd_abbr0h.o qdg_nInJqd_abbr0s.o qdg_nInJqd_born.o \
+	 qdg_nInJqd_born_Sfe6.o qdqdbar_nInJg_SquaredME.o qdqdbar_nInJg_abbr0a.o \
+	 qdqdbar_nInJg_abbr0h.o qdqdbar_nInJg_abbr0s.o qdqdbar_nInJg_born.o \
+	 qdqdbar_nInJg_born_Sfe6.o qubarg_nInJqubar_SquaredME.o qubarg_nInJqubar_abbr0a.o \
+	 qubarg_nInJqubar_abbr0h.o qubarg_nInJqubar_abbr0s.o qubarg_nInJqubar_born.o \
+	 qubarg_nInJqubar_born_Sfe6.o qug_nInJqu_SquaredME.o qug_nInJqu_abbr0a.o \
+	 qug_nInJqu_abbr0h.o qug_nInJqu_abbr0s.o qug_nInJqu_born.o \
+	 qug_nInJqu_born_Sfe6.o ququbar_nInJg_SquaredME.o ququbar_nInJg_abbr0a.o \
+	 ququbar_nInJg_abbr0h.o ququbar_nInJg_abbr0s.o ququbar_nInJg_born.o \
+	 ququbar_nInJg_born_Sfe6.o
 
 
-REALS += 
+REALS += qubarqubar_nInJqubarqubar_SquaredME.o qubarqubar_nInJqubarqubar_abbr0a.o qubarqubar_nInJqubarqubar_abbr0h.o \
+	 qubarqubar_nInJqubarqubar_abbr0s.o qubarqubar_nInJqubarqubar_real.o qubarqubar_nInJqubarqubar_real_Sfe7.o \
+	 qubarqubar_nInJqubarqubar_real_Sfe7_Sfe8.o
 
 SOURCESMAIN = $(PWHG) $(PDFPACK) $(USER) $(PWHGANALYSIS) $(FUNC) $(VIRTUALS) $(REALS) \
 	$(FORMCALC) $(MMADOBJ) $(MADOBJ)

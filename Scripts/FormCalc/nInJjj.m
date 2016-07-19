@@ -31,10 +31,10 @@ If[$CommandLine[[2]] === "-script",
 	 p[6] = ToString[$CommandLine[[9]]];),
 	(*Else*)
 	(p[1] = "qubar";
-	 p[2] = "qd";
+	 p[2] = "qu";
 	 p[3] = "nI";
 	 p[4] = "nJ";
-	 p[5] = "qd";
+	 p[5] = "qu";
 	 p[6] = "qubar";)
 ]
 
@@ -104,8 +104,8 @@ CKMC = IndexDelta;
 SetOptions[InsertFields, Model -> "MSSMCT",
            Restrictions -> {NoLightFHCoupling}(*No Fermion-Higgs coupling*),
            (*Exclude Top, Higgs, Neutrinos, massive Leptons, Sneutrinos, Sleptons*)
-		   ExcludeParticles -> {S[1|2|3|4|5|6|11|12], F[1|2](*, V[1|3]*)},
-		   (*No internal Weakinos*)
+		   ExcludeParticles -> {S[1|2|3|4|5|6|11|12], F[1|2](*, V[1|3]*)}
+		   (*No internal Weakinos*),
 		   LastSelections->{!F[11],!F[12]}];
 
 SetOptions[Paint, PaintLevel -> {Classes}, ColumnsXRows -> {4, 5}, AutoEdit -> False];
@@ -114,10 +114,7 @@ SetOptions[Paint, PaintLevel -> {Classes}, ColumnsXRows -> {4, 5}, AutoEdit -> F
 (*D = dimensional regularization (default),*)
 (*4 = constrained differential renormalization,*)
 (*0 = keeps the whole amplitude D-dimensional*)
-SetOptions[CalcFeynAmp,Dimension->D];
-(*Note: There is currently a bug in FormCalc which does not allow to compile*)
-(*the generated code with PaVeReduce\[Rule]True set.*)
-(*One has to replace "Derivative(1)(IGram)(MS2)" with "(-1/(MS2**2))"*)
+SetOptions[CalcFeynAmp, Dimension->D];
 
 (*Save the Diagrams*)
 $PaintSE = MkDir["Diagrams"];
@@ -150,7 +147,9 @@ ins = InsertFields[tops, process];
 DoPaint[ins, "real"];
 
 (*sort the amplitude by powers of the coupling constants*)
-real = CalcFeynAmp[CreateFeynAmp[ins]/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}];
+(*Uncomment the option ",InvSimplify\[Rule]False" for Mac OS X => *)
+(*FormCalc fails to generate the Form code in function InvSimplify*)
+real = CalcFeynAmp[CreateFeynAmp[ins]/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}, InvSimplify->False];
 (*Export["real."<>name<>".wdx",real,"WDX"]*)
 (*apply max coupling rules*)
 real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
@@ -178,6 +177,3 @@ WriteSquaredME[real, {}, col, abbr, subexpr, dir];
 
 Print["time used: ", SessionTime[] - time1]
 Exit[];
-
-
-

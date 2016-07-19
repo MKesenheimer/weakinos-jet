@@ -17,20 +17,21 @@ ClearProcess[]
 time1 = SessionTime[]
 
 
-(*You can now load the script with the command $ MathKernel -script nInJjj.m "d" "g" "n1" "n2" "d"*)
+(*You can now load the script with the command $ MathKernel -script nInJjj.m "d" "dbar" "n1" "n2" "d" "dbar"*)
 Print[$CommandLine]
 If[$CommandLine[[2]] === "-script",
 	(p[1] = ToString[$CommandLine[[4]]];
 	 p[2] = ToString[$CommandLine[[5]]];
 	 p[3] = ToString[$CommandLine[[6]]];
 	 p[4] = ToString[$CommandLine[[7]]];
-	 p[5] = ToString[$CommandLine[[8]]];),
+	 p[5] = ToString[$CommandLine[[8]]];
+	 p[6] = ToString[$CommandLine[[9]]];),
 	(*Else*)
 	(p[1] = "qubar";
-	 p[2] = "g";
+	 p[2] = "qu";
 	 p[3] = "nI";
 	 p[4] = "nJ";
-	 p[5] = "qubar";)
+	 p[5] = "g";)
 ]
 
 CalcProcess = p[1]<>p[2]<>"_"<>p[3]<>p[4]<>p[5];

@@ -76,8 +76,8 @@ c A factor (4 Pi)^ep/Gamma(1-ep) with ep=(4-d)/2 is implied.
         
         ! backup flavor list and momenta, so we can operate on it without
         ! affecting the rest of the program
-        flavs = vflav
-        ps = p
+        flavs(:) = vflav(:)
+        ps(:,:) = p(:,:)
         
         ! check four momentum conservation
         call check_4conservation(p, nlegborn, 1, lresult)
@@ -93,6 +93,8 @@ c A factor (4 Pi)^ep/Gamma(1-ep) with ep=(4-d)/2 is implied.
           ps(:,1) = p(:,1)
           ps(:,2) = p(:,2)
         else
+          flavs(1) = vflav(2)
+          flavs(2) = vflav(1)
           ps(:,1) = p(:,2)
           ps(:,2) = p(:,1)
         endif
@@ -157,7 +159,7 @@ c#define CHECKUV
 #endif
 
         ! is defined in Born.F, but loads also the virtual amplitudes
-        call getBVAmps(ps,flavs,helicities,flags,fc_result)
+        call getAmps(ps,flavs,helicities,flags,fc_result)
 
         ! no fake virtuals
         if(.not.flg_fakevirtuals) then

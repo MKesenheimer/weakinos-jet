@@ -213,7 +213,7 @@ Component[Amp_,n_]:=Replace[Amp,Amp[_][x__]:>{x}][[n]]
 Print["On-Shell Diagrams"]
 
 tops = CreateTopologies[0, 2 -> 4];
-(*DoPaint[tops, "tops"];*)
+DoPaint[tops, "tops", FieldNumbers->True];
 (*ins = InsertFields[tops, process, InsertionLevel -> {Particles}];*)
 ins = InsertFields[tops, process];
 
@@ -238,15 +238,19 @@ Subexpr[];
 (*now, generate the amplitudes and insert the particle widths*)
 widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I (WSf[sfe,n1,n2]+WREG) MSf[sfe,n1,n2]};
 
-real = CalcFeynAmp[CreateFeynAmp[ins3546]/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}];
+real = CalcFeynAmp[CreateFeynAmp[ins3546]/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}, InvSimplify -> False];
 real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
 real = real//.{PowerOf[a_]:>PowerOf[a][1]};
-real3546 = real/.{Den[x_,y_]:>Den[x/.widths,y/.widths]}
+real3546 = real/.{Den[x_,y_]:>Den[x/.widths,y/.widths]};
+(*set the sfermion index in fortran program*)
+real3546Sfe = real//.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External], SumOver[Sfe9,i_]:>SumOver[Sfe9,i,External]}
 
-real = CalcFeynAmp[CreateFeynAmp[ins3645]/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}];
+real = CalcFeynAmp[CreateFeynAmp[ins3645]/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}, InvSimplify -> False];
 real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
 real = real//.{PowerOf[a_]:>PowerOf[a][1]};
-real3645 = real/.{Den[x_,y_]:>Den[x/.widths,y/.widths]}
+real3645 = real/.{Den[x_,y_]:>Den[x/.widths,y/.widths]};
+(*set the sfermion index in fortran program*)
+real3645Sfe = real//.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External], SumOver[Sfe9,i_]:>SumOver[Sfe9,i,External]}
 
 
 Print["Non resonant Diagrams"]
@@ -263,14 +267,14 @@ DoPaint[insNR, "realNR"];
 (*widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW};*)
 widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2]};
 
-realNR = CalcFeynAmp[CreateFeynAmp[insNR]/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}];
+realNR = CalcFeynAmp[CreateFeynAmp[insNR]/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}, InvSimplify -> False];
 realNR = realNR//.{PowerOf[a_]^x_:>PowerOf[a][x]};
 realNR = realNR//.{PowerOf[a_]:>PowerOf[a][1]};
 realNR = realNR/.{Den[x_,y_]:>Den[x/.widths,y/.widths]}
 
 
 (*Write files for on-shell resonant reals, L35L46*)
-amps = {real3546};
+amps = {real3546Sfe};
 {realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
 
 col = ColourME[All, realOS];
@@ -283,7 +287,7 @@ WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
 
 
 (*Write files for on-shell resonant reals, L36L45*)
-amps = {real3645};
+amps = {real3645Sfe};
 {realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
 
 col = ColourME[All, realOS];
@@ -296,6 +300,7 @@ WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
 
 
 (*Combine the amplitudes again, but this time the resonant diagrams are regulated*)
+(*Use here the regulated on shell amplitudes with summation over the sfermion indices*)
 real = Combine[realNR,real3546,real3645];
 
 (*Write real files with inserted regulator for on-shell diagrams*)

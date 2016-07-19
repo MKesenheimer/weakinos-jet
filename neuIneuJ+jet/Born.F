@@ -128,7 +128,7 @@ c ---------------------------- Formcalc Born ---------------------------
 #endif
 
         ! get the formcalc real amplitudes
-        call getBVAmps(ps,flavs,helicities,flags,fc_result)
+        call getAmps(ps,flavs,helicities,flags,fc_result)
         
         born = fc_result(1)/symfac ! take spin and colour factors into account
         fborn = born
@@ -253,110 +253,3 @@ c endif preprocessor condition "if defined(CHECK_FORM_MAD) || defined(MAD_BORN)"
 #endif
       end
 c############### end setborn subroutine ################################
-
-c############### subroutine formCalcVecSet #############################
-c calculate unit vectors and set the vectors for FormCalc
-      subroutine formCalcVecSet(nlegs,p,flav)
-        implicit none
-        integer nlegs
-        double precision p(0:3,nlegs)
-        integer  flav(nlegs)
-        double precision mass(nlegs)
-        double precision ex, ey, ez, pNorm
-        integer i
-        ! function to calculate the squared momentum sum
-        double precision momsum3sq, momsum2sq, dotp
-        external momsum2sq, momsum3sq, dtop
-        ! load process dependent masses
-        call set_process(nlegs,flav(1:nlegs),mass(1:nlegs))
-        do i=1,nlegs
-          pNorm=dsqrt(p(1,i)**2+p(2,i)**2+p(3,i)**2)
-          ex=p(1,i)/pNorm
-          ey=p(2,i)/pNorm
-          ez=p(3,i)/pNorm
-          call VecSet(i, mass(i), pNorm, ex,ey,ez)
-        enddo
-      end
-c############### end subroutine formCalcVecSet #########################
-
-c############### subroutine getBVAmps ##################################
-      subroutine getBVAmps(p,flav,helicities,flags,fc_result)
-        implicit none
-#include "nlegborn.h"
-        double precision p(0:3,nlegborn)
-        integer flav(nlegborn)
-        ! helicity and flags parameter for formcalc       
-        integer*8 helicities
-        integer flags
-        ! formcalc results
-        double precision fc_result(2)
-        
-        ! reset
-        fc_result(:) = 0D0
-        
-        ! set the formCalc vectors
-        call formCalcVecSet(nlegborn,p,flav)
-        
-        ! gluon in the initial state
-        if((flav(1).eq.0 .or. flav(2).eq.0).and.(flav(5).ne.0)) then
-          if(     flav(1).eq.1 .or. flav(2).eq.1) then
-            call qdg_nInJqd_squaredME(fc_result,helicities,flags)
-            goto 20
-          elseif(flav(1).eq.2 .or. flav(2).eq.2) then
-            call qug_nInJqu_squaredME(fc_result,helicities,flags)
-            goto 20
-          elseif(flav(1).eq.3 .or. flav(2).eq.3) then
-            call qdg_nInJqd_squaredME(fc_result,helicities,flags)
-            goto 20
-          elseif(flav(1).eq.4 .or. flav(2).eq.4) then
-            call qug_nInJqu_squaredME(fc_result,helicities,flags)
-            goto 20
-          elseif(flav(1).eq.5 .or. flav(2).eq.5) then
-            call qdg_nInJqd_squaredME(fc_result,helicities,flags)
-            goto 20
-          elseif(flav(1).eq.-1 .or. flav(2).eq.-1) then
-            call qdbarg_nInJqdbar_squaredME(fc_result,helicities,flags)
-            goto 20
-          elseif(flav(1).eq.-2 .or. flav(2).eq.-2) then
-            call qubarg_nInJqubar_squaredME(fc_result,helicities,flags)
-            goto 20
-          elseif(flav(1).eq.-3 .or. flav(2).eq.-3) then
-            call qdbarg_nInJqdbar_squaredME(fc_result,helicities,flags)
-            goto 20
-          elseif(flav(1).eq.-4 .or. flav(2).eq.-4) then
-            call qubarg_nInJqubar_squaredME(fc_result,helicities,flags)
-            goto 20
-          elseif(flav(1).eq.-5 .or. flav(2).eq.-5) then
-            call qdbarg_nInJqdbar_squaredME(fc_result,helicities,flags)
-            goto 20
-          else
-            goto 21
-          endif
-        ! only quarks in the initial state
-        else
-          if(     abs(flav(1)).eq.1 .and. abs(flav(2)).eq.1) then
-            call qdqdbar_nInJg_squaredME(fc_result,helicities,flags)
-            goto 20
-          elseif(abs(flav(1)).eq.2 .and. abs(flav(2)).eq.2) then
-            call ququbar_nInJg_squaredME(fc_result,helicities,flags)
-            goto 20
-          elseif(abs(flav(1)).eq.3 .and. abs(flav(2)).eq.3) then
-            call qdqdbar_nInJg_squaredME(fc_result,helicities,flags)
-            goto 20
-          elseif(abs(flav(1)).eq.4 .and. abs(flav(2)).eq.4) then
-            call ququbar_nInJg_squaredME(fc_result,helicities,flags)
-            goto 20
-          elseif(abs(flav(1)).eq.5 .and. abs(flav(2)).eq.5) then
-            call qdqdbar_nInJg_squaredME(fc_result,helicities,flags)
-            goto 20
-          else
-            goto 21
-          endif
-        endif
-
- 21     print*, "ERROR: Wrong flavor structure in getBVAmps."
-        print*, "flav = ", flav
-        stop
- 20     continue
-      end
-c############### subroutine getBVAmps ##################################

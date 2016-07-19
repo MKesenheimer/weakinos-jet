@@ -6,17 +6,17 @@ WORKINGDIR=${PWD}
 ########################################################################
 
 # the name of the target process directory
-PROCDIR="neuIneuJ+jet/FormCalc_Virtuals"
+PROCDIR="neuIneuJ+jet/FormCalc_Reals"
 # where to copy the amplitudes to
 DEST=${PWD}/../../${PROCDIR}
 # number of particles (incoming + outgoing)
-NPART=5
+NPART=6
 # process list file
-PROCF="./proc_n1n2j_simple"
+PROCF="./proc_n1n2jj_simple"
 # the name of Mathematica Scripts
-MSCRIPT="./nInJj.m"
+MSCRIPT="./nInJjj.m"
 # the type of the amplitudes (born, virt, real, realOS)
-TYPE="born"
+TYPE="real"
 
 ########################################################################
 #           -*- no editing is required below this line -*-             #
@@ -90,7 +90,48 @@ function rename() {
     sed -i -e "s/\<Cha6\>/Cha(6)/g" $1
     # jede Zeile löschen, die #include "inline.h" enthält
     sed -i -e '/^#include "inline.h"/d' $1
-    sed -i -e "s/\t/        /g" $1
+    #sed -i -e "s/\t/        /g" $1
+    if [[ $TYPE == "realOS" ]] || [[ $TYPE == "real" ]]; then
+        sed -i -e "s/specs.h/rspecs.h/g" $1
+        sed -i -e "s/LEGS/RLEGS/g" $1
+    else
+        sed -i -e "s/specs.h/bspecs.h/g" $1
+        sed -i -e "s/LEGS/BLEGS/g" $1
+    fi
+}
+
+# rename variables in include files
+# $1: filename
+function rename2() {
+        #sed -i -e "s/\t/        /g" $1
+        sed -i -e "s/formfactors/${PRE2}_formfactors/g" $1
+        # replace the indices \<Neu3\>, Neu4, Cha3, Cha4, ... with constants
+        # max generation
+        sed -i -e "s/\<Gen1\>/3/g" $1
+        sed -i -e "s/\<Gen2\>/3/g" $1
+        sed -i -e "s/\<Gen3\>/3/g" $1
+        sed -i -e "s/\<Gen4\>/3/g" $1
+        sed -i -e "s/\<Gen5\>/3/g" $1
+        sed -i -e "s/\<Gen6\>/3/g" $1
+        sed -i -e "s/\<Neu1\>/4/g" $1
+        sed -i -e "s/\<Neu2\>/4/g" $1
+        sed -i -e "s/\<Neu3\>/4/g" $1
+        sed -i -e "s/\<Neu4\>/4/g" $1
+        sed -i -e "s/\<Neu5\>/4/g" $1
+        sed -i -e "s/\<Neu6\>/4/g" $1
+        sed -i -e "s/\<Cha1\>/2/g" $1
+        sed -i -e "s/\<Cha2\>/2/g" $1
+        sed -i -e "s/\<Cha3\>/2/g" $1
+        sed -i -e "s/\<Cha4\>/2/g" $1
+        sed -i -e "s/\<Cha5\>/2/g" $1
+        sed -i -e "s/\<Cha6\>/2/g" $1
+        if [[ $TYPE == "realOS" ]] || [[ $TYPE == "real" ]]; then
+            sed -i -e "s/specs.h/rspecs.h/g" $1
+            sed -i -e "s/LEGS/RLEGS/g" $1
+        else
+            sed -i -e "s/specs.h/bspecs.h/g" $1
+            sed -i -e "s/LEGS/BLEGS/g" $1
+        fi
 }
 
 # read in the process list
@@ -156,7 +197,7 @@ for i in `seq 0 1 $((NPROC-1))`; do
     
     # generate the Amplitudes
     echo "calling Mathematica $MSCRIPT -script $MSCRIPT ${P[@]}"
-    #MathKernel -script $MSCRIPT ${P[@]}
+    /Applications/Mathematica.app/Contents/MacOS/MathKernel -script $MSCRIPT ${P[@]}
     
     PROCESSES+=($PROC)
 done
@@ -215,28 +256,7 @@ for i in `seq 0 1 $((NPROC-1))`; do
             echo "renaming variables in $file..."
             rename $file "${PRE2}_"
         done
-        sed -i -e "s/\t/        /g" ${PRE2}_vars.h
-        sed -i -e "s/formfactors/${PRE2}_formfactors/g" ${PRE2}_vars.h
-        # replace the indices \<Neu3\>, Neu4, Cha3, Cha4, ... with constants
-        # max generation
-        sed -i -e "s/\<Gen1\>/3/g" ${PRE2}_vars.h
-        sed -i -e "s/\<Gen2\>/3/g" ${PRE2}_vars.h
-        sed -i -e "s/\<Gen3\>/3/g" ${PRE2}_vars.h
-        sed -i -e "s/\<Gen4\>/3/g" ${PRE2}_vars.h
-        sed -i -e "s/\<Gen5\>/3/g" ${PRE2}_vars.h
-        sed -i -e "s/\<Gen6\>/3/g" ${PRE2}_vars.h
-        sed -i -e "s/\<Neu1\>/4/g" ${PRE2}_vars.h
-        sed -i -e "s/\<Neu2\>/4/g" ${PRE2}_vars.h
-        sed -i -e "s/\<Neu3\>/4/g" ${PRE2}_vars.h
-        sed -i -e "s/\<Neu4\>/4/g" ${PRE2}_vars.h
-        sed -i -e "s/\<Neu5\>/4/g" ${PRE2}_vars.h
-        sed -i -e "s/\<Neu6\>/4/g" ${PRE2}_vars.h
-        sed -i -e "s/\<Cha1\>/2/g" ${PRE2}_vars.h
-        sed -i -e "s/\<Cha2\>/2/g" ${PRE2}_vars.h
-        sed -i -e "s/\<Cha3\>/2/g" ${PRE2}_vars.h
-        sed -i -e "s/\<Cha4\>/2/g" ${PRE2}_vars.h
-        sed -i -e "s/\<Cha5\>/2/g" ${PRE2}_vars.h
-        sed -i -e "s/\<Cha6\>/2/g" ${PRE2}_vars.h
+        rename2 ${PRE2}_vars.h
         cp ${DEST}/${PRE2}_squaredME/*.F ${DEST}/squaredME/
         cp ${DEST}/${PRE2}_squaredME/${PRE2}_vars.h ${DEST}/include
         rm -rf ${DEST}/${PRE2}_squaredME
