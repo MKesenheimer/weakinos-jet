@@ -6,17 +6,17 @@ WORKINGDIR=${PWD}
 ########################################################################
 
 # the name of the target process directory
-PROCDIR="neuIneuJ+jet/FormCalc_Reals"
+PROCDIR="neuIneuJ+jet/FormCalc_Virtuals"
 # where to copy the amplitudes to
 DEST=${PWD}/../../${PROCDIR}
 # number of particles (incoming + outgoing)
-NPART=6
+NPART=5
 # process list file
-PROCF="./proc_n1n2jj_simple"
+PROCF="./proc_n1n2j_simple"
 # the name of Mathematica Scripts
-MSCRIPT="./nInJjj.m"
+MSCRIPT="./nInJj.m"
 # the type of the amplitudes (born, virt, real, realOS)
-TYPE="real"
+TYPE="born"
 
 ########################################################################
 #           -*- no editing is required below this line -*-             #
@@ -55,7 +55,7 @@ function pdg2names() {
 # $1: filename
 # $2: prefix of new variable
 function rename() {
-    # alle Vorkommnisse von vars.h durch xxbar_vars.h ersetzen usw.
+    sed -i -e "s/\t/        /g" $1
     sed -i -e "s/vars.h/${2}vars.h/g" $1
     sed -i -e "s/${TYPE}/${2}${TYPE}/g" $1
     sed -i -e "s/vert/${2}vert/g" $1
@@ -90,20 +90,19 @@ function rename() {
     sed -i -e "s/\<Cha6\>/Cha(6)/g" $1
     # jede Zeile löschen, die #include "inline.h" enthält
     sed -i -e '/^#include "inline.h"/d' $1
-    #sed -i -e "s/\t/        /g" $1
     if [[ $TYPE == "realOS" ]] || [[ $TYPE == "real" ]]; then
         sed -i -e "s/specs.h/rspecs.h/g" $1
-        sed -i -e "s/LEGS/RLEGS/g" $1
+        sed -i -e "s/\<LEGS\>/RLEGS/g" $1
     else
         sed -i -e "s/specs.h/bspecs.h/g" $1
-        sed -i -e "s/LEGS/BLEGS/g" $1
+        sed -i -e "s/\<LEGS\>/BLEGS/g" $1
     fi
 }
 
 # rename variables in include files
 # $1: filename
 function rename2() {
-        #sed -i -e "s/\t/        /g" $1
+        sed -i -e "s/\t/        /g" $1
         sed -i -e "s/formfactors/${PRE2}_formfactors/g" $1
         # replace the indices \<Neu3\>, Neu4, Cha3, Cha4, ... with constants
         # max generation
@@ -127,10 +126,10 @@ function rename2() {
         sed -i -e "s/\<Cha6\>/2/g" $1
         if [[ $TYPE == "realOS" ]] || [[ $TYPE == "real" ]]; then
             sed -i -e "s/specs.h/rspecs.h/g" $1
-            sed -i -e "s/LEGS/RLEGS/g" $1
+            sed -i -e "s/\<LEGS\>/RLEGS/g" $1
         else
             sed -i -e "s/specs.h/bspecs.h/g" $1
-            sed -i -e "s/LEGS/BLEGS/g" $1
+            sed -i -e "s/\<LEGS\>/BLEGS/g" $1
         fi
 }
 
@@ -197,7 +196,8 @@ for i in `seq 0 1 $((NPROC-1))`; do
     
     # generate the Amplitudes
     echo "calling Mathematica $MSCRIPT -script $MSCRIPT ${P[@]}"
-    /Applications/Mathematica.app/Contents/MacOS/MathKernel -script $MSCRIPT ${P[@]}
+    #/Applications/Mathematica.app/Contents/MacOS/MathKernel -script $MSCRIPT ${P[@]}
+    #MathKernel -script $MSCRIPT ${P[@]}
     
     PROCESSES+=($PROC)
 done

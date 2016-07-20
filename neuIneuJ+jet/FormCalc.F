@@ -116,12 +116,38 @@ c############### subroutine getRealAmps ################################
         
         ! F F -> F F F F
         if(f1.ne.0 .and. f2.ne.0 .and. f5.ne.0 .and. f6.ne.0) then
-          if(isodd(abs(flav(1))) .and. isodd(abs(flav(2)))) then
-            !call qdqdbar_nInJqdqdbar_squaredME(fc_result,helicities,flags)
-            goto 20
-          elseif(iseven(abs(flav(1))) .and. iseven(abs(flav(2)))) then
-            call ququbar_nInJgququbar_squaredME(fc_result,helicities,flags)
-            goto 20
+          if(isodd(abs(f1)) .and. isodd(abs(f2))) then
+            if(f1.gt.0 .and. f2.gt.0) then
+              !call qdqd_nInJqdqd_squaredME(fc_result,helicities,flags)
+              goto 20
+            elseif(f1.gt.0 .and. f2.lt.0) then
+              !call qdqdbar_nInJqdqdbar_squaredME(fc_result,helicities,flags)
+              goto 20
+            elseif(f1.lt.0 .and. f2.gt.0) then
+              !call qdbarqd_nInJqdbarqd_squaredME(fc_result,helicities,flags)
+              goto 20
+            elseif(f1.lt.0 .and. f2.lt.0) then
+              !call qdbarqdbar_nInJqdbarqdbar_squaredME(fc_result,helicities,flags)
+              goto 20
+            else
+              goto 21
+            endif
+          elseif(iseven(abs(f1)) .and. iseven(abs(f2))) then
+            if(f1.gt.0 .and. f2.gt.0) then
+              !call ququ_nInJququ_squaredME(fc_result,helicities,flags)
+              goto 20
+            elseif(f1.gt.0 .and. f2.lt.0) then
+              !call ququbar_nInJququbar_squaredME(fc_result,helicities,flags)
+              goto 20
+            elseif(f1.lt.0 .and. f2.gt.0) then
+              !call qubarqu_nInJqubarqu_squaredME(fc_result,helicities,flags)
+              goto 20
+            elseif(f1.lt.0 .and. f2.lt.0) then
+              call qubarqubar_nInJqubarqubar_squaredME(fc_result,helicities,flags)
+              goto 20
+            else
+              goto 21
+            endif
           else
             goto 21
           endif

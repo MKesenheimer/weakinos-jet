@@ -465,9 +465,9 @@ VIRTUALS += CalcRenConst.o qdbarg_nInJqdbar_SquaredME.o qdbarg_nInJqdbar_abbr0a.
 	 ququbar_nInJg_born_Sfe6.o
 
 
-REALS += qubarqubar_nInJqubarqubar_SquaredME.o qubarqubar_nInJqubarqubar_abbr0a.o qubarqubar_nInJqubarqubar_abbr0h.o \
-	 qubarqubar_nInJqubarqubar_abbr0s.o qubarqubar_nInJqubarqubar_real.o qubarqubar_nInJqubarqubar_real_Sfe7.o \
-	 qubarqubar_nInJqubarqubar_real_Sfe7_Sfe8.o
+REALS += qubarqubar_nInJqubarqubar_abbr0a.o qubarqubar_nInJqubarqubar_abbr0h.o qubarqubar_nInJqubarqubar_abbr0s.o \
+	 qubarqubar_nInJqubarqubar_real.o qubarqubar_nInJqubarqubar_real_Sfe7.o qubarqubar_nInJqubarqubar_real_Sfe7_Sfe8.o \
+	 qubarqubar_nInJqubarqubar_SquaredME.o
 
 SOURCESMAIN = $(PWHG) $(PDFPACK) $(USER) $(PWHGANALYSIS) $(FUNC) $(VIRTUALS) $(REALS) \
 	$(FORMCALC) $(MMADOBJ) $(MADOBJ)

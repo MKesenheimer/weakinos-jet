@@ -21,6 +21,7 @@ c#define CUTTOOLS
 #include "susy_restore.h"
 #include "osres.h"
 #include "indices.h"
+c#include "layout.h"
 
 #endif
 

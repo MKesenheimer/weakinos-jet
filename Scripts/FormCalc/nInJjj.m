@@ -20,6 +20,20 @@ ClearProcess[]
 time1 = SessionTime[]
 
 
+(*count the arguments of a function*)
+ClearAll[countArgs];
+SetAttributes[countArgs,{(*HoldAll,*)Listable}];
+countArgs[f_Symbol]:=With[{dv=DownValues[f]},countArgs[dv]];
+countArgs[Verbatim[HoldPattern][HoldPattern[f_Symbol[args___]]]:>_]:=countArgs[f[args]];
+countArgs[f_[Except[_Optional|_OptionsPattern|Verbatim[Pattern][_,_OptionsPattern]],rest___]]:={1,0,0}+countArgs[f[rest]];
+countArgs[f_[o__Optional,rest___]]:={0,Length[HoldComplete[o]],0}+countArgs[f[rest]];
+countArgs[f_[_OptionsPattern|Verbatim[Pattern][_,_OptionsPattern]]]:={0,0,1};
+countArgs[f_[]]:={0,0,0};
+
+countArgs[f[x,1]]
+countArgs[f[1,2,3]]
+
+
 (*You can now load the script with the command $ MathKernel -script nInJjj.m "d" "dbar" "n1" "n2" "d" "dbar"*)
 Print[$CommandLine]
 If[$CommandLine[[2]] === "-script",
@@ -121,6 +135,9 @@ $PaintSE = MkDir["Diagrams"];
 DoPaint[diags_, type_, opt___] := Paint[diags, opt,
   DisplayFunction -> (Export[ToFileName[$PaintSE, name <> "_" <> type <> ".pdf"], #]&)]
 
+(*Set Options for Abbreviations*)
+(*SetOptions[Abbreviate,MinLeafCount\[Rule]100];*)
+
 (*Coupling order of amplitude*)
 (*Note: all diagrams are calculated, but after the feynman amplitude is generated*)
 (*only the amplitudes with specified order of the coupling constants survive.*)
@@ -135,6 +152,8 @@ PowerOf[EL][OrderEL] := 1
 
 (*helpful function to extract parts of a Feynman amplitude*)
 Component[Amp_,n_]:=Replace[Amp,Amp[_][x__]:>{x}][[n]]
+(*Get the object that gets replaced in a replacement list {a\[Rule]4} => a*)
+getReplacementHead[f_->_]:=f
 
 
 Print["Reals"]
@@ -149,7 +168,7 @@ DoPaint[ins, "real"];
 (*sort the amplitude by powers of the coupling constants*)
 (*Uncomment the option ",InvSimplify\[Rule]False" for Mac OS X => *)
 (*FormCalc fails to generate the Form code in function InvSimplify*)
-real = CalcFeynAmp[CreateFeynAmp[ins]/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}, InvSimplify->False];
+real = CalcFeynAmp[CreateFeynAmp[ins]/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}(*, InvSimplify->False*)];
 (*Export["real."<>name<>".wdx",real,"WDX"]*)
 (*apply max coupling rules*)
 real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
@@ -170,6 +189,24 @@ col = ColourME[All, real];
 
 abbr = OptimizeAbbr[Abbr[]]
 subexpr = OptimizeAbbr[Subexpr[]]
+
+(*fortran can't handle arrays with dimensionality greater than 7*)
+(*apply back the subexpressions with number of arguments greater than 6*)
+subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
+       {i,1,Length[subexpr]}]/.Null->Sequence[];
+real = real//.subexpr6;
+abbr = abbr//.subexpr6;
+
+(*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
+subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
+       {i,1,Length[subexpr]}]/.Null->Sequence[];
+subexpr = subexpr//.subexpr6;
+
+(*
+Export["real.wdx",real,"WDX"];
+Export["abbr.wdx",abbr,"WDX"];
+Export["subexpr.wdx",subexpr,"WDX"];
+*)
 
 dir = SetupCodeDir[name<>"_real", Drivers -> name <> "_drivers"];
 WriteSquaredME[real, {}, col, abbr, subexpr, dir];

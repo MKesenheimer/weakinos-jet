@@ -238,14 +238,14 @@ Subexpr[];
 (*now, generate the amplitudes and insert the particle widths*)
 widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I (WSf[sfe,n1,n2]+WREG) MSf[sfe,n1,n2]};
 
-real = CalcFeynAmp[CreateFeynAmp[ins3546]/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}, InvSimplify -> False];
+real = CalcFeynAmp[CreateFeynAmp[ins3546]/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}, (*InvSimplify -> False*)];
 real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
 real = real//.{PowerOf[a_]:>PowerOf[a][1]};
 real3546 = real/.{Den[x_,y_]:>Den[x/.widths,y/.widths]};
 (*set the sfermion index in fortran program*)
 real3546Sfe = real//.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External], SumOver[Sfe9,i_]:>SumOver[Sfe9,i,External]}
 
-real = CalcFeynAmp[CreateFeynAmp[ins3645]/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}, InvSimplify -> False];
+real = CalcFeynAmp[CreateFeynAmp[ins3645]/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}, (*InvSimplify -> False*)];
 real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
 real = real//.{PowerOf[a_]:>PowerOf[a][1]};
 real3645 = real/.{Den[x_,y_]:>Den[x/.widths,y/.widths]};
@@ -267,7 +267,7 @@ DoPaint[insNR, "realNR"];
 (*widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW};*)
 widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2]};
 
-realNR = CalcFeynAmp[CreateFeynAmp[insNR]/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}, InvSimplify -> False];
+realNR = CalcFeynAmp[CreateFeynAmp[insNR]/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}, (*InvSimplify -> False*)];
 realNR = realNR//.{PowerOf[a_]^x_:>PowerOf[a][x]};
 realNR = realNR//.{PowerOf[a_]:>PowerOf[a][1]};
 realNR = realNR/.{Den[x_,y_]:>Den[x/.widths,y/.widths]}

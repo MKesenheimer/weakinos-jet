@@ -94,7 +94,7 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         stop
 #endif
 
-#ifdef DEBUG
+#ifdef DEBUGQ
          flavs(           1 ) =           -4
          ps(           0 ,           1 ) =    2433.3361567772117D0
          ps(           1 ,           1 ) =    0.0000000000000000D0     
