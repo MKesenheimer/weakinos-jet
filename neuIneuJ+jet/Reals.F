@@ -205,8 +205,7 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
 #endif
 
         ! get the formcalc real amplitudes
-        call getRealAmps(ps,flavs,helicities,flags,fc_result)
-
+        !call getRealAmps(ps,flavs,helicities,flags,fc_result)
         
 #ifdef DEBUG2Q
         ! get the real amplitude from MadGraph...
@@ -271,6 +270,13 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         
         amp     = fc_result(1)/symfac
         ampreal = amp/(st_alpha/(2d0*pi))
+        
+#ifdef DEBUG
+        ! MadGraph call to real amplitudes
+        call sreal_proc(p,flavs,amp)
+        ! Cancel as/(2pi) associated with amp2. It will be put back by real_ampsq
+        ampreal = amp/(st_alpha/(2d0*pi))
+#endif
         
         ! Print informations
         if (verbose) then
