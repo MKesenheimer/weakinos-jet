@@ -6,17 +6,17 @@ WORKINGDIR=${PWD}
 ########################################################################
 
 # the name of the target process directory
-PROCDIR="neuIneuJ+jet/FormCalc_Virtuals"
+PROCDIR="neuIneuJ+jet/FormCalc_Reals"
 # where to copy the amplitudes to
 DEST=${PWD}/../../${PROCDIR}
 # number of particles (incoming + outgoing)
-NPART=5
+NPART=6
 # process list file
-PROCF="./proc_n1n2j_simple"
+PROCF="./proc_nInJjj_simple2"
 # the name of Mathematica Scripts
-MSCRIPT="./nInJj.m"
+MSCRIPT="./nInJjj.m"
 # the type of the amplitudes (born, virt, real, realOS)
-TYPE="born"
+TYPE="real"
 
 ########################################################################
 #           -*- no editing is required below this line -*-             #
@@ -90,13 +90,6 @@ function rename() {
     sed -i -e "s/\<Cha6\>/Cha(6)/g" $1
     # jede Zeile löschen, die #include "inline.h" enthält
     sed -i -e '/^#include "inline.h"/d' $1
-    if [[ $TYPE == "realOS" ]] || [[ $TYPE == "real" ]]; then
-        sed -i -e "s/specs.h/rspecs.h/g" $1
-        sed -i -e "s/\<LEGS\>/RLEGS/g" $1
-    else
-        sed -i -e "s/specs.h/bspecs.h/g" $1
-        sed -i -e "s/\<LEGS\>/BLEGS/g" $1
-    fi
 }
 
 # rename variables in include files
@@ -124,13 +117,6 @@ function rename2() {
         sed -i -e "s/\<Cha4\>/2/g" $1
         sed -i -e "s/\<Cha5\>/2/g" $1
         sed -i -e "s/\<Cha6\>/2/g" $1
-        if [[ $TYPE == "realOS" ]] || [[ $TYPE == "real" ]]; then
-            sed -i -e "s/specs.h/rspecs.h/g" $1
-            sed -i -e "s/\<LEGS\>/RLEGS/g" $1
-        else
-            sed -i -e "s/specs.h/bspecs.h/g" $1
-            sed -i -e "s/\<LEGS\>/BLEGS/g" $1
-        fi
 }
 
 # read in the process list
@@ -201,6 +187,8 @@ for i in `seq 0 1 $((NPROC-1))`; do
     
     PROCESSES+=($PROC)
 done
+
+exit
 
 
 # commented: do this by hand

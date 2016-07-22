@@ -17,15 +17,14 @@ ClearProcess[]
 time1 = SessionTime[]
 
 
-(*You can now load the script with the command $ MathKernel -script nInJjj.m "d" "dbar" "n1" "n2" "d" "dbar"*)
+(*You can now load the script with the command $ MathKernel -script nInJjj.m "d" "dbar" "n1" "n2" "g"*)
 Print[$CommandLine]
 If[$CommandLine[[2]] === "-script",
 	(p[1] = ToString[$CommandLine[[4]]];
 	 p[2] = ToString[$CommandLine[[5]]];
 	 p[3] = ToString[$CommandLine[[6]]];
 	 p[4] = ToString[$CommandLine[[7]]];
-	 p[5] = ToString[$CommandLine[[8]]];
-	 p[6] = ToString[$CommandLine[[9]]];),
+	 p[5] = ToString[$CommandLine[[8]]];),
 	(*Else*)
 	(p[1] = "qubar";
 	 p[2] = "qu";
@@ -151,7 +150,7 @@ born = born//.{PowerOf[a_]:>PowerOf[a][1]};
 
 (*insert the partice widths*)
 (*widths = {MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW};*)
-widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2]};
+widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
 born = born/.{Den[x_,y_]:>Den[x/.widths,y/.widths]}
 
 

@@ -235,6 +235,17 @@ C               T[ 2, 6]T[ 1, 5]
 C ----------
 C BEGIN CODE
 C ----------
+      !GQLGOP = GQLGOP*0D0
+      !GQRGOP = GQRGOP*0D0
+      !GQLGOM = GQLGOM*0D0
+      !GQRGOM = GQRGOM*0D0
+
+      !print*,GQLGOP
+      !print*,GQRGOP
+      !Print*,GQLGOM
+      !print*,GQRGOM
+      !stop
+
       CALL OXXXXX(P(0,1),ZERO,NHEL(1),-1*IC(1),W(1,1))        
       CALL OXXXXX(P(0,2),ZERO,NHEL(2),-1*IC(2),W(1,2))        
       CALL OXXXXX(P(0,3),MNI,NHEL(3),+1*IC(3),W(1,3))         
@@ -332,7 +343,9 @@ C ----------
       CALL HIOXXX(W(1,4),W(1,56),GULNJP,MCL,WCL,W(1,57))                                                          
       CALL IOSXXX(W(1,6),W(1,3),W(1,57),GULNIM,AMP(39))         
       CALL HIOXXX(W(1,4),W(1,56),GURNJP,MCR,WCR,W(1,58))                                                          
-      CALL IOSXXX(W(1,6),W(1,3),W(1,58),GURNIM,AMP(40))         
+      CALL IOSXXX(W(1,6),W(1,3),W(1,58),GURNIM,AMP(40))
+      
+      ! Diagrams with Z
       CALL JIOCXX(W(1,4),W(1,3),GZNIJ,ZMASS,ZWIDTH,W(1,59))                                                          
       CALL FVOXXX(W(1,2),W(1,59),GZU,ZERO,ZERO,W(1,60))    
       CALL JIOXXX(W(1,5),W(1,60),GG,ZERO,ZERO,W(1,61))     
@@ -348,7 +361,8 @@ C ----------
       CALL JIOXXX(W(1,5),W(1,62),GG,ZERO,ZERO,W(1,65))     
       CALL IOVXXX(W(1,6),W(1,2),W(1,65),GG,AMP(47))             
       CALL JIOXXX(W(1,63),W(1,1),GG,ZERO,ZERO,W(1,66))     
-      CALL IOVXXX(W(1,6),W(1,2),W(1,66),GG,AMP(48))             
+      CALL IOVXXX(W(1,6),W(1,2),W(1,66),GG,AMP(48))
+      
       CALL IXXXXX(P(0,3),MNI,NHEL(3),-1*IC(3),W(1,67))         
       CALL OXXXXX(P(0,4),MNJ,NHEL(4),+1*IC(4),W(1,68))         
       CALL HIOXXX(W(1,67),W(1,2),GULNIP,MCL,WCL,W(1,69))                                                          
@@ -530,6 +544,48 @@ C ----------
      &             -AMP(  99)-AMP( 100)+AMP( 105)+AMP( 106)+AMP( 107)
      &             +AMP( 108)-AMP( 117)-AMP( 118)-AMP( 119)-AMP( 120)
       MATRIX_CXCX_NINJCXCX = 0.D0 
+      
+#ifdef DEBUGQ
+      ! diagrams containing a Z 
+      !JAMP(   1) = AMP(  45)+AMP(  46)+AMP(  47)+AMP(  48)
+      !JAMP(   2) = -AMP(  41)-AMP(  42)-AMP(  43)-AMP(  44)
+      ! diagrams containing gluinos
+      JAMP(   1) = -AMP( 101)-AMP( 102)-AMP( 103)-AMP( 104)
+     &              -AMP(  83)-AMP(  84)-AMP(  85)-AMP(  86)
+     &              +AMP(  89)+AMP(  90)+AMP(  91)+AMP(  92)
+     &              -AMP(  53)-AMP(  54)-AMP(  55)-AMP(  56)
+     &              +AMP( 109)+AMP( 110)+AMP( 111)+AMP( 112)
+     &              -AMP( 113)-AMP( 114)-AMP( 115)-AMP( 116)
+     &              +AMP(  15)+AMP(  16)+AMP(  17)+AMP(  18)
+     &              +AMP(  25)+AMP(  26)+AMP(  27)+AMP(  28)
+      JAMP(   2) = -AMP(  97)-AMP(  98)-AMP(  99)-AMP( 100)
+     &              +AMP(  73)+AMP(  74)+AMP(  75)+AMP(  76)
+     &              +AMP(  93)+AMP(  94)+AMP(  95)+AMP(  96)
+     &              +AMP(  63)+AMP(  64)+AMP(  65)+AMP(  66)
+     &              +AMP( 105)+AMP( 106)+AMP( 107)+AMP( 108)
+     &              -AMP( 117)-AMP( 118)-AMP( 119)-AMP( 120)
+     &              -AMP(   5)-AMP(   6)-AMP(   7)-AMP(   8)
+     &              -AMP(  35)-AMP(  36)-AMP(  37)-AMP(  38)
+     
+      ! diagrams that don't contain gluinos
+!       JAMP(   1) = -AMP(   1)-AMP(   2)-AMP(   3)-AMP(   4)
+!      &             -AMP(   9)-AMP(  10)-AMP(  31)-AMP(  32)
+!      &             -AMP(  33)-AMP(  34)-AMP(  39)-AMP(  40)
+!      &             +AMP(  45)+AMP(  46)+AMP(  47)+AMP(  48)
+!      &             +AMP(  59)+AMP(  60)+AMP(  61)+AMP(  62)
+!      &             +AMP(  67)+AMP(  68)+AMP(  69)+AMP(  70)
+!      &             +AMP(  71)+AMP(  72)+AMP(  77)+AMP(  78)
+!      &            
+!       JAMP(   2) = +AMP(  11)+AMP(  12)+AMP(  13)+AMP(  14)
+!      &             +AMP(  19)+AMP(  20)+AMP(  21)+AMP(  22)
+!      &             +AMP(  23)+AMP(  24)+AMP(  29)+AMP(  30)
+!      &             -AMP(  41)-AMP(  42)-AMP(  43)-AMP(  44)
+!      &             -AMP(  49)-AMP(  50)-AMP(  51)-AMP(  52)
+!      &             -AMP(  57)-AMP(  58)-AMP(  79)-AMP(  80)
+!      &             -AMP(  81)-AMP(  82)-AMP(  87)-AMP(  88)
+
+      MATRIX_CXCX_NINJCXCX = 0.D0
+#endif
       DO I = 1, NCOLOR
           ZTEMP =(0.D0,0.D0)
           DO J = 1, NCOLOR

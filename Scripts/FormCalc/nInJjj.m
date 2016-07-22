@@ -45,10 +45,10 @@ If[$CommandLine[[2]] === "-script",
 	 p[6] = ToString[$CommandLine[[9]]];),
 	(*Else*)
 	(p[1] = "qubar";
-	 p[2] = "qu";
+	 p[2] = "qubar";
 	 p[3] = "nI";
 	 p[4] = "nJ";
-	 p[5] = "qu";
+	 p[5] = "qubar";
 	 p[6] = "qubar";)
 ]
 
@@ -119,8 +119,8 @@ SetOptions[InsertFields, Model -> "MSSMCT",
            Restrictions -> {NoLightFHCoupling}(*No Fermion-Higgs coupling*),
            (*Exclude Top, Higgs, Neutrinos, massive Leptons, Sneutrinos, Sleptons*)
 		   ExcludeParticles -> {S[1|2|3|4|5|6|11|12], F[1|2](*, V[1|3]*)}
-		   (*No internal Weakinos*),
-		   LastSelections->{!F[11],!F[12]}];
+		   (*No internal Weakinos, but internal gluons or gluinos required*),
+		   LastSelections->{!F[11],!F[12],V[5]|F[15]}];(*,V[5]|F[15],V[2]*)
 
 SetOptions[Paint, PaintLevel -> {Classes}, ColumnsXRows -> {4, 5}, AutoEdit -> False];
 
@@ -161,8 +161,8 @@ Print["Reals"]
 tops = CreateTopologies[0, 2 -> 4];
 ins = InsertFields[tops, process];
 
-(*Test*)
-(*ins = DiagramExtract[ins,8]*)
+(*DEBUG*)
+(*ins = DiagramExtract[ins,60,68]*)
 DoPaint[ins, "real"];
 
 (*sort the amplitude by powers of the coupling constants*)
@@ -177,7 +177,7 @@ real = real//.{PowerOf[a_]:>PowerOf[a][1]};
 
 (*insert the particle widths*)
 (*widths = {MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW};*)
-widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2]};
+widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
 real = real/.{Den[x_,y_]:>Den[x/.widths,y/.widths]}
 
 

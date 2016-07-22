@@ -281,7 +281,7 @@ c set the madgraph and formcalc couplings event by event
         EL = dsqrt(Alfa*4d0*pi)
 
         ! set the MadGraph SUSY-QCD couplings
-        call INIT_SUSY_QCD(G)
+        call INIT_SUSY_QCD(GS)
 
         ! initialize the counter term wich cures the susy breaking
         ! introduced by DR
@@ -708,7 +708,7 @@ c MadGraphs couplings.f as well.
         MGl  = par_Mgl
         MGl2 = MGl**2
         WGl  = par_Glwidth
-        
+
         ! Z/W Widths (added by hand to formcalc)
         WZ  = par_Zwidth
         WW  = par_Wwidth
@@ -772,8 +772,7 @@ c MadGraphs couplings.f as well.
         C2B = (CB - SB)*(CB + SB)
         
         ! Gaugino mass parameter
-        !Mino3 = dcmplx(Mgl)
-        Mino3 = dcmplx(MinPar_M12)
+        Mino3 = dcmplx(Mgl)
         
         ! trilinear couplings
         ! note: the matrix elements do not depend on Af

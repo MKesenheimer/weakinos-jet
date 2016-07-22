@@ -43,6 +43,9 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         logical init_reals
         data init_reals/.true./
         
+        ! MadGraph
+        double precision ampM
+        
         ! variables for the on-shell subtraction
         character*4 chan
         ! kinematics
@@ -133,24 +136,24 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         ! calculate the couplings for this PS point
         call set_ebe_couplings
 
-        ! crossing (FormCalc provides only amplitudes for qqbar 
-        ! and not for qbarq)
-        if((flavs(1).gt.0 .and. flavs(2).lt.0) .or.
-     &     (flavs(1).lt.0 .and. flavs(2).eq.0) .or.
-     &     (flavs(1).gt.0 .and. flavs(2).eq.0)) then
-          ps(:,1) = p(:,1)
-          ps(:,2) = p(:,2)
-        else
-          flavs(1) = rflav(2)
-          flavs(2) = rflav(1)
-          ps(:,1) = p(:,2)
-          ps(:,2) = p(:,1)
-        endif
+!         ! crossing (FormCalc provides only amplitudes for qqbar 
+!         ! and not for qbarq)
+!         if((flavs(1).gt.0 .and. flavs(2).lt.0) .or.
+!      &     (flavs(1).lt.0 .and. flavs(2).eq.0) .or.
+!      &     (flavs(1).gt.0 .and. flavs(2).eq.0)) then
+!           ps(:,1) = p(:,1)
+!           ps(:,2) = p(:,2)
+!         else
+!           flavs(1) = rflav(2)
+!           flavs(2) = rflav(1)
+!           ps(:,1) = p(:,2)
+!           ps(:,2) = p(:,1)
+!         endif
 
         ! unpolarized particles, i.e.: B01010 01010 01010 01010 01010 01010 = D346368330, FC8Guid.pdf p.49
         ! F F -> F F F F
         if(f1.ne.0 .and. f2.ne.0 .and. f5.ne.0 .and. f6.ne.0) then
-          symfac = 96d0 ! symmetry factor: TODO
+          symfac = 36d0
           helicities = 346368330
         ! F g -> F F F g
         elseif(f1.ne.0 .and. f2.eq.0 .and. f5.ne.0 .and. f6.eq.0) then
@@ -158,27 +161,27 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
           helicities = 35056238
         ! F g -> F F g F
         elseif(f1.ne.0 .and. f2.eq.0 .and. f5.eq.0 .and. f6.ne.0) then
-          symfac = 96d0
+          symfac = 96d0 ! TODO
           helicities = 350562762       
         ! g F -> F F F g
         elseif(f1.eq.0 .and. f2.ne.0 .and. f5.ne.0 .and. f6.eq.0) then
-          symfac = 96d0
+          symfac = 96d0 ! TODO
           helicities = 480586062
         ! g F -> F F g F
         elseif(f1.eq.0 .and. f2.ne.0 .and. f5.eq.0 .and. f6.ne.0) then
-          symfac = 96d0
+          symfac = 96d0 ! TODO
           helicities = 480586186
         ! F F -> F F g g
         elseif(f1.ne.0 .and. f2.ne.0 .and. f5.eq.0 .and. f6.eq.0) then
-          symfac = 96d0
+          symfac = 96d0 ! TODO
           helicities = 346368462
         ! g g -> F F F F
         elseif(f1.eq.0 .and. f2.eq.0 .and. f5.ne.0 .and. f6.ne.0) then
-          symfac = 96d0
+          symfac = 96d0 ! TODO
           helicities = 484780362
         ! g g -> F F g g
         elseif(f1.eq.0 .and. f2.eq.0 .and. f5.eq.0 .and. f6.eq.0) then
-          symfac = 96d0
+          symfac = 96d0 ! TODO
           helicities = 484780494
         else
           print*, "ERROR: Wrong flavor structure in setreal."
@@ -190,13 +193,15 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         if(flavs(3).eq.flavs(4)) then
           symfac = 2d0*symfac
         endif
+        if(flavs(5).eq.flavs(6)) then
+          symfac = 2d0*symfac
+        endif
 
         ! flags: Bit0 (reset) = 1, Bit1 (loop) = 0 -> B01 = D1
         flags = 1
 
         ! reset the FormCalc results
-        fc_result(1) = 0.D0    ! real amplitude
-        fc_result(2) = 0.D0 
+        fc_result(:) = 0D0    ! real amplitude
         
 #ifndef NEGLECTBMASS
           print*,"ERROR: FormCalc massive b-quark amplitudes not yet "
@@ -205,11 +210,12 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
 #endif
 
         ! get the formcalc real amplitudes
-        !call getRealAmps(ps,flavs,helicities,flags,fc_result)
+        call getRealAmps(ps,flavs,helicities,flags,fc_result)
+        amp = fc_result(1)/symfac
         
-#ifdef DEBUG2Q
+#ifdef DEBUGQ
         ! get the real amplitude from MadGraph...
-        call sreal_proc(p,flavs,amp)
+        call sreal_proc(p,rflav,ampM)
 
         print*
         print*,"flav",flavs
@@ -219,24 +225,25 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         print*,ps(:,4)
         print*,ps(:,5)
         print*,"pt",dsqrt(ps(1,5)**2+ps(2,5)**2)
-        print*,"MadGraph",amp
-        print*,"FormCalc",fc_result(1)/symfac
-        print*,"rel",2D0*dabs(amp-fc_result(1)/symfac)/(amp+fc_result(1)/symfac)
+        print*,"MadGraph",ampM
+        print*,"FormCalc",amp
+        print*,"rel error",2D0*dabs(ampM-amp)/(ampM+amp)
+        print*,"frac",ampM/amp, amp/ampM
         !stop
         !call nstop(10)
 #endif
         
-#ifdef DEBUGQ
+#ifdef DEBUG
         ! get the real amplitude from MadGraph...
-        call sreal_proc(p,flavs,amp)
+        call sreal_proc(p,rflav,ampM)
 
-        if(2D0*dabs(amp-fc_result(1)/symfac)/(amp+fc_result(1)/symfac).gt.1d-2) then
+        if(2D0*dabs(ampM-amp)/(ampM+amp).gt.1d-2) then
           print*
           print*,"flav",flavs
           print*,"pt",dsqrt(ps(1,5)**2+ps(2,5)**2)
-          print*,"MadGraph",amp
-          print*,"FormCalc",fc_result(1)/symfac
-          print*,"rel",2D0*dabs(amp-fc_result(1)/symfac)/(amp+fc_result(1)/symfac)
+          print*,"MadGraph",ampM
+          print*,"FormCalc",amp
+          print*,"rel",2D0*dabs(ampM-amp)/(ampM+amp)
         endif
 #endif
         
@@ -268,15 +275,13 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
 !           enddo
 !         endif
         
-        amp     = fc_result(1)/symfac
-        ampreal = amp/(st_alpha/(2d0*pi))
-        
-#ifdef DEBUG
+#ifdef DEBUGQ
         ! MadGraph call to real amplitudes
         call sreal_proc(p,flavs,amp)
+#endif
+
         ! Cancel as/(2pi) associated with amp2. It will be put back by real_ampsq
         ampreal = amp/(st_alpha/(2d0*pi))
-#endif
         
         ! Print informations
         if (verbose) then

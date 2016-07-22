@@ -450,24 +450,111 @@ MADOBJ += b_cl_001_001.o b_cl_001_002.o b_cl_001_003.o \
 MADOBJ +=
 
 ### Virtual Amplitudes in Formcalc_Virtuals/ ###
-VIRTUALS += CalcRenConst.o qdbarg_nInJqdbar_SquaredME.o qdbarg_nInJqdbar_abbr0a.o \
-	 qdbarg_nInJqdbar_abbr0h.o qdbarg_nInJqdbar_abbr0s.o qdbarg_nInJqdbar_born.o \
-	 qdbarg_nInJqdbar_born_Sfe6.o qdg_nInJqd_SquaredME.o qdg_nInJqd_abbr0a.o \
-	 qdg_nInJqd_abbr0h.o qdg_nInJqd_abbr0s.o qdg_nInJqd_born.o \
-	 qdg_nInJqd_born_Sfe6.o qdqdbar_nInJg_SquaredME.o qdqdbar_nInJg_abbr0a.o \
-	 qdqdbar_nInJg_abbr0h.o qdqdbar_nInJg_abbr0s.o qdqdbar_nInJg_born.o \
-	 qdqdbar_nInJg_born_Sfe6.o qubarg_nInJqubar_SquaredME.o qubarg_nInJqubar_abbr0a.o \
-	 qubarg_nInJqubar_abbr0h.o qubarg_nInJqubar_abbr0s.o qubarg_nInJqubar_born.o \
-	 qubarg_nInJqubar_born_Sfe6.o qug_nInJqu_SquaredME.o qug_nInJqu_abbr0a.o \
-	 qug_nInJqu_abbr0h.o qug_nInJqu_abbr0s.o qug_nInJqu_born.o \
-	 qug_nInJqu_born_Sfe6.o ququbar_nInJg_SquaredME.o ququbar_nInJg_abbr0a.o \
-	 ququbar_nInJg_abbr0h.o ququbar_nInJg_abbr0s.o ququbar_nInJg_born.o \
-	 ququbar_nInJg_born_Sfe6.o
+VIRTUALS += CalcRenConst.o qdbarg_nInJqdbar_abbr0a.o qdbarg_nInJqdbar_abbr0h.o \
+	 qdbarg_nInJqdbar_abbr0s.o qdbarg_nInJqdbar_born.o qdbarg_nInJqdbar_born_Sfe6.o \
+	 qdbarg_nInJqdbar_SquaredME.o qdg_nInJqd_abbr0a.o qdg_nInJqd_abbr0h.o \
+	 qdg_nInJqd_abbr0s.o qdg_nInJqd_born.o qdg_nInJqd_born_Sfe6.o \
+	 qdg_nInJqd_SquaredME.o qdqdbar_nInJg_abbr0a.o qdqdbar_nInJg_abbr0h.o \
+	 qdqdbar_nInJg_abbr0s.o qdqdbar_nInJg_born.o qdqdbar_nInJg_born_Sfe6.o \
+	 qdqdbar_nInJg_SquaredME.o qubarg_nInJqubar_abbr0a.o qubarg_nInJqubar_abbr0h.o \
+	 qubarg_nInJqubar_abbr0s.o qubarg_nInJqubar_born.o qubarg_nInJqubar_born_Sfe6.o \
+	 qubarg_nInJqubar_SquaredME.o qug_nInJqu_abbr0a.o qug_nInJqu_abbr0h.o \
+	 qug_nInJqu_abbr0s.o qug_nInJqu_born.o qug_nInJqu_born_Sfe6.o \
+	 qug_nInJqu_SquaredME.o ququbar_nInJg_abbr0a.o ququbar_nInJg_abbr0h.o \
+	 ququbar_nInJg_abbr0s.o ququbar_nInJg_born.o ququbar_nInJg_born_Sfe6.o \
+	 ququbar_nInJg_SquaredME.o
 
 
-REALS += qubarqubar_nInJqubarqubar_abbr0a.o qubarqubar_nInJqubarqubar_abbr0h.o qubarqubar_nInJqubarqubar_abbr0s.o \
+REALS += gqdbar_nInJgqdbar_abbr0a.o gqdbar_nInJgqdbar_abbr0h.o gqdbar_nInJgqdbar_abbr0s.o \
+	 gqdbar_nInJgqdbar_real.o gqdbar_nInJgqdbar_real_Sfe7.o gqdbar_nInJgqdbar_SquaredME.o \
+	 gqdbar_nInJqdbarg_abbr0a.o gqdbar_nInJqdbarg_abbr0h.o gqdbar_nInJqdbarg_abbr0s.o \
+	 gqdbar_nInJqdbarg_real.o gqdbar_nInJqdbarg_real_Sfe7.o gqdbar_nInJqdbarg_SquaredME.o \
+	 gqd_nInJgqd_abbr0a.o gqd_nInJgqd_abbr0h.o gqd_nInJgqd_abbr0s.o \
+	 gqd_nInJgqd_real.o gqd_nInJgqd_real_Sfe7.o gqd_nInJgqd_SquaredME.o \
+	 gqd_nInJqdg_abbr0a.o gqd_nInJqdg_abbr0h.o gqd_nInJqdg_abbr0s.o \
+	 gqd_nInJqdg_real.o gqd_nInJqdg_real_Sfe7.o gqd_nInJqdg_SquaredME.o \
+	 gqubar_nInJgqubar_abbr0a.o gqubar_nInJgqubar_abbr0h.o gqubar_nInJgqubar_abbr0s.o \
+	 gqubar_nInJgqubar_real.o gqubar_nInJgqubar_real_Sfe7.o gqubar_nInJgqubar_SquaredME.o \
+	 gqubar_nInJqubarg_abbr0a.o gqubar_nInJqubarg_abbr0h.o gqubar_nInJqubarg_abbr0s.o \
+	 gqubar_nInJqubarg_real.o gqubar_nInJqubarg_real_Sfe7.o gqubar_nInJqubarg_SquaredME.o \
+	 gqu_nInJgqu_abbr0a.o gqu_nInJgqu_abbr0h.o gqu_nInJgqu_abbr0s.o \
+	 gqu_nInJgqu_real.o gqu_nInJgqu_real_Sfe7.o gqu_nInJgqu_SquaredME.o \
+	 gqu_nInJqug_abbr0a.o gqu_nInJqug_abbr0h.o gqu_nInJqug_abbr0s.o \
+	 gqu_nInJqug_real.o gqu_nInJqug_real_Sfe7.o gqu_nInJqug_SquaredME.o \
+	 qdbarg_nInJgqdbar_abbr0a.o qdbarg_nInJgqdbar_abbr0h.o qdbarg_nInJgqdbar_abbr0s.o \
+	 qdbarg_nInJgqdbar_real.o qdbarg_nInJgqdbar_real_Sfe7.o qdbarg_nInJgqdbar_SquaredME.o \
+	 qdbarg_nInJqdbarg_abbr0a.o qdbarg_nInJqdbarg_abbr0h.o qdbarg_nInJqdbarg_abbr0s.o \
+	 qdbarg_nInJqdbarg_real.o qdbarg_nInJqdbarg_real_Sfe7.o qdbarg_nInJqdbarg_SquaredME.o \
+	 qdbarqdbar_nInJqdbarqdbar_abbr0a.o qdbarqdbar_nInJqdbarqdbar_abbr0h.o qdbarqdbar_nInJqdbarqdbar_abbr0s.o \
+	 qdbarqdbar_nInJqdbarqdbar_real.o qdbarqdbar_nInJqdbarqdbar_real_Sfe7.o qdbarqdbar_nInJqdbarqdbar_real_Sfe7_Sfe8.o \
+	 qdbarqdbar_nInJqdbarqdbar_SquaredME.o qdbarqd_nInJqdbarqd_abbr0a.o qdbarqd_nInJqdbarqd_abbr0h.o \
+	 qdbarqd_nInJqdbarqd_abbr0s.o qdbarqd_nInJqdbarqd_real.o qdbarqd_nInJqdbarqd_real_Sfe7.o \
+	 qdbarqd_nInJqdbarqd_real_Sfe7_Sfe8.o qdbarqd_nInJqdbarqd_SquaredME.o qdbarqd_nInJqdqdbar_abbr0a.o \
+	 qdbarqd_nInJqdqdbar_abbr0h.o qdbarqd_nInJqdqdbar_abbr0s.o qdbarqd_nInJqdqdbar_real.o \
+	 qdbarqd_nInJqdqdbar_real_Sfe7.o qdbarqd_nInJqdqdbar_real_Sfe7_Sfe8.o qdbarqd_nInJqdqdbar_SquaredME.o \
+	 qdbarqubar_nInJqdbarqubar_abbr0a.o qdbarqubar_nInJqdbarqubar_abbr0h.o qdbarqubar_nInJqdbarqubar_abbr0s.o \
+	 qdbarqubar_nInJqdbarqubar_real.o qdbarqubar_nInJqdbarqubar_real_Sfe7.o qdbarqubar_nInJqdbarqubar_real_Sfe7_Sfe8.o \
+	 qdbarqubar_nInJqdbarqubar_SquaredME.o qdbarqu_nInJqdbarqu_abbr0a.o qdbarqu_nInJqdbarqu_abbr0h.o \
+	 qdbarqu_nInJqdbarqu_abbr0s.o qdbarqu_nInJqdbarqu_real.o qdbarqu_nInJqdbarqu_real_Sfe7.o \
+	 qdbarqu_nInJqdbarqu_real_Sfe7_Sfe8.o qdbarqu_nInJqdbarqu_SquaredME.o qdbarqu_nInJquqdbar_abbr0a.o \
+	 qdbarqu_nInJquqdbar_abbr0h.o qdbarqu_nInJquqdbar_abbr0s.o qdbarqu_nInJquqdbar_real.o \
+	 qdbarqu_nInJquqdbar_real_Sfe7.o qdbarqu_nInJquqdbar_real_Sfe7_Sfe8.o qdbarqu_nInJquqdbar_SquaredME.o \
+	 qdg_nInJgqd_abbr0a.o qdg_nInJgqd_abbr0h.o qdg_nInJgqd_abbr0s.o \
+	 qdg_nInJgqd_real.o qdg_nInJgqd_real_Sfe7.o qdg_nInJgqd_SquaredME.o \
+	 qdg_nInJqdg_abbr0a.o qdg_nInJqdg_abbr0h.o qdg_nInJqdg_abbr0s.o \
+	 qdg_nInJqdg_real.o qdg_nInJqdg_real_Sfe7.o qdg_nInJqdg_SquaredME.o \
+	 qdqdbar_nInJqdbarqd_abbr0a.o qdqdbar_nInJqdbarqd_abbr0h.o qdqdbar_nInJqdbarqd_abbr0s.o \
+	 qdqdbar_nInJqdbarqd_real.o qdqdbar_nInJqdbarqd_real_Sfe7.o qdqdbar_nInJqdbarqd_real_Sfe7_Sfe8.o \
+	 qdqdbar_nInJqdbarqd_SquaredME.o qdqdbar_nInJqdqdbar_abbr0a.o qdqdbar_nInJqdqdbar_abbr0h.o \
+	 qdqdbar_nInJqdqdbar_abbr0s.o qdqdbar_nInJqdqdbar_real.o qdqdbar_nInJqdqdbar_real_Sfe7.o \
+	 qdqdbar_nInJqdqdbar_real_Sfe7_Sfe8.o qdqdbar_nInJqdqdbar_SquaredME.o qdqd_nInJqdqd_abbr0a.o \
+	 qdqd_nInJqdqd_abbr0h.o qdqd_nInJqdqd_abbr0s.o qdqd_nInJqdqd_real.o \
+	 qdqd_nInJqdqd_real_Sfe7.o qdqd_nInJqdqd_real_Sfe7_Sfe8.o qdqd_nInJqdqd_SquaredME.o \
+	 qdqubar_nInJqdqubar_abbr0a.o qdqubar_nInJqdqubar_abbr0h.o qdqubar_nInJqdqubar_abbr0s.o \
+	 qdqubar_nInJqdqubar_real.o qdqubar_nInJqdqubar_real_Sfe7.o qdqubar_nInJqdqubar_real_Sfe7_Sfe8.o \
+	 qdqubar_nInJqdqubar_SquaredME.o qdqubar_nInJqubarqd_abbr0a.o qdqubar_nInJqubarqd_abbr0h.o \
+	 qdqubar_nInJqubarqd_abbr0s.o qdqubar_nInJqubarqd_real.o qdqubar_nInJqubarqd_real_Sfe7.o \
+	 qdqubar_nInJqubarqd_real_Sfe7_Sfe8.o qdqubar_nInJqubarqd_SquaredME.o qdqu_nInJqdqu_abbr0a.o \
+	 qdqu_nInJqdqu_abbr0h.o qdqu_nInJqdqu_abbr0s.o qdqu_nInJqdqu_real.o \
+	 qdqu_nInJqdqu_real_Sfe7.o qdqu_nInJqdqu_real_Sfe7_Sfe8.o qdqu_nInJqdqu_SquaredME.o \
+	 qubarg_nInJgqubar_abbr0a.o qubarg_nInJgqubar_abbr0h.o qubarg_nInJgqubar_abbr0s.o \
+	 qubarg_nInJgqubar_real.o qubarg_nInJgqubar_real_Sfe7.o qubarg_nInJgqubar_SquaredME.o \
+	 qubarg_nInJqubarg_abbr0a.o qubarg_nInJqubarg_abbr0h.o qubarg_nInJqubarg_abbr0s.o \
+	 qubarg_nInJqubarg_real.o qubarg_nInJqubarg_real_Sfe7.o qubarg_nInJqubarg_SquaredME.o \
+	 qubarqdbar_nInJqubarqdbar_abbr0a.o qubarqdbar_nInJqubarqdbar_abbr0h.o qubarqdbar_nInJqubarqdbar_abbr0s.o \
+	 qubarqdbar_nInJqubarqdbar_real.o qubarqdbar_nInJqubarqdbar_real_Sfe7.o qubarqdbar_nInJqubarqdbar_real_Sfe7_Sfe8.o \
+	 qubarqdbar_nInJqubarqdbar_SquaredME.o qubarqd_nInJqdqubar_abbr0a.o qubarqd_nInJqdqubar_abbr0h.o \
+	 qubarqd_nInJqdqubar_abbr0s.o qubarqd_nInJqdqubar_real.o qubarqd_nInJqdqubar_real_Sfe7.o \
+	 qubarqd_nInJqdqubar_real_Sfe7_Sfe8.o qubarqd_nInJqdqubar_SquaredME.o qubarqd_nInJqubarqd_abbr0a.o \
+	 qubarqd_nInJqubarqd_abbr0h.o qubarqd_nInJqubarqd_abbr0s.o qubarqd_nInJqubarqd_real.o \
+	 qubarqd_nInJqubarqd_real_Sfe7.o qubarqd_nInJqubarqd_real_Sfe7_Sfe8.o qubarqd_nInJqubarqd_SquaredME.o \
+	 qubarqubar_nInJqubarqubar_abbr0a.o qubarqubar_nInJqubarqubar_abbr0h.o qubarqubar_nInJqubarqubar_abbr0s.o \
 	 qubarqubar_nInJqubarqubar_real.o qubarqubar_nInJqubarqubar_real_Sfe7.o qubarqubar_nInJqubarqubar_real_Sfe7_Sfe8.o \
-	 qubarqubar_nInJqubarqubar_SquaredME.o
+	 qubarqubar_nInJqubarqubar_SquaredME.o qubarqu_nInJqubarqu_abbr0a.o qubarqu_nInJqubarqu_abbr0h.o \
+	 qubarqu_nInJqubarqu_abbr0s.o qubarqu_nInJqubarqu_real.o qubarqu_nInJqubarqu_real_Sfe7.o \
+	 qubarqu_nInJqubarqu_real_Sfe7_Sfe8.o qubarqu_nInJqubarqu_SquaredME.o qubarqu_nInJququbar_abbr0a.o \
+	 qubarqu_nInJququbar_abbr0h.o qubarqu_nInJququbar_abbr0s.o qubarqu_nInJququbar_real.o \
+	 qubarqu_nInJququbar_real_Sfe7.o qubarqu_nInJququbar_real_Sfe7_Sfe8.o qubarqu_nInJququbar_SquaredME.o \
+	 qug_nInJgqu_abbr0a.o qug_nInJgqu_abbr0h.o qug_nInJgqu_abbr0s.o \
+	 qug_nInJgqu_real.o qug_nInJgqu_real_Sfe7.o qug_nInJgqu_SquaredME.o \
+	 qug_nInJqug_abbr0a.o qug_nInJqug_abbr0h.o qug_nInJqug_abbr0s.o \
+	 qug_nInJqug_real.o qug_nInJqug_real_Sfe7.o qug_nInJqug_SquaredME.o \
+	 quqdbar_nInJqdbarqu_abbr0a.o quqdbar_nInJqdbarqu_abbr0h.o quqdbar_nInJqdbarqu_abbr0s.o \
+	 quqdbar_nInJqdbarqu_real.o quqdbar_nInJqdbarqu_real_Sfe7.o quqdbar_nInJqdbarqu_real_Sfe7_Sfe8.o \
+	 quqdbar_nInJqdbarqu_SquaredME.o quqdbar_nInJquqdbar_abbr0a.o quqdbar_nInJquqdbar_abbr0h.o \
+	 quqdbar_nInJquqdbar_abbr0s.o quqdbar_nInJquqdbar_real.o quqdbar_nInJquqdbar_real_Sfe7.o \
+	 quqdbar_nInJquqdbar_real_Sfe7_Sfe8.o quqdbar_nInJquqdbar_SquaredME.o quqd_nInJquqd_abbr0a.o \
+	 quqd_nInJquqd_abbr0h.o quqd_nInJquqd_abbr0s.o quqd_nInJquqd_real.o \
+	 quqd_nInJquqd_real_Sfe7.o quqd_nInJquqd_real_Sfe7_Sfe8.o quqd_nInJquqd_SquaredME.o \
+	 ququbar_nInJqubarqu_abbr0a.o ququbar_nInJqubarqu_abbr0h.o ququbar_nInJqubarqu_abbr0s.o \
+	 ququbar_nInJqubarqu_real.o ququbar_nInJqubarqu_real_Sfe7.o ququbar_nInJqubarqu_real_Sfe7_Sfe8.o \
+	 ququbar_nInJqubarqu_SquaredME.o ququbar_nInJququbar_abbr0a.o ququbar_nInJququbar_abbr0h.o \
+	 ququbar_nInJququbar_abbr0s.o ququbar_nInJququbar_real.o ququbar_nInJququbar_real_Sfe7.o \
+	 ququbar_nInJququbar_real_Sfe7_Sfe8.o ququbar_nInJququbar_SquaredME.o ququ_nInJququ_abbr0a.o \
+	 ququ_nInJququ_abbr0h.o ququ_nInJququ_abbr0s.o ququ_nInJququ_real.o \
+	 ququ_nInJququ_real_Sfe7.o ququ_nInJququ_real_Sfe7_Sfe8.o ququ_nInJququ_SquaredME.o
+
+
 
 SOURCESMAIN = $(PWHG) $(PDFPACK) $(USER) $(PWHGANALYSIS) $(FUNC) $(VIRTUALS) $(REALS) \
 	$(FORMCALC) $(MMADOBJ) $(MADOBJ)
