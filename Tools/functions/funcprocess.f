@@ -227,27 +227,6 @@ c pick SUSY masses relevant for specific initial state
       end
 c############### end subroutine set_process ############################
 
-c############### subroutine switchmom ##################################
-c Changes stuff for crossings (copied from MadGraph V4.5.2)
-      subroutine switchmom(p1,p,ic,jc,nexternal)
-        implicit none
-        integer nexternal
-        integer jc(nexternal),ic(nexternal)
-        real*8 p1(0:3,nexternal),p(0:3,nexternal)
-        integer i,j
-        do i=1,nexternal
-          do j=0,3
-             p(j,ic(i))=p1(j,i)
-          enddo
-        enddo
-        do i=1,nexternal
-          jc(i)=1
-        enddo
-        jc(ic(1))=-1
-        jc(ic(2))=-1
-      end
-c############### end subroutine switchmom ##############################
-
 c############### function kaellen ######################################
 c calculates the kaellen function and the sqrt of kaellen function
       double precision function kaellen(x, y, z)

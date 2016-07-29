@@ -220,7 +220,7 @@ c
       print*, "[DEBUG] wb2    = ", wb2
       print*, "[DEBUG] wt1    = ", wt1
       print*, "[DEBUG] wt2    = ", wt2
-      !stop
+      stop
 #endif
       
 ! Set Higgs couplings manually to zero
@@ -346,7 +346,7 @@ c
 
       double precision wm
 
-      integer  i1, i2, ih, ii, io, in, ic
+      integer  i1, i2, ih, ii, io, in, ic, di
 c
 c fixed parameters
 c
@@ -439,7 +439,8 @@ c
          msr = lowmass(15)
          mcl = lowmass(15)
          mcr = lowmass(15)
-         if(ldebug) write(6,*) 'using 8-flavor average squark mass:',mdl
+         write(6,*) 'using 8-flavor average squark mass:',mdl
+         stop
       else
          mdl = lowmass(11)
          mdr = lowmass(12)
@@ -450,7 +451,7 @@ c
          mcl = lowmass(48)
          mcr = lowmass(49)
       end if
-
+      
       mbl = lowmass(17) ! in Formcalc: MSf(1,4,3)
       mbr = lowmass(18) ! MSf(2,4,3)
       mtl = lowmass(19) ! MSf(1,3,3)
@@ -550,7 +551,8 @@ c     for Majorana fermions, need right sign of width for HELAS
             wsr = lowwidth(15)
             wcl = lowwidth(15)
             wcr = lowwidth(15)
-            if(ldebug) write(6,*) 'using 8-flavor average squark width:',wdl
+            write(6,*) 'using 8-flavor average squark width:',wdl
+            stop
          else
             wdl = lowwidth(11)
             wdr = lowwidth(12)
@@ -583,6 +585,11 @@ c   Higgs widths not in the standard version - should overwrite w/ Hdecay
          wh2 = lowwidth(42)
          wh3 = lowwidth(40)
          whc = lowwidth(43)
+         
+!         do di=1,99
+!         print*,"lowwidth(",di,")",lowwidth(di)
+!         enddo
+!         stop
 
       else
 

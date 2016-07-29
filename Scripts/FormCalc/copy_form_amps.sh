@@ -6,17 +6,17 @@ WORKINGDIR=${PWD}
 ########################################################################
 
 # the name of the target process directory
-PROCDIR="neuIneuJ+jet/FormCalc_Reals"
+PROCDIR="neuIneuJ+jet/FormCalc_Virtuals"
 # where to copy the amplitudes to
 DEST=${PWD}/../../${PROCDIR}
 # number of particles (incoming + outgoing)
-NPART=6
+NPART=5
 # process list file
-PROCF="./proc_nInJjj_simple2"
+PROCF="./proc_nInJj_simple"
 # the name of Mathematica Scripts
-MSCRIPT="./nInJjj.m"
+MSCRIPT="./nInJj.m"
 # the type of the amplitudes (born, virt, real, realOS)
-TYPE="real"
+TYPE="born"
 
 ########################################################################
 #           -*- no editing is required below this line -*-             #
@@ -172,7 +172,7 @@ for i in `seq 0 1 $((NPROC-1))`; do
     fi
     #echo ${P[@]}
     echo
-    echo "current process: $PROC"
+    echo "current process: $PROC"    
     
     if [[ $TYPE == "realOS" ]]; then
         IFS=$',\r\n' command eval 'LIST=(${CHANNELS[i]})'
@@ -181,32 +181,17 @@ for i in `seq 0 1 $((NPROC-1))`; do
     fi
     
     # generate the Amplitudes
+    echo "removing ${PROC}_${TYPE}"
+    rm -rf ${PROC}_${TYPE}
     echo "calling Mathematica $MSCRIPT -script $MSCRIPT ${P[@]}"
     #/Applications/Mathematica.app/Contents/MacOS/MathKernel -script $MSCRIPT ${P[@]}
-    #MathKernel -script $MSCRIPT ${P[@]}
-    
+    MathKernel -script $MSCRIPT ${P[@]}
     PROCESSES+=($PROC)
 done
-
-exit
-
-
-# commented: do this by hand
-# clean up
-#echo "Cleaning up..."
-#rm -irf *.fortran
-#rm -irf Diagrams
-#rm -irf *.frm
 
 # commented: do this by hand
 #echo "Generating directories..."
 #mkdir ${DEST}/squaredME/
-
-# commented: delete by hand
-#echo
-#echo "Deleting old files..."
-#rm ${DEST}/squaredME/*.F
-#rm ${DEST}/include/*_vars.h
 
 for i in `seq 0 1 $((NPROC-1))`; do
     # if no on-shell resonant channels were defined CHANNEL has only one
@@ -224,6 +209,12 @@ for i in `seq 0 1 $((NPROC-1))`; do
         
         echo
         echo "${PROCESSES[i]} ${TYPE}${APPEND}"
+        
+        echo "cleaning old files..."
+        echo $(ls ${DEST}/squaredME/${PRE2}*.F)
+        echo $(ls ${DEST}/include/${PRE2}_vars.h)
+        rm ${DEST}/squaredME/${PRE2}*.F
+        rm ${DEST}/include/${PRE2}_vars.h
         
         echo "copying new files..."
         mkdir -p ${DEST}/${PRE2}_squaredME/

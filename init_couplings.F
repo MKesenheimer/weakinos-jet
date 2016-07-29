@@ -570,6 +570,8 @@ c version.
 #ifdef DEBUGQ
         print*, "sd_L width =", par_Sfwidth(1,4,1)
         print*, "sd_R width =", par_Sfwidth(2,4,1)
+        print*, "sc_L width =", par_Sfwidth(1,3,2)
+        print*, "sc_R width =", par_Sfwidth(2,3,2)
         print*, "go width   =", par_Glwidth
         stop
 #endif

@@ -97,9 +97,12 @@ CKMC = IndexDelta;
 
 (*Options*)
 SetOptions[InsertFields, Model -> "MSSMCT",
-           Restrictions -> {NoLightFHCoupling}(*No Fermion-Higgs coupling*),
-		   ExcludeParticles -> {S[1|2|3|4|5|6|11|12], F[1|2](*, V[1|3]*)} 
-			(*Exclude Top, Higgs, Neutrinos, massive Leptons, Sneutrinos, Sleptons*)];
+           (*No Fermion-Higgs coupling*)
+           Restrictions -> {NoLightFHCoupling},
+           (*Exclude Top, Higgs, Neutrinos, massive Leptons, Sneutrinos, Sleptons*)
+		   ExcludeParticles -> {S[1|2|3|4|5|6|11|12], F[1|2]},
+		   (*no internal Weakinos*)
+		   LastSelections -> {!F[11],!F[12]}];
 
 SetOptions[Paint, PaintLevel -> {Classes}, ColumnsXRows -> {4, 5}, AutoEdit -> False];
 
@@ -141,11 +144,11 @@ ins = InsertFields[tops, process];
 DoPaint[ins, "born"];
 
 (*sort the amplitude by powers of the coupling constants*)
-born = CalcFeynAmp[CreateFeynAmp[ins]/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}];
+born = CalcFeynAmp[CreateFeynAmp[ins](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)];
 (*Export["born."<>name<>".wdx",born,"WDX"]*)
 (*apply max coupling rules*)
-born = born//.{PowerOf[a_]^x_:>PowerOf[a][x]};
-born = born//.{PowerOf[a_]:>PowerOf[a][1]};
+(*born = born//.{PowerOf[a_]^x_:>PowerOf[a][x]};
+born = born//.{PowerOf[a_]:>PowerOf[a][1]};*)
 (*Export["born0."<>name<>".wdx",born,"WDX"]*)
 
 (*insert the partice widths*)

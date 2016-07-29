@@ -1,18 +1,80 @@
-      subroutine sreal_proc(p1,legs,wgt)
+      subroutine sreal_proc(p,legs,wgt)
       implicit none
       include "nexternal.inc"
       include "coupl.inc"
       double precision p(0:3,nexternal),wgt
-      integer legs(nexternal),lstr
       character*20 str
       double precision P1(0:3,nexternal)
-      integer i,ic(nexternal),legs1(nexternal)
+!       double precision P2(0:3,nexternal)
+!       double precision P3(0:3,nexternal)
+!       double precision P4(0:3,nexternal)
+      integer legs(nexternal),lstr
+      integer i,k,ic(nexternal),legs1(nexternal)
       logical mtc,even
       
-      call convert_to_string(nexternal,legs,str,lstr)
+      wgt = 0
+      
+!       do i=1,nexternal
+!          ic(i)=i
+!       enddo
+!       mtc=.false.
+!  10   call nexper(nexternal- 4,ic( 4+1),mtc,even)
+!       do i= 4+1,nexternal
+!          ic(i)=ic(i)+ 4
+!       enddo
+!       call switchmom(p,p1,ic,nexternal)
+!       CALL SWITCHLEGS(legs,legs1,IC,NEXTERNAL)
+      
+      
+      do k=1,nexternal
+        do i=0,3
+          p1(i,k) = p(i,k)
+        enddo
+        legs1(k) = legs(k)
+      enddo
+      
+      ! crossing
+      ! is ugly and not fast, but does not matter. MadGraph amplitudes 
+      ! are going to be removed sooner or later
+      do k=1,4
+      if(k.eq.1) then
+        ! change nothing
+      elseif(k.eq.2) then
+        do i=0,3
+        p1(i,5) = p(i,6)
+        p1(i,6) = p(i,5)
+        enddo
+        legs1(5) = legs(6)
+        legs1(6) = legs(5)
+      
+      elseif(k.eq.3) then
+        do i=0,3
+        p1(i,1) = p(i,2)
+        p1(i,2) = p(i,1)
+        p1(i,5) = p(i,6)
+        p1(i,6) = p(i,5)
+        enddo
+        legs1(1) = legs(2)
+        legs1(2) = legs(1)
+        legs1(5) = legs(6)
+        legs1(6) = legs(5)
+      
+      elseif(k.eq.4) then
+        do i=0,3
+        p1(i,1) = p(i,2)
+        p1(i,2) = p(i,1)
+        enddo
+        legs1(1) = legs(2)
+        legs1(2) = legs(1)
+      endif
+      
+      call convert_to_string(nexternal,legs1(:),str,lstr)
 #ifdef DEBUGQ
+      print*, "[DEBUG] legs = ",legs
+      print*, "[DEBUG] legs1 = ",legs1
       print*, "[DEBUG] str = ", str
 #endif
+      
       
       if(str.eq."-1-1nInJ-1-1") then
          call smatrix_dxdx_nInJdxdx(p1,wgt)
@@ -245,6 +307,9 @@
       elseif(str.eq."-43nInJ-43") then
          call smatrix_cxs_nInJcxs(p1,wgt)
          goto 20
+      elseif(str.eq."3-4nInJ-43") then
+         call smatrix_scx_nInJcxs(p1,wgt)
+         goto 20
       elseif(str.eq."-4-5nInJ-4-5") then
          call smatrix_cxbx_nInJcxbx(p1,wgt)
          goto 20
@@ -290,8 +355,8 @@
       elseif(str.eq."4-3nInJ4-3") then
          call smatrix_csx_nInJcsx(p1,wgt)
          goto 20
-      elseif(str.eq."43nInJ43") then
-         call smatrix_cs_nInJcs(p1,wgt)
+      elseif(str.eq."-34nInJ4-3") then
+         call smatrix_sxc_nInJcsx(p1,wgt)
          goto 20
       elseif(str.eq."4-5nInJ4-5") then
          call smatrix_cbx_nInJcbx(p1,wgt)
@@ -313,12 +378,9 @@
          goto 20
       elseif(str.eq."-32nInJ2-3") then
          call smatrix_sxu_nInJusx(p1,wgt)
-         goto 20
+         goto 20 
       elseif(str.eq."-3-4nInJ-4-3") then
          call smatrix_sxcx_nInJcxsx(p1,wgt)
-         goto 20
-      elseif(str.eq."-34nInJ4-3") then
-         call smatrix_sxc_nInJcsx(p1,wgt)
          goto 20
       elseif(str.eq."-3-3nInJ-3-3") then
          call smatrix_sxsx_nInJsxsx(p1,wgt)
@@ -334,7 +396,7 @@
          goto 20
       elseif(str.eq."-33nInJ3-3") then
          call smatrix_sxs_nInJssx(p1,wgt)
-         goto 20
+         goto 20 
       elseif(str.eq."-33nInJ5-5") then
          call smatrix_sxs_nInJbbx(p1,wgt)
          goto 20
@@ -349,7 +411,7 @@
          goto 20
       elseif(str.eq."-30nInJ-30") then
          call smatrix_sxg_nInJsxg(p1,wgt)
-         goto 20
+         goto 20  
       elseif(str.eq."3-1nInJ-13") then
          call smatrix_sdx_nInJdxs(p1,wgt)
          goto 20
@@ -362,8 +424,8 @@
       elseif(str.eq."32nInJ23") then
          call smatrix_su_nInJus(p1,wgt)
          goto 20
-      elseif(str.eq."3-4nInJ-43") then
-         call smatrix_scx_nInJcxs(p1,wgt)
+      elseif(str.eq."43nInJ43") then
+         call smatrix_cs_nInJcs(p1,wgt)
          goto 20
       elseif(str.eq."34nInJ43") then
          call smatrix_sc_nInJcs(p1,wgt)
@@ -540,12 +602,17 @@
          call smatrix_gg_nInJbbx(p1,wgt)
          goto 20
       endif
-
-#ifdef DEBUGQ
-      print*,"[DEBUG] wgt = ",wgt
-#endif
-
  20   continue
+ 
+#ifdef DEBUGQ
+      print*,"k   = ",k
+      print*,"str = ", str
+      print*,"wgt = ",wgt
+#endif
+ 
+      if(wgt .gt. 1D-99) goto 21
+      enddo
+ 21   continue  
       !if(wgt .eq. 0D0) then
       !    print*, "str = ", str
       !    print*,"WARNING: maybe error in real amplitudes: ", wgt
@@ -2367,7 +2434,3 @@
       
       return
       end
-      
-      
-      
-      

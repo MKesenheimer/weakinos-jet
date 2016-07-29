@@ -45,17 +45,18 @@ If[$CommandLine[[2]] === "-script",
 	 p[6] = ToString[$CommandLine[[9]]];),
 	(*Else*)
 	(p[1] = "qubar";
-	 p[2] = "qubar";
+	 p[2] = "g";
 	 p[3] = "nI";
 	 p[4] = "nJ";
 	 p[5] = "qubar";
-	 p[6] = "qubar";)
+	 p[6] = "g";)
 ]
 
 CalcProcess = p[1]<>p[2]<>"_"<>p[3]<>p[4]<>p[5]<>p[6];
 name = CalcProcess;
 Print[CalcProcess]
 
+IOGluon = False;
 For[i=1, i<7, i++,
 If[p[i] === "qu", P[i] = F[3],
 If[p[i] === "qubar", P[i] = -F[3],
@@ -67,7 +68,7 @@ If[p[i] === "xI-", P[i] = F[12],
 If[p[i] === "xI+", P[i] = -F[12],
 If[p[i] === "xJ-", P[i] = F[12],
 If[p[i] === "xJ+", P[i] = -F[12],
-If[p[i] === "g", P[i] = V[5],
+If[p[i] === "g", (IOGluon = True; P[i] = V[5]),
 
 If[p[i] === "u", P[i] = F[3,{1}],
 If[p[i] === "ubar", P[i] = -F[3,{1}],
@@ -115,12 +116,19 @@ CKMC = IndexDelta;
 
 
 (*Options*)
+If[IOGluon,
+          (*no internal Weakinos*)
+          lastsel = {!F[11],!F[12]};
+          (*else*),
+          (*no internal Weakinos, but internal gluons or gluinos required*)
+          lastsel = {!F[11],!F[12],V[5]|F[15]};
+]
 SetOptions[InsertFields, Model -> "MSSMCT",
-           Restrictions -> {NoLightFHCoupling}(*No Fermion-Higgs coupling*),
+           (*No Fermion-Higgs coupling*)
+           Restrictions -> {NoLightFHCoupling},
            (*Exclude Top, Higgs, Neutrinos, massive Leptons, Sneutrinos, Sleptons*)
-		   ExcludeParticles -> {S[1|2|3|4|5|6|11|12], F[1|2](*, V[1|3]*)}
-		   (*No internal Weakinos, but internal gluons or gluinos required*),
-		   LastSelections->{!F[11],!F[12],V[5]|F[15]}];(*,V[5]|F[15],V[2]*)
+		   ExcludeParticles -> {S[1|2|3|4|5|6|11|12], F[1|2]},
+		   LastSelections -> lastsel];
 
 SetOptions[Paint, PaintLevel -> {Classes}, ColumnsXRows -> {4, 5}, AutoEdit -> False];
 
@@ -160,24 +168,20 @@ Print["Reals"]
 
 tops = CreateTopologies[0, 2 -> 4];
 ins = InsertFields[tops, process];
-
-(*DEBUG*)
-(*ins = DiagramExtract[ins,60,68]*)
 DoPaint[ins, "real"];
 
 (*sort the amplitude by powers of the coupling constants*)
 (*Uncomment the option ",InvSimplify\[Rule]False" for Mac OS X => *)
 (*FormCalc fails to generate the Form code in function InvSimplify*)
-real = CalcFeynAmp[CreateFeynAmp[ins]/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}(*, InvSimplify->False*)];
+real = CalcFeynAmp[CreateFeynAmp[ins](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}(*, InvSimplify->False*)*)];
 (*Export["real."<>name<>".wdx",real,"WDX"]*)
 (*apply max coupling rules*)
-real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
-real = real//.{PowerOf[a_]:>PowerOf[a][1]};
+(*real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
+real = real//.{PowerOf[a_]:>PowerOf[a][1]};*)
 (*Export["real0."<>name<>".wdx",real,"WDX"]*)
 
 (*insert the particle widths*)
-(*widths = {MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW};*)
-widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
+widths = {MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
 real = real/.{Den[x_,y_]:>Den[x/.widths,y/.widths]}
 
 

@@ -26,6 +26,7 @@ c     set process id using slepton types
         external powheginput
         logical condition, mixed_channels
         integer max_flav,encode_pair
+        integer temp
 
         ! set number of active flavors for incoming partons
         max_flav = int(powheginput('incomingflavors'))
@@ -265,19 +266,12 @@ c     set process id using slepton types
                   if(flst_nreal.gt.maxprocreal) goto 998
                   do k=1,nlegreal
                     flst_real(k,flst_nreal)=ii(k)
-                    ! MadGraph sorts the s and c amplitudes in a different way,
-                    ! change it here manually
-                    if(abs(i5).eq.3 .and. abs(i6).eq.4) then
-                      flst_real(5,flst_nreal)=ii(6)
-                      flst_real(6,flst_nreal)=ii(5)
-                    endif
                   enddo
                 endif
               enddo
             enddo
           enddo
         enddo
-
 
 #ifdef DEBUGQ
         flst_nborn = 1
@@ -308,6 +302,7 @@ c     set process id using slepton types
         do j=1,flst_nreal
           print*,(flst_real(k,j),k=1,nlegreal)
         enddo
+        !stop
 #endif
 
         ! setup the flavor list of on-shell resonant diagrams

@@ -457,9 +457,9 @@
       subroutine convert_to_string(npart,id,string,lstring)
       implicit none
       integer npart,lstring,i
-      integer id(npart)
       character*20 string
       character*8 s
+      integer id(npart)
 #include "finalstate.h"
       if(final1.ne.id(3) .or. final2.ne.id(4)) then
         print*,"Error in convert_to_string: final states incorrect."
@@ -468,7 +468,7 @@
         stop
       endif
 
-      do i=1,140
+      do i=1,20
          string(i:i)=' '
       enddo
       lstring=0
