@@ -54,17 +54,51 @@ c############### subroutine crossing ###################################
 c############### end subroutine crossing ###############################
 
 c############### subroutine getBornAmps ################################
-      subroutine getBornAmps(p,flav,born)
+      subroutine getBornAmps(p,flav,born,bornjk,bmunu)
         implicit none
 #include "nlegborn.h"
         double precision p(0:3,nlegborn)
         integer flav(nlegborn)
-        double precision amp(2),born
+        double precision amp(2),born,bornjk(nlegborn,nlegborn)
+        double precision bmunu(0:3,0:3,nlegborn)
         integer flags
+        double precision NC, CF, CA, eighth
+        parameter (NC=3D0, CF=4D0/3D0, CA=3D0, eighth=1D0/8D0)
+        double precision fqg, fqq
+        parameter (fqq=-eighth*CF, fqg=eighth*NC**2*CF)
         ! flags: Bit0 (reset) = 1, Bit1 (loop) = 0 -> B01 = D1
         flags = 1
         call getAmps(p,flav,flags,amp)
         born = amp(1)
+        ! reset
+        bornjk(:,:) = 0D0
+        bmunu(:,:,:) = 0D0
+        ! fill the color and spin correlated amplitudes
+        ! F F -> F F g
+        if(flav(1).ne.0 .and. flav(2).ne.0) then
+          bornjk(1,2) = fqq*born
+          bornjk(2,1) = bornjk(1,2)
+          bornjk(1,5) = fqg*born
+          bornjk(5,1) = bornjk(1,5)
+          bornjk(2,5) = fqg*born
+          bornjk(5,2) = bornjk(2,5)
+        ! g F -> F F F
+        elseif(flav(1).eq.0 .and. flav(2).ne.0) then
+          bornjk(1,2) = fqg*born
+          bornjk(2,1) = bornjk(1,2)
+          bornjk(1,5) = fqg*born
+          bornjk(5,1) = bornjk(1,5)
+          bornjk(2,5) = fqq*born
+          bornjk(5,2) = bornjk(2,5)
+        ! F g -> F F F  
+        elseif(flav(1).ne.0 .and. flav(2).eq.0) then
+          bornjk(1,2) = fqg*born
+          bornjk(2,1) = bornjk(1,2)
+          bornjk(1,5) = fqq*born
+          bornjk(5,1) = bornjk(1,5)
+          bornjk(2,5) = fqg*born
+          bornjk(5,2) = bornjk(2,5)
+        endif
       end
 c############### end subroutine getBornAmps ############################
       

@@ -58,37 +58,17 @@ c ---------------------------- Formcalc Born ---------------------------
 
         ! calculate the couplings for this PS point
         call set_ebe_couplings
-        call getBornAmps(p,bflav,born)
+        call getBornAmps(p,bflav,born,bornjk,bmunu)
         fborn = born
-
-        ! spin and color correlations (TODO!)
-        do j=1,nlegborn
-          if(abs(bflav(j)).le.6) then
-          ! gluon spin correlations as in (eq. 2.8) of 1002.2581v1
-          ! (A general framework for implementing NLO calculations in [...] the POWHEG BOX)
-          ! only different from zero for processes involving gluons in 
-          ! the initial or final state.: Bmunu=0
-            if(bflav(j).eq.0) then
-              do nmu=0,3
-                do nnu=0,3
-                  bmunu(nmu,nnu,j) = 0D0
-                enddo
-              enddo
-            endif  
-          ! color correlations as in (eq. 2.6) of 1002.2581v1
-          ! (A general framework for implementing NLO calculations in [...] the POWHEG BOX)
-          ! Bij = Cf B for i != j incoming q/qbar
-            do k=j+1,nlegborn
-              if(abs(bflav(k)).le.6) then
-                colcf = cf
-              else
-                colcf = 0D0
-              endif
-                bornjk(j,k) = born*colcf
-                bornjk(k,j) = bornjk(j,k)
-            enddo
-          endif
-        enddo
+        
+#ifdef DEBUGQ
+          print*
+          print*, "process: ", bflav
+          do j=1,nlegborn
+            print*, "bornjk = ", bornjk(j,:)/fborn
+          enddo
+          !stop
+#endif
         
         if (verbose) then
           print*, "process: ", bflav
@@ -96,11 +76,6 @@ c ---------------------------- Formcalc Born ---------------------------
           print*, "t  = ", momsum2sq(p(0:3,1),-p(0:3,3))
           print*, "u  = ", momsum2sq(p(0:3,2),-p(0:3,3))
           print*, "born (formcalc) = ", fborn
-#ifdef DEBUGQ
-          do j=1,nlegborn
-            print*, "bornjk = ", bornjk(j,:)
-          enddo
-#endif
           print*
         endif
 c ---------------------------- End FormCalc Born -----------------------
@@ -115,17 +90,30 @@ c ---------------------------- MadGraph Born ---------------------------
         call sborn_proc(p,bflav,born,bornjk,bmunu)
         mborn = born
         
+#ifdef DEBUGQ
+          do j=1,nlegborn
+            print*, "bornjk = ", bornjk(j,:)/mborn
+          enddo
+          !stop
+#endif
+
+#ifdef DEBUGQ
+          print*, "process: ", bflav
+          do j=1,nlegborn
+          do nmu=0,3
+            print*, "bmunu(",nmu,", nu,",j,") = ", bmunu(nmu,:,j)/mborn
+          enddo
+          print*
+          enddo
+          !stop
+#endif
+        
         if (verbose) then
           print*, "process: ", bflav
           print*, "s  = ", momsum2sq(p(0:3,1), p(0:3,2))
           print*, "t  = ", momsum2sq(p(0:3,1),-p(0:3,3))
           print*, "u  = ", momsum2sq(p(0:3,2),-p(0:3,3))
           print*, "born (maqdgraph) = ", mborn
-#ifdef DEBUGQ
-          do j=1,nlegborn
-            print*, "bornjk = ", bornjk(j,:)
-          enddo
-#endif
           print*
         endif
 c ---------------------------- End Maqdgraph Born -----------------------
@@ -176,3 +164,41 @@ c endif preprocessor condition "if defined(CHECK_FORM_MAD) || defined(MAD_BORN)"
 #endif
       end
 c############### end setborn subroutine ################################
+
+c############### subroutine borncolour_lh ##############################
+c Wrapper subroutine to call the MadGraph code to associate
+c a (leading) color structure to an event.
+      subroutine borncolour_lh
+        implicit none
+#include "nlegborn.h"
+#include "LesHouches.h"
+        integer bflav(nlegborn),color(2,nlegborn)
+        integer i,j
+        do i=1,nlegborn
+          bflav(i)=idup(i)
+          if (bflav(i).eq.21) bflav(i)=0
+        enddo
+        call born_color(bflav,color)
+        do i=1,2
+          do j=1,nlegborn
+            icolup(i,j)=color(i,j)
+          enddo
+        enddo
+#ifdef DEBUG
+        print*,"[DEBUG] in borncolour_lh"
+        print*,"[DEBUG] bflav",bflav
+        do j=1,nlegborn
+          print*,"[DEBUG] icolup(",j,")",icolup(1,j),icolup(2,j)
+        enddo
+        !stop
+#endif
+      end
+c############### end subroutine finalize_lh ############################
+
+c############### subroutine borncolour_lh ##############################
+c Sets up the resonances whose mass must be preserved
+c on the Les Houches interface; not needed for neutralino production.
+      subroutine finalize_lh
+        implicit none
+      end
+c############### end subroutine finalize_lh ############################
