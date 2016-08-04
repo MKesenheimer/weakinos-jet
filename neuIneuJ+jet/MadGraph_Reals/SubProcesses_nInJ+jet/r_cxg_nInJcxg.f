@@ -43,12 +43,6 @@ C
 
 
 C  
-
-C
-C VARIABLES TO APPLY THE DIAGRAM SUBTRACTION SCHEMES
-C
-#include "dsubtraction.h"
-C
 C GLOBAL VARIABLES
 C  
       Double Precision amp2(maxamps), jamp2(0:maxflow)
@@ -156,10 +150,6 @@ C ----------
               jamp2(ihel)=0d0
           ENDDO
       ANS(IPROC) = 0D0
-#ifdef DEBUGQ
-        print*
-        print*,"MadGraph helicities"
-#endif
           DO IHEL=1,NCOMB
              IF(GOODHEL(IHEL,IPROC) .OR. NTRY .LT. 2) THEN
                  T=MATRIX_CXG_NINJCXG(P,NHEL(1,IHEL),JC(1))            
@@ -216,12 +206,6 @@ C
       COMPLEX*16 AMP(NGRAPHS), JAMP(NCOLOR)
       COMPLEX*16 W(18,NWAVEFUNCS)
 C  
-
-C
-C VARIABLES TO APPLY THE DIAGRAM SUBTRACTION SCHEMES
-C
-#include "dsubtraction.h"
-C
 C GLOBAL VARIABLES
 C  
       Double Precision amp2(maxamps), jamp2(0:maxflow)
@@ -239,30 +223,19 @@ C               T[ 1, 5, 2, 6]
 C ----------
 C BEGIN CODE
 C ----------
-#ifdef DEBUGQ
-        print*,WCR,WCL
-        print*,GC,G2C
-        print*,GZU,GG
-        print*,ZMASS,ZWIDTH
-        print*,MNI,MNJ
-        stop
-#endif
-
       CALL OXXXXX(P(0,1),ZERO,NHEL(1),-1*IC(1),W(1,1))        
       CALL VXXXXX(P(0,2),ZERO,NHEL(2),-1*IC(2),W(1,2))        
       CALL OXXXXX(P(0,3),MNI,NHEL(3),+1*IC(3),W(1,3))         
       CALL IXXXXX(P(0,4),MNJ,NHEL(4),-1*IC(4),W(1,4))         
       CALL IXXXXX(P(0,5),ZERO,NHEL(5),-1*IC(5),W(1,5))        
-      CALL VXXXXX(P(0,6),ZERO,NHEL(6),+1*IC(6),W(1,6))
-           
+      CALL VXXXXX(P(0,6),ZERO,NHEL(6),+1*IC(6),W(1,6))        
       CALL FVIXXX(W(1,5),W(1,2),GG,ZERO,ZERO,W(1,7))     
       CALL HIOXXX(W(1,7),W(1,3),GULNIM,MCL,WCL,W(1,8))                                                          
       CALL FSIXXX(W(1,4),W(1,8),GULNJP,ZERO,ZERO,W(1,9))                                                          
       CALL IOVXXX(W(1,9),W(1,1),W(1,6),GG,AMP(1))             
       CALL HIOXXX(W(1,7),W(1,3),GURNIM,MCR,WCR,W(1,10))                                                          
       CALL FSIXXX(W(1,4),W(1,10),GURNJP,ZERO,ZERO,W(1,11))                                                          
-      CALL IOVXXX(W(1,11),W(1,1),W(1,6),GG,AMP(2))
-      
+      CALL IOVXXX(W(1,11),W(1,1),W(1,6),GG,AMP(2))             
       CALL HIOXXX(W(1,4),W(1,1),GULNJP,MCL,WCL,W(1,12))                                                          
       CALL FSOXXX(W(1,3),W(1,12),GULNIM,ZERO,ZERO,W(1,13))                                                          
       CALL JIOXXX(W(1,5),W(1,13),GG,ZERO,ZERO,W(1,14))     
@@ -270,19 +243,15 @@ C ----------
       CALL HIOXXX(W(1,4),W(1,1),GURNJP,MCR,WCR,W(1,15))                                                          
       CALL FSOXXX(W(1,3),W(1,15),GURNIM,ZERO,ZERO,W(1,16))                                                          
       CALL JIOXXX(W(1,5),W(1,16),GG,ZERO,ZERO,W(1,17))     
-      CALL VVVXXX(W(1,6),W(1,2),W(1,17),G,AMP(4))          
-          
+      CALL VVVXXX(W(1,6),W(1,2),W(1,17),G,AMP(4))              
       CALL FVOXXX(W(1,13),W(1,2),GG,ZERO,ZERO,W(1,18))     
       CALL IOVXXX(W(1,5),W(1,18),W(1,6),GG,AMP(5))             
       CALL FVOXXX(W(1,16),W(1,2),GG,ZERO,ZERO,W(1,19))     
       CALL IOVXXX(W(1,5),W(1,19),W(1,6),GG,AMP(6))             
-      
       CALL VSSXXX(W(1,6),W(1,12),W(1,8),GC,AMP(7))             
       CALL VSSXXX(W(1,6),W(1,15),W(1,10),GC,AMP(8))             
-      
       CALL IOVXXX(W(1,7),W(1,13),W(1,6),GG,AMP(9))             
-      CALL IOVXXX(W(1,7),W(1,16),W(1,6),GG,AMP(10))  
-                 
+      CALL IOVXXX(W(1,7),W(1,16),W(1,6),GG,AMP(10))             
       CALL HIOXXX(W(1,5),W(1,3),GULNIM,MCL,WCL,W(1,20))                                                          
       CALL HVSXXX(W(1,2),W(1,20),-GC,MCL,WCL,W(1,21))    
       CALL FSIXXX(W(1,4),W(1,21),GULNJP,ZERO,ZERO,W(1,22))                                                          
@@ -290,8 +259,7 @@ C ----------
       CALL HIOXXX(W(1,5),W(1,3),GURNIM,MCR,WCR,W(1,23))                                                          
       CALL HVSXXX(W(1,2),W(1,23),-GC,MCR,WCR,W(1,24))    
       CALL FSIXXX(W(1,4),W(1,24),GURNJP,ZERO,ZERO,W(1,25))                                                          
-      CALL IOVXXX(W(1,25),W(1,1),W(1,6),GG,AMP(12))     
-              
+      CALL IOVXXX(W(1,25),W(1,1),W(1,6),GG,AMP(12))             
       CALL JSSXXX(W(1,12),W(1,20),GC,ZERO,ZERO,W(1,26))     
       CALL VVVXXX(W(1,6),W(1,2),W(1,26),G,AMP(13))              
       CALL JSSXXX(W(1,15),W(1,23),GC,ZERO,ZERO,W(1,27))     
@@ -307,15 +275,13 @@ C ----------
       CALL VSSXXX(W(1,6),W(1,12),W(1,21),GC,AMP(19))             
       CALL VSSXXX(W(1,6),W(1,15),W(1,24),GC,AMP(20))             
       CALL VSSXXX(W(1,6),W(1,28),W(1,20),GC,AMP(21))             
-      CALL VSSXXX(W(1,6),W(1,30),W(1,23),GC,AMP(22))      
-             
+      CALL VSSXXX(W(1,6),W(1,30),W(1,23),GC,AMP(22))             
       CALL FSIXXX(W(1,4),W(1,20),GULNJP,ZERO,ZERO,W(1,32))                                                          
       CALL FVIXXX(W(1,32),W(1,2),GG,ZERO,ZERO,W(1,33))     
       CALL IOVXXX(W(1,33),W(1,1),W(1,6),GG,AMP(23))             
       CALL FSIXXX(W(1,4),W(1,23),GURNJP,ZERO,ZERO,W(1,34))                                                          
       CALL FVIXXX(W(1,34),W(1,2),GG,ZERO,ZERO,W(1,35))     
-      CALL IOVXXX(W(1,35),W(1,1),W(1,6),GG,AMP(24))      
-             
+      CALL IOVXXX(W(1,35),W(1,1),W(1,6),GG,AMP(24))             
       CALL JIOXXX(W(1,32),W(1,1),GG,ZERO,ZERO,W(1,36))     
       CALL VVVXXX(W(1,6),W(1,2),W(1,36),G,AMP(25))              
       CALL JIOXXX(W(1,34),W(1,1),GG,ZERO,ZERO,W(1,37))     
@@ -435,100 +401,13 @@ C ----------
      &             +AMP(  61)+AMP(  62)-AMP(  65)-AMP(  66)+AMP(  67)
      &             +AMP(  68)+AMP(  69)+AMP(  70)+AMP(  71)+AMP(  72)
       MATRIX_CXG_NINJCXG = 0.D0 
-      
-#ifdef DEBUGQ
-!       ! diagramme mit g g su su Kopplung
-!       JAMP(   1) = -AMP(  17)-AMP(  18)+AMP(  57)+AMP(  58)
-!       JAMP(   2) = -AMP(  17)-AMP(  18)+AMP(  57)+AMP(  58)
-!      
-!       ! diagramme mit Z
-!       JAMP(   1) = +AMP(  33)+AMP(  34)+AMP(  36)+AMP(  37)+AMP(  38)
-!       JAMP(   2) = -AMP(  34)+AMP(  35)-AMP(  38)+AMP(  39)+AMP(  40)
-! 
-!       ! diagramme mit g g g Kopplung
-!       JAMP(   1) = -AMP(   3)-AMP(   4)-AMP(  13)-AMP(  14)
-!      &             -AMP(  25)-AMP(  26)+AMP(  34)+AMP(  38)
-!      &             +AMP(  43)+AMP(  44)+AMP(  53)+AMP(  54)
-!      &             +AMP(  65)+AMP(  66)
-!       JAMP(   2) = +AMP(   3)+AMP(   4)+AMP(  13)+AMP(  14)
-!      &             +AMP(  25)+AMP(  26)-AMP(  34)-AMP(  38)
-!      &             -AMP(  43)-AMP(  44)-AMP(  53)-AMP(  54)
-!      &             -AMP(  65)-AMP(  66)
-!      
-!       ! diagramme mit 3 squark propagatoren
-!       JAMP(   1) = -AMP(  19)-AMP(  20)+AMP(  59)+AMP(  60)
-!       JAMP(   2) = -AMP(  21)-AMP(  22)+AMP(  61)+AMP(  62)
-!
-!       ! diagramme mit g su su Kopplung
-!       JAMP(   1) = -AMP(   7)-AMP(   8)-AMP(  11)-AMP(  12)
-!      &             -AMP(  13)-AMP(  14)-AMP(  19)-AMP(  20)
-!      &             +AMP(  47)+AMP(  48)+AMP(  51)+AMP(  52)
-!      &             +AMP(  53)+AMP(  54)+AMP(  59)+AMP(  60)
-!       JAMP(   2) = +AMP(  13)+AMP(  14)-AMP(  15)-AMP(  16)
-!      &             -AMP(  21)-AMP(  22)-AMP(  31)-AMP(  32)
-!      &             -AMP(  53)-AMP(  54)+AMP(  61)+AMP(  62)
-!      &             +AMP(  71)+AMP(  72)+AMP(  55)+AMP(  56)
-!
-!
-!       ! einzelne diagramme
-!       JAMP(   1) = -AMP(   1)-AMP(   2) ! ok -> FormCalc 68
-!      &             -AMP(   9)-AMP(  10) ! ok -> FormCalc 38
-!      &             -AMP(  23)-AMP(  24) ! ok -> FormCalc 70
-!      &             +AMP(  41)+AMP(  42) ! ok -> FormCalc 66
-!      &             +AMP(  49)+AMP(  50) ! ok -> FormCalc 22
-!      &             +AMP(  63)+AMP(  64) ! ok -> FormCalc 76
-!       JAMP(   2) = -AMP(   5)-AMP(   6) ! ok -> FormCalc 52
-!      &             -AMP(  27)-AMP(  28) ! ok -> FormCalc 20
-!      &             -AMP(  29)-AMP(  30) ! ok -> FormCalc 12
-!      &             +AMP(  45)+AMP(  46) ! ok -> FormCalc 36
-!      &             +AMP(  67)+AMP(  68) ! ok -> FormCalc 18
-!      &             +AMP(  69)+AMP(  70) ! ok -> FormCalc 16 
-
-      ! einzelne diagramme + diagramme mit g g su su Kopplung
-      ! funktioniert nicht! Einzelne Zeilen sind allerdings ok
-      JAMP(   1) = -AMP(   1)-AMP(   2) ! ok -> FormCalc 68
-     &             -AMP(   9)-AMP(  10) ! ok -> FormCalc 38
-     &             -AMP(  23)-AMP(  24) ! ok -> FormCalc 70
-     &             +AMP(  41)+AMP(  42) ! ok -> FormCalc 66
-     &             +AMP(  49)+AMP(  50) ! ok -> FormCalc 22
-     &             +AMP(  63)+AMP(  64) ! ok -> FormCalc 76
-     &             -AMP(  17)-AMP(  18) ! ok -> FormCalc 4
-     &             +AMP(  57)+AMP(  58) ! ok -> FormCalc 2
-      JAMP(   2) = -AMP(   5)-AMP(   6) ! ok -> FormCalc 52
-     &             -AMP(  27)-AMP(  28) ! ok -> FormCalc 20
-     &             -AMP(  29)-AMP(  30) ! ok -> FormCalc 12
-     &             +AMP(  45)+AMP(  46) ! ok -> FormCalc 36
-     &             +AMP(  67)+AMP(  68) ! ok -> FormCalc 18
-     &             +AMP(  69)+AMP(  70) ! ok -> FormCalc 16
-     &             -AMP(  17)-AMP(  18) ! ok -> FormCalc 4
-     &             +AMP(  57)+AMP(  58) ! ok -> FormCalc 2
-     
-      ! nicht ok  
-      JAMP(   1) = -AMP(   1)-AMP(   2)-AMP(  17)-AMP(  18)
-      JAMP(   2) = -AMP(  17)-AMP(  18)
-      
-      ! ok
-      !JAMP(   1) = -AMP(  17)-AMP(  18) ! FormCalc 4
-      !JAMP(   2) = -AMP(  17)-AMP(  18)
-      
-      ! ok
-      !JAMP(   1) = -AMP(   1)-AMP(   2) ! FormCalc 68
-      !JAMP(   2) = 0D0
-     
-      MATRIX_CXG_NINJCXG = 0.D0 
-#endif
       DO I = 1, NCOLOR
           ZTEMP =(0.D0,0.D0)
           DO J = 1, NCOLOR
-              !print*,"CF(",J,",",I,")",CF(J,I)
-              !print*,"jamp(",j,") = ",CF(J,I)*JAMP(J)
               ZTEMP = ZTEMP + CF(J,I)*JAMP(J)
           ENDDO
           MATRIX_CXG_NINJCXG =MATRIX_CXG_NINJCXG+ZTEMP*DCONJG(JAMP(I))/DENOM(I)   
       ENDDO
-      
-      !print*,NHEL,MATRIX_CXG_NINJCXG
-      
       Do I = 1, NGRAPHS
           amp2(i)=amp2(i)+amp(i)*dconjg(amp(i))
       Enddo

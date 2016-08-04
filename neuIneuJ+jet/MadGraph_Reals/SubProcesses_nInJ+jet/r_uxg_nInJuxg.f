@@ -43,12 +43,6 @@ C
 
 
 C  
-
-C
-C VARIABLES TO APPLY THE DIAGRAM SUBTRACTION SCHEMES
-C
-#include "dsubtraction.h"
-C
 C GLOBAL VARIABLES
 C  
       Double Precision amp2(maxamps), jamp2(0:maxflow)
@@ -212,12 +206,6 @@ C
       COMPLEX*16 AMP(NGRAPHS), JAMP(NCOLOR)
       COMPLEX*16 W(18,NWAVEFUNCS)
 C  
-
-C
-C VARIABLES TO APPLY THE DIAGRAM SUBTRACTION SCHEMES
-C
-#include "dsubtraction.h"
-C
 C GLOBAL VARIABLES
 C  
       Double Precision amp2(maxamps), jamp2(0:maxflow)
@@ -413,89 +401,6 @@ C ----------
      &             +AMP(  61)+AMP(  62)-AMP(  65)-AMP(  66)+AMP(  67)
      &             +AMP(  68)+AMP(  69)+AMP(  70)+AMP(  71)+AMP(  72)
       MATRIX_UXG_NINJUXG = 0.D0 
-      
-#ifdef DEBUGQ
-!       ! diagramme mit g g su su Kopplung
-!       JAMP(   1) = -AMP(  17)-AMP(  18)+AMP(  57)+AMP(  58)
-!       JAMP(   2) = -AMP(  17)-AMP(  18)+AMP(  57)+AMP(  58)
-!      
-!       ! diagramme mit Z
-!       JAMP(   1) = +AMP(  33)+AMP(  34)+AMP(  36)+AMP(  37)+AMP(  38)
-!       JAMP(   2) = -AMP(  34)+AMP(  35)-AMP(  38)+AMP(  39)+AMP(  40)
-! 
-!       ! diagramme mit g g g Kopplung
-!       JAMP(   1) = -AMP(   3)-AMP(   4)-AMP(  13)-AMP(  14)
-!      &             -AMP(  25)-AMP(  26)+AMP(  34)+AMP(  38)
-!      &             +AMP(  43)+AMP(  44)+AMP(  53)+AMP(  54)
-!      &             +AMP(  65)+AMP(  66)
-!       JAMP(   2) = +AMP(   3)+AMP(   4)+AMP(  13)+AMP(  14)
-!      &             +AMP(  25)+AMP(  26)-AMP(  34)-AMP(  38)
-!      &             -AMP(  43)-AMP(  44)-AMP(  53)-AMP(  54)
-!      &             -AMP(  65)-AMP(  66)
-!      
-!       ! diagramme mit 3 squark propagatoren
-!       JAMP(   1) = -AMP(  19)-AMP(  20)+AMP(  59)+AMP(  60)
-!       JAMP(   2) = -AMP(  21)-AMP(  22)+AMP(  61)+AMP(  62)
-!
-!       ! diagramme mit g su su Kopplung
-!       JAMP(   1) = -AMP(   7)-AMP(   8)-AMP(  11)-AMP(  12)
-!      &             -AMP(  13)-AMP(  14)-AMP(  19)-AMP(  20)
-!      &             +AMP(  47)+AMP(  48)+AMP(  51)+AMP(  52)
-!      &             +AMP(  53)+AMP(  54)+AMP(  59)+AMP(  60)
-!       JAMP(   2) = +AMP(  13)+AMP(  14)-AMP(  15)-AMP(  16)
-!      &             -AMP(  21)-AMP(  22)-AMP(  31)-AMP(  32)
-!      &             -AMP(  53)-AMP(  54)+AMP(  61)+AMP(  62)
-!      &             +AMP(  71)+AMP(  72)+AMP(  55)+AMP(  56)
-!
-!
-!       ! einzelne diagramme
-!       JAMP(   1) = -AMP(   1)-AMP(   2) ! ok -> FormCalc 68
-!      &             -AMP(   9)-AMP(  10) ! ok -> FormCalc 38
-!      &             -AMP(  23)-AMP(  24) ! ok -> FormCalc 70
-!      &             +AMP(  41)+AMP(  42) ! ok -> FormCalc 66
-!      &             +AMP(  49)+AMP(  50) ! ok -> FormCalc 22
-!      &             +AMP(  63)+AMP(  64) ! ok -> FormCalc 76
-!       JAMP(   2) = -AMP(   5)-AMP(   6) ! ok -> FormCalc 52
-!      &             -AMP(  27)-AMP(  28) ! ok -> FormCalc 20
-!      &             -AMP(  29)-AMP(  30) ! ok -> FormCalc 12
-!      &             +AMP(  45)+AMP(  46) ! ok -> FormCalc 36
-!      &             +AMP(  67)+AMP(  68) ! ok -> FormCalc 18
-!      &             +AMP(  69)+AMP(  70) ! ok -> FormCalc 16 
-
-      ! einzelne diagramme + diagramme mit g g su su Kopplung
-      ! funktioniert nicht! Einzelne Zeilen sind allerdings ok
-      JAMP(   1) = -AMP(   1)-AMP(   2) ! ok -> FormCalc 68
-     &             -AMP(   9)-AMP(  10) ! ok -> FormCalc 38
-     &             -AMP(  23)-AMP(  24) ! ok -> FormCalc 70
-     &             +AMP(  41)+AMP(  42) ! ok -> FormCalc 66
-     &             +AMP(  49)+AMP(  50) ! ok -> FormCalc 22
-     &             +AMP(  63)+AMP(  64) ! ok -> FormCalc 76
-     &             -AMP(  17)-AMP(  18) ! ok -> FormCalc 4
-     &             +AMP(  57)+AMP(  58) ! ok -> FormCalc 2
-      JAMP(   2) = -AMP(   5)-AMP(   6) ! ok -> FormCalc 52
-     &             -AMP(  27)-AMP(  28) ! ok -> FormCalc 20
-     &             -AMP(  29)-AMP(  30) ! ok -> FormCalc 12
-     &             +AMP(  45)+AMP(  46) ! ok -> FormCalc 36
-     &             +AMP(  67)+AMP(  68) ! ok -> FormCalc 18
-     &             +AMP(  69)+AMP(  70) ! ok -> FormCalc 16
-     &             -AMP(  17)-AMP(  18) ! ok -> FormCalc 4
-     &             +AMP(  57)+AMP(  58) ! ok -> FormCalc 2
-     
-      ! nicht ok  
-      JAMP(   1) = -AMP(   1)-AMP(   2)-AMP(  17)-AMP(  18)
-      JAMP(   2) = -AMP(  17)-AMP(  18)
-      
-      ! ok
-      !JAMP(   1) = -AMP(  17)-AMP(  18) ! FormCalc 4
-      !JAMP(   2) = -AMP(  17)-AMP(  18)
-      
-      ! ok
-      !JAMP(   1) = -AMP(   1)-AMP(   2) ! FormCalc 68
-      !JAMP(   2) = 0D0
-     
-      MATRIX_UXG_NINJUXG = 0.D0 
-#endif
-
       DO I = 1, NCOLOR
           ZTEMP =(0.D0,0.D0)
           DO J = 1, NCOLOR

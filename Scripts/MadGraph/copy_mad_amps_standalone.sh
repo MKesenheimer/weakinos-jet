@@ -20,12 +20,12 @@ echo "      else" >> addfinalstatescheck.txt
 echo "        ANS(IPROC)=ANS(IPROC)/DBLE(IDEN(IPROC))" >> addfinalstatescheck.txt
 echo "      endif" >> addfinalstatescheck.txt
 
-echo "C" > addsubtraction.txt
-echo "C VARIABLES TO APPLY THE DIAGRAM SUBTRACTION SCHEMES" >> addsubtraction.txt
-echo "C" >> addsubtraction.txt
-echo "#include \"dsubtraction.h\"" >> addsubtraction.txt
-echo "C" >> addsubtraction.txt
-echo "C GLOBAL VARIABLES" >> addsubtraction.txt
+#echo "C" > addsubtraction.txt
+#echo "C VARIABLES TO APPLY THE DIAGRAM SUBTRACTION SCHEMES" >> addsubtraction.txt
+#echo "C" >> addsubtraction.txt
+#echo "#include \"dsubtraction.h\"" >> addsubtraction.txt
+#echo "C" >> addsubtraction.txt
+#echo "C GLOBAL VARIABLES" >> addsubtraction.txt
 
 for dir in $(ls -d */); do
     if [ "$dir" == "madME/" ]; then
@@ -97,9 +97,9 @@ for dir in $(ls -d */); do
     sed -i -e 's/marker//g' $x
     
     # add dsubtraction.h
-    sed -i -e "s/C GLOBAL VARIABLES/marker/g" $x
-    sed -i -e '/marker/r addsubtraction.txt' $x
-    sed -i -e 's/marker//g' $x
+    #sed -i -e "s/C GLOBAL VARIABLES/marker/g" $x
+    #sed -i -e '/marker/r addsubtraction.txt' $x
+    #sed -i -e 's/marker//g' $x
 
     # rename to prevent clashes with FormCalc
     sed -i -e 's/MB1/MBL/g' $x

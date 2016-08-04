@@ -49,12 +49,11 @@ c
 #include "nexternal.inc"
 #include "nlegborn.h"
 #include "pwhg_kn.h"
+#include "osres.h"
         ! momenta from PS-generator, on-shell momenta
         double precision p(0:3,nexternal),p_OS(0:3,nexternal)
         ! mass at resonance, mass of particle i,j,k
         double precision mij, mkl, mi, mj, mk, ml
-        ! channel index (which particle should get resonant to mij)
-        character*4 chan
         ! if you choose i=3, j=5, k=4: particle 3 and 5 will generate
         ! the resonance with the intermediate particle with mass mij
         integer i,j,k,l
@@ -441,8 +440,6 @@ c
 #include "pwhg_math.h"
 #include "pwhg_kn.h"
 #include "osres.h"
-        ! variable to determine the channel
-        character*4 chan
         ! indices
         integer i,j,k,l, ichan
         ! masses
@@ -452,7 +449,7 @@ c
         integer levi_civita
         external levi_civita
         
-        do ichan=1,nosres
+        do ichan=1,cnosres
           if(chan.eq.osresID(ichan)) then
             i = osreslegs(ichan,1)
             j = osreslegs(ichan,2)
@@ -464,20 +461,10 @@ c
               mj = 0D0
               mk = par_Fin2mass
               ml = 0D0
-            elseif(i.eq.4 .and. j.eq.5 .and. k.eq.3 .and. l.eq.6) then
-              mi = par_Fin2mass
-              mj = 0D0
-              mk = par_Fin1mass
-              ml = 0D0
             elseif(i.eq.3 .and. j.eq.6 .and. k.eq.4 .and. l.eq.5) then
               mi = par_Fin1mass
               mj = 0D0
               mk = par_Fin2mass
-              ml = 0D0
-            elseif(i.eq.4 .and. j.eq.6 .and. k.eq.3 .and. l.eq.5) then
-              mi = par_Fin2mass
-              mj = 0D0
-              mk = par_Fin1mass
               ml = 0D0
             else
               print*,"error in set_channel: i,j,k,l",i,j,k,l

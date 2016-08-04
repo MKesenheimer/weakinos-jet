@@ -68,7 +68,7 @@ c keep this order
         ! use the generic phase-space here,
         ! provide tan-mapping for the resonant particles
         ! sum over the resonances
-        do ichan=1,nosres
+        do ichan=1,cnosres
           ! first create a momentum-config where the particles i and j are
           ! tan-mapped on a resonant squark
           ! phase space that builds the 2->3 PS by using only 1->2 sub PS
@@ -300,7 +300,7 @@ c keep this order
         !print*,ncalls
 
         ! reset all contributions
-        do j=1,nosres
+        do j=1,cnosres
           dtotosres(j)    = 0D0
           dtotabsosres(j) = 0D0
           dtotpososres(j) = 0D0
@@ -308,7 +308,7 @@ c keep this order
         enddo
 
         ! sum over resonances
-        do j=1,nosres
+        do j=1,cnosres
           ! sum over processes
           do i=1,flst_nosres
             dtotosres(j)    = dtotosres(j) + rad_osres_arr(i,j)
@@ -361,7 +361,7 @@ c set all new totals concerning regulars/remnants/osres to zero
 
         ncalls = 0
 
-        do j=1,nosres
+        do j=1,cnosres
           totosres(j)     = 0D0
           etotosres(j)    = 0D0
           totabsosres(j)  = 0D0
@@ -406,7 +406,7 @@ c keep this order
         ! if we never call the remnant-routines: avoid NaNs
         if(ncalls.eq.0) ncalls = 1
 
-        do j=1,nosres
+        do j=1,cnosres
           rad_totosres(j)     = totosres(j)/ncalls
           rad_etotosres(j)    = calc_error(totosres(j),
      &                                     etotosres(j),ncalls)

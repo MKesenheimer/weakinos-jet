@@ -32,8 +32,6 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         ! MadGraph
         double precision ampM
         
-        ! variables for the on-shell subtraction
-        character*4 chan
         ! kinematics
         double precision s12, sij
         ! breit-wigner ratios
@@ -122,12 +120,13 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         ! get the formcalc real amplitudes
         call getRealAmps(p,rflav,amp)
 
-#ifdef DEBUGQ
-        print*,rflav
+#ifdef DEBUG
+        !print*,rflav
         ! get the real amplitude from MadGraph...
         call sreal_proc(p,rflav,ampM)
 
-        if(2D0*dabs(ampM-amp)/(ampM+amp).gt.1d-4) then
+        if(2D0*dabs(ampM-amp)/(ampM+amp).gt.1d-4 .and. 
+     &    dsqrt(p(1,5)**2+p(2,5)**2).gt. 10D0) then
           print*
           print*,"rflav",rflav
           print*,"pt",dsqrt(p(1,5)**2+p(2,5)**2)
@@ -135,7 +134,7 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
           print*,"FormCalc",amp
           print*,"rel error",2D0*dabs(ampM-amp)/(ampM+amp)
           print*,"frac",ampM/amp, amp/ampM
-          stop
+          !stop
         endif
 #endif
         

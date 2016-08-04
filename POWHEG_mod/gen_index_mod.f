@@ -141,7 +141,7 @@ c MK: added
       
       ! sum
       rad_totosres_sum = 0D0
-      do ichan=1,nosres
+      do ichan=1,cnosres
         rad_totosres_sum = rad_totosres_sum + rad_totosres(ichan)
       enddo
       
@@ -154,11 +154,11 @@ c MK: added
       ! random()<=rad_totosres(1)/rad_totosres_sum? -> iret = 3
       ! random()<=(rad_totosres(1)+rad_totosres(2))/rad_totosres_sum? -> iret = 4
       ! ...
-      ! random()<=rad_totosres_sum/rad_totosres_sum? -> iret = 2+nosres
+      ! random()<=rad_totosres_sum/rad_totosres_sum? -> iret = 2+cnosres
       !
       ! figuratively, if ran1 lies e.g. in intervall 3:
       !
-      ! contr.   1    2     3   4   5    ... nosres
+      ! contr.   1    2     3   4   5    ... cnosres
       ! sum    |---|-----|----|--|-----| ...
       ! step1: |---|                                 -> if(.false.) -> next step
       ! step2: |---|-----|                           -> if(.false.) -> next step
@@ -174,7 +174,7 @@ c which version is better?
 #define GENOSRES1
 #ifdef GENOSRES1
       ran1 = random()
-      do ichan=1,nosres  
+      do ichan=1,cnosres  
         rad_totosres_frac_sum = rad_totosres_frac_sum
      &                           + rad_totosres(ichan)
         if(ran1.le.rad_totosres_frac_sum/rad_totosres_sum) then
@@ -193,7 +193,7 @@ c which version is better?
 #ifdef GENOSRES2
       ran1 = random()
       rad_totosres_frac_sum = rad_totosres_sum
-      do ichan=1,nosres  
+      do ichan=1,cnosres  
         rad_totosres_frac_sum = rad_totosres_frac_sum
      &                           - rad_totosres(ichan)
         if(ran1.gt.rad_totosres_frac_sum/rad_totosres_sum) then

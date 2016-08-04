@@ -362,25 +362,6 @@ c ur45: right handed down-type squark gets resonant with particles 4 & 5
           endif
         enddo
 
-        ! fill the global variables for treating the on-shell resonances
-#if defined(NIXJ_JET) || defined(XIXJ_JET)
-        ! number of resonances
-        nosres = 8 ! change cnosres in osres.h as well
-#elif defined(NINJ_JET)
-        nosres = 16
-#else
-        print*,"error: preprocessor flag NIXJ_JET, NINJ_JET or "//
-     &         "XIXJ_JET not set."
-#endif
-        
-        if(nosres.ne.cnosres) then
-          print*,"error in init_processes.F: nosres and narraylngth not"
-          print*,"equal: ", nosres, cnosres
-          print*,"change nosres in init_processes or"//
-     &           "cnosres in osres.h"
-          stop
-        endif
-
         ! the human readable identifiers (TODO)
         osresID(1) = "dl35"
         osresID(2) = "dl45"
@@ -401,7 +382,7 @@ c ur45: right handed down-type squark gets resonant with particles 4 & 5
         osresID(16) = "ur46"
 #endif
 
-        do k=1,nosres
+        do k=1,cnosres
           if(len(osresID(k)).gt.4) then
             print*,"error in init_processes.F: array osresID not set"
             print*,"correctly. Increase field length."

@@ -176,7 +176,7 @@ c MK: added
       integer gen_seed,gen_n1,gen_n2
       common/cgenrand/gen_seed,gen_n1,gen_n2
 c     rad_type=1,2,3 for btilde,remnants,regulars, respectively
-      ! MK: 4<=rad_type<=3+nosres: event from on-shell resonant part of the reals
+      ! MK: 4<=rad_type<=3+cnosres: event from on-shell resonant part of the reals
       if(rad_type.eq.1) then
 c     btilde
          write(string,*)'#rwgt ',rad_type,
@@ -196,7 +196,7 @@ c     regular
       ! MK: added the following lines
       !=================================================================
       ! Remember: rad_type = ichan + 3 (see pwhgreweight_mod.f)
-      elseif((rad_type.ge.4) .and. (rad_type.le.(nosres+3))) then
+      elseif((rad_type.ge.4) .and. (rad_type.le.(cnosres+3))) then
          write(string,*)'#rwgt ',rad_type,
      $        rad_realosres,rad_osres_arr(rad_realosres,rad_type-3),
      $        gen_seed,gen_n1,gen_n2

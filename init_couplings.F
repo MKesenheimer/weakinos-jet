@@ -863,7 +863,7 @@ c set the paramaters for treating the on-shell resonances
         osresM(8) = mul
 
 #ifdef NINJ_JET
-        osresM(9) = mdr
+        osresM(9)  = mdr
         osresM(10) = mdr
         osresM(11) = mur
         osresM(12) = mur
@@ -875,10 +875,10 @@ c set the paramaters for treating the on-shell resonances
 #endif
 
         m_avrg = 0D0
-        do i=1,nosres
+        do i=1,cnosres
           m_avrg = m_avrg + osresM(i)
         enddo
-        m_avrg = m_avrg/nosres
+        m_avrg = m_avrg/cnosres
 
         ! set the width of the immediate particle (regulator wreg)
         ewi  = 1D-2 ! (default)
@@ -886,5 +886,9 @@ c set the paramaters for treating the on-shell resonances
           ewi = powheginput("ewi")
         endif
         wreg = ewi*m_avrg ! Prospino like definition
+        
+#ifdef DEBUG
+        wreg = 0D0
+#endif
       end
 c############### end subroutine set_osres_params #######################

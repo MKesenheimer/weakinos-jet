@@ -27,8 +27,6 @@ c modifies the jacobian.
         integer rflav(nlegreal), dflav(nlegreal)
         ! the real amplitudes
         double precision ampreal
-        ! variable to determine the channel
-        character*4 chan
         ! local variables
         double precision ampCT, amp
         ! function to calculate the squared momentum sum

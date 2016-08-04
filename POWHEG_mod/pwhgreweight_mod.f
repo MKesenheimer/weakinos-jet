@@ -61,7 +61,7 @@ c ! MK: added
       ! Note: since pwhgnewweight uses indices rad_type=1,2,3 we have to shift
       ! the indices for the on-shell resonances by 3.
       ! => rad_type = ichan + 3 
-      elseif((rad_type.ge.4) .and. (rad_type.le.(nosres+3))) then
+      elseif((rad_type.ge.4) .and. (rad_type.le.(cnosres+3))) then
          call gen_sigosresrw
          newweight=rad_osres_arr(rad_realosres,rad_type-3)
       !=================================================================
@@ -324,7 +324,7 @@ c     regular
      $              gen_seed,gen_n1,gen_n2
             ! MK: added the following statements
             !===========================================================
-            elseif((rad_type.ge.4) .and. (rad_type.le.(3+nosres))) then
+            elseif((rad_type.ge.4) .and. (rad_type.le.(3+cnosres))) then
                read(string,*)rad_type,
      $              rad_realosres,rad_currentweight,
      $              gen_seed,gen_n1,gen_n2

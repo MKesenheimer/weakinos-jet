@@ -3,7 +3,6 @@ c Variables to apply the diagram subtractions scheme
 #ifndef DSUBTRACTION_H
 #define DSUBTRACTION_H
 
-      character*4 CHAN                       ! distuinguish between u-, t-channels, left and right
       double precision MATRIX_RES            ! sum of resonant diagrams squared
       
 #if defined(DSUB_I)

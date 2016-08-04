@@ -43,12 +43,6 @@ C
 
 
 C  
-
-C
-C VARIABLES TO APPLY THE DIAGRAM SUBTRACTION SCHEMES
-C
-#include "dsubtraction.h"
-C
 C GLOBAL VARIABLES
 C  
       Double Precision amp2(maxamps), jamp2(0:maxflow)
@@ -212,12 +206,6 @@ C
       COMPLEX*16 AMP(NGRAPHS), JAMP(NCOLOR)
       COMPLEX*16 W(18,NWAVEFUNCS)
 C  
-
-C
-C VARIABLES TO APPLY THE DIAGRAM SUBTRACTION SCHEMES
-C
-#include "dsubtraction.h"
-C
 C GLOBAL VARIABLES
 C  
       Double Precision amp2(maxamps), jamp2(0:maxflow)

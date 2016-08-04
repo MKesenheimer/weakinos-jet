@@ -17,14 +17,20 @@ c          mk            mj
 
 c definitions
         ! store the number of resonances here
-        integer nosres, cnosres ! constants
+        integer cnosres ! nosres, constants
         ! dummy variable to initialize the array
+#ifdef NINJ_JET
         parameter (cnosres=16)
+#else
+        parameter (cnosres=8)
+#endif
         ! this is the human readable array which stores the id of the 
         ! on-shell resonance, e.g. "ul35", "dl35".
         ! this variable is set in init_processes
         character*4 osresID(cnosres)
-
+        ! variable to determine the channel
+        character*4 chan
+        
         ! the mass array of the on-shell resonant particles
         double precision osresM(cnosres)
         double precision m_avrg
@@ -42,10 +48,9 @@ c definitions
         ! osreslegs(chan,3): spectator 1 (index is k used in our code)
         ! osreslegs(chan,4): spectator 2 (index is l used in our code)
         integer osreslegs(cnosres,1:4)
-
+        
         common/c_onshell/ osresM, m_avrg, wreg  ! doubles
         common/c_onshell/ osresID               ! characters
-        common/c_onshell/ nosres                ! integers
 
 
 #if defined(DSUB_I) || defined(DSUB_II) || defined(DSUB_II_TEST)

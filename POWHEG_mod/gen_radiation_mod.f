@@ -55,7 +55,7 @@ c      if(random().gt.rad_totrm/rad_totgen) then
       ! MK: added the following lines
       !=================================================================
       rad_totosresgen_sum = 0D0
-      do ichan=1,nosres
+      do ichan=1,cnosres
         rad_totosresgen_sum   = rad_totosresgen_sum + 
      &                          rad_totosresgen(ichan)
       enddo
@@ -172,7 +172,7 @@ c CH, MK: new part here:
          call gen_osres(iret)
          ! MK: changed the following lines
          ! if negative weight, flip the sign of xwgtup
-         if( (iret.ge.3) .and. (iret.le.(nosres+2)) ) then
+         if( (iret.ge.3) .and. (iret.le.(cnosres+2)) ) then
            if(rad_osres_sign(rad_realosres,iret-2).eq.-1) then
              weight = -weight
            endif
@@ -183,7 +183,7 @@ c CH, MK: new part here:
 
          call add_azimuth
 
-         if( (iret.ge.3) .and. (iret.le.(nosres+2)) ) then
+         if( (iret.ge.3) .and. (iret.le.(cnosres+2)) ) then
             ! set st_muren2 for scalup value for osres contributions 
             ! (alphas should be set correctly)
             ! pt2max_osres-fct in Real_osres_phsp.f
@@ -194,7 +194,7 @@ c CH, MK: new part here:
          else
             print*, "error in gen_radiation_mod.f: invalid iret-type."
             print*, "iret: ", iret
-            print*, "nosres: ", nosres
+            print*, "cnosres: ", cnosres
             stop
          endif   
          call increasecnt("osres event")

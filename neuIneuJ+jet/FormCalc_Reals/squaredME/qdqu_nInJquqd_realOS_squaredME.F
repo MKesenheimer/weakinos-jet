@@ -7,53 +7,53 @@
         double precision ampos(2,cnosres),temp(2)
         ampos(:,:) = 0D0
         temp(:) = 0D0
-        do i=1,nosres
+        do i=1,cnosres
           if(osresID(i).eq."l35l46") then
-            Sfe6=1
-            Sfe7=1
-            call qdqu_nInJquqd_l35l46_SquaredME(temp, helicities, flags)
+            SfeSQ1=1
+            SfeSQ2=1
+            call qdqu_nInJquqd_3546_SquaredME(temp, helicities, flags)
             ampos(:,i) = temp(:)
           endif
           if(osresID(i).eq."r35l46") then
-            Sfe6=2
-            Sfe7=1
-            call qdqu_nInJquqd_r35l46_SquaredME(temp, helicities, flags)
+            SfeSQ1=2
+            SfeSQ2=1
+            call qdqu_nInJquqd_3645_SquaredME(temp, helicities, flags)
             ampos(:,i) = temp(:)
           endif
           if(osresID(i).eq."l35r46") then
-            Sfe6=1
-            Sfe7=2
-            call qdqu_nInJquqd_l35r46_SquaredME(temp, helicities, flags)
+            SfeSQ1=1
+            SfeSQ2=2
+            call qdqu_nInJquqd_3546_SquaredME(temp, helicities, flags)
             ampos(:,i) = temp(:)
           endif
           if(osresID(i).eq."r35r46") then
-            Sfe6=2
-            Sfe7=2
-            call qdqu_nInJquqd_r35r46_SquaredME(temp, helicities, flags)
+            SfeSQ1=2
+            SfeSQ2=2
+            call qdqu_nInJquqd_3546_SquaredME(temp, helicities, flags)
             ampos(:,i) = temp(:)
           endif
           if(osresID(i).eq."l36l45") then
-            Sfe6=1
-            Sfe7=1
-            call qdqu_nInJquqd_l36l45_SquaredME(temp, helicities, flags)
+            SfeSQ1=1
+            SfeSQ2=1
+            call qdqu_nInJquqd_3645_SquaredME(temp, helicities, flags)
             ampos(:,i) = temp(:)
           endif
           if(osresID(i).eq."r36l45") then
-            Sfe6=2
-            Sfe7=1
-            call qdqu_nInJquqd_r36l45_SquaredME(temp, helicities, flags)
+            SfeSQ1=2
+            SfeSQ2=1
+            call qdqu_nInJquqd_3645_SquaredME(temp, helicities, flags)
             ampos(:,i) = temp(:)
           endif
           if(osresID(i).eq."l36r45") then
-            Sfe6=1
-            Sfe7=2
-            call qdqu_nInJquqd_l36r45_SquaredME(temp, helicities, flags)
+            SfeSQ1=1
+            SfeSQ2=2
+            call qdqu_nInJquqd_3546_SquaredME(temp, helicities, flags)
             ampos(:,i) = temp(:)
           endif
           if(osresID(i).eq."r36r45") then
-            Sfe6=2
-            Sfe7=2
-            call qdqu_nInJquqd_r36r45_SquaredME(temp, helicities, flags)
+            SfeSQ1=2
+            SfeSQ2=2
+            call qdqu_nInJquqd_3546_SquaredME(temp, helicities, flags)
             ampos(:,i) = temp(:)
           endif
         enddo

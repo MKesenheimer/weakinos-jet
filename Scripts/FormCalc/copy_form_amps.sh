@@ -52,11 +52,11 @@ DEST=${PWD}/../../${PROCDIR}
 # number of particles (incoming + outgoing)
 NPART=6
 # process list file
-PROCF="./proc_nInJjj_os"
+PROCF="./proc_nInJjj_reg"
 # the name of Mathematica Scripts
-MSCRIPT="./nInJjj_os.m"
+MSCRIPT=
 # the type of the amplitudes (born, virt, real, realOS)
-TYPE="realOS"
+TYPE="real"
 
 ########################################################################
 #       -*- usually no editing is required below this line -*-         #
@@ -157,8 +157,6 @@ function rename2() {
         sed -i -e "s/\<Cha4\>/2/g" $1
         sed -i -e "s/\<Cha5\>/2/g" $1
         sed -i -e "s/\<Cha6\>/2/g" $1
-        sed -i -e "s/\<Sfe6\>/2/g" $1
-        sed -i -e "s/\<Sfe7\>/2/g" $1
 }
 
 # read in the process list
@@ -223,10 +221,10 @@ for i in `seq 0 1 $((NPROC-1))`; do
     fi
     
     # generate the Amplitudes
-    echo "removing ${PROC}_${TYPE}"
-    rm -rf ${PROC}_${TYPE}
     # if MSCRIPT is not empty, call the MathKernel
     if [[ -n "$MSCRIPT" ]]; then
+        echo "removing ${PROC}_${TYPE}"
+        rm -rf ${PROC}_${TYPE}
         echo "calling Mathematica $MSCRIPT -script $MSCRIPT ${P[@]}"
         #/Applications/Mathematica.app/Contents/MacOS/MathKernel -script $MSCRIPT ${P[@]}
         MathKernel -script $MSCRIPT ${P[@]}
@@ -264,12 +262,14 @@ for i in `seq 0 1 $((NPROC-1))`; do
         
         echo
         echo "${PROCESSES[i]} ${TYPE}${APPEND}"
+        echo "PRE1 = $PRE1"
+        echo "PRE2 = $PRE2"
         
-        echo "cleaning old files..."
-        echo $(ls ${DEST}/squaredME/${PRE2}*.F)
-        echo $(ls ${DEST}/include/${PRE2}_vars.h)
-        rm ${DEST}/squaredME/${PRE2}*.F
-        rm ${DEST}/include/${PRE2}_vars.h
+        #echo "cleaning old files..."
+        #echo $(ls ${DEST}/squaredME/${PRE2}*.F)
+        #echo $(ls ${DEST}/include/${PRE2}_vars.h)
+        #rm ${DEST}/squaredME/${PRE2}*.F
+        #rm ${DEST}/include/${PRE2}_vars.h
         
         echo "copying new files..."
         mkdir -p ${DEST}/${PRE2}_squaredME/
@@ -289,8 +289,16 @@ for i in `seq 0 1 $((NPROC-1))`; do
             # rename the variables
             echo "renaming variables in $file..."
             rename $file "${PRE2}_"
+            if [[ $TYPE == "realOS" ]]; then
+                sed -i -e "s/\<Sfe7\>/SfeSQ1/g" $file
+                sed -i -e "s/\<Sfe8\>/SfeSQ2/g" $file
+            fi
         done
         rename2 ${PRE2}_vars.h
+        if [[ $TYPE == "realOS" ]]; then
+            sed -i -e "s/\<Sfe7\>/2/g" ${PRE2}_vars.h
+            sed -i -e "s/\<Sfe8\>/2/g" ${PRE2}_vars.h
+        fi
         cp ${DEST}/${PRE2}_squaredME/*.F ${DEST}/squaredME/
         cp ${DEST}/${PRE2}_squaredME/${PRE2}_vars.h ${DEST}/include
         rm -rf ${DEST}/${PRE2}_squaredME
@@ -318,29 +326,31 @@ if [[ $TYPE == "realOS" ]]; then
         echo "        double precision ampos(2,cnosres),temp(2)" >> ${PRE2}_squaredME.F
         echo "        ampos(:,:) = 0D0" >> ${PRE2}_squaredME.F
         echo "        temp(:) = 0D0" >> ${PRE2}_squaredME.F
-        echo "        do i=1,nosres" >> ${PRE2}_squaredME.F
+        echo "        do i=1,cnosres" >> ${PRE2}_squaredME.F
         CHIRALITY=()
         NCHANNELS=0
         for j in ${CHANNEL[@]}; do
             # we need the chirality combination of the requested channel
             CHIRALITY+=($(echo "${CHANNEL[NCHANNELS]}" | tr -d "0123456789"))
+            # the mathematica identifiers don't need the left and right identifier, truncate them
+            MCHANNEL+=($(echo "${CHANNEL[NCHANNELS]}" | tr -d "lr"))
             NCHANNELS=$((1+NCHANNELS))
         done
         for j in `seq 0 1 $((NCHANNELS-1))`; do
-            PRE1="${PROCESSES[i]}_${CHANNEL[j]}"
+            PRE1="${PROCESSES[i]}_${MCHANNEL[j]}"
             echo "          if(osresID(i).eq.\"${CHANNEL[j]}\") then" >> ${PRE2}_squaredME.F
             if [[ "${CHIRALITY[j]}" == "ll" ]]; then
-                echo "            Sfe6=1" >> ${PRE2}_squaredME.F
-                echo "            Sfe7=1" >> ${PRE2}_squaredME.F
+                echo "            SfeSQ1=1" >> ${PRE2}_squaredME.F
+                echo "            SfeSQ2=1" >> ${PRE2}_squaredME.F
             elif [[ "${CHIRALITY[j]}" == "lr" ]]; then
-                echo "            Sfe6=1" >> ${PRE2}_squaredME.F
-                echo "            Sfe7=2" >> ${PRE2}_squaredME.F
+                echo "            SfeSQ1=1" >> ${PRE2}_squaredME.F
+                echo "            SfeSQ2=2" >> ${PRE2}_squaredME.F
             elif [[ "${CHIRALITY[j]}" == "rl" ]]; then
-                echo "            Sfe6=2" >> ${PRE2}_squaredME.F
-                echo "            Sfe7=1" >> ${PRE2}_squaredME.F
+                echo "            SfeSQ1=2" >> ${PRE2}_squaredME.F
+                echo "            SfeSQ2=1" >> ${PRE2}_squaredME.F
             elif [[ "${CHIRALITY[j]}" == "rr" ]]; then
-                echo "            Sfe6=2" >> ${PRE2}_squaredME.F
-                echo "            Sfe7=2" >> ${PRE2}_squaredME.F
+                echo "            SfeSQ1=2" >> ${PRE2}_squaredME.F
+                echo "            SfeSQ2=2" >> ${PRE2}_squaredME.F
             fi
             echo "            call ${PRE1}_SquaredME(temp, helicities, flags)" >> ${PRE2}_squaredME.F
             echo "            ampos(:,i) = temp(:)" >> ${PRE2}_squaredME.F

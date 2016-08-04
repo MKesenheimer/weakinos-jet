@@ -114,12 +114,12 @@ If[$CommandLine[[2]] === "-script",
 	 p[5] = ToString[$CommandLine[[8]]];
 	 p[6] = ToString[$CommandLine[[9]]];),
 	(*Else*)
-	(p[1] = "d";
-	 p[2] = "dbar";
+	(p[1] = "qd";
+	 p[2] = "qdbar";
 	 p[3] = "nI";
 	 p[4] = "nJ";
-	 p[5] = "d";
-	 p[6] = "dbar";)
+	 p[5] = "qd";
+	 p[6] = "qdbar";)
 ]
 
 CalcProcess = p[1]<>p[2]<>"_"<>p[3]<>p[4]<>p[5]<>p[6];
@@ -269,14 +269,14 @@ real = CalcFeynAmp[CreateFeynAmp[ins3546](*/.{EL->EL PowerOf[EL], GS->GS PowerOf
 real = real//.{PowerOf[a_]:>PowerOf[a][1]};*)
 real3546 = real/.{Den[x_,y_]:>Den[x/.widths,y/.widths]};
 (*set the sfermion index in fortran program*)
-real3546Sfe = real//.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External], SumOver[Sfe9,i_]:>SumOver[Sfe9,i,External]}
+real3546Sfe = real3546//.{SumOver[Sfe6,i_]:>SumOver[Sfe6,i,External], SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External], SumOver[Sfe9,i_]:>SumOver[Sfe9,i,External]}
 
 real = CalcFeynAmp[CreateFeynAmp[ins3645](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
 (*real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
 real = real//.{PowerOf[a_]:>PowerOf[a][1]};*)
 real3645 = real/.{Den[x_,y_]:>Den[x/.widths,y/.widths]};
 (*set the sfermion index in fortran program*)
-real3645Sfe = real//.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External], SumOver[Sfe9,i_]:>SumOver[Sfe9,i,External]}
+real3645Sfe = real3645//.{SumOver[Sfe6,i_]:>SumOver[Sfe6,i,External], SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External], SumOver[Sfe9,i_]:>SumOver[Sfe9,i,External]}
 
 
 Print["Non resonant Diagrams"]

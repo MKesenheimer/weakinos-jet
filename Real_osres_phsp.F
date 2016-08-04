@@ -46,7 +46,7 @@ c this subroutine uses subroutines defined in phi1_2.f (with boosts).
         parameter (m_pi = 4.D0*datan(1.D0))
         
         ! check the channel identifier
-        if( ichan.gt.nosres .or. ichan.lt.0) then
+        if( ichan.gt.cnosres .or. ichan.lt.0) then
           print*,"wrong channel number: ", ichan
           stop
         endif
