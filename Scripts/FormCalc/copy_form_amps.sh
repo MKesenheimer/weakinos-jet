@@ -4,22 +4,62 @@ WORKINGDIR=${PWD}
 ########################################################################
 #                       -*-  Preferences -*-                           #
 ########################################################################
+# Steps for weakinos + jet:
+# 1. generate and copy the born or virtual amplitudes, e.g. 
+#     PROCDIR="neuIneuJ+jet/FormCalc_Virtuals"
+#     NPART=5
+#     PROCF="./proc_nInJj"
+#     MSCRIPT="./nInJj.m"
+#     TYPE="born"
+#
+# 2. generate and copy the amplitudes of purely non resonant diagrams:
+#     PROCDIR="neuIneuJ+jet/FormCalc_Reals"
+#     NPART=6
+#     PROCF="./proc_nInJjj_nr"
+#     MSCRIPT="./nInJjj.m"
+#     TYPE="real"
+#
+# 3. Modify the part "on-shell subroutines" if needed (i.e. modify the
+#     Squark indices Sfe6 and Sfe7).
+#
+# 4. generate and copy the amplitudes with possible on shell resonances
+#     PROCDIR="neuIneuJ+jet/FormCalc_Reals"
+#     NPART=6
+#     PROCF="./proc_nInJjj_os"
+#     MSCRIPT="./nInJjj_os.m"
+#     TYPE="realOS"
+#
+# 5. copy the regulated real processes (no creation of the amplitudes is
+#    needed, since the regulated reals were generated in step 3)
+#     PROCDIR="neuIneuJ+jet/FormCalc_Reals"
+#     NPART=6
+#     PROCF="./proc_nInJjj_reg"
+#     MSCRIPT=""   # leave this empty!
+#     TYPE="real"
+#
+# process list files
+# proc_nInJj      -> Born processes for p p > nI nJ j
+# proc_nInJjj     -> all Real processes for p p > nI nJ j (real = nr + os)
+# proc_nInJjj_nr  -> processes that don't have not resonant diagrams
+# proc_nInJjj_os  -> processes with resonant diagrams
+# proc_nInJjj_reg -> regulated real processes with resonant diagrams (os_reg, 
+#                    the same as proc_nInJjj, but without channel identifiers)
 
 # the name of the target process directory
-PROCDIR="neuIneuJ+jet/FormCalc_Virtuals"
+PROCDIR="neuIneuJ+jet/FormCalc_Reals"
 # where to copy the amplitudes to
 DEST=${PWD}/../../${PROCDIR}
 # number of particles (incoming + outgoing)
-NPART=5
+NPART=6
 # process list file
-PROCF="./proc_nInJj_simple"
+PROCF="./proc_nInJjj_os"
 # the name of Mathematica Scripts
-MSCRIPT="./nInJj.m"
+MSCRIPT="./nInJjj_os.m"
 # the type of the amplitudes (born, virt, real, realOS)
-TYPE="born"
+TYPE="realOS"
 
 ########################################################################
-#           -*- no editing is required below this line -*-             #
+#       -*- usually no editing is required below this line -*-         #
 ########################################################################
 
 # convert PDG numbers to particle names
@@ -117,6 +157,8 @@ function rename2() {
         sed -i -e "s/\<Cha4\>/2/g" $1
         sed -i -e "s/\<Cha5\>/2/g" $1
         sed -i -e "s/\<Cha6\>/2/g" $1
+        sed -i -e "s/\<Sfe6\>/2/g" $1
+        sed -i -e "s/\<Sfe7\>/2/g" $1
 }
 
 # read in the process list
@@ -183,9 +225,12 @@ for i in `seq 0 1 $((NPROC-1))`; do
     # generate the Amplitudes
     echo "removing ${PROC}_${TYPE}"
     rm -rf ${PROC}_${TYPE}
-    echo "calling Mathematica $MSCRIPT -script $MSCRIPT ${P[@]}"
-    #/Applications/Mathematica.app/Contents/MacOS/MathKernel -script $MSCRIPT ${P[@]}
-    MathKernel -script $MSCRIPT ${P[@]}
+    # if MSCRIPT is not empty, call the MathKernel
+    if [[ -n "$MSCRIPT" ]]; then
+        echo "calling Mathematica $MSCRIPT -script $MSCRIPT ${P[@]}"
+        #/Applications/Mathematica.app/Contents/MacOS/MathKernel -script $MSCRIPT ${P[@]}
+        MathKernel -script $MSCRIPT ${P[@]}
+    fi
     PROCESSES+=($PROC)
 done
 
@@ -198,9 +243,19 @@ for i in `seq 0 1 $((NPROC-1))`; do
     # entry which is "none"
     IFS=$',\r\n' command eval 'CHANNEL=(${CHANNELS[i]})'
     unset IFS
-    #echo "channels: ${CHANNEL[@]}"
-    #exit
+    NCHANNELS=0
+    MCHANNEL=()
     for j in ${CHANNEL[@]}; do
+        # the mathematica identifiers don't need the left and right identifier, truncate them
+        MCHANNEL+=($(echo "${CHANNEL[NCHANNELS]}" | tr -d "lr"))
+        # count the different channels starting with zero
+        NCHANNELS=$((1+NCHANNELS))
+    done
+    MCHANNEL=($(echo "${MCHANNEL[@]}" | xargs -n1 | sort -u | xargs))
+    #echo "$NCHANNELS channels: ${CHANNEL[@]}"
+    #echo "Mathematica identifiers: ${MCHANNEL[@]}"
+    #exit
+    for j in ${MCHANNEL[@]}; do
         if [[ $TYPE == "realOS" ]]; then
             APPEND="_${j}"
         fi
@@ -239,10 +294,11 @@ for i in `seq 0 1 $((NPROC-1))`; do
         cp ${DEST}/${PRE2}_squaredME/*.F ${DEST}/squaredME/
         cp ${DEST}/${PRE2}_squaredME/${PRE2}_vars.h ${DEST}/include
         rm -rf ${DEST}/${PRE2}_squaredME
-        
     done
 done
 
+# on-shell subroutines:
+# modify this if needed.
 # generate the subroutines to call the on-shell amplitudes
 if [[ $TYPE == "realOS" ]]; then
     echo
@@ -256,15 +312,36 @@ if [[ $TYPE == "realOS" ]]; then
         echo "      subroutine ${PRE2}_squaredME(ampos, helicities, flags)" > ${PRE2}_squaredME.F
         echo "        implicit none" >> ${PRE2}_squaredME.F
         echo "#include \"osres.h\"" >> ${PRE2}_squaredME.F
+        echo "#include \"indices.h\"" >> ${PRE2}_squaredME.F
         echo "        integer*8 helicities" >> ${PRE2}_squaredME.F
         echo "        integer flags,i,j,k" >> ${PRE2}_squaredME.F
         echo "        double precision ampos(2,cnosres),temp(2)" >> ${PRE2}_squaredME.F
         echo "        ampos(:,:) = 0D0" >> ${PRE2}_squaredME.F
         echo "        temp(:) = 0D0" >> ${PRE2}_squaredME.F
         echo "        do i=1,nosres" >> ${PRE2}_squaredME.F
+        CHIRALITY=()
+        NCHANNELS=0
         for j in ${CHANNEL[@]}; do
-            PRE1="${PROCESSES[i]}_${j}"
-            echo "          if(osresID(i).eq.\"${j}\") then" >> ${PRE2}_squaredME.F
+            # we need the chirality combination of the requested channel
+            CHIRALITY+=($(echo "${CHANNEL[NCHANNELS]}" | tr -d "0123456789"))
+            NCHANNELS=$((1+NCHANNELS))
+        done
+        for j in `seq 0 1 $((NCHANNELS-1))`; do
+            PRE1="${PROCESSES[i]}_${CHANNEL[j]}"
+            echo "          if(osresID(i).eq.\"${CHANNEL[j]}\") then" >> ${PRE2}_squaredME.F
+            if [[ "${CHIRALITY[j]}" == "ll" ]]; then
+                echo "            Sfe6=1" >> ${PRE2}_squaredME.F
+                echo "            Sfe7=1" >> ${PRE2}_squaredME.F
+            elif [[ "${CHIRALITY[j]}" == "lr" ]]; then
+                echo "            Sfe6=1" >> ${PRE2}_squaredME.F
+                echo "            Sfe7=2" >> ${PRE2}_squaredME.F
+            elif [[ "${CHIRALITY[j]}" == "rl" ]]; then
+                echo "            Sfe6=2" >> ${PRE2}_squaredME.F
+                echo "            Sfe7=1" >> ${PRE2}_squaredME.F
+            elif [[ "${CHIRALITY[j]}" == "rr" ]]; then
+                echo "            Sfe6=2" >> ${PRE2}_squaredME.F
+                echo "            Sfe7=2" >> ${PRE2}_squaredME.F
+            fi
             echo "            call ${PRE1}_SquaredME(temp, helicities, flags)" >> ${PRE2}_squaredME.F
             echo "            ampos(:,i) = temp(:)" >> ${PRE2}_squaredME.F
             echo "          endif" >> ${PRE2}_squaredME.F

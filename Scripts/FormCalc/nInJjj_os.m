@@ -20,6 +20,20 @@ ClearProcess[]
 time1 = SessionTime[]
 
 
+(*count the arguments of a function*)
+ClearAll[countArgs];
+SetAttributes[countArgs,{(*HoldAll,*)Listable}];
+countArgs[f_Symbol]:=With[{dv=DownValues[f]},countArgs[dv]];
+countArgs[Verbatim[HoldPattern][HoldPattern[f_Symbol[args___]]]:>_]:=countArgs[f[args]];
+countArgs[f_[Except[_Optional|_OptionsPattern|Verbatim[Pattern][_,_OptionsPattern]],rest___]]:={1,0,0}+countArgs[f[rest]];
+countArgs[f_[o__Optional,rest___]]:={0,Length[HoldComplete[o]],0}+countArgs[f[rest]];
+countArgs[f_[_OptionsPattern|Verbatim[Pattern][_,_OptionsPattern]]]:={0,0,1};
+countArgs[f_[]]:={0,0,0};
+
+countArgs[f[x,1]]
+countArgs[f[1,2,3]]
+
+
 (*rewrite the FieldMemberQ function to allow checks with leg numbers*)
 FieldMatchExtQ[{_. (fi:P$Generic)[___],exti1_,exti2_},{_. fi_,extj1_,extj2_} ] := And[MatchQ[exti1,extj1],MatchQ[exti2,extj2]]
 FieldMatchExtQ[{_. (fi:P$Generic)[i_, ___],exti1_,exti2_},{_. fi_[j_],extj1_,extj2_} ] := And[MatchQ[i, j],MatchQ[exti1,extj1],MatchQ[exti2,extj2]]
@@ -100,18 +114,19 @@ If[$CommandLine[[2]] === "-script",
 	 p[5] = ToString[$CommandLine[[8]]];
 	 p[6] = ToString[$CommandLine[[9]]];),
 	(*Else*)
-	(p[1] = "qubar";
-	 p[2] = "qd";
+	(p[1] = "d";
+	 p[2] = "dbar";
 	 p[3] = "nI";
 	 p[4] = "nJ";
-	 p[5] = "qd";
-	 p[6] = "qubar";)
+	 p[5] = "d";
+	 p[6] = "dbar";)
 ]
 
 CalcProcess = p[1]<>p[2]<>"_"<>p[3]<>p[4]<>p[5]<>p[6];
 name = CalcProcess;
 Print[CalcProcess]
 
+IOGluon = False;
 For[i=1, i<7, i++,
 If[p[i] === "qu", P[i] = F[3],
 If[p[i] === "qubar", P[i] = -F[3],
@@ -123,7 +138,7 @@ If[p[i] === "xI-", P[i] = F[12],
 If[p[i] === "xI+", P[i] = -F[12],
 If[p[i] === "xJ-", P[i] = F[12],
 If[p[i] === "xJ+", P[i] = -F[12],
-If[p[i] === "g", P[i] = V[5],
+If[p[i] === "g", (IOGluon = True; P[i] = V[5]),
 
 If[p[i] === "u", P[i] = F[3,{1}],
 If[p[i] === "ubar", P[i] = -F[3,{1}],
@@ -171,12 +186,19 @@ CKMC = IndexDelta;
 
 
 (*Options*)
+If[IOGluon,
+          (*no internal Weakinos*)
+          lastsel = {!F[11],!F[12]};
+          (*else*),
+          (*no internal Weakinos, but internal gluons or gluinos required*)
+          lastsel = {!F[11],!F[12],V[5]|F[15]};
+]
 SetOptions[InsertFields, Model -> "MSSMCT",
-           Restrictions -> {NoLightFHCoupling}(*No Fermion-Higgs coupling*),
+           (*No Fermion-Higgs coupling*)
+           Restrictions -> {NoLightFHCoupling},
            (*Exclude Top, Higgs, Neutrinos, massive Leptons, Sneutrinos, Sleptons*)
-		   ExcludeParticles -> {S[1|2|3|4|5|6|11|12], F[1|2](*, V[1|3]*)},
-		   (*No internal Weakinos*)
-		   LastSelections->{!F[11],!F[12]}];
+		   ExcludeParticles -> {S[1|2|3|4|5|6|11|12], F[1|2]},
+		   LastSelections -> lastsel];
 
 SetOptions[Paint, PaintLevel -> {Classes}, ColumnsXRows -> {4, 5}, AutoEdit -> False];
 
@@ -209,11 +231,15 @@ PowerOf[EL][OrderEL] := 1
 (*helpful function to extract parts of a Feynman amplitude*)
 Component[Amp_,n_]:=Replace[Amp,Amp[_][x__]:>{x}][[n]]
 
+(*helpful function to extract parts of a Feynman amplitude*)
+Component[Amp_,n_]:=Replace[Amp,Amp[_][x__]:>{x}][[n]]
+(*Get the object that gets replaced in a replacement list {a\[Rule]4} => a*)
+getReplacementHead[f_->_]:=f
+
 
 Print["On-Shell Diagrams"]
 
 tops = CreateTopologies[0, 2 -> 4];
-DoPaint[tops, "tops", FieldNumbers->True];
 (*ins = InsertFields[tops, process, InsertionLevel -> {Particles}];*)
 ins = InsertFields[tops, process];
 
@@ -238,16 +264,16 @@ Subexpr[];
 (*now, generate the amplitudes and insert the particle widths*)
 widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I (WSf[sfe,n1,n2]+WREG) MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
 
-real = CalcFeynAmp[CreateFeynAmp[ins3546]/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}, (*InvSimplify -> False*)];
-real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
-real = real//.{PowerOf[a_]:>PowerOf[a][1]};
+real = CalcFeynAmp[CreateFeynAmp[ins3546](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
+(*real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
+real = real//.{PowerOf[a_]:>PowerOf[a][1]};*)
 real3546 = real/.{Den[x_,y_]:>Den[x/.widths,y/.widths]};
 (*set the sfermion index in fortran program*)
 real3546Sfe = real//.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External], SumOver[Sfe9,i_]:>SumOver[Sfe9,i,External]}
 
-real = CalcFeynAmp[CreateFeynAmp[ins3645]/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}, (*InvSimplify -> False*)];
-real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
-real = real//.{PowerOf[a_]:>PowerOf[a][1]};
+real = CalcFeynAmp[CreateFeynAmp[ins3645](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
+(*real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
+real = real//.{PowerOf[a_]:>PowerOf[a][1]};*)
 real3645 = real/.{Den[x_,y_]:>Den[x/.widths,y/.widths]};
 (*set the sfermion index in fortran program*)
 real3645Sfe = real//.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External], SumOver[Sfe9,i_]:>SumOver[Sfe9,i,External]}
@@ -267,13 +293,13 @@ DoPaint[insNR, "realNR"];
 (*widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW};*)
 widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
 
-realNR = CalcFeynAmp[CreateFeynAmp[insNR]/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}, (*InvSimplify -> False*)];
-realNR = realNR//.{PowerOf[a_]^x_:>PowerOf[a][x]};
-realNR = realNR//.{PowerOf[a_]:>PowerOf[a][1]};
+realNR = CalcFeynAmp[CreateFeynAmp[insNR](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
+(*realNR = realNR//.{PowerOf[a_]^x_:>PowerOf[a][x]};
+realNR = realNR//.{PowerOf[a_]:>PowerOf[a][1]};*)
 realNR = realNR/.{Den[x_,y_]:>Den[x/.widths,y/.widths]}
 
 
-(*Write files for on-shell resonant reals, L35L46*)
+(*Write files for on-shell resonant reals, OS3546*)
 amps = {real3546Sfe};
 {realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
 
@@ -282,11 +308,23 @@ col = ColourME[All, realOS];
 abbr = OptimizeAbbr[Abbr[]];
 subexpr = OptimizeAbbr[Subexpr[]];
 
+(*fortran can't handle arrays with dimensionality greater than 7*)
+(*apply back the subexpressions with number of arguments greater than 6*)
+subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
+       {i,1,Length[subexpr]}]/.Null->Sequence[];
+realOS = realOS//.subexpr6;
+abbr = abbr//.subexpr6;
+
+(*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
+subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
+       {i,1,Length[subexpr]}]/.Null->Sequence[];
+subexpr = subexpr//.subexpr6;
+
 dir = SetupCodeDir[name<>"_realOS_3546", Drivers -> name <> "_drivers"];
 WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
 
 
-(*Write files for on-shell resonant reals, L36L45*)
+(*Write files for on-shell resonant reals, OS3645*)
 amps = {real3645Sfe};
 {realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
 
@@ -294,6 +332,18 @@ col = ColourME[All, realOS];
 
 abbr = OptimizeAbbr[Abbr[]];
 subexpr = OptimizeAbbr[Subexpr[]];
+
+(*fortran can't handle arrays with dimensionality greater than 7*)
+(*apply back the subexpressions with number of arguments greater than 6*)
+subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
+       {i,1,Length[subexpr]}]/.Null->Sequence[];
+realOS = realOS//.subexpr6;
+abbr = abbr//.subexpr6;
+
+(*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
+subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
+       {i,1,Length[subexpr]}]/.Null->Sequence[];
+subexpr = subexpr//.subexpr6;
 
 dir = SetupCodeDir[name<>"_realOS_3645", Drivers -> name <> "_drivers"];
 WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
@@ -312,6 +362,18 @@ col = ColourME[All, real];
 abbr = OptimizeAbbr[Abbr[]];
 subexpr = OptimizeAbbr[Subexpr[]];
 
+(*fortran can't handle arrays with dimensionality greater than 7*)
+(*apply back the subexpressions with number of arguments greater than 6*)
+subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
+       {i,1,Length[subexpr]}]/.Null->Sequence[];
+real = real//.subexpr6;
+abbr = abbr//.subexpr6;
+
+(*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
+subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
+       {i,1,Length[subexpr]}]/.Null->Sequence[];
+subexpr = subexpr//.subexpr6;
+
 dir = SetupCodeDir[name<>"_real", Drivers -> name <> "_drivers"];
 WriteSquaredME[real, {}, col, abbr, subexpr, dir];
 
@@ -324,6 +386,18 @@ col = ColourME[All, real];
 
 abbr = OptimizeAbbr[Abbr[]];
 subexpr = OptimizeAbbr[Subexpr[]];
+
+(*fortran can't handle arrays with dimensionality greater than 7*)
+(*apply back the subexpressions with number of arguments greater than 6*)
+subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
+       {i,1,Length[subexpr]}]/.Null->Sequence[];
+real = real//.subexpr6;
+abbr = abbr//.subexpr6;
+
+(*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
+subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
+       {i,1,Length[subexpr]}]/.Null->Sequence[];
+subexpr = subexpr//.subexpr6;
 
 dir = SetupCodeDir[name<>"_realNR", Drivers -> name <> "_drivers"];
 WriteSquaredME[real, {}, col, abbr, subexpr, dir];
