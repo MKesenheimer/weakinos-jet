@@ -135,6 +135,7 @@ c endif preprocessor condition "if defined(CHECK_FORM_MAD) || defined(MAD_BORN)"
           print*, "rel. err. = ", abs((fborn - mborn)/(fborn + mborn))
           print*, "fborn/mborn = ", fborn/mborn, mborn/fborn
           print*
+          stop
         endif
 #endif
 

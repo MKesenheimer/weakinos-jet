@@ -408,62 +408,6 @@ c sets the PhysPars.h parameters
           par_Zwidth = 0D0
         endif
         
-        ! extract particle types from process id
-        call decode_pair(lprup(1),id_fin1,id_fin2)
-#ifdef DEBUG
-        print*, "extracted from process ID: ", lprup(1)
-        print*, "the final state pair: ", id_fin1, ", ", id_fin2
-#endif
-        
-        select case(abs(id_fin1))
-          case (1000022) ! neutralino1
-            par_Fin1mass = dreal(Mass_MNeu(1))
-          case (1000023) ! neutralino2
-            par_Fin1mass = dreal(Mass_MNeu(2))
-          case (1000025) ! neutralino3
-            par_Fin1mass = dreal(Mass_MNeu(3))
-          case (1000035) ! neutralino4
-            par_Fin1mass = dreal(Mass_MNeu(4))
-          case (1000024) ! chargino1+
-            par_Fin1mass = dreal(Mass_MCha(1))
-          case (1000037) ! chargino2+
-            par_Fin1mass = dreal(Mass_MCha(2))
-          case (2000011) ! slepton+
-            par_Fin1mass = dreal(Mass_MSf(2,2,1))  
-          case default
-            print*, "encountered unknown particle ID for fin1 ",id_fin1
-            stop
-        end select
-        select case(abs(id_fin2))
-          case (1000022) ! neutralino1
-            par_Fin2mass = dreal(Mass_MNeu(1))
-          case (1000023) ! neutralino2
-            par_Fin2mass = dreal(Mass_MNeu(2))
-          case (1000025) ! neutralino3
-            par_Fin2mass = dreal(Mass_MNeu(3))
-          case (1000035) ! neutralino4
-            par_Fin2mass = dreal(Mass_MNeu(4))
-          case (1000024) ! chargino1-
-            par_Fin2mass = dreal(Mass_MCha(1))
-          case (1000037) ! chargino2-
-            par_Fin2mass = dreal(Mass_MCha(2))
-          case (2000011) ! slepton-
-            par_Fin2mass = dreal(Mass_MSf(2,2,1))
-          case default
-            print*, "encountered unknown particle ID for fin2", id_fin2
-            stop
-        end select
-        
-        if( (dabs(par_Fin1mass) + dabs(par_Fin2mass)) .lt. par_Zmass )
-     &  then
-          print*, "Final state masses low, W/Z decays might "//
-     &            "be more suitable"
-          stop
-        endif
-
-        ! mass of the jet (is used only for phsp)
-        par_Fin3mass = 0D0
-        
         ! Sfermion masses
         do i=1,2     ! left, right
           do j=1,4   ! type (nu,e,u,d)
@@ -475,7 +419,8 @@ c sets the PhysPars.h parameters
         
         ! Neutralino masses
         do i=1,4
-          par_MNeu(i)  = dreal(Mass_MNeu(i))
+          par_MNeu(i)  = dabs(dreal(Mass_MNeu(i)))
+          !par_MNeu(i)  = dreal(Mass_MNeu(i))
         enddo
         
         ! Chargino masses
@@ -566,6 +511,62 @@ c version.
           enddo
         enddo
 #endif
+
+! extract particle types from process id
+        call decode_pair(lprup(1),id_fin1,id_fin2)
+#ifdef DEBUG
+        print*, "extracted from process ID: ", lprup(1)
+        print*, "the final state pair: ", id_fin1, ", ", id_fin2
+#endif
+        
+        select case(abs(id_fin1))
+          case (1000022) ! neutralino1
+            par_Fin1mass = par_MNeu(1)
+          case (1000023) ! neutralino2
+            par_Fin1mass = par_MNeu(2)
+          case (1000025) ! neutralino3
+            par_Fin1mass = par_MNeu(3)
+          case (1000035) ! neutralino4
+            par_Fin1mass = par_MNeu(4)
+          case (1000024) ! chargino1
+            par_Fin1mass = par_MCha(1)
+          case (1000037) ! chargino2
+            par_Fin1mass = par_MCha(2)
+          case (2000011) ! slepton+
+            par_Fin1mass = par_MSf(2,2,1)
+          case default
+            print*, "encountered unknown particle ID for fin1 ",id_fin1
+            stop
+        end select
+        select case(abs(id_fin2))
+          case (1000022) ! neutralino1
+            par_Fin2mass = par_MNeu(1)
+          case (1000023) ! neutralino2
+            par_Fin2mass = par_MNeu(2)
+          case (1000025) ! neutralino3
+            par_Fin2mass = par_MNeu(3)
+          case (1000035) ! neutralino4
+            par_Fin2mass = par_MNeu(4)
+          case (1000024) ! chargino1
+            par_Fin2mass = par_MCha(1)
+          case (1000037) ! chargino2
+            par_Fin2mass = par_MCha(2)
+          case (2000011) ! slepton
+            par_Fin2mass = par_MSf(2,2,1)
+          case default
+            print*, "encountered unknown particle ID for fin2", id_fin2
+            stop
+        end select
+        
+        if( (dabs(par_Fin1mass) + dabs(par_Fin2mass)) .lt. par_Zmass )
+     &  then
+          print*, "Final state masses low, W/Z decays might "//
+     &            "be more suitable"
+          stop
+        endif
+
+        ! mass of the jet (is used only for phsp)
+        par_Fin3mass = 0D0
         
 #ifdef DEBUGQ
         print*, "sd_L width =", par_Sfwidth(1,4,1)
@@ -646,7 +647,6 @@ c MadGraphs couplings.f as well.
             enddo
           enddo
         enddo
-        !stop
        
         ! Neutralino masses
         do i=1,4 !neutralino index s
@@ -719,7 +719,7 @@ c MadGraphs couplings.f as well.
         ! SLHA name: NMix_ZNeu(n1,n2)
         do i=1,4 ! neutralino index n1
           do j=1,4 ! neutralino index n2
-            if(MNeu(i).lt.0D0) then ! check if we need a complex mixing matrix
+            if(dreal(Mass_MNeu(i)).lt.0D0) then ! check if we need a complex mixing matrix
               ZNeu(i,j) = ii*dcmplx(NMix_ZNeu(i,j))
             else
               ZNeu(i,j) = dcmplx(NMix_ZNeu(i,j))

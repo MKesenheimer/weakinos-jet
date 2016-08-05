@@ -15,13 +15,31 @@ DEST=${PWD}/../../${PROCDIR}
 ########################################################################
 
 echo
-echo "new Makefile objects:"
+echo "new Makefile objects (without OS-amplitudes):"
 # copy the output to your makefile
 echo "cd ${DEST}"
 cd ${DEST}
 COUNTER=0
 y=''
-for x in $(ls */*.F); do
+for x in $(ls */* | grep -v "3546" | grep -v "3645" | grep -v "realOS"); do
+  x=${x##*/}
+  let COUNTER=COUNTER+1
+  y=$y"  "$(echo $x | sed -e 's/\.F/\.o/g')
+  if [ $COUNTER -eq 3  ]; then
+    COUNTER=0
+     echo -e '\t'$y' \'
+     y=''
+  fi
+done
+echo -e '\t'$y
+echo
+echo "new Makefile objects (OS-amplitudes):"
+# copy the output to your makefile
+echo "cd ${DEST}"
+cd ${DEST}
+COUNTER=0
+y=''
+for x in $(ls squaredME/*realOS*.F squaredME/*3645* squaredME/*3546*); do
   x=${x##*/}
   let COUNTER=COUNTER+1
   y=$y"  "$(echo $x | sed -e 's/\.F/\.o/g')

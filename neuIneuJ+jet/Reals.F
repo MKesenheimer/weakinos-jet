@@ -82,7 +82,7 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
          p(           1 ,           1 ) =    0.0000000000000000D0     
          p(           2 ,           1 ) =    0.0000000000000000D0     
          p(           3 ,           1 ) =    2433.3361567772117D0     
-         rflav(           2 ) =           0
+         rflav(           2 ) =           4
          p(           0 ,           2 ) =    2433.3361567772117D0     
          p(           1 ,           2 ) =    0.0000000000000000D0     
          p(           2 ,           2 ) =    0.0000000000000000D0     
@@ -97,7 +97,7 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
          p(           1 ,           4 ) =   -101.96891144413289D0     
          p(           2 ,           4 ) =    839.58697824297883D0     
          p(           3 ,           4 ) =   -119.96988299311880D0     
-         rflav(           5 ) =           -4
+         rflav(           5 ) =           0
          p(           0 ,           5 ) =    729.35050620199615D0     
          p(           1 ,           5 ) =    479.26306163459833D0     
          p(           2 ,           5 ) =    206.30478262886419D0     
@@ -126,15 +126,17 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         call sreal_proc(p,rflav,ampM)
 
         if(2D0*dabs(ampM-amp)/(ampM+amp).gt.1d-4 .and. 
-     &    dsqrt(p(1,5)**2+p(2,5)**2).gt. 10D0) then
+     &    dsqrt(p(1,5)**2+p(2,5)**2).gt. 10D0 .and.
+     &    dsqrt(p(1,6)**2+p(2,6)**2).gt. 10D0) then
           print*
           print*,"rflav",rflav
-          print*,"pt",dsqrt(p(1,5)**2+p(2,5)**2)
+          print*,"pt5",dsqrt(p(1,5)**2+p(2,5)**2)
+          print*,"pt6",dsqrt(p(1,6)**2+p(2,6)**2)
           print*,"MadGraph",ampM
           print*,"FormCalc",amp
           print*,"rel error",2D0*dabs(ampM-amp)/(ampM+amp)
           print*,"frac",ampM/amp, amp/ampM
-          !stop
+          stop
         endif
 #endif
         

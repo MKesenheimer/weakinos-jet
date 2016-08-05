@@ -52,9 +52,9 @@ DEST=${PWD}/../../${PROCDIR}
 # number of particles (incoming + outgoing)
 NPART=6
 # process list file
-PROCF="./proc_nInJjj_reg"
+PROCF="./proc_nInJjj_test"
 # the name of Mathematica Scripts
-MSCRIPT=
+MSCRIPT="./nInJjj.m"
 # the type of the amplitudes (born, virt, real, realOS)
 TYPE="real"
 
@@ -363,13 +363,31 @@ if [[ $TYPE == "realOS" ]]; then
 fi
 
 echo
-echo "new Makefile objects:"
+echo "new Makefile objects (without OS-amplitudes):"
 # copy the output to your makefile
 echo "cd ${DEST}"
 cd ${DEST}
 COUNTER=0
 y=''
-for x in $(ls */*.F); do
+for x in $(ls */* | grep -v "3546" | grep -v "3645" | grep -v "realOS"); do
+  x=${x##*/}
+  let COUNTER=COUNTER+1
+  y=$y"  "$(echo $x | sed -e 's/\.F/\.o/g')
+  if [ $COUNTER -eq 3  ]; then
+    COUNTER=0
+     echo -e '\t'$y' \'
+     y=''
+  fi
+done
+echo -e '\t'$y
+echo
+echo "new Makefile objects (OS-amplitudes):"
+# copy the output to your makefile
+echo "cd ${DEST}"
+cd ${DEST}
+COUNTER=0
+y=''
+for x in $(ls squaredME/*realOS*.F squaredME/*3645* squaredME/*3546*); do
   x=${x##*/}
   let COUNTER=COUNTER+1
   y=$y"  "$(echo $x | sed -e 's/\.F/\.o/g')
