@@ -120,7 +120,7 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         ! get the formcalc real amplitudes
         call getRealAmps(p,rflav,amp)
 
-#ifdef DEBUG
+#ifdef DEBUGQ
         !print*,rflav
         ! get the real amplitude from MadGraph...
         call sreal_proc(p,rflav,ampM)

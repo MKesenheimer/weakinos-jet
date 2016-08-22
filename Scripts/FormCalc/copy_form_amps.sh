@@ -369,7 +369,7 @@ echo "cd ${DEST}"
 cd ${DEST}
 COUNTER=0
 y=''
-for x in $(ls */* | grep -v "3546" | grep -v "3645" | grep -v "realOS"); do
+for x in $(ls squaredME/* | grep -v "3546" | grep -v "3645" | grep -v "realOS"); do
   x=${x##*/}
   let COUNTER=COUNTER+1
   y=$y"  "$(echo $x | sed -e 's/\.F/\.o/g')
