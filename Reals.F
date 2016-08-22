@@ -27,11 +27,7 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         ! status
         logical verbose
         logical init_reals
-        data init_reals/.true./
-        
-        ! MadGraph
-        double precision ampM
-        
+        data init_reals/.true./        
         ! kinematics
         double precision s12, sij
         ! breit-wigner ratios
@@ -48,6 +44,9 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         ! function to calculate the squared momentum sum
         double precision momsum3sq, momsum2sq
         external momsum2sq, momsum3sq
+
+        ! MadGraph (TODO: remove)
+        double precision ampM
         
 #ifdef DEBUGQ
 #define DEBUG1
@@ -65,80 +64,13 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         else
           verbose = .false.
         endif
-        
-#ifdef DEBUGQ
-        do i=1,nlegreal
-          print*,"        rflav(",i,") = ",rflav(i)
-          do j=0,3
-            print*,"        p(",j,",",i,") = ", p(j,i)
-          enddo
-        enddo
-        stop
-#endif
 
-#ifdef DEBUGQ
-         rflav(           1 ) =           -4
-         p(           0 ,           1 ) =    2433.3361567772117D0
-         p(           1 ,           1 ) =    0.0000000000000000D0     
-         p(           2 ,           1 ) =    0.0000000000000000D0     
-         p(           3 ,           1 ) =    2433.3361567772117D0     
-         rflav(           2 ) =           4
-         p(           0 ,           2 ) =    2433.3361567772117D0     
-         p(           1 ,           2 ) =    0.0000000000000000D0     
-         p(           2 ,           2 ) =    0.0000000000000000D0     
-         p(           3 ,           2 ) =   -2433.3361567772117D0     
-         rflav(           3 ) =      1000022
-         p(           0 ,           3 ) =    2059.0938579668482D0     
-         p(           1 ,           3 ) =   -740.52967816895693D0     
-         p(           2 ,           3 ) =   -1915.0108015757655D0     
-         p(           3 ,           3 ) =   -121.93588030733588D0     
-         rflav(           4 ) =      1000023
-         p(           0 ,           4 ) =    873.20653133569544D0     
-         p(           1 ,           4 ) =   -101.96891144413289D0     
-         p(           2 ,           4 ) =    839.58697824297883D0     
-         p(           3 ,           4 ) =   -119.96988299311880D0     
-         rflav(           5 ) =           0
-         p(           0 ,           5 ) =    729.35050620199615D0     
-         p(           1 ,           5 ) =    479.26306163459833D0     
-         p(           2 ,           5 ) =    206.30478262886419D0     
-         p(           3 ,           5 ) =   -509.60515628690052D0     
-         rflav(           6 ) =           0
-         p(           0 ,           6 ) =    1205.0214180498836D0     
-         p(           1 ,           6 ) =    363.23552797849158D0     
-         p(           2 ,           6 ) =    869.11904070392245D0     
-         p(           3 ,           6 ) =    751.51091958735549D0
-#endif
         ! calculate the couplings for this PS point
         call set_ebe_couplings
-        
-#ifndef NEGLECTBMASS
-          print*,"ERROR: FormCalc massive b-quark amplitudes not yet "
-                 //"implemented."
-          stop
-#endif
 
         ! get the formcalc real amplitudes
         call getRealAmps(p,rflav,amp)
 
-#ifdef DEBUGQ
-        !print*,rflav
-        ! get the real amplitude from MadGraph...
-        call sreal_proc(p,rflav,ampM)
-
-        if(2D0*dabs(ampM-amp)/(ampM+amp).gt.1d-4 .and. 
-     &    dsqrt(p(1,5)**2+p(2,5)**2).gt. 10D0 .and.
-     &    dsqrt(p(1,6)**2+p(2,6)**2).gt. 10D0) then
-          print*
-          print*,"rflav",rflav
-          print*,"pt5",dsqrt(p(1,5)**2+p(2,5)**2)
-          print*,"pt6",dsqrt(p(1,6)**2+p(2,6)**2)
-          print*,"MadGraph",ampM
-          print*,"FormCalc",amp
-          print*,"rel error",2D0*dabs(ampM-amp)/(ampM+amp)
-          print*,"frac",ampM/amp, amp/ampM
-          stop
-        endif
-#endif
         
 !         ! subtract the on shell contributions
 !         if((rflav(1).eq.0 .or. rflav(2).eq.0).and.(rflav(5).ne.0)) then
@@ -167,11 +99,6 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
 !             fc_result(1) = fc_result(1) - ampCT
 !           enddo
 !         endif
-        
-#ifdef DEBUGQ
-        ! MadGraph call to real amplitudes
-        call sreal_proc(p,rflav,amp)
-#endif
 
         ! Cancel as/(2pi) associated with amp2. It will be put back by real_ampsq
         ampreal = amp/(st_alpha/(2d0*pi))
