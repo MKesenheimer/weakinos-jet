@@ -13,6 +13,10 @@
 
 #include "qdbarqdbar_nInJqdbarqdbar_vars.h"
 
+#ifdef DEBUGQ
+        print*,WREG
+        stop
+#endif
 
         MatSUN(1,1) = 9
 

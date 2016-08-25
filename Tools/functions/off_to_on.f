@@ -52,10 +52,11 @@ c
 #include "osres.h"
         ! momenta from PS-generator, on-shell momenta
         double precision p(0:3,nexternal),p_OS(0:3,nexternal)
-        ! mass at resonance, mass of particle i,j,k
+        ! mass at resonance, mass of particle i,j,k,l
         double precision mij, mkl, mi, mj, mk, ml
-        ! if you choose i=3, j=5, k=4: particle 3 and 5 will generate
-        ! the resonance with the intermediate particle with mass mij
+        ! if you choose i=3, j=5, k=4, l=6:
+        ! particle 3&5 and 4&6 will generate the resonances with the 
+        ! intermediate particle with mass mij and mkl
         integer i,j,k,l
         ! external functions
         double precision kaellenSqrt

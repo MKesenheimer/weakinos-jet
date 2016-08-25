@@ -44,12 +44,12 @@ If[$CommandLine[[2]] === "-script",
 	 p[5] = ToString[$CommandLine[[8]]];
 	 p[6] = ToString[$CommandLine[[9]]];),
 	(*Else*)
-	(p[1] = "qubar";
-	 p[2] = "g";
+	(p[1] = "qdbar";
+	 p[2] = "qdbar";
 	 p[3] = "nI";
 	 p[4] = "nJ";
-	 p[5] = "qubar";
-	 p[6] = "g";)
+	 p[5] = "qdbar";
+	 p[6] = "qdbar";)
 ]
 
 CalcProcess = p[1]<>p[2]<>"_"<>p[3]<>p[4]<>p[5]<>p[6];
@@ -173,7 +173,7 @@ DoPaint[ins, "real"];
 (*sort the amplitude by powers of the coupling constants*)
 (*Uncomment the option ",InvSimplify\[Rule]False" for Mac OS X => *)
 (*FormCalc fails to generate the Form code in function InvSimplify*)
-real = CalcFeynAmp[CreateFeynAmp[ins](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}(*, InvSimplify->False*)*)];
+real = CalcFeynAmp[CreateFeynAmp[ins](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*), InvSimplify->False];
 (*Export["real."<>name<>".wdx",real,"WDX"]*)
 (*apply max coupling rules*)
 (*real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};

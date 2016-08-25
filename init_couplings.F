@@ -888,7 +888,7 @@ c set the paramaters for treating the on-shell resonances
         wreg = ewi*m_avrg ! Prospino like definition
         
 #ifdef DEBUG
-        wreg = 0D0
+        wreg = 1D50
 #endif
       end
 c############### end subroutine set_osres_params #######################

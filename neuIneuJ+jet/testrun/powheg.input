@@ -23,7 +23,7 @@ chainA '1000023->1000022,23;23->11,-11;'
 chainB '1000023->1000022,23;23->13,-13;'
 
 ! physics
-incomingflavors 4    ! (default 5) number of incoming flavor
+incomingflavors 5    ! (default 5) number of incoming flavor
 
 ! by default, these parameters are set according to the SLHA input file.
 ! however, they may be set to explicit values here.
@@ -58,9 +58,9 @@ lhans2 10042        ! CTeQ6l1 PDF LO, pdf set for hadron 2 (LHA numbering)
 use-old-grid    0    ! if 1 use old grid if file pwggrids.dat is present (0 regenerate)
 use-old-ubound  0    ! if 1 use norm of upper bounding function stored in pwgubound.dat if present (0 regenerate)
 
-ncall1   200        ! number of calls for initializing the integration grid
+ncall1   20000        ! number of calls for initializing the integration grid
 itmx1    4           ! number of iterations for initializing the integration grid
-ncall2   200        ! number of calls for computing the integral and finding upper bound
+ncall2   20000        ! number of calls for computing the integral and finding upper bound
 itmx2    4           ! number of iterations for computing the integral and finding upper bound
 ncall1osres 20000    ! number of calls for initializing the integration grid of on-shell resonances (only required for DSUB_II)
 itmx1osres  6        ! number of iterations for initializing the integration grid of on-shell resonances (only required for DSUB_II)
@@ -78,8 +78,8 @@ numevts  0           ! number of events to be generated
 ! OPTIONAL PARAMETERS
 runningscale   0     ! (default 0) use ref. scale=virtuality Q (default 0, use fixed scale)
 fakevirtuals  1     ! (default 0) generate the grid with fake virtuals
-#softtest      1     ! (default 0) check soft singularities
-#colltest      1     ! (default 0) check collinear singularities
+softtest      1     ! (default 0) check soft singularities
+colltest      1     ! (default 0) check collinear singularities
 renscfact     1d0    ! (default 1d0) ren scale factor: muren  = muref * renscfact
 facscfact     1d0    ! (default 1d0) fac scale factor: mufact = muref * facscfact
 #bornonly       1     ! (default 0) if 1 do Born only

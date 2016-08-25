@@ -273,21 +273,21 @@ c     set process id using slepton types
           enddo
         enddo
 
-#ifdef DEBUGQ
+#ifdef DEBUG
         flst_nborn = 1
-        flst_born(1,1) = -2
-        flst_born(2,1) = 0
+        flst_born(1,1) = 1
+        flst_born(2,1) = -1
         flst_born(3,1) = 1000022
-        flst_born(4,1) = 1000022
-        flst_born(5,1) = -2
+        flst_born(4,1) = 1000023
+        flst_born(5,1) = 0
 
         flst_nreal = 1
         flst_real(1,1) = -1
-        flst_real(2,1) =  0
+        flst_real(2,1) = -1
         flst_real(3,1) = 1000022
-        flst_real(4,1) = 1000022
-        flst_real(5,1) = 0
-        flst_real(6,1) = 0
+        flst_real(4,1) = 1000023
+        flst_real(5,1) = -1
+        flst_real(6,1) = -1
 #endif
         
 #ifdef DEBUG
