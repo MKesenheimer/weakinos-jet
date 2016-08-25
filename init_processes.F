@@ -327,15 +327,6 @@ c if the real-amplitudes are resonant split into a regular part and the
 c IR-divergent parts: this routine provides the corresponding flavor 
 c lists and stores it in flst_osres
 c this list should not be confused with flst_realres.
-c dl35: left handed up-type squark gets resonant with particles 3 & 5
-c dl45: left handed up-type squark gets resonant with particles 4 & 5
-c ul35: left handed down-type squark gets resonant with particles 3 & 5
-c ul45: left handed down-type squark gets resonant with particles 4 & 5
-c (only required for neutralino pair production:)
-c dr35: right handed up-type squark gets resonant with particles 3 & 5
-c dr45: right handed up-type squark gets resonant with particles 4 & 5
-c ur35: right handed down-type squark gets resonant with particles 3 & 5
-c ur45: right handed down-type squark gets resonant with particles 4 & 5
       subroutine init_processes_osres
         implicit none
 #include "nlegborn.h"
@@ -355,130 +346,12 @@ c ur45: right handed down-type squark gets resonant with particles 4 & 5
             f(i2) = flst_real(i2,i1)
           enddo
           if(f(5).ne.0 .and. f(6).ne.0) then
-            flst_nosres=flst_nosres+1 
+            flst_nosres = flst_nosres+1 
             do i2=1,nlegreal
-              flst_osres(i2,flst_nosres) = flst_real(i2,i1) ! copy existing real
+              ! copy existing reals
+              flst_osres(i2,flst_nosres) = flst_real(i2,i1)
             enddo
           endif
         enddo
-
-        ! the human readable identifiers (TODO)
-        osresID(1) = "dl35"
-        osresID(2) = "dl45"
-        osresID(3) = "ul35"
-        osresID(4) = "ul45"
-        osresID(5) = "dl36"
-        osresID(6) = "dl46"
-        osresID(7) = "ul36"
-        osresID(8) = "ul46"
-#ifdef NINJ_JET
-        osresID(9)  = "dr35"
-        osresID(10) = "dr45"
-        osresID(11) = "ur35"
-        osresID(12) = "ur45"
-        osresID(13) = "dr36"
-        osresID(14) = "dr46"
-        osresID(15) = "ur36"
-        osresID(16) = "ur46"
-#endif
-
-        do k=1,cnosres
-          if(len(osresID(k)).gt.4) then
-            print*,"error in init_processes.F: array osresID not set"
-            print*,"correctly. Increase field length."
-            stop
-          endif
-        enddo
-
-        ! save which final state particles get resonant in an 
-        ! additional array. This will be helpful to generate the 
-        ! on-shell real phase space and to calculate the matrix elements
-        ! in subroutine setosresreal
-        osreslegs(1,1) = 3
-        osreslegs(1,2) = 5
-        osreslegs(1,3) = 4
-        osreslegs(1,4) = 6
-        
-        osreslegs(2,1) = 4
-        osreslegs(2,2) = 5
-        osreslegs(2,3) = 3
-        osreslegs(2,4) = 6
-        
-        osreslegs(3,1) = 3
-        osreslegs(3,2) = 5
-        osreslegs(3,3) = 4
-        osreslegs(3,4) = 6
-        
-        osreslegs(4,1) = 4
-        osreslegs(4,2) = 5
-        osreslegs(4,3) = 3
-        osreslegs(4,4) = 6
-
-
-        osreslegs(5,1) = 3
-        osreslegs(5,2) = 6
-        osreslegs(5,3) = 4
-        osreslegs(5,4) = 5
-        
-        osreslegs(6,1) = 4
-        osreslegs(6,2) = 6
-        osreslegs(6,3) = 3
-        osreslegs(6,4) = 5
-        
-        osreslegs(7,1) = 3
-        osreslegs(7,2) = 6
-        osreslegs(7,3) = 4
-        osreslegs(7,4) = 5
-        
-        osreslegs(8,1) = 4
-        osreslegs(8,2) = 6
-        osreslegs(8,3) = 3
-        osreslegs(8,4) = 5
-
-#ifdef NINJ_JET
-        osreslegs(9,1) = 3
-        osreslegs(9,2) = 5
-        osreslegs(9,3) = 4
-        osreslegs(9,4) = 6
-        
-        osreslegs(10,1) = 4
-        osreslegs(10,2) = 5
-        osreslegs(10,3) = 3
-        osreslegs(10,4) = 6
-        
-        osreslegs(11,1) = 3
-        osreslegs(11,2) = 5
-        osreslegs(11,3) = 4
-        osreslegs(11,4) = 6
-        
-        osreslegs(12,1) = 4
-        osreslegs(12,2) = 5
-        osreslegs(12,3) = 3
-        osreslegs(12,4) = 6
-
-
-        osreslegs(13,1) = 3
-        osreslegs(13,2) = 6
-        osreslegs(13,3) = 4
-        osreslegs(13,4) = 5
-        
-        osreslegs(14,1) = 4
-        osreslegs(14,2) = 6
-        osreslegs(14,3) = 3
-        osreslegs(14,4) = 5
-        
-        osreslegs(15,1) = 3
-        osreslegs(15,2) = 6
-        osreslegs(15,3) = 4
-        osreslegs(15,4) = 5
-        
-        osreslegs(16,1) = 4
-        osreslegs(16,2) = 6
-        osreslegs(16,3) = 3
-        osreslegs(16,4) = 5
-#endif
-
-        ! the rest of the variables defined in osres.h are set
-        ! in init_couplings.f
       end
 c############### end subroutine init_osres #############################

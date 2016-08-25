@@ -126,17 +126,9 @@ DEBUG = -ggdb -pg -D DEBUG -D DEBUGV
 USRFLAGS += -D FORM_BORN
 
 ## Treatment of quark masses and squark widths
-# The current version uses vanishing masses for the incoming quarks.
-# Whether to neglect the squark widths or use the complex mass scheme
-# (CMS) to regularize on-shell resonances (default).
+# The current version uses vanishing masses for incoming quarks.
+# if you wish to use finite bottom mass, comment the following line.
 USRFLAGS += -D NEGLECTBMASS
-#USRFLAGS += -D NEGLECT_SWIDTH
-#USRFLAGS += -D COMPLEXMASS
-# If you want to change these flags, you probably have to change a lot
-# for the FormCalc amplitudes. For example, the b-quark amplitudes are 
-# currently calculated by crossing relations from d-quark amplitudes.
-# Since FormCalc does not use squark widths, you have to introduce
-# squark widths by hand.
 
 ## Subtraction schemes
 # There are divergences originating from on-shell produced squark lines
@@ -270,7 +262,8 @@ endif
 ### USER Files ###
 USER = Born.o Born_phsp.o Reals.o Virtuals.o 	\
        init_processes.o init_couplings.o Reals_osres.o 		\
-       Real_osres_phsp.o phi1_2.o sigosres.o version.o FormCalc.o
+       Real_osres_phsp.o phi1_2.o sigosres.o version.o FormCalc.o \
+       set_channel.o
 
 ### Functions in Tools/functions/
 FUNC = funcprocess.o Print.o funcbasic.o off_to_on.o

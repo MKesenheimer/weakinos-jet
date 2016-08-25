@@ -5,53 +5,42 @@ c global definitions for treating the on-shell resonant diagrams
 c for the case of weakino pair-production, there are eight resonances
 c but if you have less resonances you can simply initialize the variables
 c defined here in a different way.
-c                        mi
-c                        / 
-c   ____      !         /
-c  |    |  sij=mij^2   /
-c  | s  |--------------
-c  |____|\             \
-c         \             \
-c          \             \
-c          mk            mj
+c              pi
+c            /
+c           /
+c          /---- pj
+c   ____  /    !
+c  |    |/ sij = mij**2
+c  | s  |      !
+c  |____|\ skl = mkl**2
+c         \
+c          \---- pk
+c           \
+c            \
+c              pl
 
 c definitions
-        ! store the number of resonances here
+        ! store the number of on-shell resonances here
         integer cnosres ! nosres, constants
-        ! dummy variable to initialize the array
-#ifdef NINJ_JET
-        parameter (cnosres=16)
-#else
         parameter (cnosres=8)
-#endif
-        ! this is the human readable array which stores the id of the 
-        ! on-shell resonance, e.g. "ul35", "dl35".
-        ! this variable is set in init_processes
-        character*4 osresID(cnosres)
-        ! variable to determine the channel
-        character*4 chan
         
-        ! the mass array of the on-shell resonant particles
-        double precision osresM(cnosres)
-        double precision m_avrg
         ! the width of the on-shell resonant particle (regulator)
         ! this must be set in init_couplings.f
         double precision wreg
 
-        ! store in an additional array which legs get resonant
-        ! e.g. osreslegs(3,1) = 3 and osreslegs(3,2) = 5 means that for 
-        ! resonance with ID osresID = 3 (dl35) the resonant particle 
-        ! (left handed down-type squark) decays into the final state 
-        ! particles with numbers 3 & 5
-        ! osreslegs(chan,1): first resonant particle (index is i used in our code)
-        ! osreslegs(chan,2): second resonant particle (index is j used in our code)
-        ! osreslegs(chan,3): spectator 1 (index is k used in our code)
-        ! osreslegs(chan,4): spectator 2 (index is l used in our code)
-        integer osreslegs(cnosres,1:4)
-        
-        common/c_onshell/ osresM, m_avrg, wreg  ! doubles
-        common/c_onshell/ osresID               ! characters
 
+        ! variables which get defined in set_channel(flav,ichan)
+        ! and are used to determine the on-shell divergence
+        integer osres_i, osres_j, osres_k, osres_l
+        integer osres_sfeij, osres_sfekl
+        double precision osres_mi, osres_mj, osres_mk, osres_ml
+        double precision osres_mij, osres_mkl
+
+        common/c_onshell/ osres_i, osres_j, osres_k, osres_l
+        common/c_onshell/ osres_sfeij, osres_sfekl
+        common/c_onshell/ osres_mi, osres_mj, osres_mk, osres_ml
+        common/c_onshell/ osres_mij, osres_mkl
+        common/c_onshell/ wreg
 
 #if defined(DSUB_I) || defined(DSUB_II) || defined(DSUB_II_TEST)
 #define WDLR wreg

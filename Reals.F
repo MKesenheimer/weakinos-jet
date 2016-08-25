@@ -29,13 +29,12 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         logical init_reals
         data init_reals/.true./        
         ! kinematics
-        double precision s12, sij
+        double precision s12, sij, skl
+        ! mass at resonance, mass of particle i,j,k,l
+        double precision mij, mkl, mi, mj, mk, ml
+        integer i,j,k,l
         ! breit-wigner ratios
         double precision bwratio
-        ! masses
-        double precision mij, mi, mj, mk
-        ! indices
-        integer n,i,j,k
         ! local variables
         double precision ampCT
         ! jacobian for the on-shell terms
@@ -74,27 +73,32 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         
 !         ! subtract the on shell contributions
 !         if((rflav(1).eq.0 .or. rflav(2).eq.0).and.(rflav(5).ne.0)) then
-!           do n=1,nosres          
-!             ! set the channel-related indices i,j,k and masses mi,mj,mk,mij
-!             call set_channel(osresID(n),i,j,k,mi,mj,mk,mij)
-!             ! in case a weakino mass is negative
-!             mi = dabs(mi)
-!             mj = dabs(mj)
-!             mk = dabs(mk)
-!             mij = dabs(mij)
+!           do ichan=1,nosres          
+!             ! set the channel-related indices osres_i,osres_j,osres_k and masses osres_mi,osres_mj,osres_mk,osres_mij
+!             call set_channel(ichan,rflav)
+!             i = osres_i
+!             j = osres_j
+!             k = osres_k
+!             l = osres_l
+!             mi = osres_mi
+!             mj = osres_mj
+!             mk = osres_mk
+!             ml = osres_ml
+!             mij = osres_mij
+!             mkl = osres_mkl
 !             ! calculate the invariants
 !             s12 = momsum2sq(p(0:3,1),p(0:3,2)) ! invariant mass of particle 1 + 2
-!             sij = momsum2sq(p(0:3,i),p(0:3,j)) ! invariant mass of particle i + j
+!             sij = momsum2sq(p(0:3,osres_i),p(0:3,osres_j)) ! invariant mass of particle i + j
 !             ampCT = 0D0
 !             ! Prospino scheme 1211.0286
-!             if( (s12.ge.(mij+mk)**2) .and. (mij.ge.(mi+mj)) ) then
-!               bwratio = (mij*wreg)**2/((sij-mij**2)**2+(mij*wreg)**2) ! calculate the ratio of the breit wigner functions
+!             if( (s12.ge.(osres_mij+osres_mk)**2) .and. (osres_mij.ge.(osres_mi+osres_mj)) ) then
+!               bwratio = (osres_mij*wreg)**2/((sij-osres_mij**2)**2+(osres_mij*wreg)**2) ! calculate the ratio of the breit wigner functions
 !               !bwratio = 0D0
-!               call off_to_on(p,osresID(n),p_os)                      ! off_to_on the momenta p to on-shell momenta p_os
-!               call getROSAmps(p_os,rflav,osresID(n),
+!               call off_to_on(p,ichan,p_os)                      ! off_to_on the momenta p to on-shell momenta p_os
+!               call getROSAmps(p_os,rflav,ichan,
 !      &                                  helicities,flags,ampos)
 !               ampCT = bwratio*ampos(1)                                ! multiply with the breit-wigner ratio
-!               ampCT = corrfac(s12,mi,mj,mk,sij,mij)*ampCT             ! rescale the counter term to fit into the new ps
+!               ampCT = corrfac(s12,osres_mi,osres_mj,osres_mk,sij,osres_mij)*ampCT             ! rescale the counter term to fit into the new ps
 !             endif
 !             fc_result(1) = fc_result(1) - ampCT
 !           enddo

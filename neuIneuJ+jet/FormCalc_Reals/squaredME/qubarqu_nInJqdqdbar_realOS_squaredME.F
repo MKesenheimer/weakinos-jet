@@ -1,60 +1,45 @@
-      subroutine qubarqu_nInJqdqdbar_realOS_squaredME(ampos, helicities, flags)
+      subroutine qubarqu_nInJqdqdbar_realOS_squaredME(fc_result, ichan, helicities, flags)
         implicit none
 #include "osres.h"
 #include "indices.h"
         integer*8 helicities
-        integer flags,i,j,k
-        double precision ampos(2,cnosres),temp(2)
-        ampos(:,:) = 0D0
-        temp(:) = 0D0
-        do i=1,cnosres
-          if(osresID(i).eq."l35l46") then
-            SfeSQ1=1
-            SfeSQ2=1
-            call qubarqu_nInJqdqdbar_3546_SquaredME(temp, helicities, flags)
-            ampos(:,i) = temp(:)
-          endif
-          if(osresID(i).eq."r35l46") then
-            SfeSQ1=2
-            SfeSQ2=1
-            call qubarqu_nInJqdqdbar_3645_SquaredME(temp, helicities, flags)
-            ampos(:,i) = temp(:)
-          endif
-          if(osresID(i).eq."l35r46") then
-            SfeSQ1=1
-            SfeSQ2=2
-            call qubarqu_nInJqdqdbar_3546_SquaredME(temp, helicities, flags)
-            ampos(:,i) = temp(:)
-          endif
-          if(osresID(i).eq."r35r46") then
-            SfeSQ1=2
-            SfeSQ2=2
-            call qubarqu_nInJqdqdbar_3546_SquaredME(temp, helicities, flags)
-            ampos(:,i) = temp(:)
-          endif
-          if(osresID(i).eq."l36l45") then
-            SfeSQ1=1
-            SfeSQ2=1
-            call qubarqu_nInJqdqdbar_3645_SquaredME(temp, helicities, flags)
-            ampos(:,i) = temp(:)
-          endif
-          if(osresID(i).eq."r36l45") then
-            SfeSQ1=2
-            SfeSQ2=1
-            call qubarqu_nInJqdqdbar_3645_SquaredME(temp, helicities, flags)
-            ampos(:,i) = temp(:)
-          endif
-          if(osresID(i).eq."l36r45") then
-            SfeSQ1=1
-            SfeSQ2=2
-            call qubarqu_nInJqdqdbar_3546_SquaredME(temp, helicities, flags)
-            ampos(:,i) = temp(:)
-          endif
-          if(osresID(i).eq."r36r45") then
-            SfeSQ1=2
-            SfeSQ2=2
-            call qubarqu_nInJqdqdbar_3546_SquaredME(temp, helicities, flags)
-            ampos(:,i) = temp(:)
-          endif
-        enddo
+        integer flags,i,ichan
+        double precision fc_result(2)
+        fc_result(:) = 0D0
+        ! sfeij and sfekl are defined in set_channel
+        SfeSQ1 = osres_sfeij
+        SFeSQ2 = osres_sfekl
+        if(ichan.eq.1) then
+          call qubarqu_nInJqdqdbar_3546_SquaredME(fc_result, helicities, flags)
+          goto 10
+        endif
+        if(ichan.eq.2) then
+          call qubarqu_nInJqdqdbar_3546_SquaredME(fc_result, helicities, flags)
+          goto 10
+        endif
+        if(ichan.eq.3) then
+          call qubarqu_nInJqdqdbar_3546_SquaredME(fc_result, helicities, flags)
+          goto 10
+        endif
+        if(ichan.eq.4) then
+          call qubarqu_nInJqdqdbar_3546_SquaredME(fc_result, helicities, flags)
+          goto 10
+        endif
+        if(ichan.eq.5) then
+          call qubarqu_nInJqdqdbar_3645_SquaredME(fc_result, helicities, flags)
+          goto 10
+        endif
+        if(ichan.eq.6) then
+          call qubarqu_nInJqdqdbar_3645_SquaredME(fc_result, helicities, flags)
+          goto 10
+        endif
+        if(ichan.eq.7) then
+          call qubarqu_nInJqdqdbar_3645_SquaredME(fc_result, helicities, flags)
+          goto 10
+        endif
+        if(ichan.eq.8) then
+          call qubarqu_nInJqdqdbar_3645_SquaredME(fc_result, helicities, flags)
+          goto 10
+        endif
+ 10     continue
       end

@@ -13,16 +13,15 @@ c selects the resonance specified in init_processes.F.
 c Only perform a tan-mapping if there is a (possible) resonance, 
 c otherwise: flat sampling in sij
 c this subroutine uses subroutines defined in phi1_2.f (with boosts).
-      subroutine real_osres_phsp(xx,ichan)
+      subroutine real_osres_phsp(xx,flav,ichan)
         implicit none
-        
 #include "PhysPars.h"
 #include "nlegborn.h"
 #include "pwhg_kn.h"
 #include "osres.h"
-
         !include integration over sij -> 6 integration-variables
         double precision xx(ndiminteg)
+        integer ichan, flav(nlegreal)
         ! x1-x2 phase space
         integer psgen
         double precision tau,taumin,taumax
@@ -30,11 +29,12 @@ c this subroutine uses subroutines defined in phi1_2.f (with boosts).
         ! mandelstams
         double precision s12
         double precision sijkmin, sijmin
+        ! mass at resonance, mass of particle i,j,k,l
+        double precision mij, mkl, mi, mj, mk, ml
+        integer i,j,k,l
         ! jacobian
         double precision jac
-        double precision minmass,mi,mj,mk,ml,mij,mkl
-        ! indices
-        integer ichan,i,j,k,l
+        double precision minmass
         ! variables for pwg routines phi1_2
         double precision pijk(0:3),pij(0:3),pkl(0:3),p12(0:3)
         ! boost
@@ -51,8 +51,18 @@ c this subroutine uses subroutines defined in phi1_2.f (with boosts).
           stop
         endif
 
-        ! set the channel-related indices i,j,k and masses mi,mj,mk,mij
-        call set_channel(osresID(ichan),i,j,k,l,mi,mj,mk,ml,mij)
+        ! set the channel-related variables
+        call set_channel(flav,ichan)
+        i = osres_i
+        j = osres_j
+        k = osres_k
+        l = osres_l
+        mi = osres_mi
+        mj = osres_mj
+        mk = osres_mk
+        ml = osres_ml
+        mij = osres_mij
+        mkl = osres_mkl
         
         ! reset the jacobians
         jac = 1D0
@@ -85,20 +95,20 @@ c this subroutine uses subroutines defined in phi1_2.f (with boosts).
         ! phase space for decay p12 -> pl + pijk
         ! R2phsp_s2(psgen,x2,xth,xphi,s2min,m1,bwmass,bwwidth,p0,p1,p2,jac)
         ! without phi integration
-        call R2phsp_s2(0,xx(3),xx(4),0D0,sijkmin,ml,0D0,0D0,p12(:),
-     &                  kn_cmpreal(:,l),pijk(:),jac)
+        call R2phsp_s2(0,xx(3),xx(4),0D0,sijkmin,ml,0D0,0D0,
+     &                 p12(:),kn_cmpreal(:,l),pijk(:),jac)
         kn_jacreal = kn_jacreal*jac
         
         ! phase space for decay pijk -> pk + pij (1 = with breit wigner)
         ! with phi integration
-        call R2phsp_s2(1,xx(5),xx(6),xx(7),sijmin,mk,mij,WREG,pijk(:),
-     &                  kn_cmpreal(:,k),pij(:),jac)
+        call R2phsp_s2(1,xx(5),xx(6),xx(7),sijmin,mk,mij,
+     &                 WREG,pijk(:),kn_cmpreal(:,k),pij(:),jac)
         kn_jacreal = kn_jacreal*jac
 
         ! phase space for decay pij -> pi + pj
         ! R2phsp(xth,xphi,m1,m2,p0,p1,p2,jac)
-        call R2phsp(xx(8),xx(9),mi,mj,pij(:),kn_cmpreal(:,i),
-     &               kn_cmpreal(:,j),jac)
+        call R2phsp(xx(8),xx(9),mi,mj,pij(:),
+     &              kn_cmpreal(:,i),kn_cmpreal(:,j),jac)
         kn_jacreal = kn_jacreal*jac
         
         ! physical phase space jacobian ((2*Pi)**(3n-4), n=4)

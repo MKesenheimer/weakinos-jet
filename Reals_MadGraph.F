@@ -85,7 +85,7 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
           do ichan=1,nosres
             amposres = 0D0
             ! TODO
-            !call setosresreal(p,flavs,osresID(ichan),amposres)
+            !call setosresreal(p,flavs,ichan,amposres)
             ! Note: amposres has the factor as/(2pi)
             ! included, so cancel as/(2pi) here
             ampreal = ampreal + amposres/(st_alpha/(2d0*pi))

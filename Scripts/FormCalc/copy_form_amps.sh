@@ -52,11 +52,11 @@ DEST=${PWD}/../../${PROCDIR}
 # number of particles (incoming + outgoing)
 NPART=6
 # process list file
-PROCF="./proc_nInJjj_test"
+PROCF="./proc_nInJjj_os"
 # the name of Mathematica Scripts
-MSCRIPT="./nInJjj.m"
+MSCRIPT=""
 # the type of the amplitudes (born, virt, real, realOS)
-TYPE="real"
+TYPE="realOS"
 
 ########################################################################
 #       -*- usually no editing is required below this line -*-         #
@@ -232,78 +232,78 @@ for i in `seq 0 1 $((NPROC-1))`; do
     PROCESSES+=($PROC)
 done
 
-# commented: do this by hand
-#echo "Generating directories..."
-#mkdir ${DEST}/squaredME/
-
-for i in `seq 0 1 $((NPROC-1))`; do
-    # if no on-shell resonant channels were defined CHANNEL has only one
-    # entry which is "none"
-    IFS=$',\r\n' command eval 'CHANNEL=(${CHANNELS[i]})'
-    unset IFS
-    NCHANNELS=0
-    MCHANNEL=()
-    for j in ${CHANNEL[@]}; do
-        # the mathematica identifiers don't need the left and right identifier, truncate them
-        MCHANNEL+=($(echo "${CHANNEL[NCHANNELS]}" | tr -d "lr"))
-        # count the different channels starting with zero
-        NCHANNELS=$((1+NCHANNELS))
-    done
-    MCHANNEL=($(echo "${MCHANNEL[@]}" | xargs -n1 | sort -u | xargs))
-    #echo "$NCHANNELS channels: ${CHANNEL[@]}"
-    #echo "Mathematica identifiers: ${MCHANNEL[@]}"
-    #exit
-    for j in ${MCHANNEL[@]}; do
-        if [[ $TYPE == "realOS" ]]; then
-            APPEND="_${j}"
-        fi
-        PRE1="${PROCESSES[i]}_${TYPE}${APPEND}"
-        PRE2="${PROCESSES[i]}${APPEND}"
-        
-        echo
-        echo "${PROCESSES[i]} ${TYPE}${APPEND}"
-        echo "PRE1 = $PRE1"
-        echo "PRE2 = $PRE2"
-        
-        #echo "cleaning old files..."
-        #echo $(ls ${DEST}/squaredME/${PRE2}*.F)
-        #echo $(ls ${DEST}/include/${PRE2}_vars.h)
-        #rm ${DEST}/squaredME/${PRE2}*.F
-        #rm ${DEST}/include/${PRE2}_vars.h
-        
-        echo "copying new files..."
-        mkdir -p ${DEST}/${PRE2}_squaredME/
-        cp ${WORKINGDIR}/${PRE1}/squaredme/*.F ${DEST}/${PRE2}_squaredME/
-        cp ${WORKINGDIR}/${PRE1}/squaredme/vars.h ${DEST}/${PRE2}_squaredME/${PRE2}_vars.h
-        
-        
-        echo "renaming files..."
-        echo "cd ${DEST}/${PRE2}_squaredME"
-        cd ${DEST}/${PRE2}_squaredME
-        for file in *.F; do
-            # rename files, append prefix
-            echo "$file -> ${PRE2}_${file}"
-            mv "$file" "${PRE2}_${file}"
-        done
-        for file in *.F; do
-            # rename the variables
-            echo "renaming variables in $file..."
-            rename $file "${PRE2}_"
-            if [[ $TYPE == "realOS" ]]; then
-                sed -i -e "s/\<Sfe7\>/SfeSQ1/g" $file
-                sed -i -e "s/\<Sfe8\>/SfeSQ2/g" $file
-            fi
-        done
-        rename2 ${PRE2}_vars.h
-        if [[ $TYPE == "realOS" ]]; then
-            sed -i -e "s/\<Sfe7\>/2/g" ${PRE2}_vars.h
-            sed -i -e "s/\<Sfe8\>/2/g" ${PRE2}_vars.h
-        fi
-        cp ${DEST}/${PRE2}_squaredME/*.F ${DEST}/squaredME/
-        cp ${DEST}/${PRE2}_squaredME/${PRE2}_vars.h ${DEST}/include
-        rm -rf ${DEST}/${PRE2}_squaredME
-    done
-done
+# # commented: do this by hand
+# #echo "Generating directories..."
+# #mkdir ${DEST}/squaredME/
+# 
+# for i in `seq 0 1 $((NPROC-1))`; do
+#     # if no on-shell resonant channels were defined CHANNEL has only one
+#     # entry which is "none"
+#     IFS=$',\r\n' command eval 'CHANNEL=(${CHANNELS[i]})'
+#     unset IFS
+#     NCHANNELS=0
+#     MCHANNEL=()
+#     for j in ${CHANNEL[@]}; do
+#         # the mathematica identifiers don't need the left and right identifier, truncate them
+#         MCHANNEL+=($(echo "${CHANNEL[NCHANNELS]}" | tr -d "lr"))
+#         # count the different channels starting with zero
+#         NCHANNELS=$((1+NCHANNELS))
+#     done
+#     MCHANNEL=($(echo "${MCHANNEL[@]}" | xargs -n1 | sort -u | xargs))
+#     #echo "$NCHANNELS channels: ${CHANNEL[@]}"
+#     #echo "Mathematica identifiers: ${MCHANNEL[@]}"
+#     #exit
+#     for j in ${MCHANNEL[@]}; do
+#         if [[ $TYPE == "realOS" ]]; then
+#             APPEND="_${j}"
+#         fi
+#         PRE1="${PROCESSES[i]}_${TYPE}${APPEND}"
+#         PRE2="${PROCESSES[i]}${APPEND}"
+#         
+#         echo
+#         echo "${PROCESSES[i]} ${TYPE}${APPEND}"
+#         echo "PRE1 = $PRE1"
+#         echo "PRE2 = $PRE2"
+#         
+#         #echo "cleaning old files..."
+#         #echo $(ls ${DEST}/squaredME/${PRE2}*.F)
+#         #echo $(ls ${DEST}/include/${PRE2}_vars.h)
+#         #rm ${DEST}/squaredME/${PRE2}*.F
+#         #rm ${DEST}/include/${PRE2}_vars.h
+#         
+#         echo "copying new files..."
+#         mkdir -p ${DEST}/${PRE2}_squaredME/
+#         cp ${WORKINGDIR}/${PRE1}/squaredme/*.F ${DEST}/${PRE2}_squaredME/
+#         cp ${WORKINGDIR}/${PRE1}/squaredme/vars.h ${DEST}/${PRE2}_squaredME/${PRE2}_vars.h
+#         
+#         
+#         echo "renaming files..."
+#         echo "cd ${DEST}/${PRE2}_squaredME"
+#         cd ${DEST}/${PRE2}_squaredME
+#         for file in *.F; do
+#             # rename files, append prefix
+#             echo "$file -> ${PRE2}_${file}"
+#             mv "$file" "${PRE2}_${file}"
+#         done
+#         for file in *.F; do
+#             # rename the variables
+#             echo "renaming variables in $file..."
+#             rename $file "${PRE2}_"
+#             if [[ $TYPE == "realOS" ]]; then
+#                 sed -i -e "s/\<Sfe7\>/SfeSQ1/g" $file
+#                 sed -i -e "s/\<Sfe8\>/SfeSQ2/g" $file
+#             fi
+#         done
+#         rename2 ${PRE2}_vars.h
+#         if [[ $TYPE == "realOS" ]]; then
+#             sed -i -e "s/\<Sfe7\>/2/g" ${PRE2}_vars.h
+#             sed -i -e "s/\<Sfe8\>/2/g" ${PRE2}_vars.h
+#         fi
+#         cp ${DEST}/${PRE2}_squaredME/*.F ${DEST}/squaredME/
+#         cp ${DEST}/${PRE2}_squaredME/${PRE2}_vars.h ${DEST}/include
+#         rm -rf ${DEST}/${PRE2}_squaredME
+#     done
+# done
 
 # on-shell subroutines:
 # modify this if needed.
@@ -317,46 +317,31 @@ if [[ $TYPE == "realOS" ]]; then
         unset IFS
         PRE2="${PROCESSES[i]}_${TYPE}"
         
-        echo "      subroutine ${PRE2}_squaredME(ampos, helicities, flags)" > ${PRE2}_squaredME.F
+        echo "      subroutine ${PRE2}_squaredME(fc_result, ichan, helicities, flags)" > ${PRE2}_squaredME.F
         echo "        implicit none" >> ${PRE2}_squaredME.F
         echo "#include \"osres.h\"" >> ${PRE2}_squaredME.F
         echo "#include \"indices.h\"" >> ${PRE2}_squaredME.F
         echo "        integer*8 helicities" >> ${PRE2}_squaredME.F
-        echo "        integer flags,i,j,k" >> ${PRE2}_squaredME.F
-        echo "        double precision ampos(2,cnosres),temp(2)" >> ${PRE2}_squaredME.F
-        echo "        ampos(:,:) = 0D0" >> ${PRE2}_squaredME.F
-        echo "        temp(:) = 0D0" >> ${PRE2}_squaredME.F
-        echo "        do i=1,cnosres" >> ${PRE2}_squaredME.F
-        CHIRALITY=()
+        echo "        integer flags,i,ichan" >> ${PRE2}_squaredME.F
+        echo "        double precision fc_result(2)" >> ${PRE2}_squaredME.F
+        echo "        fc_result(:) = 0D0" >> ${PRE2}_squaredME.F
+        echo "        ! sfeij and sfekl are defined in set_channel" >> ${PRE2}_squaredME.F
+        echo "        SfeSQ1 = osres_sfeij" >> ${PRE2}_squaredME.F
+        echo "        SFeSQ2 = osres_sfekl" >> ${PRE2}_squaredME.F
         NCHANNELS=0
         for j in ${CHANNEL[@]}; do
-            # we need the chirality combination of the requested channel
-            CHIRALITY+=($(echo "${CHANNEL[NCHANNELS]}" | tr -d "0123456789"))
             # the mathematica identifiers don't need the left and right identifier, truncate them
             MCHANNEL+=($(echo "${CHANNEL[NCHANNELS]}" | tr -d "lr"))
             NCHANNELS=$((1+NCHANNELS))
         done
         for j in `seq 0 1 $((NCHANNELS-1))`; do
             PRE1="${PROCESSES[i]}_${MCHANNEL[j]}"
-            echo "          if(osresID(i).eq.\"${CHANNEL[j]}\") then" >> ${PRE2}_squaredME.F
-            if [[ "${CHIRALITY[j]}" == "ll" ]]; then
-                echo "            SfeSQ1=1" >> ${PRE2}_squaredME.F
-                echo "            SfeSQ2=1" >> ${PRE2}_squaredME.F
-            elif [[ "${CHIRALITY[j]}" == "lr" ]]; then
-                echo "            SfeSQ1=1" >> ${PRE2}_squaredME.F
-                echo "            SfeSQ2=2" >> ${PRE2}_squaredME.F
-            elif [[ "${CHIRALITY[j]}" == "rl" ]]; then
-                echo "            SfeSQ1=2" >> ${PRE2}_squaredME.F
-                echo "            SfeSQ2=1" >> ${PRE2}_squaredME.F
-            elif [[ "${CHIRALITY[j]}" == "rr" ]]; then
-                echo "            SfeSQ1=2" >> ${PRE2}_squaredME.F
-                echo "            SfeSQ2=2" >> ${PRE2}_squaredME.F
-            fi
-            echo "            call ${PRE1}_SquaredME(temp, helicities, flags)" >> ${PRE2}_squaredME.F
-            echo "            ampos(:,i) = temp(:)" >> ${PRE2}_squaredME.F
-            echo "          endif" >> ${PRE2}_squaredME.F
+            echo "        if(ichan.eq.$((j+1))) then" >> ${PRE2}_squaredME.F
+            echo "          call ${PRE1}_SquaredME(fc_result, helicities, flags)" >> ${PRE2}_squaredME.F
+            echo "          goto 10" >> ${PRE2}_squaredME.F
+            echo "        endif" >> ${PRE2}_squaredME.F
         done
-        echo "        enddo" >> ${PRE2}_squaredME.F
+        echo " 10     continue" >> ${PRE2}_squaredME.F
         echo "      end" >> ${PRE2}_squaredME.F
     done
     echo "done."

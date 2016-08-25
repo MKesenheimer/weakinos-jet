@@ -82,7 +82,7 @@ c requires encoded process ID in lprup(1)
         ! set general MadGraph couplings
         call set_general_couplings(id_fin1,id_fin2)
         ! set the parameters for treating the on-shell resonances
-        call set_osres_params
+        call set_os_regulator
 
 
         ! Print out all parameters if you want
@@ -590,12 +590,6 @@ c sets the FormCalc parameters
         double precision powheginput, kronecker
         external powheginput, kronecker
         integer i,j,k,l ! loops
-        real ident(4,4) ! identity matrix
-        real eps        ! auxilliary variable for checking unitarity of ZNeu
-        real cP1        ! (checkLimitPlus 1) upper limit for checking unitarity
-        real cM1        ! (checkLimitMinus 1) lower limit -"-
-        real cP0        ! (checkLimitPlus 0) upper limit for checking unitarity
-        real cM0        ! (checkLimitMinus 0) lower limit -"-
         ! Avoid multiple calls to this subroutine.
         logical called
         data called/.false./
@@ -629,21 +623,13 @@ c MadGraphs couplings.f as well.
         CKM(3,3) = 0.99915d0
 #endif
 
-        ! Squark masses and widths
-        ! note: The squark widths are not needed in the current 
-        ! implementation of FormCalc. They will be initialized here
-        ! anyway.
+        ! Slepton/Squark masses and widths
         do i=1,2 ! sfermion index s
           do j=1,4 ! type (nu,e,u,d)
             do k=1,3 ! generation
               WSf(i,j,k)  = par_Sfwidth(i,j,k)
               MSf(i,j,k)  = par_MSf(i,j,k)
-#ifdef COMPLEXMASS
-              MSf2(i,j,k) = MSf(i,j,k)**2-ii*WSf(i,j,k)*MSf(i,j,k)
-#else
               MSf2(i,j,k) = MSf(i,j,k)**2
-#endif
-              !print*,MSf2(i,j,k)
             enddo
           enddo
         enddo
@@ -841,54 +827,37 @@ c ddbar_SquaredME.F and uubar_SquaredME.F.
       end
 c############### end init_susy_restore subroutine ######################
 
-c############### subroutine set_osres_params ###########################
-c set the paramaters for treating the on-shell resonances
-      subroutine set_osres_params
+c############### subroutine set_os_regulator ###########################
+c set the on shell regulator wreg
+      subroutine set_os_regulator
         implicit none
 #include "PhysPars.h"
 #include "osres.h"
-        integer i
-        double precision ewi
+        integer i,j,k,nmass
+        double precision ewi,m_avrg
         double precision powheginput
         external powheginput
 
-        osresM(1) = mdl
-        osresM(2) = mdl
-        osresM(3) = mul
-        osresM(4) = mul
-
-        osresM(5) = mdl
-        osresM(6) = mdl
-        osresM(7) = mul
-        osresM(8) = mul
-
-#ifdef NINJ_JET
-        osresM(9)  = mdr
-        osresM(10) = mdr
-        osresM(11) = mur
-        osresM(12) = mur
-
-        osresM(13) = mdr
-        osresM(14) = mdr
-        osresM(15) = mur
-        osresM(16) = mur
-#endif
-
+        nmass = 0
         m_avrg = 0D0
-        do i=1,cnosres
-          m_avrg = m_avrg + osresM(i)
+        do i=1,2 ! sfermion index s
+          do j=3,4 ! type (nu,e,u,d)
+            do k=1,3 ! generation
+              m_avrg = m_avrg + MSf(i,j,k)
+              nmass = nmass + 1
+            enddo
+          enddo
         enddo
-        m_avrg = m_avrg/cnosres
+        m_avrg = m_avrg/nmass
 
-        ! set the width of the immediate particle (regulator wreg)
         ewi  = 1D-2 ! (default)
         if(powheginput("#ewi").gt.0) then
           ewi = powheginput("ewi")
         endif
         wreg = ewi*m_avrg ! Prospino like definition
         
-#ifdef DEBUG
+#ifdef DEBUGQ
         wreg = 1D50
 #endif
       end
-c############### end subroutine set_osres_params #######################
+c############### end subroutine set_os_regulator #######################

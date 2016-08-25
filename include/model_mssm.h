@@ -11,11 +11,7 @@ c############### model_mssm.h ##########################################
         ComplexType USf(2,2,4,3)
         RealType SB, SB2, CB, CB2, TB, TB2, C2B, S2B
         RealType MSf(2,4,3)
-#ifdef COMPLEXMASS
-        ComplexType MSf2(2,4,3)
-#else
         RealType MSf2(2,4,3)
-#endif
         RealType MGl, MGl2
         RealType WSf(2,4,3), WGl
         ComplexType Mino3

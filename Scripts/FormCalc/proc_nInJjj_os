@@ -1,5 +1,5 @@
-           g            g         nI     nJ           qd           qdbar    l35l46,r35r46,l36l45,r36r45
-           g            g         nI     nJ           qu           qubar    l35l46,r35r46,l36l45,r36r45
+           g            g         nI     nJ           qd           qdbar    l35l46,r35l46,l35r46,r35r46,l36l45,r36l45,l36r45,r36r45
+           g            g         nI     nJ           qu           qubar    l35l46,r35l46,l35r46,r35r46,l36l45,r36l45,l36r45,r36r45
            qd           qd        nI     nJ           qd           qd       l35l46,r35l46,l35r46,r35r46,l36l45,r36l45,l36r45,r36r45
            qd           qu        nI     nJ           qd           qu       l35l46,r35l46,l35r46,r35r46,l36l45,r36l45,l36r45,r36r45
            qd           qu        nI     nJ           qu           qd       l35l46,r35l46,l35r46,r35r46,l36l45,r36l45,l36r45,r36r45

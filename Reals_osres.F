@@ -11,7 +11,7 @@ c by on-shell counter terms) evaluated at a phase space point where
 c sij = mij**2 holds.
 c the corrfac factor accounts for the restriction of the pahse-space and
 c modifies the jacobian.
-      subroutine  setosresreal(p,rflav,chan,ampreal)
+      subroutine  setosresreal(p,rflav,ichan,ampreal)
         implicit none
 
 #include "PhysPars.h"
@@ -25,6 +25,7 @@ c modifies the jacobian.
         double precision p(0:3,nlegreal),p_in(0:3,nlegreal)
         double precision p_os(0:3,nlegreal)
         integer rflav(nlegreal), dflav(nlegreal)
+        integer ichan
         ! the real amplitudes
         double precision ampreal
         ! local variables
@@ -37,12 +38,11 @@ c modifies the jacobian.
         external corrfac
         ! kinematics
         double precision s12, sij, skl
+        ! mass at resonance, mass of particle i,j,k,l
+        double precision mij, mkl, mi, mj, mk, ml
+        integer i,j,k,l
         ! breit-wigner ratios
         double precision bwratio
-        ! masses
-        double precision mij, mkl, mi, mj, mk, ml
-        ! indices
-        integer i,j,k,l
         ! check 4-momentum conservation
         logical lresult
         ! initialization variables
@@ -74,6 +74,7 @@ c modifies the jacobian.
         endif
         
         ! store flavor list and momenta
+        ! CHANGE! TODO
         dflav = rflav
         p_in(:,:) = p(:,:)
         
@@ -85,17 +86,6 @@ c modifies the jacobian.
            print*,"the current Real subprocess is ",rflav
            print*,"check your settings in init_processes"
            stop
-        endif
-        
-        if( chan.ne."ul35" .and. chan.ne."ul45" .and. 
-     &      chan.ne."ur35" .and. chan.ne."ur45" .and.
-     &      chan.ne."dl35" .and. chan.ne."dl45" .and. 
-     &      chan.ne."dr35" .and. chan.ne."dr45" .and.
-     &      chan.ne."allr ") then
-          print*,"wrong channel number: ", chan
-          print*,"choose ul35, ul45, ur35, ur45, dl35, dl45, dr35, "//
-     &           "dr45 or allr."     
-          stop
         endif
         
 #ifndef DSUB_II_TEST
@@ -117,13 +107,22 @@ c modifies the jacobian.
         call set_ebe_couplings
         
         ! set the channel-related indices i,j,k and masses mi,mj,mk,mij
-        call set_channel(chan,i,j,k,l,mi,mj,mk,ml,mij)
+        call set_channel(ichan,rflav)
+        i = osres_i
+        j = osres_j
+        k = osres_k
+        l = osres_l
+        mi = osres_mi
+        mj = osres_mj
+        mk = osres_mk
+        ml = osres_ml
+        mij = osres_mij
+        mkl = osres_mkl
 
         ! calculate the invariants
         s12  = momsum2sq(p(0:3,1),p(0:3,2)) ! invariant mass of particle 1 + 2
         sij  = momsum2sq(p(0:3,i),p(0:3,j)) ! invariant mass of particle i + j
         skl  = momsum2sq(p(0:3,k),p(0:3,l)) ! invariant mass of particle k + l
-        mkl  = dsqrt(skl)
 
         ! this is |M_R(res)|**2 (still with on-shell resonances)
         !call sreal_proc_res(p,rflav,chan,amp)

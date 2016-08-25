@@ -1,8 +1,8 @@
 c############### subroutine off_to_on ##################################
 c remaps p to on-shell momenta
 c sufficient for diagram subtraction scheme
-c this subroutine is in principal a 3 particle phase-space generator 
-c with an additional condition, namely sij = mij**2
+c this subroutine is in principal a 4 particle phase-space generator 
+c with an additional condition, namely sij = mij**2 and skl = mkl**2
 c
 c kinematics:
 c              pi
@@ -30,6 +30,17 @@ c        /
 c       /
 c      pj'
 c
+c restframe Rkl:
+c
+c            pk'
+c            /
+c           / 
+c          /_theta_ _ _ _
+c         /
+c        /
+c       /
+c      pl'
+c
 c
 c
 c laboratory frame Rh (hadronic restframe)
@@ -44,7 +55,7 @@ c        /   \
 c       /     \
 c      pk     pl
 c
-      subroutine off_to_on(p,chan,p_OS)
+      subroutine off_to_on(p,flav,ichan,p_OS)
         implicit none
 #include "nexternal.inc"
 #include "nlegborn.h"
@@ -52,11 +63,10 @@ c
 #include "osres.h"
         ! momenta from PS-generator, on-shell momenta
         double precision p(0:3,nexternal),p_OS(0:3,nexternal)
+        integer ichan
+        integer flav(nlegreal)
         ! mass at resonance, mass of particle i,j,k,l
         double precision mij, mkl, mi, mj, mk, ml
-        ! if you choose i=3, j=5, k=4, l=6:
-        ! particle 3&5 and 4&6 will generate the resonances with the 
-        ! intermediate particle with mass mij and mkl
         integer i,j,k,l
         ! external functions
         double precision kaellenSqrt
@@ -91,7 +101,7 @@ c
         ! small parameters
         double precision eps
         parameter(eps=1D-8)
-        ! angles of particle i and j
+        ! angles
         double precision cosQ, phi
         ! abs. momentum in x-y-plane
         double precision pxy
@@ -99,7 +109,17 @@ c
         logical lresult
         
         ! set the channel-related indices i,j,k,l and masses mi,mj,mk,ml,mij
-        call set_channel(chan,i,j,k,l,mi,mj,mk,ml,mij)
+        call set_channel(flav,ichan)
+        i = osres_i
+        j = osres_j
+        k = osres_k
+        l = osres_l
+        mi = osres_mi
+        mj = osres_mj
+        mk = osres_mk
+        ml = osres_ml
+        mij = osres_mij
+        mkl = osres_mkl
         
         if( nexternal .ne. 6) then
           print*, "error in subroutine off_to_on"
@@ -115,7 +135,6 @@ c
         sqrtS = dsqrt(S)
         sij   = momsum2sq(p(:,i),p(:,j))
         skl   = momsum2sq(p(:,k),p(:,l))
-        mkl   = dsqrt(skl)
         
         ! check if theta function was properly used
         if(sqrtS - mij - mkl .lt. 0D0) then
@@ -412,94 +431,3 @@ c rescaled by this correction factor
 #endif
       end  
 c############### end function corrfac ##################################
-
-c############### subroutine set_channel ################################
-c this subroutine sets the indices i,j,k,l and the masses mi,mj,mk,ml,
-c and mij in dependence of the chan-identifier (NOTE: chan must be a
-c character-string). The arrays osresID, osreslegs and osresM must
-c be initialized in init_couplings and in init_processes.
-c
-c              pi
-c            /
-c           /
-c          /---- pj
-c   ____  /    !
-c  |    |/ sij = mij**2
-c  | s  |      !
-c  |____|\ skl = mkl**2
-c         \
-c          \---- pk
-c           \
-c            \
-c              pl
-c
-      subroutine set_channel(chan,i,j,k,l,mi,mj,mk,ml,mij)
-        implicit none
-#include "PhysPars.h"
-#include "nexternal.inc"
-#include "nlegborn.h"
-#include "pwhg_math.h"
-#include "pwhg_kn.h"
-#include "osres.h"
-        ! indices
-        integer i,j,k,l, ichan
-        ! masses
-        double precision mij,mkl, mi, mj, mk, ml
-        double precision momsq, momsum2sq, momsum3sq, dotp
-        external momsq, momsum2sq, momsum3sq, dotp
-        integer levi_civita
-        external levi_civita
-        
-        do ichan=1,cnosres
-          if(chan.eq.osresID(ichan)) then
-            i = osreslegs(ichan,1)
-            j = osreslegs(ichan,2)
-            k = osreslegs(ichan,3)
-            l = osreslegs(ichan,4)
-            mij = osresM(ichan)
-            if(i.eq.3 .and. j.eq.5 .and. k.eq.4 .and. l.eq.6) then
-              mi = par_Fin1mass
-              mj = 0D0
-              mk = par_Fin2mass
-              ml = 0D0
-            elseif(i.eq.3 .and. j.eq.6 .and. k.eq.4 .and. l.eq.5) then
-              mi = par_Fin1mass
-              mj = 0D0
-              mk = par_Fin2mass
-              ml = 0D0
-            else
-              print*,"error in set_channel: i,j,k,l",i,j,k,l
-              stop
-            endif
-            goto 10
-          endif
-        enddo
-
- 10     continue
-        ! in case a weakino masses are negative
-        mi = dabs(mi)
-        mj = dabs(mj)
-        mk = dabs(mk)
-        ml = dabs(ml)
-        mij = dabs(mij)
-
-        ! checks
-        if(i.eq.0 .or. j.eq.0 .or. k.eq.0 .or. l.eq.0) then
-          print*,"chan ",chan
-          print*,"osreslegs(1)",osreslegs(:,1)
-          print*,"osreslegs(2)",osreslegs(:,2)
-          print*,"osreslegs(3)",osreslegs(:,3)
-          print*,"osreslegs(4)",osreslegs(:,4)
-          print*,"set_channel: got strang values for i,j,k,l:",i,j,k,l
-          stop
-        endif
-        
-#ifdef DEBUGQ
-        print*,"chan",chan
-        print*,"i,j,k,l",i,j,k,l
-        print*,"mij,mi,mj,mk,ml",mij,mi,mj,mk,ml
-        print*,"par_FinMasses",par_Fin1mass,par_Fin2mass
-        !stop
-#endif
-      end
-c############### end subroutine set_channel ############################

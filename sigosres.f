@@ -20,7 +20,6 @@ c return value: output, 0: success; 1: retval0 was not computed
 c                   (this function does not support an avatar function)
       function sigosres(xx,ww1,ifirst,imode,retval,retval0)
         implicit none
-
 #include "nlegborn.h"
 #include "pwhg_flst.h"
 #include "pwhg_kn.h"
@@ -28,16 +27,15 @@ c                   (this function does not support an avatar function)
 #include "pwhg_flg.h"
 #include "pwhg_math.h"
 #include "PhysPars.h"
-
 c keep this order
 #include "osres.h"
 #include "pwhg_flst_add.h"
 #include "pwhg_rad_add.h"
-
         integer sigosres,imode
         double precision retval,retval0,xx(ndiminteg),ww1
         double precision yy(ndiminteg)
         integer ifirst,ichan,idi
+        integer lset
         double precision xjac
         ! temporary results for calc. of resonant contributions
         double precision sigosres_contr
@@ -51,7 +49,6 @@ c keep this order
      
         if(ifirst.eq.2) then
           call addupweightsosres(retval)
-          !retval = rad_reg_tot+rad_damp_rem_tot
           if(flg_nlotest) call pwhgaccumup
           return
         endif
@@ -65,29 +62,27 @@ c keep this order
         ! reset result
         retval = 0D0
 
+        ! TODO: use smartsig for sigosres_contr
+    
         ! use the generic phase-space here,
         ! provide tan-mapping for the resonant particles
         ! sum over the resonances
+        sigosres_contr = 0D0
         do ichan=1,cnosres
-          ! first create a momentum-config where the particles i and j are
-          ! tan-mapped on a resonant squark
-          ! phase space that builds the 2->3 PS by using only 1->2 sub PS
-          call real_osres_phsp(xx,ichan)
-          xjac = kn_jacreal*ww1*hc2
-          call sigreal_osres(xjac,sigosres_contr,
-     &                      rad_osres_arr(:,ichan),ichan)         
+          do lset=1,flst_nosres
+            call real_osres_phsp(xx,ichan,flst_osres(:,lset))
+            xjac = kn_jacreal*ww1*hc2
+            call sigreal_osres(xjac,lset,ichan,rad_osres_arr(lset,ichan))
+            sigosres_contr = sigosres_contr+rad_osres_arr(lset,ichan)
+          enddo
+          
           call transfersign(rad_osres_arr(:,ichan),
      &                      rad_osres_sign(:,ichan),flst_nosres)
           if(flg_nlotest) then
             call analysis_driver(sigosres_contr,1)
           endif
-          ! TODO: ausprobieren:
           retval = retval + dabs(sigosres_contr)
-          ! old:
-          !retval = retval - sigosres_contr
         enddo
-
-        ! retval0 = 0D0
         
 #ifdef DEBUGQ
          print*,"retval",retval
@@ -101,117 +96,47 @@ c############### end function sigosres #################################
 
 c############### subroutine sigreal_osres ##############################
 c contributions from real graphs that do not have a singular region
-      subroutine sigreal_osres(xjac,sig,r0,ichan)
+      subroutine sigreal_osres(xjac,lset,ichan,r0)
         implicit none
-        
 #include "nlegborn.h"
 #include "pwhg_flst.h"
 #include "pwhg_kn.h"
 #include "pwhg_rad.h"
 #include "pwhg_flg.h"
 #include "pwhg_pdf.h"
-
 c keep this order
 #include "osres.h"
 #include "pwhg_flst_add.h"
 #include "pwhg_rad_add.h"
-
-        double precision xjac,sig,r0(maxprocreal)
-        integer lset,lsetpr,iret
-        integer nmomset
-        parameter (nmomset=10)
-        double precision res(nmomset,maxprocreal)
-        double precision preal(0:3,nlegreal,nmomset)
-        double precision cprop
+        double precision xjac,r0
+        integer lset
         integer j
         double precision pdf1(-pdf_nparton:pdf_nparton)
         double precision pdf2(-pdf_nparton:pdf_nparton)
-        ! we need to initialize this routine for every on-shell resonance
-        integer equivto(maxprocreal,cnosres)
-        double precision equivcoef(maxprocreal,cnosres)
-        logical init(cnosres)
-        data init/cnosres*.true./
-        save equivto,equivcoef
-        save init
         integer ichan
 
         ! first check if the jacobian is 0
         ! if yes return immediately and save time
         if(xjac.eq.0D0) then 
-          sig = 0
-          do lset=1,flst_nosres
-            r0(lset) = 0D0
-          enddo
+          r0 = 0D0
           return
         endif
-
-        ! initialization phase
-        if(init(ichan)) then
-          do lset=1,flst_nosres
-            equivto(lset,ichan) = -1
-          enddo
-          flg_in_smartsig = .true. ! causes trouble with subtraction
-          if(flg_smartsig) then
-            call randomsave
-            ! generate "nmomset" random real-phase space configurations
-            call fillmomenta(nlegreal,nmomset,kn_masses,preal)
-            do lset=1,flst_nosres
-              do j=1,nmomset
-                ! call realgr(flst_osres(1,lset),preal(0,1,j),res(j,lset))
-                call setosresreal(preal(0,1,j),flst_osres(1,lset),
-     &                            osresID(ichan),res(j,lset))
-              enddo
-              
-              call compare_vecs_osres(nmomset,lset,res,lsetpr,
-     &                                cprop,iret)
-              if(iret.eq.0) then
-                ! they are equal
-                equivto(lset,ichan)   = lsetpr
-                equivcoef(lset,ichan) = 1D0
-              elseif(iret.eq.1) then
-                ! they are proportional
-                equivto(lset,ichan)   = lsetpr
-                equivcoef(lset,ichan) = cprop
-              endif
-            enddo
-            call randomrestore
-          endif
-          flg_in_smartsig = .false.
-          init(ichan)     = .false.
-        endif
       
-        ! End initialization phase; compute graphs
+        ! compute graphs
         call pdfcall(1,kn_x1,pdf1)
         call pdfcall(2,kn_x2,pdf2)
-        do lset=1,flst_nosres
-          if(equivto(lset,ichan).lt.0) then
-            flst_cur_alr = -1
-            !call realgr(flst_osres(1,lset),kn_cmpreal,r0(lset))
-            call setosresreal(kn_cmpreal,flst_osres(1,lset),
-     &                        osresID(ichan),r0(lset))
-          else
-            r0(lset)=r0(equivto(lset,ichan))*equivcoef(lset,ichan)
-          endif
-        enddo
-        sig = 0D0
-        do lset=1,flst_nosres
-          r0(lset) = xjac*r0(lset)*
-     &               pdf1(flst_osres(1,lset))*pdf2(flst_osres(2,lset))
-          sig = sig+r0(lset)
-        enddo
+        call setosresreal(kn_cmpreal,flst_osres(1,lset),ichan,r0)
+        r0 = r0*xjac*pdf1(flst_osres(1,lset))*pdf2(flst_osres(2,lset))
       end
 c############### end subroutine sigreal_osres ##########################
-
 
 c############### subroutine compare_vecs_osres #########################
 c slightliy modified copy of compare_vecs_reg
 c make sure to avoid 0-amplitudes correctly
       subroutine compare_vecs_osres(nmomset,lset,res,lsetpr,cprop,iret)
         implicit none
-
 #include "nlegborn.h"
 #include "pwhg_flst.h"
-
         double precision ep
         parameter (ep=1d-12)
         integer nmomset,lset,lsetpr,iret,j,k
@@ -270,18 +195,14 @@ c############### subroutine addupweightsosres ##########################
 c the following routines are similar to the btilde-case...
       subroutine addupweightsosres(sigosres)
         implicit none
-
 #include "nlegborn.h"
 #include "pwhg_flst.h"
 # include "pwhg_rad.h"
-
 c keep this order
 #include "osres.h"
 #include "pwhg_flst_add.h"
 #include "pwhg_rad_add.h"
-
         double precision sigosres
-
         double precision dtotosres(cnosres),dtotabsosres(cnosres)
         double precision dtotpososres(cnosres),dtotnegosres(cnosres)
         double precision totosres(cnosres),etotosres(cnosres)
@@ -337,7 +258,6 @@ c keep this order
         print*,"sigosres",sigosres
 #endif
       end
-
 c############### end subroutine addupweightsosres ######################
 
 
@@ -345,9 +265,7 @@ c############### subroutine addupweightsosres ##########################
 c set all new totals concerning regulars/remnants/osres to zero
       subroutine resettotalsosres
         implicit none
-
 #include "osres.h"
-
         double precision totosres(cnosres),etotosres(cnosres)
         double precision totabsosres(cnosres),etotabsosres(cnosres)
         double precision totpososres(cnosres),etotpososres(cnosres)
@@ -372,23 +290,19 @@ c set all new totals concerning regulars/remnants/osres to zero
           etotnegosres(j) = 0D0
         enddo
       end
-
 c############### end subroutine addupweightsosres ######################
 
 c############### subroutine finaltotalsosres ###########################
 c similar to corresponding routine in btilde
       subroutine finaltotalsosres
         implicit none
-
 #include "nlegborn.h"
 #include "pwhg_flst.h"
 #include "pwhg_rad.h"
-
 c keep this order
 #include "osres.h"
 #include "pwhg_flst_add.h"
 #include "pwhg_rad_add.h"
-
         double precision calc_error
         external calc_error
 
