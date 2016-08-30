@@ -121,6 +121,14 @@ c
         mij = osres_mij
         mkl = osres_mkl
         
+#ifdef DEBUGQ
+        print*,"ichan",ichan
+        print*,"flav",flav
+        print*,"i,j,k,l",i,j,k,l
+        print*,"mij,mkl,mi,mj,mk,ml",mij,mkl,mi,mj,mk,ml
+        !stop
+#endif
+        
         if( nexternal .ne. 6) then
           print*, "error in subroutine off_to_on"
           print*, "nexternal = ", nexternal
@@ -160,10 +168,10 @@ c
 
         ! definition of the momenta pij_tilde and pkl_tilde in terms of  
         ! the original momenta pi, pj and pkl
-        ratio = kaellenSqrt(s,mij**2,mk**2)/kaellenSqrt(s,sij,mk**2)
+        ratio = kaellenSqrt(s,mij**2,mkl**2)/kaellenSqrt(s,sij,skl)
         do mu = 0,3
           pkl_tilde(mu)  = ratio*(pkl(mu)-dotp(p12,pkl)/s*p12(mu))
-     &                    +(s+mk**2-mij**2)/(2*s)*p12(mu)
+     &                    +(s+mkl**2-mij**2)/(2*s)*p12(mu)
           pij_tilde(mu) = p12(mu)-pkl_tilde(mu)
         enddo
         
@@ -368,7 +376,17 @@ c
           print*,"mij**2           = ", mij**2
           print*,"relerror         = ", relerror
           stop
-        endif  
+        endif
+        
+        relerror = (momsum2sq(p_OS(:,k),p_OS(:,l))-mkl**2)
+     &             /(momsum2sq(p_OS(:,k),p_OS(:,l))+mkl**2) 
+        if( dabs(relerror) .gt. 1D-6 ) then
+          print*,"error: no on-shell condition found."
+          print*,"(p_OSk+p_OSl)**2 = ",momsum2sq(p_OS(:,k),p_OS(:,l))
+          print*,"mkl**2           = ", mkl**2
+          print*,"relerror         = ", relerror
+          stop
+        endif
         
         ! check if NaN's occur
         do sumi=0,3
@@ -392,11 +410,18 @@ c
           enddo
         enddo
         
+#ifdef DEBUGQ
+      print*,"|pij|, mij = ", dsqrt(dabs(momsum2sq(p_OS(:,i),p_OS(:,j)))), mij
+      print*,"|pkl|, mkl = ", dsqrt(dabs(momsum2sq(p_OS(:,k),p_OS(:,l)))), mkl
+      print*
+#endif
+        
         ! check four momentum conservation
-        call check_4conservation(p_OS,nlegreal,1,lresult)
+        call check_4conservation(p_OS,nlegreal,3,lresult)
       end
 c############### end subroutine off_to_on ##############################
 
+c TODO
 c############### function corrfac ######################################
 c the remapping requires a change in the PS integration
 c and every counter term which uses the on-shell momenta should be

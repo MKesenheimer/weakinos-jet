@@ -154,7 +154,7 @@ USRFLAGS += -D NEGLECTBMASS
 #USRFLAGS += -D DR_I
 #USRFLAGS += -D DR_II
 #USRFLAGS += -D DSUB_I
-#USRFLAGS += -D DSUB_II_TEST
+USRFLAGS += -D DSUB_II_TEST
 #USRFLAGS += -D DSUB_II
 
 ########################################################################

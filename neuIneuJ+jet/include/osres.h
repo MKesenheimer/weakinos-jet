@@ -35,11 +35,13 @@ c definitions
         integer osres_sfeij, osres_sfekl
         double precision osres_mi, osres_mj, osres_mk, osres_ml
         double precision osres_mij, osres_mkl
+        double precision osres_wij, osres_wkl
 
         common/c_onshell/ osres_i, osres_j, osres_k, osres_l
         common/c_onshell/ osres_sfeij, osres_sfekl
         common/c_onshell/ osres_mi, osres_mj, osres_mk, osres_ml
         common/c_onshell/ osres_mij, osres_mkl
+        common/c_onshell/ osres_wij, osres_wkl
         common/c_onshell/ wreg
 
 #if defined(DSUB_I) || defined(DSUB_II) || defined(DSUB_II_TEST)

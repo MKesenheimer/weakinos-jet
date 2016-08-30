@@ -22,14 +22,14 @@ c modifies the jacobian.
 #include "Flags.h"
 #include "osres.h"
 
-        double precision p(0:3,nlegreal),p_in(0:3,nlegreal)
+        double precision p(0:3,nlegreal)
         double precision p_os(0:3,nlegreal)
-        integer rflav(nlegreal), dflav(nlegreal)
+        integer rflav(nlegreal)
         integer ichan
         ! the real amplitudes
         double precision ampreal
         ! local variables
-        double precision ampCT, amp
+        double precision ampCT, amp, ampOS
         ! function to calculate the squared momentum sum
         double precision momsum3sq, momsum2sq
         external momsum2sq, momsum3sq
@@ -39,7 +39,7 @@ c modifies the jacobian.
         ! kinematics
         double precision s12, sij, skl
         ! mass at resonance, mass of particle i,j,k,l
-        double precision mij, mkl, mi, mj, mk, ml
+        double precision wij, mij, wkl, mkl, mi, mj, mk, ml
         integer i,j,k,l
         ! breit-wigner ratios
         double precision bwratio
@@ -58,7 +58,6 @@ c modifies the jacobian.
 #endif
         
 #if defined(DSUB_II) || defined(DSUB_II_TEST)
-
         if (init_real) then
            print*
            print*, "=== Init resonant real... ==="
@@ -73,21 +72,6 @@ c modifies the jacobian.
            verbose = .false.
         endif
         
-        ! store flavor list and momenta
-        ! CHANGE! TODO
-        dflav = rflav
-        p_in(:,:) = p(:,:)
-        
-        ! tests
-        if (.not.( (abs(rflav(2)).eq.abs(rflav(1)))
-     &      .or.   (abs(rflav(2)+rflav(1)).eq.1)
-     &      .or.   (rflav(2).ne.0)
-     &      .or.   (rflav(1).ne.0)   )) then
-           print*,"the current Real subprocess is ",rflav
-           print*,"check your settings in init_processes"
-           stop
-        endif
-        
 #ifndef DSUB_II_TEST
         if(flg_btilde) then
           print*, "the realresonant-routine should not cald for Btilde."
@@ -98,16 +82,11 @@ c modifies the jacobian.
         ! check four momentum conservation
         call check_4conservation(p, nlegborn+1, 1, lresult)
         
-        ! reset the breit-wigner ratios
-        bwratio = 1d0
-        amp   = 0d0
-        ampCT = 0d0
-        
         ! calculate the couplings for this PS point
         call set_ebe_couplings
         
         ! set the channel-related indices i,j,k and masses mi,mj,mk,mij
-        call set_channel(ichan,rflav)
+        call set_channel(rflav,ichan)
         i = osres_i
         j = osres_j
         k = osres_k
@@ -118,6 +97,8 @@ c modifies the jacobian.
         ml = osres_ml
         mij = osres_mij
         mkl = osres_mkl
+        wij = osres_wij
+        wkl = osres_wkl
 
         ! calculate the invariants
         s12  = momsum2sq(p(0:3,1),p(0:3,2)) ! invariant mass of particle 1 + 2
@@ -125,42 +106,39 @@ c modifies the jacobian.
         skl  = momsum2sq(p(0:3,k),p(0:3,l)) ! invariant mass of particle k + l
 
         ! this is |M_R(res)|**2 (still with on-shell resonances)
-        !call sreal_proc_res(p,rflav,chan,amp)
+        call getRealOSAmps(p,rflav,ichan,amp)
 
-        ! calculate the on-shell counter terms BW*corrfac*|M_R^OS(res)|**2
-        ! (don't subtract anything if the squark is off-shell, but if 
-        ! the quark is on-shell subtract the divergent part) 
-        ! -> Prospino scheme 1211.0286
-        if( (s12.ge.(mij+mkl)**2) .and. (mij.ge.(mi+mj)) ) then
-          call off_to_on(p,chan,p_os)                             ! off_to_on the momenta p to on-shell momenta p_os        
-          bwratio = (mij*wreg)**2/((sij-mij**2)**2+(mij*wreg)**2) ! calculate the ratio of the breit wigner functions
-          !call sreal_proc_res(p_os,rflav,chan,ampCT)              ! new routine to calculate only the resonant matrix elements
-          ampCT = bwratio*ampCT                                   ! multiply with the breit-wigner ratio
-          ampCT = corrfac(s12,mi,mj,mkl,sij,mij)*ampCT             ! rescale the counter term to fit into the new ps
+        ! Prospino scheme for double resonances
+        if((s12.ge.(mij+mkl)**2).and.(mij.ge.(mi+mj)).and.(mkl.ge.(mk+ml))) then
+          ! calculate the ratio of the breit wigner functions
+          bwratio = (mij*(wreg+wij))**2/((sij-mij**2)**2+(mij*(wreg+wij))**2)*
+     &              (mkl*(wreg+wkl))**2/((skl-mkl**2)**2+(mkl*(wreg+wkl))**2)
+          ! off_to_on the momenta p to on-shell momenta p_os
+          call off_to_on(p,rflav,ichan,p_OS)
+          call getRealOSAmps(p_os,rflav,ichan,ampos)
+          ampCT = bwratio*ampos
+          ! rescale the counter term to fit into the new PS
+          !ampCT = corrfac(s12,mi,mj,mk,sij,mij)*ampCT
         else
           ampCT = 0D0
-        endif  
+        endif 
 
         ! calculate the total resonant amplitude and substract the
         ! on-shell counter terms -> no on-shell resonances anymore
-        ampreal = (+amp-ampCT)
+        ampreal = amp-ampCT
  
         if(isnan(ampreal)) then
           !print*,"got strange value for ampreal amplitude...",ampreal
           ampreal = 0D0
         endif
  
-        if (verbose) then
+        if(verbose) then
           print*, "process = ", rflav
-          print*, "chan = ", chan
+          print*, "chan = ", ichan
           print*, "s12  = ", s12
           print*, "on-shell resonant Real amplitude = ", ampreal
           print*
-        end if
-
-        ! restore flavor list
-        rflav = dflav
-        p(:,:) = p_in(:,:)
+        endif
         
 #ifdef DEBUG1
         if(counter .lt. 5) then

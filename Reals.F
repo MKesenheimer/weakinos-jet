@@ -23,7 +23,7 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
 #include "osres.h"
         double precision p(0:3,nlegreal),p_os(0:3,nlegreal)
         integer rflav(nlegreal)
-        double precision amp, ampreal, ampos(2)
+        double precision amp, ampreal, ampos
         ! status
         logical verbose
         logical init_reals
@@ -32,7 +32,9 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         double precision s12, sij, skl
         ! mass at resonance, mass of particle i,j,k,l
         double precision mij, mkl, mi, mj, mk, ml
-        integer i,j,k,l
+        ! the width of the resonances
+        double precision wij, wkl
+        integer ichan,i,j,k,l
         ! breit-wigner ratios
         double precision bwratio
         ! local variables
@@ -43,10 +45,6 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         ! function to calculate the squared momentum sum
         double precision momsum3sq, momsum2sq
         external momsum2sq, momsum3sq
-
-        ! MadGraph (TODO: remove)
-        double precision ampM
-        
 #ifdef DEBUGQ
 #define DEBUG1
         ! debugging
@@ -70,45 +68,54 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         ! get the formcalc real amplitudes
         call getRealAmps(p,rflav,amp)
 
-        
-!         ! subtract the on shell contributions
-!         if((rflav(1).eq.0 .or. rflav(2).eq.0).and.(rflav(5).ne.0)) then
-!           do ichan=1,nosres          
-!             ! set the channel-related indices osres_i,osres_j,osres_k and masses osres_mi,osres_mj,osres_mk,osres_mij
-!             call set_channel(ichan,rflav)
-!             i = osres_i
-!             j = osres_j
-!             k = osres_k
-!             l = osres_l
-!             mi = osres_mi
-!             mj = osres_mj
-!             mk = osres_mk
-!             ml = osres_ml
-!             mij = osres_mij
-!             mkl = osres_mkl
-!             ! calculate the invariants
-!             s12 = momsum2sq(p(0:3,1),p(0:3,2)) ! invariant mass of particle 1 + 2
-!             sij = momsum2sq(p(0:3,osres_i),p(0:3,osres_j)) ! invariant mass of particle i + j
-!             ampCT = 0D0
-!             ! Prospino scheme 1211.0286
-!             if( (s12.ge.(osres_mij+osres_mk)**2) .and. (osres_mij.ge.(osres_mi+osres_mj)) ) then
-!               bwratio = (osres_mij*wreg)**2/((sij-osres_mij**2)**2+(osres_mij*wreg)**2) ! calculate the ratio of the breit wigner functions
-!               !bwratio = 0D0
-!               call off_to_on(p,ichan,p_os)                      ! off_to_on the momenta p to on-shell momenta p_os
-!               call getROSAmps(p_os,rflav,ichan,
-!      &                                  helicities,flags,ampos)
-!               ampCT = bwratio*ampos(1)                                ! multiply with the breit-wigner ratio
-!               ampCT = corrfac(s12,osres_mi,osres_mj,osres_mk,sij,osres_mij)*ampCT             ! rescale the counter term to fit into the new ps
-!             endif
-!             fc_result(1) = fc_result(1) - ampCT
-!           enddo
-!         endif
+#ifdef DEBUG
+        ! subtract the on shell contributions
+        if(rflav(5).ne.0 .and. rflav(6).ne.0) then
+          do ichan=1,cnosres
+            ! set the channel-related indices i,j,k and masses mi,mj,mk,mij
+            call set_channel(rflav,ichan)
+            i = osres_i
+            j = osres_j
+            k = osres_k
+            l = osres_l
+            mi = osres_mi
+            mj = osres_mj
+            mk = osres_mk
+            ml = osres_ml
+            mij = osres_mij
+            mkl = osres_mkl
+            wij = osres_wij
+            wkl = osres_wkl
+
+            ! calculate the invariants
+            s12 = momsum2sq(p(0:3,1),p(0:3,2)) ! invariant mass of particle 1 + 2
+            sij = momsum2sq(p(0:3,i),p(0:3,j)) ! invariant mass of particle i + j
+            skl = momsum2sq(p(0:3,k),p(0:3,l)) ! invariant mass of particle k + l
+            
+            ! Prospino scheme for double resonances
+            if((s12.ge.(mij+mkl)**2).and.(mij.ge.(mi+mj)).and.(mkl.ge.(mk+ml))) then
+              ! calculate the ratio of the breit wigner functions
+              bwratio = (mij*(wreg+wij))**2/((sij-mij**2)**2+(mij*(wreg+wij))**2)*
+     &                  (mkl*(wreg+wkl))**2/((skl-mkl**2)**2+(mkl*(wreg+wkl))**2)
+              ! off_to_on the momenta p to on-shell momenta p_os
+              call off_to_on(p,rflav,ichan,p_OS)
+              call getRealOSAmps(p_os,rflav,ichan,ampos)
+              ampCT = bwratio*ampos
+              ! rescale the counter term to fit into the new PS
+              !ampCT = corrfac(s12,mi,mj,mk,sij,mij)*ampCT
+            else
+              ampCT = 0D0
+            endif  
+            amp = amp - ampCT
+          enddo
+        endif
+#endif
 
         ! Cancel as/(2pi) associated with amp2. It will be put back by real_ampsq
         ampreal = amp/(st_alpha/(2d0*pi))
         
         ! Print informations
-        if (verbose) then
+        if(verbose) then
           print*, "process: ", rflav
           print*, "s  = ", momsum2sq(p(0:3,1), p(0:3,2))
           print*, "t  = ", momsum2sq(p(0:3,1),-p(0:3,3))

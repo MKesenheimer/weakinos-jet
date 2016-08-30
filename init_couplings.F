@@ -499,7 +499,7 @@ c version.
               case (2000006) ! stop_2
                 par_Sfwidth(2,3,3) = width(channel)
 #endif
-            end select
+            endselect
           endif
         enddo
 #ifdef NEGLECT_SWIDTH
@@ -537,7 +537,7 @@ c version.
           case default
             print*, "encountered unknown particle ID for fin1 ",id_fin1
             stop
-        end select
+        endselect
         select case(abs(id_fin2))
           case (1000022) ! neutralino1
             par_Fin2mass = par_MNeu(1)
@@ -556,7 +556,7 @@ c version.
           case default
             print*, "encountered unknown particle ID for fin2", id_fin2
             stop
-        end select
+        endselect
         
         if( (dabs(par_Fin1mass) + dabs(par_Fin2mass)) .lt. par_Zmass )
      &  then

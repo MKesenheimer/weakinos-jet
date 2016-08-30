@@ -64,6 +64,8 @@ c verbose = 4: No output at all, but set the variable lresult
         double precision p(0:3,nleg) ! momentum vectors
         double precision pi(0:3) ! sum of incoming momenta
         double precision pf(0:3) ! sum of outgoing momenta
+        double precision momsq, momsum2sq, momsum3sq, dotp
+        external momsq, momsum2sq, momsum3sq, dotp
         double precision eps, rel(0:3) ! rel. err.
         parameter (eps=1d-6)
         logical lresult
@@ -144,12 +146,16 @@ c verbose = 4: No output at all, but set the variable lresult
           print*, "Sum p out = ", pf(:)
           print*, "rel. err. = ",rel(:)
           if(verbose.ge.2) then
-            print*,"p1 = ", p(:,1)
-            print*,"p2 = ", p(:,2)
-            print*,"p3 = ", p(:,3)
-            print*,"p4 = ", p(:,4)
-            if(nleg.eq.5 .or. nleg.eq.6) print*,"p5 = ", p(:,5)
-            if(nleg.eq.6) print*,"p6 = ", p(:,6)
+            print*,"p1, m1 = ", p(:,1), dsqrt(dabs(dotp(p(:,1),p(:,1))))
+            print*,"p2, m2 = ", p(:,2), dsqrt(dabs(dotp(p(:,2),p(:,2))))
+            print*,"p3, m3 = ", p(:,3), dsqrt(dabs(dotp(p(:,3),p(:,3))))
+            print*,"p4, m4 = ", p(:,4), dsqrt(dabs(dotp(p(:,4),p(:,4))))
+            if(nleg.eq.5 .or. nleg.eq.6) then
+              print*,"p5, m5 = ", p(:,5), dsqrt(dabs(dotp(p(:,5),p(:,5))))
+            endif  
+            if(nleg.eq.6) then
+              print*,"p6, m6 = ", p(:,6), dsqrt(dabs(dotp(p(:,6),p(:,6))))
+            endif  
           endif
           if(verbose.eq.3) stop
           lresult = .false.
