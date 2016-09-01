@@ -22,7 +22,8 @@ c              pl
 c definitions
         ! store the number of on-shell resonances here
         integer cnosres ! nosres, constants
-        parameter (cnosres=8)
+        !parameter (cnosres=8)
+        parameter (cnosres=1)
         
         ! the width of the on-shell resonant particle (regulator)
         ! this must be set in init_couplings.f

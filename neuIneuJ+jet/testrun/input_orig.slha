@@ -422,6 +422,7 @@ DECAY   1000001     5.31278772E+00   # sdown_L decays
      0.00000000E+00    2     1000021         1   # BR(~d_L -> ~g      d)
 #
 #         PDG            Width
+#DECAY   2000001     0.0E+00   # sdown_R decays
 DECAY   2000001     2.85812308E-01   # sdown_R decays
 #          BR         NDA      ID1       ID2
      9.86529614E-01    2     1000022         1   # BR(~d_R -> ~chi_10 d)

@@ -189,7 +189,7 @@ c requires encoded process ID in lprup(1)
      &      (VCha(2,2)          .ne. vvmix(2,2)   ) ) then
           print*, "error: Madgraph uses parameters different to "
      &          //"PhysPars.h or FormCalc paramaters"
-          stop
+          !stop
         endif
 
         ! check if all paramaters are properly set

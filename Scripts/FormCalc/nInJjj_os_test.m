@@ -114,11 +114,11 @@ If[$CommandLine[[2]] === "-script",
 	 p[5] = ToString[$CommandLine[[8]]];
 	 p[6] = ToString[$CommandLine[[9]]];),
 	(*Else*)
-	(p[1] = "qd";
+	(p[1] = "qdbar";
 	 p[2] = "qdbar";
 	 p[3] = "nI";
 	 p[4] = "nJ";
-	 p[5] = "qd";
+	 p[5] = "qdbar";
 	 p[6] = "qdbar";)
 ]
 
@@ -131,9 +131,9 @@ For[i=1, i<7, i++,
 If[p[i] === "qu", P[i] = F[3],
 If[p[i] === "qubar", P[i] = -F[3],
 If[p[i] === "qd", P[i] = F[4],
-If[p[i] === "qdbar", P[i] = -F[4],
-If[p[i] === "nI", P[i] = F[11],
-If[p[i] === "nJ", P[i] = F[11],
+If[p[i] === "qdbar", P[i] = -F[4,{1}], (*CHANGED!!!!!!!!!*)
+If[p[i] === "nI", P[i] = F[11,{1}],(*CHANGED!!!!!!!!!*)
+If[p[i] === "nJ", P[i] = F[11,{2}],(*CHANGED!!!!!!!!!*)
 If[p[i] === "xI-", P[i] = F[12],
 If[p[i] === "xI+", P[i] = -F[12],
 If[p[i] === "xJ-", P[i] = F[12],
@@ -200,7 +200,7 @@ SetOptions[InsertFields, Model -> "MSSMCT",
 		   ExcludeParticles -> {S[1|2|3|4|5|6|11|12], F[1|2]},
 		   LastSelections -> lastsel];
 
-SetOptions[Paint, PaintLevel -> {Classes}, ColumnsXRows -> {4, 5}, AutoEdit -> False];
+SetOptions[Paint, PaintLevel -> {Particles}, ColumnsXRows -> {4, 5}, AutoEdit -> False];
 
 (*Reduce tensor to scalar integrals and choose regularization scheme*)
 (*D = dimensional regularization (default),*)
@@ -237,8 +237,8 @@ getReplacementHead[f_->_]:=f
 Print["On-Shell Diagrams"]
 
 tops = CreateTopologies[0, 2 -> 4];
-(*ins = InsertFields[tops, process, InsertionLevel -> {Particles}];*)
-ins = InsertFields[tops, process];
+ins = InsertFields[tops, process, InsertionLevel -> {Particles}];
+(*ins = InsertFields[tops, process];*)
 
 (*Extract the on-shell diagrams*)
 (*Select Diagrams with Squarks*)
@@ -247,15 +247,9 @@ ins = DiagramSelect[ins,(FieldPointMemberQ[FieldPoints[##],FieldPoint[_][S[_,{_,
 							FieldPointMemberQ[FieldPoints[##],FieldPoint[_][_,S[_,{_,_,_}],_]])&];
 (*Select Diagrams with possible double on-shell resonances*)
 ins3546 = DiagramSelect[ins,(SChannelExtQ[S[_,{_,_,_}],3,5][##] && SChannelExtQ[S[_,{_,_,_}],4,6][##])&];
+(*DEBUG*)
+ins3546 = DiagramExtract[ins3546,4]
 DoPaint[ins3546, "realOS_3546"];
-
-(*Select Diagrams with possible double on-shell resonances*)
-ins3645 = DiagramSelect[ins,(SChannelExtQ[S[_,{_,_,_}],3,6][##] && SChannelExtQ[S[_,{_,_,_}],4,5][##])&];
-DoPaint[ins3645, "realOS_3645"];
-
-(*Check the abrreviations and subexpressions, no WREG should occur here up to now*)
-Abbr[];
-Subexpr[];
 
 
 (*now, generate the amplitudes and insert the particle widths*)
@@ -268,22 +262,17 @@ real3546 = real/.{Den[x_,y_]:>Den[x/.widths,y/.widths]};
 (*set the sfermion index in fortran program*)
 real3546Sfe = real3546//.{SumOver[Sfe6,i_]:>SumOver[Sfe6,i,External], SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External], SumOver[Sfe9,i_]:>SumOver[Sfe9,i,External]}
 
-real = CalcFeynAmp[CreateFeynAmp[ins3645](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
-(*real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
-real = real//.{PowerOf[a_]:>PowerOf[a][1]};*)
-real3645 = real/.{Den[x_,y_]:>Den[x/.widths,y/.widths]};
-(*set the sfermion index in fortran program*)
-real3645Sfe = real3645//.{SumOver[Sfe6,i_]:>SumOver[Sfe6,i,External], SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External], SumOver[Sfe9,i_]:>SumOver[Sfe9,i,External]}
-
 
 Print["Non resonant Diagrams"]
 
 tops = CreateTopologies[0, 2 -> 4];
-ins = InsertFields[tops, process];
+ins = InsertFields[tops, process, InsertionLevel->{Particles}];
 
 (*Select the diagrams without on-shell divergences*)
 insNR = DiagramSelect[ins,(Not[SChannelExtQ[S[_],3,5][##] && SChannelExtQ[S[_],4,6][##]] &&
                             Not[SChannelExtQ[S[_],3,6][##] && SChannelExtQ[S[_],4,5][##]])&];
+(*DEBUG*)
+insNR = DiagramExtract[insNR,1];
 DoPaint[insNR, "realNR"];
 
 (*insert the particle widths*)
@@ -321,34 +310,9 @@ dir = SetupCodeDir[name<>"_realOS_3546", Drivers -> name <> "_drivers"];
 WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
 
 
-(*Write files for on-shell resonant reals, OS3645*)
-amps = {real3645Sfe};
-{realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
-
-col = ColourME[All, realOS];
-
-abbr = OptimizeAbbr[Abbr[]];
-subexpr = OptimizeAbbr[Subexpr[]];
-
-(*fortran can't handle arrays with dimensionality greater than 7*)
-(*apply back the subexpressions with number of arguments greater than 6*)
-subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-realOS = realOS//.subexpr6;
-abbr = abbr//.subexpr6;
-
-(*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-subexpr = subexpr//.subexpr6;
-
-dir = SetupCodeDir[name<>"_realOS_3645", Drivers -> name <> "_drivers"];
-WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
-
-
 (*Combine the amplitudes again, but this time the resonant diagrams are regulated*)
 (*Use here the regulated on shell amplitudes with summation over the sfermion indices*)
-real = Combine[realNR,real3546,real3645];
+real = Combine[realNR,real3546];
 
 (*Write real files with inserted regulator for on-shell diagrams*)
 amps = {real};
@@ -372,31 +336,6 @@ subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])
 subexpr = subexpr//.subexpr6;
 
 dir = SetupCodeDir[name<>"_real", Drivers -> name <> "_drivers"];
-WriteSquaredME[real, {}, col, abbr, subexpr, dir];
-
-
-(*Write files of non resonant reals*)
-amps = {realNR};
-{real} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
-
-col = ColourME[All, real];
-
-abbr = OptimizeAbbr[Abbr[]];
-subexpr = OptimizeAbbr[Subexpr[]];
-
-(*fortran can't handle arrays with dimensionality greater than 7*)
-(*apply back the subexpressions with number of arguments greater than 6*)
-subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-real = real//.subexpr6;
-abbr = abbr//.subexpr6;
-
-(*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-subexpr = subexpr//.subexpr6;
-
-dir = SetupCodeDir[name<>"_realNR", Drivers -> name <> "_drivers"];
 WriteSquaredME[real, {}, col, abbr, subexpr, dir];
 
 

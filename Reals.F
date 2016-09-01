@@ -139,6 +139,15 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
           counter = counter + 1
         endif
 #endif
+
+#ifdef DEBUGQ
+        if(ampreal.lt.0D0) then
+            sij = momsum2sq(p(0:3,3),p(0:3,5)) ! invariant mass of particle i + j
+            skl = momsum2sq(p(0:3,4),p(0:3,6)) ! invariant mass of particle k + l
+            call histogram("sqrt_s35",90,100D0,1000D0,dsqrt(sij),dabs(ampreal))
+            !call histogram("s46",100,1D4,2D4,skl,dabs(ampreal))
+        endif
+#endif
       end
 c############### end subroutine setreal ################################
 

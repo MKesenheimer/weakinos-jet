@@ -40,7 +40,7 @@ WORKINGDIR=${PWD}
 # process list files
 # proc_nInJj      -> Born processes for p p > nI nJ j
 # proc_nInJjj     -> all Real processes for p p > nI nJ j (real = nr + os)
-# proc_nInJjj_nr  -> processes that don't have not resonant diagrams
+# proc_nInJjj_nr  -> processes that don't have resonant diagrams
 # proc_nInJjj_os  -> processes with resonant diagrams
 # proc_nInJjj_reg -> regulated real processes with resonant diagrams (os_reg, 
 #                    the same as proc_nInJjj, but without channel identifiers)
@@ -232,78 +232,78 @@ for i in `seq 0 1 $((NPROC-1))`; do
     PROCESSES+=($PROC)
 done
 
-# # commented: do this by hand
-# #echo "Generating directories..."
-# #mkdir ${DEST}/squaredME/
-# 
-# for i in `seq 0 1 $((NPROC-1))`; do
-#     # if no on-shell resonant channels were defined CHANNEL has only one
-#     # entry which is "none"
-#     IFS=$',\r\n' command eval 'CHANNEL=(${CHANNELS[i]})'
-#     unset IFS
-#     NCHANNELS=0
-#     MCHANNEL=()
-#     for j in ${CHANNEL[@]}; do
-#         # the mathematica identifiers don't need the left and right identifier, truncate them
-#         MCHANNEL+=($(echo "${CHANNEL[NCHANNELS]}" | tr -d "lr"))
-#         # count the different channels starting with zero
-#         NCHANNELS=$((1+NCHANNELS))
-#     done
-#     MCHANNEL=($(echo "${MCHANNEL[@]}" | xargs -n1 | sort -u | xargs))
-#     #echo "$NCHANNELS channels: ${CHANNEL[@]}"
-#     #echo "Mathematica identifiers: ${MCHANNEL[@]}"
-#     #exit
-#     for j in ${MCHANNEL[@]}; do
-#         if [[ $TYPE == "realOS" ]]; then
-#             APPEND="_${j}"
-#         fi
-#         PRE1="${PROCESSES[i]}_${TYPE}${APPEND}"
-#         PRE2="${PROCESSES[i]}${APPEND}"
-#         
-#         echo
-#         echo "${PROCESSES[i]} ${TYPE}${APPEND}"
-#         echo "PRE1 = $PRE1"
-#         echo "PRE2 = $PRE2"
-#         
-#         #echo "cleaning old files..."
-#         #echo $(ls ${DEST}/squaredME/${PRE2}*.F)
-#         #echo $(ls ${DEST}/include/${PRE2}_vars.h)
-#         #rm ${DEST}/squaredME/${PRE2}*.F
-#         #rm ${DEST}/include/${PRE2}_vars.h
-#         
-#         echo "copying new files..."
-#         mkdir -p ${DEST}/${PRE2}_squaredME/
-#         cp ${WORKINGDIR}/${PRE1}/squaredme/*.F ${DEST}/${PRE2}_squaredME/
-#         cp ${WORKINGDIR}/${PRE1}/squaredme/vars.h ${DEST}/${PRE2}_squaredME/${PRE2}_vars.h
-#         
-#         
-#         echo "renaming files..."
-#         echo "cd ${DEST}/${PRE2}_squaredME"
-#         cd ${DEST}/${PRE2}_squaredME
-#         for file in *.F; do
-#             # rename files, append prefix
-#             echo "$file -> ${PRE2}_${file}"
-#             mv "$file" "${PRE2}_${file}"
-#         done
-#         for file in *.F; do
-#             # rename the variables
-#             echo "renaming variables in $file..."
-#             rename $file "${PRE2}_"
-#             if [[ $TYPE == "realOS" ]]; then
-#                 sed -i -e "s/\<Sfe7\>/SfeSQ1/g" $file
-#                 sed -i -e "s/\<Sfe8\>/SfeSQ2/g" $file
-#             fi
-#         done
-#         rename2 ${PRE2}_vars.h
-#         if [[ $TYPE == "realOS" ]]; then
-#             sed -i -e "s/\<Sfe7\>/2/g" ${PRE2}_vars.h
-#             sed -i -e "s/\<Sfe8\>/2/g" ${PRE2}_vars.h
-#         fi
-#         cp ${DEST}/${PRE2}_squaredME/*.F ${DEST}/squaredME/
-#         cp ${DEST}/${PRE2}_squaredME/${PRE2}_vars.h ${DEST}/include
-#         rm -rf ${DEST}/${PRE2}_squaredME
-#     done
-# done
+# commented: do this by hand
+#echo "Generating directories..."
+#mkdir ${DEST}/squaredME/
+
+for i in `seq 0 1 $((NPROC-1))`; do
+    # if no on-shell resonant channels were defined CHANNEL has only one
+    # entry which is "none"
+    IFS=$',\r\n' command eval 'CHANNEL=(${CHANNELS[i]})'
+    unset IFS
+    NCHANNELS=0
+    MCHANNEL=()
+    for j in ${CHANNEL[@]}; do
+        # the mathematica identifiers don't need the left and right identifier, truncate them
+        MCHANNEL+=($(echo "${CHANNEL[NCHANNELS]}" | tr -d "lr"))
+        # count the different channels starting with zero
+        NCHANNELS=$((1+NCHANNELS))
+    done
+    MCHANNEL=($(echo "${MCHANNEL[@]}" | xargs -n1 | sort -u | xargs))
+    #echo "$NCHANNELS channels: ${CHANNEL[@]}"
+    #echo "Mathematica identifiers: ${MCHANNEL[@]}"
+    #exit
+    for j in ${MCHANNEL[@]}; do
+        if [[ $TYPE == "realOS" ]]; then
+            APPEND="_${j}"
+        fi
+        PRE1="${PROCESSES[i]}_${TYPE}${APPEND}"
+        PRE2="${PROCESSES[i]}${APPEND}"
+        
+        echo
+        echo "${PROCESSES[i]} ${TYPE}${APPEND}"
+        echo "PRE1 = $PRE1"
+        echo "PRE2 = $PRE2"
+        
+        #echo "cleaning old files..."
+        #echo $(ls ${DEST}/squaredME/${PRE2}*.F)
+        #echo $(ls ${DEST}/include/${PRE2}_vars.h)
+        #rm ${DEST}/squaredME/${PRE2}*.F
+        #rm ${DEST}/include/${PRE2}_vars.h
+        
+        echo "copying new files..."
+        mkdir -p ${DEST}/${PRE2}_squaredME/
+        cp ${WORKINGDIR}/${PRE1}/squaredme/*.F ${DEST}/${PRE2}_squaredME/
+        cp ${WORKINGDIR}/${PRE1}/squaredme/vars.h ${DEST}/${PRE2}_squaredME/${PRE2}_vars.h
+        
+        
+        echo "renaming files..."
+        echo "cd ${DEST}/${PRE2}_squaredME"
+        cd ${DEST}/${PRE2}_squaredME
+        for file in *.F; do
+            # rename files, append prefix
+            echo "$file -> ${PRE2}_${file}"
+            mv "$file" "${PRE2}_${file}"
+        done
+        for file in *.F; do
+            # rename the variables
+            echo "renaming variables in $file..."
+            rename $file "${PRE2}_"
+            if [[ $TYPE == "realOS" ]]; then
+                sed -i -e "s/\<Sfe7\>/SfeSQ1/g" $file
+                sed -i -e "s/\<Sfe8\>/SfeSQ2/g" $file
+            fi
+        done
+        rename2 ${PRE2}_vars.h
+        if [[ $TYPE == "realOS" ]]; then
+            sed -i -e "s/\<Sfe7\>/2/g" ${PRE2}_vars.h
+            sed -i -e "s/\<Sfe8\>/2/g" ${PRE2}_vars.h
+        fi
+        cp ${DEST}/${PRE2}_squaredME/*.F ${DEST}/squaredME/
+        cp ${DEST}/${PRE2}_squaredME/${PRE2}_vars.h ${DEST}/include
+        rm -rf ${DEST}/${PRE2}_squaredME
+    done
+done
 
 # on-shell subroutines:
 # modify this if needed.

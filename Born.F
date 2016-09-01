@@ -30,6 +30,9 @@ c parton parton -> weakino weakino
         logical verbose
         logical init_born
         data init_born/.true./
+#ifdef DEBUG
+        double precision s35
+#endif
 #ifdef DEBUGQ
 #define DEBUG1
         ! debqugging
@@ -162,6 +165,12 @@ c endif preprocessor condition "if defined(CHECK_FORM_MAD) || defined(MAD_BORN)"
           print*,"born = ", born
           counter = counter + 1
         endif
+#endif
+
+#ifdef DEBUG
+        s35 = momsum2sq(p(0:3,3),p(0:3,5)) ! invariant mass of particle i + j
+        call histogram("sqrt_s35",90,100D0,1000D0,dsqrt(s35),born)
+        !call histogram("s46",100,1D4,2D4,skl,dabs(ampreal))
 #endif
       end
 c############### end setborn subroutine ################################

@@ -23,6 +23,11 @@ c bigger changes over a whole section are marked with !===...
       logical pwhg_isfinite
       external pwhg_isfinite
       logical, save :: ini=.true.
+#ifdef DEBUGQ
+      double precision s35, s46
+      double precision momsum2sq
+      external momsum2sq
+#endif
 
       if(ini) then
          if(flg_analysisextrainfo) then
@@ -197,6 +202,14 @@ c     to avoid divergent integral (25 is an ad hoc value)
             if(out0.ne.0d0) call analysis_driver(out0,0)
             call analysis_extrainfo('real',flst_nalr,out1arr,www)
             if(out1.ne.0d0) call analysis_driver(out1,1)
+#ifdef DEBUGQ
+        if(out1.lt.0D0) then
+            s35 = momsum2sq(kn_cmpreal(0:3,3),kn_cmpreal(0:3,5))
+            s46 = momsum2sq(kn_cmpreal(0:3,4),kn_cmpreal(0:3,6))
+            call histogram("s35",100,1D4,2D4,s35,dabs(out1))
+            !call histogram("s46",100,1D4,2D4,s46,dabs(www))
+        endif
+#endif
          endif
       enddo
       end
