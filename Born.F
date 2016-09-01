@@ -31,14 +31,7 @@ c parton parton -> weakino weakino
         logical init_born
         data init_born/.true./
 #ifdef DEBUG
-        double precision s35
-#endif
-#ifdef DEBUGQ
-#define DEBUG1
-        ! debqugging
-        integer counter
-        data counter/0/
-        save counter
+        double precision s35, s45
 #endif
 
         if (init_born) then
@@ -156,21 +149,14 @@ c endif preprocessor condition "if defined(CHECK_FORM_MAD) || defined(MAD_BORN)"
           born = 0D0
         endif
 
-#ifdef DEBUG1
-        if(counter < 5) then
-          print*, "process: ", bflav
-          print*, "s  = ", momsum2sq(p(0:3,1), p(0:3,2))
-          print*, "t  = ", momsum2sq(p(0:3,1),-p(0:3,3))
-          print*, "u  = ", momsum2sq(p(0:3,2),-p(0:3,3))
-          print*,"born = ", born
-          counter = counter + 1
+#ifdef DEBUGQ
+        ! fill histograms
+        if(dsqrt(p(1,5)**2+p(2,5)**2).gt.10D0) then
+          s35 = momsum2sq(p(0:3,3),p(0:3,5))
+          s45 = momsum2sq(p(0:3,4),p(0:3,5))
+          call histogram("sqrt(s35)",90,100D0,1000D0,dsqrt(s35),born)
+          call histogram("sqrt(s45)",90,100D0,1000D0,dsqrt(s45),born)
         endif
-#endif
-
-#ifdef DEBUG
-        s35 = momsum2sq(p(0:3,3),p(0:3,5)) ! invariant mass of particle i + j
-        call histogram("sqrt(s35)",90,100D0,1000D0,dsqrt(s35),born)
-        !call histogram("s46",100,1D4,2D4,skl,dabs(ampreal))
 #endif
       end
 c############### end setborn subroutine ################################

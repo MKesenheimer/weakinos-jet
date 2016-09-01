@@ -66,8 +66,10 @@ BLOCK MASS  # Mass Spectrum
         35     3.99960116E+02   # H
         36     3.99583917E+02   # A
         37     4.07879012E+02   # H+
-   1000001     5.68441109E+02   # ~d_L
-   2000001     5.45228462E+02   # ~d_R
+   1000001     5.68441109E+02   # ~d_L, original
+   2000001     5.45228462E+02   # ~d_R, original
+#   1000001     5.68441109E+20   # ~d_L
+#   2000001     4.45228462E+02   # ~d_R
    1000002     5.61119014E+02   # ~u_L
    2000002     5.49259265E+02   # ~u_R
    1000003     5.68441109E+02   # ~s_L
@@ -78,10 +80,10 @@ BLOCK MASS  # Mass Spectrum
    2000005     5.45228462E+02   # ~b_R
    1000006     5.61119014E+02   # ~t_L
    2000006     5.49259265E+02   # ~t_R
-#   1000005     5.13065179E+02   # ~b_1
-#   2000005     5.43726676E+02   # ~b_2
-#   1000006     3.99668493E+02   # ~t_1
-#   2000006     5.85785818E+02   # ~t_2
+#   1000005     5.13065179E+02   # ~b_1, original
+#   2000005     5.43726676E+02   # ~b_2, original
+#   1000006     3.99668493E+02   # ~t_1, original
+#   2000006     5.85785818E+02   # ~t_2, original
    1000011     2.02915690E+02   # ~e_L
    2000011     1.44102799E+02   # ~e_R
    1000012     1.85258326E+02   # ~nu_eL
@@ -387,8 +389,8 @@ DECAY   2000005     8.01566294E-01   # sbottom2 decays
      0.00000000E+00    2     2000006       -24   # BR(~b_2 -> ~t_2    W-)
 #
 #         PDG            Width
-DECAY   1000002     5.47719539E+00   # sup_L decays
-#DECAY   1000002     0E+00   # sup_L decays
+DECAY   1000002     5.47719539E+00   # sup_L decays, original
+#DECAY   1000002     0E+00   # test
 #          BR         NDA      ID1       ID2
      6.65240987E-03    2     1000022         2   # BR(~u_L -> ~chi_10 u)
      3.19051458E-01    2     1000023         2   # BR(~u_L -> ~chi_20 u)
@@ -399,8 +401,8 @@ DECAY   1000002     5.47719539E+00   # sup_L decays
      0.00000000E+00    2     1000021         2   # BR(~u_L -> ~g      u)
 #
 #         PDG            Width
-DECAY   2000002     1.15297292E+00   # sup_R decays
-#DECAY   2000002     0E+00   # sup_R decays
+DECAY   2000002     1.15297292E+00   # sup_R decays, original
+#DECAY   2000002     0E+00   # test
 #          BR         NDA      ID1       ID2
      9.86377420E-01    2     1000022         2   # BR(~u_R -> ~chi_10 u)
      8.46640647E-03    2     1000023         2   # BR(~u_R -> ~chi_20 u)
@@ -411,7 +413,9 @@ DECAY   2000002     1.15297292E+00   # sup_R decays
      0.00000000E+00    2     1000021         2   # BR(~u_R -> ~g      u)
 #
 #         PDG            Width
-DECAY   1000001     5.31278772E+00   # sdown_L decays
+DECAY   1000001     5.31278772E+00   # sdown_L decays, original
+#DECAY   1000001     1.0E+01 # test
+#DECAY   1000001     0.0E+00 # test
 #          BR         NDA      ID1       ID2
      2.32317969E-02    2     1000022         1   # BR(~d_L -> ~chi_10 d)
      3.10235077E-01    2     1000023         1   # BR(~d_L -> ~chi_20 d)
@@ -422,8 +426,9 @@ DECAY   1000001     5.31278772E+00   # sdown_L decays
      0.00000000E+00    2     1000021         1   # BR(~d_L -> ~g      d)
 #
 #         PDG            Width
-#DECAY   2000001     0.0E+00   # sdown_R decays
-DECAY   2000001     2.85812308E-01   # sdown_R decays
+DECAY   2000001     2.85812308E-01   # sdown_R decays, original
+#DECAY   2000001     1.0E-01 # test
+#DECAY   2000001     0.0E+00 # test
 #          BR         NDA      ID1       ID2
      9.86529614E-01    2     1000022         1   # BR(~d_R -> ~chi_10 d)
      8.44510350E-03    2     1000023         1   # BR(~d_R -> ~chi_20 d)

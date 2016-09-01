@@ -45,12 +45,8 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         ! function to calculate the squared momentum sum
         double precision momsum3sq, momsum2sq
         external momsum2sq, momsum3sq
-#ifdef DEBUGQ
-#define DEBUG1
-        ! debugging
-        integer counter
-        data counter/0/
-        save counter
+#ifdef DEBUG
+        double precision s35, s46
 #endif
 
         if (init_reals) then
@@ -128,24 +124,14 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
           !print*,"got strange value for real amplitude...", ampreal
           ampreal = 0D0
         endif
-        
-#ifdef DEBUG1
-        if(counter < 5) then
-          print*, "process: ", rflav
-          print*, "s  = ", momsum2sq(p(0:3,1), p(0:3,2))
-          print*, "t  = ", momsum2sq(p(0:3,1),-p(0:3,3))
-          print*, "u  = ", momsum2sq(p(0:3,2),-p(0:3,3))
-          print*, "real = ", ampreal
-          counter = counter + 1
-        endif
-#endif
 
-#ifdef DEBUGQ
-        if(ampreal.lt.0D0) then
-            sij = momsum2sq(p(0:3,3),p(0:3,5)) ! invariant mass of particle i + j
-            skl = momsum2sq(p(0:3,4),p(0:3,6)) ! invariant mass of particle k + l
-            call histogram("sqrt_s35",90,100D0,1000D0,dsqrt(sij),dabs(ampreal))
-            !call histogram("s46",100,1D4,2D4,skl,dabs(ampreal))
+#ifdef DEBUG
+        ! fill histograms
+        if(dsqrt(p(1,5)**2+p(2,5)**2).gt.10D0 .and. dsqrt(p(1,6)**2+p(2,6)**2).gt.10D0) then
+          s35 = momsum2sq(p(0:3,3),p(0:3,5))
+          s46 = momsum2sq(p(0:3,4),p(0:3,6))
+          call histogram("sqrt(s35)",100,400D0,800D0,dsqrt(s35),ampreal)
+          call histogram("sqrt(s46)",100,400D0,800D0,dsqrt(s46),ampreal)
         endif
 #endif
       end

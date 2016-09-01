@@ -82,16 +82,16 @@ softtest      1     ! (default 0) check soft singularities
 colltest      1     ! (default 0) check collinear singularities
 renscfact     1d0    ! (default 1d0) ren scale factor: muren  = muref * renscfact
 facscfact     1d0    ! (default 1d0) fac scale factor: mufact = muref * facscfact
-bornonly       1     ! (default 0) if 1 do Born only
+#bornonly       1     ! (default 0) if 1 do Born only
 #LOevents       1
 #smartsig       1     ! (default 1) remember equal amplitudes (0 do not remember)
-testplots      1     ! write data for gnuplot histograms to *.top
+#testplots      1     ! write data for gnuplot histograms to *.top
 #bornsuppfact  1     ! (default 0, do not use) use Born suppression factor
 #withdamp      1     ! (default 0, do not use) use Born-zero damping factor
 #hfact        100d0  ! (default no damping factor) damp factor for high-pt radiation: > 0 dampfac=h**2/(pt2+h**2)
 #hdamp        100d0  ! damping factor h**2/(pt2+h**2) to separate real contributions between Sudakov and remnants
-#storemintupb   0    ! whether to save btilde calls to set up upper bounding envelope (TODO: funktioniert bislang nicht, POWHEG hängt sich bei der Berechnung eines failure estimate auf)
-ewi           0d+0   ! regulator for on-shell divergences
+#storemintupb   0    ! whether to save btilde calls to set up upper bounding envelope
+ewi           1d-1   ! regulator for on-shell divergences
 storeinfo_rwgt 1     ! write informations into the event file that are necessary for reweighting
 lhrwgt_id '000'      ! reweighting id
 #compute_rwgt  1     ! reweight the events corresponding to different pdf's or scale choice
