@@ -169,7 +169,7 @@ c endif preprocessor condition "if defined(CHECK_FORM_MAD) || defined(MAD_BORN)"
 
 #ifdef DEBUG
         s35 = momsum2sq(p(0:3,3),p(0:3,5)) ! invariant mass of particle i + j
-        call histogram("sqrt_s35",90,100D0,1000D0,dsqrt(s35),born)
+        call histogram("sqrt(s35)",90,100D0,1000D0,dsqrt(s35),born)
         !call histogram("s46",100,1D4,2D4,skl,dabs(ampreal))
 #endif
       end

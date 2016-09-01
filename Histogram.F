@@ -8,9 +8,13 @@ c############### generate histograms ###################################
         double precision xval,weight
         integer st,ind,iun,ncalls(nhistsmax)
         integer hits(nhistsmax,0:nbinsmax)
-        double precision y(nhistsmax,0:nbinsmax),x(nhistsmax,0:nbinsmax)
-        double precision yint(nhistsmax,0:nbinsmax)
-        save y, x, yint, hits
+        double precision x(nhistsmax,0:nbinsmax)
+        double precision ysum(nhistsmax,0:nbinsmax)
+        double precision ymean(nhistsmax,0:nbinsmax)
+        double precision yerr(nhistsmax,0:nbinsmax)
+        double precision ysqsum(nhistsmax,0:nbinsmax)
+        save x, ysum, ymean, yerr, ysqsum
+        save hits
         data ncalls/nhistsmax * 0/
         save ncalls
         logical init(nhistsmax)
@@ -19,9 +23,11 @@ c############### generate histograms ###################################
         call index(name,ind,iun)
         if(init(ind)) then
           do k=0,nbins
-            y(ind,k) = 0D0
-            yint(ind,k) = 0D0
+            ysum(ind,k) = 0D0
+            ymean(ind,k) = 0D0
             hits(ind,k) = 0
+            ysqsum(ind,k) = 0D0
+            yerr(ind,k) = 0D0
           enddo
           init(ind) = .false.
         endif
@@ -33,7 +39,8 @@ c############### generate histograms ###################################
         do k=0,(nbins-1)
           if(xval.ge.x(ind,k) .and. xval.lt.x(ind,k+1)) then
             hits(ind,k) = hits(ind,k) + 1
-            y(ind,k) = y(ind,k) + weight
+            ysum(ind,k) = ysum(ind,k) + weight
+            ysqsum(ind,k) = ysqsum(ind,k) + weight**2D0
           endif
         enddo
         
@@ -41,14 +48,16 @@ c############### generate histograms ###################################
         if(mod(ncalls(ind),100).eq.0) then
           do k=0,(nbins-1)
             if(hits(ind,k).gt.0) then
-              yint(ind,k) = y(ind,k)/hits(ind,k)
+              ymean(ind,k) = ysum(ind,k)/hits(ind,k)
+              yerr(ind,k) = ysqsum(ind,k)-ymean(ind,k)**2D0
+              yerr(ind,k) = dsqrt(yerr(ind,k))/hits(ind,k)
             endif
           enddo
           
           open(iun, file=trim(adjustl(name))//'.top',status='replace')
           write(iun,*) " # ",trim(name),"  index ",ind
           do k=0,(nbins-1)
-            write(iun,*) x(ind,k),x(ind,k+1),yint(ind,k) !,yinterr(k)
+            write(iun,"(4(ES14.7))") x(ind,k),x(ind,k+1),ymean(ind,k),yerr(ind,k)
           enddo
           close(iun)
         endif  
