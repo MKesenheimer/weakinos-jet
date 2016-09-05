@@ -132,6 +132,8 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
           s46 = momsum2sq(p(0:3,4),p(0:3,6))
           call histogram("sqrt(s35)",100,400D0,800D0,dsqrt(s35),ampreal)
           call histogram("sqrt(s46)",100,400D0,800D0,dsqrt(s46),ampreal)
+          call histogram("int(s35)",1,100D0,1000D0,dsqrt(s35),ampreal)
+          call histogram("int(s46)",1,100D0,1000D0,dsqrt(s46),ampreal)
         endif
 #endif
       end
