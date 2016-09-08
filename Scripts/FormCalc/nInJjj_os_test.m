@@ -248,7 +248,8 @@ ins = DiagramSelect[ins,(FieldPointMemberQ[FieldPoints[##],FieldPoint[_][S[_,{_,
 (*Select Diagrams with possible double on-shell resonances*)
 ins3546 = DiagramSelect[ins,(SChannelExtQ[S[_,{_,_,_}],3,5][##] && SChannelExtQ[S[_,{_,_,_}],4,6][##])&];
 (*DEBUG*)
-ins3546 = DiagramExtract[ins3546,4]
+DoPaint[ins3546, "realOSall_3546"];
+ins3546 = DiagramExtract[ins3546,1] (*1=ll,2=lr,3=rl,4=rr*)
 DoPaint[ins3546, "realOS_3546"];
 
 
@@ -312,7 +313,9 @@ WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
 
 (*Combine the amplitudes again, but this time the resonant diagrams are regulated*)
 (*Use here the regulated on shell amplitudes with summation over the sfermion indices*)
-real = Combine[realNR,real3546];
+(*real = Combine[realNR,real3546];*)
+(*DEBUG*)
+real = real3546;
 
 (*Write real files with inserted regulator for on-shell diagrams*)
 amps = {real};

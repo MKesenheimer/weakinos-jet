@@ -855,9 +855,5 @@ c set the on shell regulator wreg
           ewi = powheginput("ewi")
         endif
         wreg = ewi*m_avrg ! Prospino like definition
-        
-#ifdef DEBUGQ
-        wreg = 1D50
-#endif
       end
 c############### end subroutine set_os_regulator #######################

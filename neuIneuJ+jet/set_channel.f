@@ -39,7 +39,6 @@ c 5: left squark resonant with legs 3&6, and left squark resonant with legs 4&5
 c 6: right squark resonant with legs 3&6, and left squark resonant with legs 4&5
 c 7: left squark resonant with legs 3&6, and right squark resonant with legs 4&5
 c 8: right squark resonant with legs 3&6, and right squark resonant with legs 4&5
-
       subroutine set_channel(flav,ichan)
         implicit none
 #include "nlegborn.h"
@@ -190,17 +189,25 @@ c 8: right squark resonant with legs 3&6, and right squark resonant with legs 4&
         endselect
 
 #ifdef DEBUG
-            osres_mj = par_MD
-            osres_sfeij = 2
-            osres_mij = par_MSf(2,4,1)
-            osres_wij = par_Sfwidth(2,4,1)
-            osres_ml = par_MD
-            osres_sfekl = 2
-            osres_mkl = par_MSf(2,4,1)
-            osres_wkl = par_Sfwidth(2,4,1)
+        if(ichan.eq.1) then
+          osres_i = 3
+          osres_j = 5
+          osres_k = 4
+          osres_l = 6
+          osres_mj = par_MD
+          osres_sfeij = 1
+          osres_mij = par_MSf(1,4,1)
+          osres_wij = par_Sfwidth(1,4,1)
+          osres_ml = par_MD
+          osres_sfekl = 1
+          osres_mkl = par_MSf(1,4,1)
+          osres_wkl = par_Sfwidth(1,4,1)
+        else
+          print*,ichan
+          stop
+        endif
 #endif
-            
-        
+
         ! in case some masses are negative
         osres_mi = dabs(osres_mi)
         osres_mj = dabs(osres_mj)
@@ -217,7 +224,7 @@ c 8: right squark resonant with legs 3&6, and right squark resonant with legs 4&
         print*,"mij,mkl",osres_mij,osres_mkl
         print*,"wij,wkl",osres_wij,osres_wkl
         print*,"par_FinMasses",par_Fin1mass,par_Fin2mass
-        stop
+        !stop
 #endif
       end
 c############### end subroutine set_channel ############################

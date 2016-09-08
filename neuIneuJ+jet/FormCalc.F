@@ -67,16 +67,19 @@ c############### subroutine getBornAmps ################################
         double precision fqg, fqq
         parameter (fqq=-eighth*CF, fqg=eighth*NC**2*CF)
         
-        ! TODO: calculate bmunu with FormCalc, here it is calculated by MadGraph
+        ! reset
+        bornjk(:,:) = 0D0
+        bmunu(:,:,:) = 0D0
+        
+        ! TODO: calculate bmunu with FormCalc
+        ! for now it is calculated by MadGraph
         call sborn_proc(p,flav,born,bornjk,bmunu)
         
         ! flags: Bit0 (reset) = 1, Bit1 (loop) = 0 -> B01 = D1
         flags = 1
         call getAmps(p,flav,flags,amp)
         born = amp(1)
-        ! reset
-        bornjk(:,:) = 0D0
-        bmunu(:,:,:) = 0D0
+        
         ! fill the color and spin correlated amplitudes
         ! F F -> F F g
         if(flav(1).ne.0 .and. flav(2).ne.0) then

@@ -414,7 +414,7 @@ DECAY   2000002     1.15297292E+00   # sup_R decays, original
 #
 #         PDG            Width
 DECAY   1000001     5.31278772E+00   # sdown_L decays, original
-#DECAY   1000001     1.0E+01 # test
+#DECAY   1000001     2.0E-01 # test
 #DECAY   1000001     0.0E+00 # test
 #          BR         NDA      ID1       ID2
      2.32317969E-02    2     1000022         1   # BR(~d_L -> ~chi_10 d)

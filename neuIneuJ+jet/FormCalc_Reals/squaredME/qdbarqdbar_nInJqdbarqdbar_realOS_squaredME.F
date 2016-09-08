@@ -7,7 +7,11 @@
         double precision fc_result(2)
         fc_result(:) = 0D0
         ! sfeij and sfekl are defined in set_channel
-        SfeSQ1 = 2
-        SFeSQ2 = 2
-        call qdbarqdbar_nInJqdbarqdbar_3546_SquaredME(fc_result, helicities, flags)
+        SfeSQ1 = osres_sfeij
+        SFeSQ2 = osres_sfekl
+        if(ichan.eq.1) then
+          call qdbarqdbar_nInJqdbarqdbar_3546_SquaredME(fc_result, helicities, flags)
+          goto 10
+        endif
+ 10     continue
       end

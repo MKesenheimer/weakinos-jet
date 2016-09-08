@@ -47,6 +47,7 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         external momsum2sq, momsum3sq
 #ifdef DEBUG
         double precision s35, s46
+        double precision wreg1
 #endif
 
         if (init_reals) then
@@ -61,9 +62,10 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         ! calculate the couplings for this PS point
         call set_ebe_couplings
 
+
         ! get the formcalc real amplitudes
         call getRealAmps(p,rflav,amp)
-
+        
 #ifdef DEBUG
         ! subtract the on shell contributions
         if(rflav(5).ne.0 .and. rflav(6).ne.0) then
@@ -82,7 +84,7 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
             mkl = osres_mkl
             wij = osres_wij
             wkl = osres_wkl
-
+            
             ! calculate the invariants
             s12 = momsum2sq(p(0:3,1),p(0:3,2)) ! invariant mass of particle 1 + 2
             sij = momsum2sq(p(0:3,i),p(0:3,j)) ! invariant mass of particle i + j
@@ -94,17 +96,39 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
               bwratio = (mij*(wreg+wij))**2/((sij-mij**2)**2+(mij*(wreg+wij))**2)*
      &                  (mkl*(wreg+wkl))**2/((skl-mkl**2)**2+(mkl*(wreg+wkl))**2)
               ! off_to_on the momenta p to on-shell momenta p_os
-              call off_to_on(p,rflav,ichan,p_OS)
+              call off_to_on(p,rflav,ichan,.true.,.true.,p_OS)
               call getRealOSAmps(p_os,rflav,ichan,ampos)
               ampCT = bwratio*ampos
               ! rescale the counter term to fit into the new PS
-              !ampCT = corrfac(s12,mi,mj,mk,sij,mij)*ampCT
-            else
-              ampCT = 0D0
-            endif  
-            amp = amp - ampCT
+              !ampCT = corrfac(s12,mi,mj,mk,ml,mij,mkl,sij,skl)*ampCT
+              amp = amp - ampCT
+              
+            ! Prospino scheme for single resonances
+            elseif((s12.ge.(mij+mk+ml)**2).and.(mij.ge.(mi+mj))) then
+              ! calculate the ratio of the breit wigner functions
+              bwratio = (mij*(wreg+wij))**2/((sij-mij**2)**2+(mij*(wreg+wij))**2)
+              ! off_to_on the momenta p to on-shell momenta p_os
+              call off_to_on(p,rflav,ichan,.true.,.false.,p_OS)
+              call getRealOSAmps(p_os,rflav,ichan,ampos)
+              ampCT = bwratio*ampos
+              ! rescale the counter term to fit into the new PS
+              !ampCT = corrfac(s12,mi,mj,mk,ml,mij,mkl,sij,skl)*ampCT
+              amp = amp - ampCT
+            
+            elseif((s12.ge.(mi+mj+mkl)**2).and.(mkl.ge.(mk+ml))) then
+              ! calculate the ratio of the breit wigner functions
+              bwratio = (mkl*(wreg+wkl))**2/((skl-mkl**2)**2+(mkl*(wreg+wkl))**2)
+              ! off_to_on the momenta p to on-shell momenta p_os
+              call off_to_on(p,rflav,ichan,.false.,.true.,p_OS)
+              call getRealOSAmps(p_os,rflav,ichan,ampos)
+              ampCT = bwratio*ampos
+              ! rescale the counter term to fit into the new PS
+              !ampCT = corrfac(s12,mi,mj,mk,ml,mij,mkl,sij,skl)*ampCT
+              amp = amp - ampCT
+            endif
+            
           enddo
-        endif
+        endif  
 #endif
 
         ! Cancel as/(2pi) associated with amp2. It will be put back by real_ampsq
@@ -132,8 +156,8 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
           s46 = momsum2sq(p(0:3,4),p(0:3,6))
           call histogram("sqrt(s35)",100,400D0,800D0,dsqrt(s35),ampreal)
           call histogram("sqrt(s46)",100,400D0,800D0,dsqrt(s46),ampreal)
-          call histogram("int(s35)",1,100D0,1000D0,dsqrt(s35),ampreal)
-          call histogram("int(s46)",1,100D0,1000D0,dsqrt(s46),ampreal)
+          call histogram("int(s35)",1,1D1,1D6,dsqrt(s35),ampreal)
+          call histogram("int(s46)",1,1D1,1D6,dsqrt(s46),ampreal)
         endif
 #endif
       end

@@ -58,9 +58,9 @@ lhans2 10042        ! CTeQ6l1 PDF LO, pdf set for hadron 2 (LHA numbering)
 use-old-grid    0    ! if 1 use old grid if file pwggrids.dat is present (0 regenerate)
 use-old-ubound  0    ! if 1 use norm of upper bounding function stored in pwgubound.dat if present (0 regenerate)
 
-ncall1   200000        ! number of calls for initializing the integration grid
+ncall1   20000        ! number of calls for initializing the integration grid
 itmx1    4           ! number of iterations for initializing the integration grid
-ncall2   200000        ! number of calls for computing the integral and finding upper bound
+ncall2   20000        ! number of calls for computing the integral and finding upper bound
 itmx2    4           ! number of iterations for computing the integral and finding upper bound
 ncall1osres 20000    ! number of calls for initializing the integration grid of on-shell resonances (only required for DSUB_II)
 itmx1osres  6        ! number of iterations for initializing the integration grid of on-shell resonances (only required for DSUB_II)
@@ -91,7 +91,7 @@ facscfact     1d0    ! (default 1d0) fac scale factor: mufact = muref * facscfac
 #hfact        100d0  ! (default no damping factor) damp factor for high-pt radiation: > 0 dampfac=h**2/(pt2+h**2)
 #hdamp        100d0  ! damping factor h**2/(pt2+h**2) to separate real contributions between Sudakov and remnants
 #storemintupb   0    ! whether to save btilde calls to set up upper bounding envelope
-ewi           1d+20   ! regulator for on-shell divergences
+ewi           1d-2   ! regulator for on-shell divergences
 storeinfo_rwgt 1     ! write informations into the event file that are necessary for reweighting
 lhrwgt_id '000'      ! reweighting id
 #compute_rwgt  1     ! reweight the events corresponding to different pdf's or scale choice
