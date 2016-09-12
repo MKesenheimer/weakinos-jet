@@ -59,7 +59,6 @@ c verbose = 3: hard check. Throw error and show all output
 c verbose = 4: No output at all, but set the variable lresult
       subroutine check_4conservation(p,nleg,verbose,lresult)
         implicit none
-#include "nlegborn.h"
         integer nleg,i,j
         double precision p(0:3,nleg) ! momentum vectors
         double precision pi(0:3) ! sum of incoming momenta

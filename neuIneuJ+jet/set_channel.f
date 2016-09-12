@@ -224,7 +224,7 @@ c 8: right squark resonant with legs 3&6, and right squark resonant with legs 4&
         print*,"mij,mkl",osres_mij,osres_mkl
         print*,"wij,wkl",osres_wij,osres_wkl
         print*,"par_FinMasses",par_Fin1mass,par_Fin2mass
-        !stop
+        stop
 #endif
       end
 c############### end subroutine set_channel ############################

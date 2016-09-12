@@ -57,12 +57,10 @@ c      pk     pl
 c
       subroutine off_to_on(p,flav,ichan,flag_ij,flag_kl,p_OS)
         implicit none
-#include "nexternal.inc"
 #include "nlegborn.h"
-#include "pwhg_kn.h"
 #include "osres.h"
         ! momenta from PS-generator, on-shell momenta
-        double precision p(0:3,nexternal),p_OS(0:3,nexternal)
+        double precision p(0:3,nlegreal),p_OS(0:3,nlegreal)
         integer ichan, flav(nlegreal)
         logical flag_ij, flag_kl
         ! mass at resonance
@@ -106,9 +104,9 @@ c
         mij = osres_mij
         mkl = osres_mkl
         
-        if( nexternal.ne.6) then
+        if( nlegreal.ne.6) then
           print*, "error in subroutine off_to_on"
-          print*, "nexternal = ", nexternal
+          print*, "nlegreal = ", nlegreal
           stop
         endif
         
@@ -205,7 +203,7 @@ c
         p_OS(:,k) = pk_tilde(:)
         p_OS(:,l) = pl_tilde(:)
 
-#ifdef DEBUG
+#ifdef DEBUGQ
         if(.not.flag_ij.or..not.flag_kl) then
 
         norm = dsqrt(pkl_tilde(1)**2+pkl_tilde(2)**2+pkl_tilde(3)**2)
@@ -363,9 +361,6 @@ c and every counter term which uses the on-shell momenta should be
 c rescaled by this correction factor
       double precision function corrfac(shat,mi,mj,mk,ml,mij,mkl,sij,skl)
         implicit none
-#include "nexternal.inc"
-#include "nlegborn.h"
-#include "pwhg_kn.h"
         !input variables
         double precision shat,mi,mj,mk,ml,mkl,mij,sij,skl
         ! external functions
