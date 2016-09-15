@@ -182,7 +182,7 @@ real = real//.{PowerOf[a_]:>PowerOf[a][1]};*)
 
 (*insert the particle widths*)
 widths = {MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
-real = real/.{Den[x_,y_]:>Den[x/.widths,y/.widths]}
+real = real/.{Den[x_,y_]:>Den[x,y/.widths]}
 
 
 (*Write files of non resonant reals*)

@@ -45,7 +45,7 @@ c############### generate histograms ###################################
         enddo
         
         ncalls(ind) = ncalls(ind) + 1
-        if(mod(ncalls(ind),1000).eq.0) then
+        if(mod(ncalls(ind),10000).eq.0) then
           do k=0,(nbins-1)
             if(hits(ind,k).gt.0) then
               ymean(ind,k) = ysum(ind,k)/hits(ind,k)

@@ -47,7 +47,6 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         external momsum2sq, momsum3sq
 #ifdef DEBUG
         double precision s35, s46
-        double precision wreg1
 #endif
 
         if (init_reals) then
@@ -62,25 +61,9 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         ! calculate the couplings for this PS point
         call set_ebe_couplings
 
-#ifdef DEBUGQ
-        do i=1,nlegreal
-          do j=0,3
-            print*,"       p(",j,",",i,") = ", p(j,i)
-          enddo
-        enddo
-        call off_to_on(p,rflav,1,.true.,.true.,p_OS)
-        do i=1,nlegreal
-          do j=0,3
-            print*,"       p_OS(",j,",",i,") = ", p_OS(j,i)
-          enddo
-        enddo
-        stop
-#endif
-
-
         ! get the formcalc real amplitudes
         call getRealAmps(p,rflav,amp)
-        
+       
 #ifdef DEBUG
         ! subtract the on shell contributions
         if(rflav(5).ne.0 .and. rflav(6).ne.0) then
@@ -105,57 +88,25 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
             sij = momsum2sq(p(0:3,i),p(0:3,j)) ! invariant mass of particle i + j
             skl = momsum2sq(p(0:3,k),p(0:3,l)) ! invariant mass of particle k + l
             
-#ifdef DEBUGQ
-            ! theta functions
-            if(s12.ge.(mij+mkl)**2) then
-              print*,"Theta(s12-(mij+mkl)**2) = 1"
-            else
-              print*,"Theta(s12-(mij+mkl)**2) = 0"
-            endif
-            if(sij.ge.mij**2) then
-              print*,"Theta(sij-mij**2) = 1"
-            else
-              print*,"Theta(sij-mij**2) = 0"
-            endif
-            if(skl.ge.mkl**2) then
-              print*,"Theta(skl-mkl**2) = 1"
-            else
-              print*,"Theta(skl-mkl**2) = 0"
-            endif
-            print*
-#endif
-            
-            
-            ! Prospino scheme for double resonances
+            ! subtraction scheme for double resonances
             if((s12.ge.(mij+mkl)**2).and.(mij.ge.(mi+mj)).and.(mkl.ge.(mk+ml))) then
               ! calculate the ratio of the breit wigner functions
-              bwratio = (mij*(wreg+wij))**2/((sij-mij**2)**2+(mij*(wreg+wij))**2)*
-     &                  (mkl*(wreg+wkl))**2/((skl-mkl**2)**2+(mkl*(wreg+wkl))**2)
+              bwratio = (mij**2*mkl**2*wij**2*wkl**2*
+     &                  (mij**4 + (-mkl**2 + sij + skl)**2 + 
+     &                   mij**2*(2*mkl**2 - 2*(sij + skl) + 
+     &                   wij**2) + 2*mij*mkl*wij*wkl + 
+     &                  mkl**2*wkl**2)*
+     &                  (mij*(wij + wreg) + mkl*(wkl + wreg))**2)/
+     &                  (((mij**2 - sij)**2 + mij**2*wij**2)*
+     &                  (mij*wij + mkl*wkl)**2*
+     &                  ((mkl**2 - skl)**2 + mkl**2*wkl**2)*
+     &                  (mij**4 + mkl**4 + (sij + skl)**2 + 
+     &                   2*mij*mkl*(wij + wreg)*(wkl + wreg) + 
+     &                   mij**2*(2*mkl**2 - 2*sij - 2*skl + 
+     &                   (wij + wreg)**2) + 
+     &                  mkl**2*(-2*sij - 2*skl + (wkl + wreg)**2)))
               ! off_to_on the momenta p to on-shell momenta p_os
               call off_to_on(p,rflav,ichan,.true.,.true.,p_OS)
-              call getRealOSAmps(p_os,rflav,ichan,ampos)
-              ampCT = bwratio*ampos
-              ! rescale the counter term to fit into the new PS
-              !ampCT = corrfac(s12,mi,mj,mk,ml,mij,mkl,sij,skl)*ampCT
-              amp = amp - ampCT
-              
-            ! Prospino scheme for single resonances
-            elseif((sij.ge.mij**2).and.(skl.lt.mkl**2).and.(mij.ge.(mi+mj))) then
-              ! calculate the ratio of the breit wigner functions
-              bwratio = (mij*(wreg+wij))**2/((sij-mij**2)**2+(mij*(wreg+wij))**2)
-              ! off_to_on the momenta p to on-shell momenta p_os
-              call off_to_on(p,rflav,ichan,.true.,.false.,p_OS)
-              call getRealOSAmps(p_os,rflav,ichan,ampos)
-              ampCT = bwratio*ampos
-              ! rescale the counter term to fit into the new PS
-              !ampCT = corrfac(s12,mi,mj,mk,ml,mij,mkl,sij,skl)*ampCT
-              amp = amp - ampCT
-            
-            elseif((skl.ge.mkl**2).and.(sij.lt.mij**2).and.(mkl.ge.(mk+ml))) then
-              ! calculate the ratio of the breit wigner functions
-              bwratio = (mkl*(wreg+wkl))**2/((skl-mkl**2)**2+(mkl*(wreg+wkl))**2)
-              ! off_to_on the momenta p to on-shell momenta p_os
-              call off_to_on(p,rflav,ichan,.false.,.true.,p_OS)
               call getRealOSAmps(p_os,rflav,ichan,ampos)
               ampCT = bwratio*ampos
               ! rescale the counter term to fit into the new PS
@@ -166,7 +117,6 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
           enddo
         endif  
 #endif
-
         ! Cancel as/(2pi) associated with amp2. It will be put back by real_ampsq
         ampreal = amp/(st_alpha/(2d0*pi))
         

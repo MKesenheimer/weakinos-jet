@@ -52,12 +52,15 @@ DEST=${PWD}/../../${PROCDIR}
 # number of particles (incoming + outgoing)
 NPART=6
 # process list file
+#PROCF="./proc_nInJjj_nr"
 #PROCF="./proc_nInJjj_os_test"
 PROCF="./proc_nInJjj_reg_test"
 # the name of Mathematica Scripts
+#MSCRIPT="./nInJjj.m"
 #MSCRIPT="./nInJjj_os_test.m"
 MSCRIPT=""
 # the type of the amplitudes (born, virt, real, realOS)
+#TYPE="born"
 #TYPE="realOS"
 TYPE="real"
 

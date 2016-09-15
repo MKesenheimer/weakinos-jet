@@ -253,8 +253,8 @@ c
         
         ! - checks -
         ! check on-shell condition
-        !if(flag_ij) call check_on_shell(p_OS(:,i),p_OS(:,j),mij)
-        !if(flag_kl) call check_on_shell(p_OS(:,k),p_OS(:,l),mkl)
+        if(flag_ij) call check_on_shell(p_OS(:,i),p_OS(:,j),mij)
+        if(flag_kl) call check_on_shell(p_OS(:,k),p_OS(:,l),mkl)
         ! check four momentum conservation
         call check_4conservation(p_OS,nlegreal,3,lresult)
       end

@@ -203,8 +203,6 @@ c############### subroutine getAmps ####################################
           symfac = 2d0*symfac
         endif
         
-        !call clearcache
-        
         ! set the formCalc vectors
         call formCalcVecSet(nlegborn,ps,flavs)
         

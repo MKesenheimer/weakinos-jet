@@ -202,6 +202,19 @@ c 8: right squark resonant with legs 3&6, and right squark resonant with legs 4&
           osres_sfekl = 1
           osres_mkl = par_MSf(1,4,1)
           osres_wkl = par_Sfwidth(1,4,1)
+        elseif(ichan.eq.2) then
+          osres_i = 3
+          osres_j = 5
+          osres_k = 4
+          osres_l = 6
+          osres_mj = par_MD
+          osres_sfeij = 2
+          osres_mij = par_MSf(2,4,1)
+          osres_wij = par_Sfwidth(2,4,1)
+          osres_ml = par_MD
+          osres_sfekl = 2
+          osres_mkl = par_MSf(2,4,1)
+          osres_wkl = par_Sfwidth(2,4,1)
         else
           print*,ichan
           stop

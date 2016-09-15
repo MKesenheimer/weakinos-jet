@@ -131,9 +131,9 @@ For[i=1, i<7, i++,
 If[p[i] === "qu", P[i] = F[3],
 If[p[i] === "qubar", P[i] = -F[3],
 If[p[i] === "qd", P[i] = F[4],
-If[p[i] === "qdbar", P[i] = -F[4,{1}], (*CHANGED!!!!!!!!!*)
-If[p[i] === "nI", P[i] = F[11,{1}],(*CHANGED!!!!!!!!!*)
-If[p[i] === "nJ", P[i] = F[11,{2}],(*CHANGED!!!!!!!!!*)
+If[p[i] === "qdbar", P[i] = -F[4,{1}],(*CHANGED!!!!!!!*)
+If[p[i] === "nI", P[i] = F[11,{1}],(*CHANGED!!!!!!!*)
+If[p[i] === "nJ", P[i] = F[11,{2}],(*CHANGED!!!!!!!*)
 If[p[i] === "xI-", P[i] = F[12],
 If[p[i] === "xI+", P[i] = -F[12],
 If[p[i] === "xJ-", P[i] = F[12],
@@ -237,8 +237,9 @@ getReplacementHead[f_->_]:=f
 Print["On-Shell Diagrams"]
 
 tops = CreateTopologies[0, 2 -> 4];
-ins = InsertFields[tops, process, InsertionLevel -> {Particles}];
 (*ins = InsertFields[tops, process];*)
+(*DEBUG*)
+ins = InsertFields[tops, process, InsertionLevel -> {Particles}];
 
 (*Extract the on-shell diagrams*)
 (*Select Diagrams with Squarks*)
@@ -249,17 +250,19 @@ ins = DiagramSelect[ins,(FieldPointMemberQ[FieldPoints[##],FieldPoint[_][S[_,{_,
 ins3546 = DiagramSelect[ins,(SChannelExtQ[S[_,{_,_,_}],3,5][##] && SChannelExtQ[S[_,{_,_,_}],4,6][##])&];
 (*DEBUG*)
 DoPaint[ins3546, "realOSall_3546"];
-ins3546 = DiagramExtract[ins3546,1] (*1=ll,2=lr,3=rl,4=rr*)
+ins3546 = DiagramExtract[ins3546,1,4] (*1=ll,2=lr,3=rl,4=rr*)
 DoPaint[ins3546, "realOS_3546"];
 
-
-(*now, generate the amplitudes and insert the particle widths*)
-widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I (WSf[sfe,n1,n2]+WREG) MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
+(*now, generate the amplitudes and insert the natural particle widths*)
+widths = {MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
+reg = {Den[sij_,MSf2[cij_,tij_,gij_]-I MSf[cij_,tij_,gij_] WSf[cij_,tij_,gij_]]Den[skl_,MSf2[ckl_,tkl_,gkl_]-I MSf[ckl_,tkl_,gkl_] WSf[ckl_,tkl_,gkl_]]:>((Den[sij,MSf2[cij,tij,gij]-I MSf[cij,tij,gij] (WSf[cij,tij,gij]+WREG)]^-1+Den[skl,MSf2[ckl,tkl,gkl]-I MSf[ckl,tkl,gkl] (WSf[ckl,tkl,gkl]+WREG)]^-1)^-1)*(Den[sij,MSf2[cij,tij,gij]-I MSf[cij,tij,gij] WSf[cij,tij,gij]]+Den[skl,MSf2[ckl,tkl,gkl]-I MSf[ckl,tkl,gkl] WSf[ckl,tkl,gkl]])};
 
 real = CalcFeynAmp[CreateFeynAmp[ins3546](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
 (*real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
 real = real//.{PowerOf[a_]:>PowerOf[a][1]};*)
-real3546 = real/.{Den[x_,y_]:>Den[x/.widths,y/.widths]};
+real3546 = real/.{Den[x_,y_]:>Den[x,y/.widths]};
+(*insert the regulator*)
+real3546 = real3546/.reg;
 (*set the sfermion index in fortran program*)
 real3546Sfe = real3546//.{SumOver[Sfe6,i_]:>SumOver[Sfe6,i,External], SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External], SumOver[Sfe9,i_]:>SumOver[Sfe9,i,External]}
 
@@ -283,7 +286,7 @@ widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-
 realNR = CalcFeynAmp[CreateFeynAmp[insNR](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
 (*realNR = realNR//.{PowerOf[a_]^x_:>PowerOf[a][x]};
 realNR = realNR//.{PowerOf[a_]:>PowerOf[a][1]};*)
-realNR = realNR/.{Den[x_,y_]:>Den[x/.widths,y/.widths]}
+realNR = realNR/.{Den[x_,y_]:>Den[x,y/.widths]}
 
 
 (*Write files for on-shell resonant reals, OS3546*)
