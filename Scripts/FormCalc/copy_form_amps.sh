@@ -47,22 +47,30 @@ WORKINGDIR=${PWD}
 
 # the name of the target process directory
 PROCDIR="neuIneuJ+jet/FormCalc_Reals"
+
 # where to copy the amplitudes to
 DEST=${PWD}/../../${PROCDIR}
+
 # number of particles (incoming + outgoing)
 NPART=6
+
 # process list file
 #PROCF="./proc_nInJjj_nr"
 #PROCF="./proc_nInJjj_os_test"
 PROCF="./proc_nInJjj_reg_test"
+
 # the name of Mathematica Scripts
 #MSCRIPT="./nInJjj.m"
-#MSCRIPT="./nInJjj_os_test.m"
+#MSCRIPT="./nInJjj_os.m"
 MSCRIPT=""
+
 # the type of the amplitudes (born, virt, real, realOS)
 #TYPE="born"
 #TYPE="realOS"
 TYPE="real"
+
+# the number of subchannels of realOS amplitudes (f.e. ll, lr, rl, rr)
+NSUBCHANNELS=4
 
 ########################################################################
 #       -*- usually no editing is required below this line -*-         #
@@ -247,19 +255,7 @@ for i in `seq 0 1 $((NPROC-1))`; do
     # entry which is "none"
     IFS=$',\r\n' command eval 'CHANNEL=(${CHANNELS[i]})'
     unset IFS
-    NCHANNELS=0
-    MCHANNEL=()
     for j in ${CHANNEL[@]}; do
-        # the mathematica identifiers don't need the left and right identifier, truncate them
-        MCHANNEL+=($(echo "${CHANNEL[NCHANNELS]}" | tr -d "lr"))
-        # count the different channels starting with zero
-        NCHANNELS=$((1+NCHANNELS))
-    done
-    MCHANNEL=($(echo "${MCHANNEL[@]}" | xargs -n1 | sort -u | xargs))
-    #echo "$NCHANNELS channels: ${CHANNEL[@]}"
-    #echo "Mathematica identifiers: ${MCHANNEL[@]}"
-    #exit
-    for j in ${MCHANNEL[@]}; do
         if [[ $TYPE == "realOS" ]]; then
             APPEND="_${j}"
         fi
@@ -336,13 +332,9 @@ if [[ $TYPE == "realOS" ]]; then
         echo "        SFeSQ2 = osres_sfekl" >> ${PRE2}_squaredME.F
         NCHANNELS=0
         for j in ${CHANNEL[@]}; do
-            # the mathematica identifiers don't need the left and right identifier, truncate them
-            MCHANNEL+=($(echo "${CHANNEL[NCHANNELS]}" | tr -d "lr"))
+            PRE1="${PROCESSES[i]}_${j}"
             NCHANNELS=$((1+NCHANNELS))
-        done
-        for j in `seq 0 1 $((NCHANNELS-1))`; do
-            PRE1="${PROCESSES[i]}_${MCHANNEL[j]}"
-            echo "        if(ichan.eq.$((j+1))) then" >> ${PRE2}_squaredME.F
+            echo "        if(ichan.ge.$((NSUBCHANNELS*NCHANNELS-NSUBCHANNELS+1)) .and. ichan.le.$((NSUBCHANNELS*NCHANNELS))) then" >> ${PRE2}_squaredME.F
             echo "          call ${PRE1}_SquaredME(fc_result, helicities, flags)" >> ${PRE2}_squaredME.F
             echo "          goto 10" >> ${PRE2}_squaredME.F
             echo "        endif" >> ${PRE2}_squaredME.F
@@ -352,43 +344,6 @@ if [[ $TYPE == "realOS" ]]; then
     done
     echo "done."
 fi
-
-echo
-echo "new Makefile objects (without OS-amplitudes):"
-# copy the output to your makefile
-echo "cd ${DEST}"
-cd ${DEST}
-COUNTER=0
-y=''
-for x in $(ls squaredME/* | grep -v "3546" | grep -v "3645" | grep -v "realOS"); do
-  x=${x##*/}
-  let COUNTER=COUNTER+1
-  y=$y"  "$(echo $x | sed -e 's/\.F/\.o/g')
-  if [ $COUNTER -eq 3  ]; then
-    COUNTER=0
-     echo -e '\t'$y' \'
-     y=''
-  fi
-done
-echo -e '\t'$y
-echo
-echo "new Makefile objects (OS-amplitudes):"
-# copy the output to your makefile
-echo "cd ${DEST}"
-cd ${DEST}
-COUNTER=0
-y=''
-for x in $(ls squaredME/*realOS*.F squaredME/*3645* squaredME/*3546*); do
-  x=${x##*/}
-  let COUNTER=COUNTER+1
-  y=$y"  "$(echo $x | sed -e 's/\.F/\.o/g')
-  if [ $COUNTER -eq 3  ]; then
-    COUNTER=0
-     echo -e '\t'$y' \'
-     y=''
-  fi
-done
-echo -e '\t'$y
 
 # clear junk
 cd ${DEST}

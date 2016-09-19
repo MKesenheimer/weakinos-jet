@@ -244,22 +244,14 @@ ins = InsertFields[tops, process];
 ins = DiagramSelect[ins,(FieldPointMemberQ[FieldPoints[##],FieldPoint[_][S[_,{_,_,_}],_,_]]||
 							FieldPointMemberQ[FieldPoints[##],FieldPoint[_][_,_,S[_,{_,_,_}]]]||
 							FieldPointMemberQ[FieldPoints[##],FieldPoint[_][_,S[_,{_,_,_}],_]])&];
-
 (*Select Diagrams with possible double on-shell resonances*)
-ins1 = DiagramSelect[ins,(SChannelExtQ[S[_,{_,_,_}],3,5][##] && SChannelExtQ[S[_,{_,_,_}],4,6][##])&];
-DoPaint[ins1, "realOSall_3546"];
-ins3546 = DiagramExtract[ins1,2] (*t-channel.*)
-ins4635 = DiagramExtract[ins1,4] (*u-channel*)
+ins = DiagramSelect[ins,(SChannelExtQ[S[_,{_,_,_}],3,5][##] && SChannelExtQ[S[_,{_,_,_}],4,6][##])&];
+(*DEBUG*)
+DoPaint[ins, "realOSall"];
+ins3546 = DiagramExtract[ins,2] (*t-channel.*)
+ins4635 = DiagramExtract[ins,4] (*u-channel*)
 DoPaint[ins3546, "realOS_3546"];
 DoPaint[ins4635, "realOS_4635"];
-
-(*Select Diagrams with possible double on-shell resonances*)
-ins2 = DiagramSelect[ins,(SChannelExtQ[S[_,{_,_,_}],3,6][##] && SChannelExtQ[S[_,{_,_,_}],4,5][##])&];
-DoPaint[ins2, "realOSall_3645"];
-ins3645 = DiagramExtract[ins2,2] (*t-channel.*)
-ins4536 = DiagramExtract[ins2,4] (*u-channel*)
-DoPaint[ins3645, "realOS_3645"];
-DoPaint[ins4536, "realOS_4536"];
 
 
 (*insert the natural particle widths*)
@@ -272,25 +264,17 @@ reg = {Den[sij_,MSf2[cij_,tij_,gij_]-I MSf[cij_,tij_,gij_] WSf[cij_,tij_,gij_]]D
 
 real3546 = CalcFeynAmp[CreateFeynAmp[ins3546](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
 real4635 = CalcFeynAmp[CreateFeynAmp[ins4635](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
-real3645 = CalcFeynAmp[CreateFeynAmp[ins3645](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
-real4536 = CalcFeynAmp[CreateFeynAmp[ins4536](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
 (*real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
 real = real//.{PowerOf[a_]:>PowerOf[a][1]};*)
 real3546 = real3546/.{Den[x_,y_]:>Den[x,y/.widths]};
 real4635 = real4635/.{Den[x_,y_]:>Den[x,y/.widths]};
-real3645 = real3645/.{Den[x_,y_]:>Den[x,y/.widths]};
-real4536 = real4536/.{Den[x_,y_]:>Den[x,y/.widths]};
 (*insert the regulator*)
 real3546 = real3546/.reg;
 real4635 = real4635/.reg;
-real3645 = real3645/.reg;
-real4536 = real4536/.reg;
 
 (*set the sfermion index in fortran program*)
 real3546Sfe = real3546//.{SumOver[Sfe6,i_]:>SumOver[Sfe6,i,External], SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External], SumOver[Sfe9,i_]:>SumOver[Sfe9,i,External]}
 real4635Sfe = real4635//.{SumOver[Sfe6,i_]:>SumOver[Sfe6,i,External], SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External], SumOver[Sfe9,i_]:>SumOver[Sfe9,i,External]}
-real3645Sfe = real3645//.{SumOver[Sfe6,i_]:>SumOver[Sfe6,i,External], SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External], SumOver[Sfe9,i_]:>SumOver[Sfe9,i,External]}
-real4536Sfe = real4536//.{SumOver[Sfe6,i_]:>SumOver[Sfe6,i,External], SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External], SumOver[Sfe9,i_]:>SumOver[Sfe9,i,External]}
 
 
 Print["Non resonant Diagrams"]
@@ -304,7 +288,6 @@ insNR = DiagramSelect[ins,(Not[SChannelExtQ[S[_],3,5][##] && SChannelExtQ[S[_],4
 DoPaint[insNR, "realNR"];
 
 (*insert the particle widths*)
-(*widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW};*)
 widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
 
 realNR = CalcFeynAmp[CreateFeynAmp[insNR](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
@@ -363,59 +346,9 @@ dir = SetupCodeDir[name<>"_realOS_4635", Drivers -> name <> "_drivers"];
 WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
 
 
-(*Write files for on-shell resonant reals, OS3645*)
-amps = {real3645Sfe};
-{realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
-
-col = ColourME[All, realOS];
-
-abbr = OptimizeAbbr[Abbr[]];
-subexpr = OptimizeAbbr[Subexpr[]];
-
-(*fortran can't handle arrays with dimensionality greater than 7*)
-(*apply back the subexpressions with number of arguments greater than 6*)
-subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-realOS = realOS//.subexpr6;
-abbr = abbr//.subexpr6;
-
-(*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-subexpr = subexpr//.subexpr6;
-
-dir = SetupCodeDir[name<>"_realOS_3645", Drivers -> name <> "_drivers"];
-WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
-
-
-(*Write files for on-shell resonant reals, OS4536*)
-amps = {real4536Sfe};
-{realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
-
-col = ColourME[All, realOS];
-
-abbr = OptimizeAbbr[Abbr[]];
-subexpr = OptimizeAbbr[Subexpr[]];
-
-(*fortran can't handle arrays with dimensionality greater than 7*)
-(*apply back the subexpressions with number of arguments greater than 6*)
-subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-realOS = realOS//.subexpr6;
-abbr = abbr//.subexpr6;
-
-(*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-subexpr = subexpr//.subexpr6;
-
-dir = SetupCodeDir[name<>"_realOS_4536", Drivers -> name <> "_drivers"];
-WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
-
-
 (*Combine the amplitudes again, but this time the resonant diagrams are regulated*)
 (*Use here the regulated on shell amplitudes with summation over the sfermion indices*)
-real = Combine[realNR,real3546,real4635,real3645,real4536];
+real = Combine[realNR,real3546,real4635];
 
 (*Write real files with inserted regulator for on-shell diagrams*)
 amps = {real};

@@ -91,7 +91,7 @@ facscfact     1d0    ! (default 1d0) fac scale factor: mufact = muref * facscfac
 #hfact        100d0  ! (default no damping factor) damp factor for high-pt radiation: > 0 dampfac=h**2/(pt2+h**2)
 #hdamp        100d0  ! damping factor h**2/(pt2+h**2) to separate real contributions between Sudakov and remnants
 #storemintupb   0    ! whether to save btilde calls to set up upper bounding envelope
-ewi           1d-4   ! regulator for on-shell divergences
+ewi           1d-2   ! regulator for on-shell divergences
 storeinfo_rwgt 1     ! write informations into the event file that are necessary for reweighting
 lhrwgt_id '000'      ! reweighting id
 #compute_rwgt  1     ! reweight the events corresponding to different pdf's or scale choice

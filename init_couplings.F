@@ -471,33 +471,33 @@ c version.
           if(nparticles .eq. 1) then
             select case(partid(1,channel))
               case (1000021) ! gluino
-                par_Glwidth = width(channel)
+                par_WGl = width(channel)
 #ifndef NEGLECT_SWIDTH
               print*, "warning: FormCalc does not use squark-widths."  
               case (1000001) ! sdown_L
-                par_Sfwidth(1,4,1) = width(channel)
+                par_WSf(1,4,1) = width(channel)
               case (2000001) ! sdown_R
-                par_Sfwidth(2,4,1) = width(channel)
+                par_WSf(2,4,1) = width(channel)
               case (1000002) ! sup_L
-                par_Sfwidth(1,3,1) = width(channel)
+                par_WSf(1,3,1) = width(channel)
               case (2000002) ! sup_R
-                par_Sfwidth(2,3,1) = width(channel)
+                par_WSf(2,3,1) = width(channel)
               case (1000003) ! sstrange_L
-                par_Sfwidth(1,4,2) = width(channel)
+                par_WSf(1,4,2) = width(channel)
               case (2000003) ! sstrange_R
-                par_Sfwidth(2,4,2) = width(channel)
+                par_WSf(2,4,2) = width(channel)
               case (1000004) ! scharm_L
-                par_Sfwidth(1,3,2) = width(channel)
+                par_WSf(1,3,2) = width(channel)
               case (2000004) ! scharm_R
-                par_Sfwidth(2,3,2) = width(channel)
+                par_WSf(2,3,2) = width(channel)
               case (1000005) ! sbottom_1
-                par_Sfwidth(1,4,3) = width(channel)
+                par_WSf(1,4,3) = width(channel)
               case (2000005) ! sbottom_2
-                par_Sfwidth(2,4,3) = width(channel)
+                par_WSf(2,4,3) = width(channel)
               case (1000006) ! stop_1
-                par_Sfwidth(1,3,3) = width(channel)
+                par_WSf(1,3,3) = width(channel)
               case (2000006) ! stop_2
-                par_Sfwidth(2,3,3) = width(channel)
+                par_WSf(2,3,3) = width(channel)
 #endif
             endselect
           endif
@@ -569,11 +569,11 @@ c version.
         par_Fin3mass = 0D0
         
 #ifdef DEBUGQ
-        print*, "sd_L width =", par_Sfwidth(1,4,1)
-        print*, "sd_R width =", par_Sfwidth(2,4,1)
-        print*, "sc_L width =", par_Sfwidth(1,3,2)
-        print*, "sc_R width =", par_Sfwidth(2,3,2)
-        print*, "go width   =", par_Glwidth
+        print*, "sd_L width =", par_WSf(1,4,1)
+        print*, "sd_R width =", par_WSf(2,4,1)
+        print*, "sc_L width =", par_WSf(1,3,2)
+        print*, "sc_R width =", par_WSf(2,3,2)
+        print*, "go width   =", par_WGl
         stop
 #endif
       end
@@ -627,7 +627,7 @@ c MadGraphs couplings.f as well.
         do i=1,2 ! sfermion index s
           do j=1,4 ! type (nu,e,u,d)
             do k=1,3 ! generation
-              WSf(i,j,k)  = par_Sfwidth(i,j,k)
+              WSf(i,j,k)  = par_WSf(i,j,k)
               MSf(i,j,k)  = par_MSf(i,j,k)
               MSf2(i,j,k) = MSf(i,j,k)**2
             enddo
@@ -695,7 +695,7 @@ c MadGraphs couplings.f as well.
         ! Gluino mass and width
         MGl  = par_Mgl
         MGl2 = MGl**2
-        WGl  = par_Glwidth
+        WGl  = par_WGl
 
         ! Z/W Widths (added by hand to formcalc)
         WZ  = par_Zwidth

@@ -250,12 +250,16 @@ ins = DiagramSelect[ins,(FieldPointMemberQ[FieldPoints[##],FieldPoint[_][S[_,{_,
 ins3546 = DiagramSelect[ins,(SChannelExtQ[S[_,{_,_,_}],3,5][##] && SChannelExtQ[S[_,{_,_,_}],4,6][##])&];
 (*DEBUG*)
 DoPaint[ins3546, "realOSall_3546"];
-ins3546 = DiagramExtract[ins3546,1,4] (*1=ll,2=lr,3=rl,4=rr*)
+ins3546 = DiagramExtract[ins3546,1,2,3,4] (*1=ll,2=lr,3=rl,4=rr*)
 DoPaint[ins3546, "realOS_3546"];
 
 (*now, generate the amplitudes and insert the natural particle widths*)
 widths = {MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
+(*TODO: this might be different when working with InsertionLevel\[Rule]Classes*)
+(*with natural widths in double resonant part*)
 reg = {Den[sij_,MSf2[cij_,tij_,gij_]-I MSf[cij_,tij_,gij_] WSf[cij_,tij_,gij_]]Den[skl_,MSf2[ckl_,tkl_,gkl_]-I MSf[ckl_,tkl_,gkl_] WSf[ckl_,tkl_,gkl_]]:>((Den[sij,MSf2[cij,tij,gij]-I MSf[cij,tij,gij] (WSf[cij,tij,gij]+WREG)]^-1+Den[skl,MSf2[ckl,tkl,gkl]-I MSf[ckl,tkl,gkl] (WSf[ckl,tkl,gkl]+WREG)]^-1)^-1)*(Den[sij,MSf2[cij,tij,gij]-I MSf[cij,tij,gij] WSf[cij,tij,gij]]+Den[skl,MSf2[ckl,tkl,gkl]-I MSf[ckl,tkl,gkl] WSf[ckl,tkl,gkl]])};
+(*without natural widths in double resonant part*)
+(*reg = {Den[sij_,MSf2[cij_,tij_,gij_]-I MSf[cij_,tij_,gij_] WSf[cij_,tij_,gij_]]Den[skl_,MSf2[ckl_,tkl_,gkl_]-I MSf[ckl_,tkl_,gkl_] WSf[ckl_,tkl_,gkl_]]:>((Den[sij,MSf2[cij,tij,gij]-I MSf[cij,tij,gij] WREG]^-1+Den[skl,MSf2[ckl,tkl,gkl]-I MSf[ckl,tkl,gkl] WREG]^-1)^-1)*(Den[sij,MSf2[cij,tij,gij]-I MSf[cij,tij,gij] WSf[cij,tij,gij]]+Den[skl,MSf2[ckl,tkl,gkl]-I MSf[ckl,tkl,gkl] WSf[ckl,tkl,gkl]])}*)
 
 real = CalcFeynAmp[CreateFeynAmp[ins3546](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
 (*real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
@@ -276,11 +280,10 @@ ins = InsertFields[tops, process, InsertionLevel->{Particles}];
 insNR = DiagramSelect[ins,(Not[SChannelExtQ[S[_],3,5][##] && SChannelExtQ[S[_],4,6][##]] &&
                             Not[SChannelExtQ[S[_],3,6][##] && SChannelExtQ[S[_],4,5][##]])&];
 (*DEBUG*)
-insNR = DiagramExtract[insNR,1];
+(*insNR = DiagramExtract[insNR,1];*)
 DoPaint[insNR, "realNR"];
 
 (*insert the particle widths*)
-(*widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW};*)
 widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
 
 realNR = CalcFeynAmp[CreateFeynAmp[insNR](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
@@ -316,9 +319,7 @@ WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
 
 (*Combine the amplitudes again, but this time the resonant diagrams are regulated*)
 (*Use here the regulated on shell amplitudes with summation over the sfermion indices*)
-(*real = Combine[realNR,real3546];*)
-(*DEBUG*)
-real = real3546;
+real = Combine[realNR,real3546];
 
 (*Write real files with inserted regulator for on-shell diagrams*)
 amps = {real};

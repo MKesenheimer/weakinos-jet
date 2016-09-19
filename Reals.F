@@ -90,21 +90,33 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
             
             ! subtraction scheme for double resonances
             if((s12.ge.(mij+mkl)**2).and.(mij.ge.(mi+mj)).and.(mkl.ge.(mk+ml))) then
-              ! calculate the ratio of the breit wigner functions
+              ! with natural widths in double pole part
               bwratio = (mij**2*mkl**2*wij**2*wkl**2*
      &                  (mij**4 + (-mkl**2 + sij + skl)**2 + 
-     &                   mij**2*(2*mkl**2 - 2*(sij + skl) + 
-     &                   wij**2) + 2*mij*mkl*wij*wkl + 
+     &                  mij**2*(2*mkl**2 - 2*(sij + skl) + 
+     &                  wij**2) + 2*mij*mkl*wij*wkl + 
      &                  mkl**2*wkl**2)*
      &                  (mij*(wij + wreg) + mkl*(wkl + wreg))**2)/
      &                  (((mij**2 - sij)**2 + mij**2*wij**2)*
      &                  (mij*wij + mkl*wkl)**2*
      &                  ((mkl**2 - skl)**2 + mkl**2*wkl**2)*
      &                  (mij**4 + mkl**4 + (sij + skl)**2 + 
-     &                   2*mij*mkl*(wij + wreg)*(wkl + wreg) + 
-     &                   mij**2*(2*mkl**2 - 2*sij - 2*skl + 
-     &                   (wij + wreg)**2) + 
+     &                  2*mij*mkl*(wij + wreg)*(wkl + wreg) + 
+     &                  mij**2*(2*mkl**2 - 2*sij - 2*skl + 
+     &                  (wij + wreg)**2) + 
      &                  mkl**2*(-2*sij - 2*skl + (wkl + wreg)**2)))
+     
+#ifdef DEBUGQ
+              ! no natural widths in double pole part
+              bwratio = (mij**2*mkl**2*(mij + mkl)**2*wij**2*wkl**2*
+     &                  (mij**4 + (-mkl**2 + sij + skl)**2 + 
+     &                  mij**2*(2*mkl**2 - 2*(sij + skl) + wij**2) + 
+     &                  2*mij*mkl*wij*wkl + mkl**2*wkl**2)*wreg**2)/
+     &                  (((mij**2 - sij)**2 + mij**2*wij**2)*
+     &                  (mij*wij + mkl*wkl)**2*((mkl**2 - skl)**2 + 
+     &                  mkl**2*wkl**2)*((mij**2 + mkl**2 - sij -  
+     &                  skl)**2 + (mij + mkl)**2*wreg**2))
+#endif
               ! off_to_on the momenta p to on-shell momenta p_os
               call off_to_on(p,rflav,ichan,.true.,.true.,p_OS)
               call getRealOSAmps(p_os,rflav,ichan,ampos)

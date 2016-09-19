@@ -28,198 +28,111 @@ c           \
 c            \
 c              pl
 c
-c channel convention (this must be equal to the definitions made in the
-c mathematica scripts):
-c ichan =
-c 1: left squark resonant with legs 3&5, and left squark resonant with legs 4&6
-c 2: right squark resonant with legs 3&5, and left squark resonant with legs 4&6
-c 3: left squark resonant with legs 3&5, and right squark resonant with legs 4&6
-c 4: right squark resonant with legs 3&5, and right squark resonant with legs 4&6
-c 5: left squark resonant with legs 3&6, and left squark resonant with legs 4&5
-c 6: right squark resonant with legs 3&6, and left squark resonant with legs 4&5
-c 7: left squark resonant with legs 3&6, and right squark resonant with legs 4&5
-c 8: right squark resonant with legs 3&6, and right squark resonant with legs 4&5
       subroutine set_channel(flav,ichan)
         implicit none
 #include "nlegborn.h"
 #include "PhysPars.h"
 #include "osres.h"
-        ! indices
         integer ichan,flav(nlegreal)
-        logical isodd, iseven
-        external isodd, iseven
 
+        ! set the indices
         if(ichan.ge.1 .and. ichan.le.4) then
           osres_i = 3
           osres_j = 5
           osres_k = 4
           osres_l = 6
         elseif(ichan.ge.5 .and. ichan.le.8) then
+          osres_i = 4
+          osres_j = 6
+          osres_k = 3
+          osres_l = 5  
+        elseif(ichan.ge.9 .and. ichan.le.12) then
           osres_i = 3
           osres_j = 6
           osres_k = 4
           osres_l = 5
+        elseif(ichan.ge.13 .and. ichan.le.16) then
+          osres_i = 4
+          osres_j = 5
+          osres_k = 3
+          osres_l = 6
         else
           print*,"error in set_channel: ichan =",ichan
           stop
         endif
-         
+        
+        ! set the chirality of the intermediate squark
+        if(mod(ichan-1,4).eq.0) then ! 1, 5, 9, 13
+          osres_sfeij = 1
+          osres_sfekl = 1
+        elseif(mod(ichan-1,4).eq.1) then ! 2, 6, 10, 14
+          osres_sfeij = 2
+          osres_sfekl = 2
+        elseif(mod(ichan-1,4).eq.2) then ! 3, 7, 11, 15
+          osres_sfeij = 1
+          osres_sfekl = 2
+        elseif(mod(ichan-1,4).eq.3) then ! 4, 8, 12, 16
+          osres_sfeij = 2
+          osres_sfekl = 1
+        else
+          print*,"error in set_channel: ichan =",ichan
+          stop
+        endif
+        
+        ! set the masses
         osres_mi = par_Fin1mass
         osres_mk = par_Fin2mass
         select case(abs(flav(osres_j)))
           case(1)
             osres_mj = par_MD
-            if(isodd(ichan)) then
-              osres_sfeij = 1 ! left squark
-              osres_mij = par_MSf(1,4,1)
-              osres_wij = par_Sfwidth(1,4,1)
-            else
-              osres_sfeij = 2 ! right
-              osres_mij = par_MSf(2,4,1)
-              osres_wij = par_Sfwidth(2,4,1)
-            endif    
+            osres_mij = par_MSf(osres_sfeij,4,1)
+            osres_wij = par_WSf(osres_sfeij,4,1)  
           case(2)
             osres_mj = par_MU
-            if(isodd(ichan)) then
-              osres_sfeij = 1
-              osres_mij = par_MSf(1,3,1)
-              osres_wij = par_Sfwidth(1,3,1)
-            else
-              osres_sfeij = 2
-              osres_mij = par_MSf(2,3,1)
-              osres_wij = par_Sfwidth(2,3,1)
-            endif
+            osres_mij = par_MSf(osres_sfeij,3,1)
+            osres_wij = par_WSf(osres_sfeij,3,1)
           case(3)
             osres_mj = par_MS
-            if(isodd(ichan)) then
-              osres_sfeij = 1
-              osres_mij = par_MSf(1,4,2)
-              osres_wij = par_Sfwidth(1,4,2)
-            else
-              osres_sfeij = 2
-              osres_mij = par_MSf(2,4,2)
-              osres_wij = par_Sfwidth(2,4,2)
-            endif
+            osres_mij = par_MSf(osres_sfeij,4,2)
+            osres_wij = par_WSf(osres_sfeij,4,2)
           case(4)
             osres_mj = par_MC
-            if(isodd(ichan)) then
-              osres_sfeij = 1
-              osres_mij = par_MSf(1,3,2)
-              osres_wij = par_Sfwidth(1,3,2)
-            else
-              osres_sfeij = 2
-              osres_mij = par_MSf(2,3,2)
-              osres_wij = par_Sfwidth(2,3,2)
-            endif
+            osres_mij = par_MSf(osres_sfeij,3,2)
+            osres_wij = par_WSf(osres_sfeij,3,2)
           case(5)
             osres_mj = par_MB
-            if(isodd(ichan)) then
-              osres_sfeij = 1
-              osres_mij = par_MSf(1,4,3)
-              osres_wij = par_Sfwidth(1,4,3)
-            else
-              osres_sfeij = 2
-              osres_mij = par_MSf(2,4,3)
-              osres_wij = par_Sfwidth(2,4,3)
-            endif
+            osres_mij = par_MSf(osres_sfeij,4,3)
+            osres_wij = par_WSf(osres_sfeij,4,3)
           case default
-            print*, "error in set_channel: flav(4)", flav(4)
+            print*, "error in set_channel: flav(j)", flav(osres_j)
             stop
         endselect
     
         select case(abs(flav(osres_l)))
           case(1)
             osres_ml = par_MD
-            if(isodd(ichan)) then
-              osres_sfekl = 1 ! left squark
-              osres_mkl = par_MSf(1,4,1)
-              osres_wkl = par_Sfwidth(1,4,1)
-            else
-              osres_sfekl = 2 ! right
-              osres_mkl = par_MSf(2,4,1)
-              osres_wkl = par_Sfwidth(2,4,1)
-            endif    
+            osres_mkl = par_MSf(osres_sfekl,4,1)
+            osres_wkl = par_WSf(osres_sfekl,4,1)
           case(2)
             osres_ml = par_MU
-            if(isodd(ichan)) then
-              osres_sfekl = 1
-              osres_mkl = par_MSf(1,3,1)
-              osres_wkl = par_Sfwidth(1,3,1)
-            else
-              osres_sfekl = 2
-              osres_mkl = par_MSf(2,3,1)
-              osres_wkl = par_Sfwidth(2,3,1)
-            endif
+            osres_mkl = par_MSf(osres_sfekl,3,1)
+            osres_wkl = par_WSf(osres_sfekl,3,1)
           case(3)
             osres_ml = par_MS
-            if(isodd(ichan)) then
-              osres_sfekl = 1
-              osres_mkl = par_MSf(1,4,2)
-              osres_wkl = par_Sfwidth(1,4,2)
-            else
-              osres_sfekl = 2
-              osres_mkl = par_MSf(2,4,2)
-              osres_wkl = par_Sfwidth(2,4,2)
-            endif
+            osres_mkl = par_MSf(osres_sfekl,4,2)
+            osres_wkl = par_WSf(osres_sfekl,4,2)
           case(4)
             osres_ml = par_MC
-            if(isodd(ichan)) then
-              osres_sfekl = 1
-              osres_mkl = par_MSf(1,3,2)
-              osres_wkl = par_Sfwidth(1,3,2)
-            else
-              osres_sfekl = 2
-              osres_mkl = par_MSf(2,3,2)
-              osres_wkl = par_Sfwidth(2,3,2)
-            endif
+            osres_mkl = par_MSf(osres_sfekl,3,2)
+            osres_wkl = par_WSf(osres_sfekl,3,2)
           case(5)
             osres_ml = par_MB
-            if(isodd(ichan)) then
-              osres_sfekl = 1
-              osres_mkl = par_MSf(1,4,3)
-              osres_wkl = par_Sfwidth(1,4,3)
-            else
-              osres_sfekl = 2
-              osres_mkl = par_MSf(2,4,3)
-              osres_wkl = par_Sfwidth(2,4,3)
-            endif
+            osres_mkl = par_MSf(osres_sfekl,4,3)
+            osres_wkl = par_WSf(osres_sfekl,4,3)
           case default
-            print*, "error in set_channel: flav(4)", flav(4)
+            print*, "error in set_channel: flav(l)", flav(osres_l)
             stop
         endselect
-
-#ifdef DEBUG
-        if(ichan.eq.1) then
-          osres_i = 3
-          osres_j = 5
-          osres_k = 4
-          osres_l = 6
-          osres_mj = par_MD
-          osres_sfeij = 1
-          osres_mij = par_MSf(1,4,1)
-          osres_wij = par_Sfwidth(1,4,1)
-          osres_ml = par_MD
-          osres_sfekl = 1
-          osres_mkl = par_MSf(1,4,1)
-          osres_wkl = par_Sfwidth(1,4,1)
-        elseif(ichan.eq.2) then
-          osres_i = 3
-          osres_j = 5
-          osres_k = 4
-          osres_l = 6
-          osres_mj = par_MD
-          osres_sfeij = 2
-          osres_mij = par_MSf(2,4,1)
-          osres_wij = par_Sfwidth(2,4,1)
-          osres_ml = par_MD
-          osres_sfekl = 2
-          osres_mkl = par_MSf(2,4,1)
-          osres_wkl = par_Sfwidth(2,4,1)
-        else
-          print*,ichan
-          stop
-        endif
-#endif
 
         ! in case some masses are negative
         osres_mi = dabs(osres_mi)
