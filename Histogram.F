@@ -45,7 +45,8 @@ c############### generate histograms ###################################
         enddo
         
         ncalls(ind) = ncalls(ind) + 1
-        if(mod(ncalls(ind),10000).eq.0) then
+        if(mod(ncalls(ind),1000).eq.0) then
+          !print*,"write histograms..."
           do k=0,(nbins-1)
             if(hits(ind,k).gt.0) then
               ymean(ind,k) = ysum(ind,k)/hits(ind,k)
@@ -69,6 +70,9 @@ c############### generate histograms ###################################
         character*(*) name
         integer ind,iun
         integer i
+        logical warning
+        data warning /.true./
+        save warning
         do i=1,nhistsmax
           if(trim(histlist(i)).eq.trim(name)) then
             ind = i
@@ -77,8 +81,18 @@ c############### generate histograms ###################################
           endif  
         enddo
         nhists = nhists + 1
-        histlist(nhists) = name
-        !call newunit(iun)
+        if(nhists.gt.nhistsmax) then
+          nhists = nhistsmax
+          if(warning) then
+            print*,"warning: two many histograms..."
+            do i=1,nhistsmax
+              print*,i,trim(histlist(i))
+            enddo
+            warning = .false.
+            endif
+          return
+        endif
+        histlist(nhists) = trim(name)
         iun = ind + 50
         unitlist(nhists) = iun
         ind = nhists

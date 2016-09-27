@@ -16,7 +16,6 @@ c Kronecker delta
         endif
       end
 
-
 c swap two integers
       subroutine swapi(i1,i2)
         implicit none
@@ -26,8 +25,6 @@ c swap two integers
         i2=itmp
       end
 
-
-
 c squared of a four vector
       double precision function momsq(p)
         implicit none
@@ -35,7 +32,6 @@ c squared of a four vector
         external dotp
         momsq = dotp(p,p)
       end
-
 
 c check odd or even integer
       logical function iseven(n)
@@ -51,7 +47,6 @@ c check odd or even integer
         if(mod(abs(n),2).eq.1) isodd = .true.
       end 
 
-
 c squared of sum of 2 four vectors
       double precision function momsum2sq(p1,p2)
       implicit none
@@ -64,8 +59,6 @@ c squared of sum of 2 four vectors
         enddo
         momsum2sq = dotp(psum,psum)
       end
-
-
 
 c squared of sum of 3 four vectors
       double precision function momsum3sq(p1,p2,p3)
@@ -108,15 +101,12 @@ c levi-civita symbol
      &                - x(i,2)*x(j,1)*x(k,3) + x(i,1)*x(j,2)*x(k,3)
       end
 
-      
-
 c denominator function needed by FormCalc
       double precision function Den(x,y)
         implicit none
         double precision x,y
         Den = 1/(x-y)
       end
-      
       
 c takes an array with n entries, if entry is negative: 
 c mult. with -1 and save sign in the 2nd array
@@ -136,7 +126,6 @@ c mult. with -1 and save sign in the 2nd array
           enddo
         end
 
-
 c error-determination (taken from btilde-routines)
       double precision function calc_error(tot,etot2,n)
         implicit none
@@ -144,7 +133,6 @@ c error-determination (taken from btilde-routines)
         integer n
         calc_error = dsqrt((etot2/n-(tot/n)**2)/n)
       end
-
       
 c factorial
       integer function factorial(n)
@@ -157,7 +145,6 @@ c factorial
         enddo
         factorial=m
       end
-
 
 c gibt die i-te Permutation der 4-Impulsvektoren p1, p2, ... p_DIMEN
 c zurück. DIMEN und FAKUL müssen in Abhänbgigkeit der zu permutierenden
@@ -226,7 +213,6 @@ c Statuszwecken zu finden.
         nextp=.true.
       end
 
-
 c berechnet die Größenordnung einer Zahl
       integer function magnitude(x)
         implicit none
@@ -249,7 +235,6 @@ c berechnet die Größenordnung einer Zahl
    20   magnitude = i
       end 
       
-
 c übersetzt eine dezimalzahl in ein anderes Zahlsystem zur 
 c Basis "BASE" und gibt die Zahl an der Stelle k zurück
 #define LENGTH 9
@@ -272,7 +257,6 @@ c Basis "BASE" und gibt die Zahl an der Stelle k zurück
         cdec = b(k)  
       end
 
-      
 c gibt das Vorzeichen einer reellen Zahl zurück (+-1)
       double precision function signum(r)
         implicit none
@@ -284,7 +268,6 @@ c gibt das Vorzeichen einer reellen Zahl zurück (+-1)
           signum = -1D0
         endif
       end
-
 
 c transforms a lower case character string to an upper case
       subroutine to_uppercase(str1,upper1)
@@ -309,7 +292,6 @@ c transforms a lower case character string to an upper case
         upper1 = str1
 #endif
       end
-      
 
 c sorts the entries of an integer list in decreasing order
       subroutine sorti(list,lgth)
@@ -390,5 +372,17 @@ c stops the program if gets called for n times (useful for debugging)
           stop
         endif
       end
+      
+c calculates the kaellen function and the sqrt of kaellen function
+      double precision function kaellen(x, y, z)
+        implicit none
+        double precision x, y, z
+        kaellen = x**2+y**2+z**2-2*(x*y+x*z+y*z)
+      end
 
+      double precision function kaellenSqrt(x, y, z)
+        implicit none
+        double precision x, y, z
+        kaellenSqrt = dsqrt(dabs(x**2+y**2+z**2-2*(x*y+x*z+y*z)))
+      end
 c############### end functions #########################################

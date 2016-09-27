@@ -47,6 +47,8 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         external momsum2sq, momsum3sq
 #ifdef DEBUG
         double precision s35, s46
+        integer lstr
+        character*50 str
 #endif
 
         if (init_reals) then
@@ -105,18 +107,6 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
      &                  mij**2*(2*mkl**2 - 2*sij - 2*skl + 
      &                  (wij + wreg)**2) + 
      &                  mkl**2*(-2*sij - 2*skl + (wkl + wreg)**2)))
-     
-#ifdef DEBUGQ
-              ! no natural widths in double pole part
-              bwratio = (mij**2*mkl**2*(mij + mkl)**2*wij**2*wkl**2*
-     &                  (mij**4 + (-mkl**2 + sij + skl)**2 + 
-     &                  mij**2*(2*mkl**2 - 2*(sij + skl) + wij**2) + 
-     &                  2*mij*mkl*wij*wkl + mkl**2*wkl**2)*wreg**2)/
-     &                  (((mij**2 - sij)**2 + mij**2*wij**2)*
-     &                  (mij*wij + mkl*wkl)**2*((mkl**2 - skl)**2 + 
-     &                  mkl**2*wkl**2)*((mij**2 + mkl**2 - sij -  
-     &                  skl)**2 + (mij + mkl)**2*wreg**2))
-#endif
               ! off_to_on the momenta p to on-shell momenta p_os
               call off_to_on(p,rflav,ichan,.true.,.true.,p_OS)
               call getRealOSAmps(p_os,rflav,ichan,ampos)
@@ -150,12 +140,16 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
 #ifdef DEBUG
         ! fill histograms
         if(dsqrt(p(1,5)**2+p(2,5)**2).gt.10D0 .and. dsqrt(p(1,6)**2+p(2,6)**2).gt.10D0) then
+          call process_name(nlegreal,rflav(1:nlegreal),str(1:20),lstr)
           s35 = momsum2sq(p(0:3,3),p(0:3,5))
           s46 = momsum2sq(p(0:3,4),p(0:3,6))
-          call histogram("sqrt(s35)",100,400D0,800D0,dsqrt(s35),ampreal)
-          call histogram("sqrt(s46)",100,400D0,800D0,dsqrt(s46),ampreal)
-          call histogram("int(s35)",1,1D1,1D6,dsqrt(s35),ampreal)
-          call histogram("int(s46)",1,1D1,1D6,dsqrt(s46),ampreal)
+          ! warning: don't fill more than 200 histograms!
+          if(abs(rflav(1)).lt.2) then
+            !call histogram("sqrt(s35)_"//str(1:lstr),100,400D0,800D0,dsqrt(s35),ampreal)
+            !call histogram("sqrt(s46)_"//str(1:lstr),100,400D0,800D0,dsqrt(s46),ampreal)
+            call histogram("int(s35)_"//str(1:lstr),1,1D1,1D6,dsqrt(s35),ampreal)
+            !call histogram("int(s46)_"//str(1:lstr),1,1D1,1D6,dsqrt(s46),ampreal)
+          endif
         endif
 #endif
       end

@@ -232,18 +232,91 @@ c pick SUSY masses relevant for specific initial state
       end
 c############### end subroutine set_process ############################
 
-c############### function kaellen ######################################
-c calculates the kaellen function and the sqrt of kaellen function
-      double precision function kaellen(x, y, z)
+c############### subroutine process_name ###############################
+c convert the powheg flavor string to an character string
+#define NCHARACTERS 50
+      subroutine process_name(nlegs,flav,str,lstr)
         implicit none
-        double precision x, y, z
-        kaellen = x**2+y**2+z**2-2*(x*y+x*z+y*z)
-      end function kaellen
-
-      double precision function kaellenSqrt(x, y, z)
-        implicit none
-        double precision x, y, z
-        kaellenSqrt = dsqrt(dabs(x**2+y**2+z**2-2*(x*y+x*z+y*z)))
-      end function kaellenSqrt
-c############### end function kaellen ##################################
-
+        integer nlegs, lstr, i
+        integer flav(nlegs)
+        character*NCHARACTERS str
+        do i=1,NCHARACTERS
+          str = " "
+        enddo
+        lstr = 0
+        do i=1,nlegs
+        if(i.eq.3) then
+          str(lstr+1:lstr+1) = "_"
+          lstr = lstr + 1
+        endif
+        select case(flav(i))
+          case(0)
+            str(lstr+1:lstr+1) = "g"
+            lstr = lstr + 1
+          case(-1)
+            str(lstr+1:lstr+4) = "dbar"
+            lstr = lstr + 4
+          case(1)
+            str(lstr+1:lstr+1) = "d"
+            lstr = lstr + 1
+          case(-2)
+            str(lstr+1:lstr+4) = "ubar"
+            lstr = lstr + 4
+          case(2)
+            str(lstr+1:lstr+1) = "u"
+            lstr = lstr + 1
+          case(-3)
+            str(lstr+1:lstr+4) = "sbar"
+            lstr = lstr + 4
+          case(3)
+            str(lstr+1:lstr+1) = "s"
+            lstr = lstr + 1
+          case(-4)
+            str(lstr+1:lstr+4) = "cbar"
+            lstr = lstr + 4
+          case(4)
+            str(lstr+1:lstr+1) = "c"
+            lstr = lstr + 1
+          case(-5)
+            str(lstr+1:lstr+4) = "bbar"
+            lstr = lstr + 4
+          case(5)
+            str(lstr+1:lstr+1) = "b"
+            lstr = lstr + 1
+          case(-6)
+            str(lstr+1:lstr+4) = "tbar"
+            lstr = lstr + 4
+          case(6)
+            str(lstr+1:lstr+1) = "t"
+            lstr = lstr + 1
+          case(1000022)
+            str(lstr+1:lstr+2) = "n1"
+            lstr = lstr + 2
+          case(1000023)
+            str(lstr+1:lstr+2) = "n2"
+            lstr = lstr + 2
+          case(1000025)
+            str(lstr+1:lstr+2) = "n3"
+            lstr = lstr + 2
+          case(1000035)
+            str(lstr+1:lstr+2) = "n4"
+            lstr = lstr + 2
+          case(1000024)
+            str(lstr+1:lstr+3) = "x1+"
+            lstr = lstr + 3
+          case(-1000024)
+            str(lstr+1:lstr+3) = "x1-"
+            lstr = lstr + 3
+          case(1000037)
+            str(lstr+1:lstr+3) = "x2+"
+            lstr = lstr + 3
+          case(-1000037)
+            str(lstr+1:lstr+3) = "x2-"
+            lstr = lstr + 3
+          case default
+            str(lstr+1:lstr+1) = "_"
+            lstr = lstr + 1
+        endselect
+        enddo
+      end
+c############### end subroutine process_name ###########################

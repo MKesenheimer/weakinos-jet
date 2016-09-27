@@ -42,36 +42,26 @@ c
           osres_k = 4
           osres_l = 6
         elseif(ichan.ge.5 .and. ichan.le.8) then
-          osres_i = 4
-          osres_j = 6
-          osres_k = 3
-          osres_l = 5  
-        elseif(ichan.ge.9 .and. ichan.le.12) then
           osres_i = 3
           osres_j = 6
           osres_k = 4
-          osres_l = 5
-        elseif(ichan.ge.13 .and. ichan.le.16) then
-          osres_i = 4
-          osres_j = 5
-          osres_k = 3
-          osres_l = 6
+          osres_l = 5  
         else
           print*,"error in set_channel: ichan =",ichan
           stop
         endif
         
         ! set the chirality of the intermediate squark
-        if(mod(ichan-1,4).eq.0) then ! 1, 5, 9, 13
+        if(mod(ichan-1,4).eq.0) then ! 1, 5
           osres_sfeij = 1
           osres_sfekl = 1
-        elseif(mod(ichan-1,4).eq.1) then ! 2, 6, 10, 14
+        elseif(mod(ichan-1,4).eq.1) then ! 2, 6
           osres_sfeij = 2
           osres_sfekl = 2
-        elseif(mod(ichan-1,4).eq.2) then ! 3, 7, 11, 15
+        elseif(mod(ichan-1,4).eq.2) then ! 3, 7
           osres_sfeij = 1
           osres_sfekl = 2
-        elseif(mod(ichan-1,4).eq.3) then ! 4, 8, 12, 16
+        elseif(mod(ichan-1,4).eq.3) then ! 4, 8
           osres_sfeij = 2
           osres_sfekl = 1
         else
@@ -150,7 +140,8 @@ c
         print*,"mij,mkl",osres_mij,osres_mkl
         print*,"wij,wkl",osres_wij,osres_wkl
         print*,"par_FinMasses",par_Fin1mass,par_Fin2mass
-        stop
+        print*
+        !stop
 #endif
       end
 c############### end subroutine set_channel ############################

@@ -1,9 +1,9 @@
 (* ::Package:: *)
 
-(*  	neu1neu2+jet.m
-		generates the Fortran code for
-		p p -> chi chi jet in the MSSM
-		last modified July 2016
+(*      neu1neu2+jet.m
+        generates the Fortran code for
+        p p -> chi chi jet in the MSSM
+        last modified July 2016
 
 This version introduces particle widths on the Amp level, which is much simpler than
 introducing them on the FeynAmp level.
@@ -92,14 +92,14 @@ NotTChannelQ[ fi_ ][ gr_, top_, ___ ] :=
 (*The same as SChannelQ, but with an additional rule that checks the external fields which couple to the s- or t-channel fields.*)
 Attributes[SChannelExtQ] = Attributes[TChannelExtQ] = {Orderless};
 SChannelExtQ[ fi_,ext1_,ext2_][ gr_, top_, ___ ] :=
- FieldMemberExtQ[STChannelFieldsExt[top][[1]] /. List@@ gr, {fi,ext1,ext2}]
+  FieldMemberExtQ[STChannelFieldsExt[top][[1]] /. List@@ gr, {fi,ext1,ext2}]
 TChannelExtQ[ fi_,ext1_,ext2_ ][ gr_, top_, ___ ] :=
   FieldMemberExtQ[STChannelFieldsExt[top][[2]] /. List@@ gr, {fi,ext1,ext2}]
 
 (*Same as above.*)
 Attributes[NotSChannelExtQ] = Attributes[NotTChannelExtQ] = {Orderless};
 NotSChannelExtQ[ fi_,ext1_,ext2_][ gr_, top_, ___ ] :=
- Not[FieldMemberExtQ[STChannelFieldsExt[top][[1]] /. List@@ gr, {fi,ext1,ext2}]]
+  Not[FieldMemberExtQ[STChannelFieldsExt[top][[1]] /. List@@ gr, {fi,ext1,ext2}]]
 NotTChannelExtQ[ fi_,ext1_,ext2_ ][ gr_, top_, ___ ] :=
   Not[FieldMemberExtQ[STChannelFieldsExt[top][[2]] /. List@@ gr, {fi,ext1,ext2}]]
 
@@ -107,19 +107,19 @@ NotTChannelExtQ[ fi_,ext1_,ext2_ ][ gr_, top_, ___ ] :=
 (*You can now load the script with the command $ MathKernel -script nInJjj.m "d" "dbar" "n1" "n2" "d" "dbar"*)
 Print[$CommandLine]
 If[$CommandLine[[2]] === "-script",
-	(p[1] = ToString[$CommandLine[[4]]];
-	 p[2] = ToString[$CommandLine[[5]]];
-	 p[3] = ToString[$CommandLine[[6]]];
-	 p[4] = ToString[$CommandLine[[7]]];
-	 p[5] = ToString[$CommandLine[[8]]];
-	 p[6] = ToString[$CommandLine[[9]]];),
-	(*Else*)
-	(p[1] = "qdbar";
-	 p[2] = "qdbar";
-	 p[3] = "nI";
-	 p[4] = "nJ";
-	 p[5] = "qdbar";
-	 p[6] = "qdbar";)
+    (p[1] = ToString[$CommandLine[[4]]];
+     p[2] = ToString[$CommandLine[[5]]];
+     p[3] = ToString[$CommandLine[[6]]];
+     p[4] = ToString[$CommandLine[[7]]];
+     p[5] = ToString[$CommandLine[[8]]];
+     p[6] = ToString[$CommandLine[[9]]];),
+    (*Else*)
+    (p[1] = "qdbar";
+     p[2] = "qdbar";
+     p[3] = "nI";
+     p[4] = "nJ";
+     p[5] = "qdbar";
+     p[6] = "qdbar";)
 ]
 
 CalcProcess = p[1]<>p[2]<>"_"<>p[3]<>p[4]<>p[5]<>p[6];
@@ -197,8 +197,8 @@ SetOptions[InsertFields, Model -> "MSSMCT",
            (*No Fermion-Higgs coupling*)
            Restrictions -> {NoLightFHCoupling},
            (*Exclude Top, Higgs, Neutrinos, massive Leptons, Sneutrinos, Sleptons*)
-		   ExcludeParticles -> {S[1|2|3|4|5|6|11|12], F[1|2]},
-		   LastSelections -> lastsel];
+           ExcludeParticles -> {S[1|2|3|4|5|6|11|12], F[1|2]},
+           LastSelections -> lastsel];
 
 SetOptions[Paint, PaintLevel -> {Classes}, ColumnsXRows -> {4, 5}, AutoEdit -> False];
 
@@ -236,61 +236,104 @@ getReplacementHead[f_->_]:=f
 
 Print["On-Shell Diagrams"]
 
-tops = CreateTopologies[0, 2 -> 4];
-ins = InsertFields[tops, process];
+(*On Shell Topologies*)
+top3546 =  TopologyList[
+    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[4][7]],
+    Propagator[Incoming][Vertex[1][2],Vertex[4][7]],
+    Propagator[Outgoing][Vertex[1][3],Vertex[3][8]],
+    Propagator[Outgoing][Vertex[1][4],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][5],Vertex[3][8]],
+    Propagator[Outgoing][Vertex[1][6],Vertex[3][9]],
+    Propagator[Internal][Vertex[3][8],Vertex[4][7]],
+    Propagator[Internal][Vertex[3][9],Vertex[4][7]]],
+    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
+    Propagator[Incoming][Vertex[1][2],Vertex[3][7]],
+    Propagator[Outgoing][Vertex[1][3],Vertex[3][8]],
+    Propagator[Outgoing][Vertex[1][4],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][5],Vertex[3][8]],
+    Propagator[Outgoing][Vertex[1][6],Vertex[3][9]],
+    Propagator[Internal][Vertex[3][8],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][9],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][10]]],
+    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
+    Propagator[Incoming][Vertex[1][2],Vertex[3][8]],
+    Propagator[Outgoing][Vertex[1][3],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][4],Vertex[3][10]],
+    Propagator[Outgoing][Vertex[1][5],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][6],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][9]],
+    Propagator[Internal][Vertex[3][8],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][8]]],
+    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
+    Propagator[Incoming][Vertex[1][2],Vertex[3][8]],
+    Propagator[Outgoing][Vertex[1][3],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][4],Vertex[3][10]],
+    Propagator[Outgoing][Vertex[1][5],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][6],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][8],Vertex[3][9]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][8]]]];
 
-(*Extract the on-shell diagrams*)
-(*Select Diagrams with Squarks*)
-ins = DiagramSelect[ins,(FieldPointMemberQ[FieldPoints[##],FieldPoint[_][S[_,{_,_,_}],_,_]]||
-							FieldPointMemberQ[FieldPoints[##],FieldPoint[_][_,_,S[_,{_,_,_}]]]||
-							FieldPointMemberQ[FieldPoints[##],FieldPoint[_][_,S[_,{_,_,_}],_]])&];
+top3645 = TopologyList[Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[4][7]],
+    Propagator[Incoming][Vertex[1][2],Vertex[4][7]],
+    Propagator[Outgoing][Vertex[1][3],Vertex[3][8]],
+    Propagator[Outgoing][Vertex[1][4],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][5],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][6],Vertex[3][8]],
+    Propagator[Internal][Vertex[3][8],Vertex[4][7]],
+    Propagator[Internal][Vertex[3][9],Vertex[4][7]]],
+    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
+    Propagator[Incoming][Vertex[1][2],Vertex[3][8]],
+    Propagator[Outgoing][Vertex[1][3],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][4],Vertex[3][10]],
+    Propagator[Outgoing][Vertex[1][5],Vertex[3][10]],
+    Propagator[Outgoing][Vertex[1][6],Vertex[3][9]],
+    Propagator[Internal][Vertex[3][8],Vertex[3][9]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][8]]],
+    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
+    Propagator[Incoming][Vertex[1][2],Vertex[3][7]],
+    Propagator[Outgoing][Vertex[1][3],Vertex[3][8]],
+    Propagator[Outgoing][Vertex[1][4],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][5],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][6],Vertex[3][8]],
+    Propagator[Internal][Vertex[3][8],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][9],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][10]]],
+    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
+    Propagator[Incoming][Vertex[1][2],Vertex[3][8]],
+    Propagator[Outgoing][Vertex[1][3],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][4],Vertex[3][10]],
+    Propagator[Outgoing][Vertex[1][5],Vertex[3][10]],
+    Propagator[Outgoing][Vertex[1][6],Vertex[3][9]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][9]],
+    Propagator[Internal][Vertex[3][8],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][8]]]];
 
-(*Select Diagrams with possible double on-shell resonances*)
-ins1 = DiagramSelect[ins,(SChannelExtQ[S[_,{_,_,_}],3,5][##] && SChannelExtQ[S[_,{_,_,_}],4,6][##])&];
-DoPaint[ins1, "realOSall_3546"];
-ins3546 = DiagramExtract[ins1,2] (*t-channel.*)
-ins4635 = DiagramExtract[ins1,4] (*u-channel*)
+ins3546 = InsertFields[top3546, process]
 DoPaint[ins3546, "realOS_3546"];
-DoPaint[ins4635, "realOS_4635"];
-
-(*Select Diagrams with possible double on-shell resonances*)
-ins2 = DiagramSelect[ins,(SChannelExtQ[S[_,{_,_,_}],3,6][##] && SChannelExtQ[S[_,{_,_,_}],4,5][##])&];
-DoPaint[ins2, "realOSall_3645"];
-ins3645 = DiagramExtract[ins2,2] (*t-channel.*)
-ins4536 = DiagramExtract[ins2,4] (*u-channel*)
+ins3645 = InsertFields[top3645, process]
 DoPaint[ins3645, "realOS_3645"];
-DoPaint[ins4536, "realOS_4536"];
 
 
-(*insert the natural particle widths*)
+(*widths and regulator replacement rules*)
 widths = {MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
-(*TODO: this might be different when working with InsertionLevel\[Rule]Classes*)
-(*insert the regulator, with natural widths in double resonant part*)
 reg = {Den[sij_,MSf2[cij_,tij_,gij_]-I MSf[cij_,tij_,gij_] WSf[cij_,tij_,gij_]]Den[skl_,MSf2[ckl_,tkl_,gkl_]-I MSf[ckl_,tkl_,gkl_] WSf[ckl_,tkl_,gkl_]]:>((Den[sij,MSf2[cij,tij,gij]-I MSf[cij,tij,gij] (WSf[cij,tij,gij]+WREG)]^-1+Den[skl,MSf2[ckl,tkl,gkl]-I MSf[ckl,tkl,gkl] (WSf[ckl,tkl,gkl]+WREG)]^-1)^-1)*(Den[sij,MSf2[cij,tij,gij]-I MSf[cij,tij,gij] WSf[cij,tij,gij]]+Den[skl,MSf2[ckl,tkl,gkl]-I MSf[ckl,tkl,gkl] WSf[ckl,tkl,gkl]])};
-(*without natural widths in double resonant part*)
-(*reg = {Den[sij_,MSf2[cij_,tij_,gij_]-I MSf[cij_,tij_,gij_] WSf[cij_,tij_,gij_]]Den[skl_,MSf2[ckl_,tkl_,gkl_]-I MSf[ckl_,tkl_,gkl_] WSf[ckl_,tkl_,gkl_]]:>((Den[sij,MSf2[cij,tij,gij]-I MSf[cij,tij,gij] WREG]^-1+Den[skl,MSf2[ckl,tkl,gkl]-I MSf[ckl,tkl,gkl] WREG]^-1)^-1)*(Den[sij,MSf2[cij,tij,gij]-I MSf[cij,tij,gij] WSf[cij,tij,gij]]+Den[skl,MSf2[ckl,tkl,gkl]-I MSf[ckl,tkl,gkl] WSf[ckl,tkl,gkl]])}*)
-
-real3546 = CalcFeynAmp[CreateFeynAmp[ins3546](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
-real4635 = CalcFeynAmp[CreateFeynAmp[ins4635](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
-real3645 = CalcFeynAmp[CreateFeynAmp[ins3645](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
-real4536 = CalcFeynAmp[CreateFeynAmp[ins4536](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
+(*generate amplitudes*)
+real3546 = CalcFeynAmp[CreateFeynAmp[ins3546](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*), InvSimplify -> False]; (*uncomment ", InvSimplify -> False" for Mac OS X*)
+real3645 = CalcFeynAmp[CreateFeynAmp[ins3645](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*), InvSimplify -> False];
 (*real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
 real = real//.{PowerOf[a_]:>PowerOf[a][1]};*)
+(*insert widths*)
 real3546 = real3546/.{Den[x_,y_]:>Den[x,y/.widths]};
-real4635 = real4635/.{Den[x_,y_]:>Den[x,y/.widths]};
 real3645 = real3645/.{Den[x_,y_]:>Den[x,y/.widths]};
-real4536 = real4536/.{Den[x_,y_]:>Den[x,y/.widths]};
 (*insert the regulator*)
 real3546 = real3546/.reg;
-real4635 = real4635/.reg;
 real3645 = real3645/.reg;
-real4536 = real4536/.reg;
 
-(*set the sfermion index in fortran program*)
-real3546Sfe = real3546//.{SumOver[Sfe6,i_]:>SumOver[Sfe6,i,External], SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External], SumOver[Sfe9,i_]:>SumOver[Sfe9,i,External]}
-real4635Sfe = real4635//.{SumOver[Sfe6,i_]:>SumOver[Sfe6,i,External], SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External], SumOver[Sfe9,i_]:>SumOver[Sfe9,i,External]}
-real3645Sfe = real3645//.{SumOver[Sfe6,i_]:>SumOver[Sfe6,i,External], SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External], SumOver[Sfe9,i_]:>SumOver[Sfe9,i,External]}
-real4536Sfe = real4536//.{SumOver[Sfe6,i_]:>SumOver[Sfe6,i,External], SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External], SumOver[Sfe9,i_]:>SumOver[Sfe9,i,External]}
+(*set the sfermion index in the external fortran program (leave it open)*)
+real3546Sfe = real3546//.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]}
+real3645Sfe = real3645//.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]}
 
 
 Print["Non resonant Diagrams"]
@@ -338,31 +381,6 @@ dir = SetupCodeDir[name<>"_realOS_3546", Drivers -> name <> "_drivers"];
 WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
 
 
-(*Write files for on-shell resonant reals, OS4635*)
-amps = {real4635Sfe};
-{realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
-
-col = ColourME[All, realOS];
-
-abbr = OptimizeAbbr[Abbr[]];
-subexpr = OptimizeAbbr[Subexpr[]];
-
-(*fortran can't handle arrays with dimensionality greater than 7*)
-(*apply back the subexpressions with number of arguments greater than 6*)
-subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-realOS = realOS//.subexpr6;
-abbr = abbr//.subexpr6;
-
-(*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-subexpr = subexpr//.subexpr6;
-
-dir = SetupCodeDir[name<>"_realOS_4635", Drivers -> name <> "_drivers"];
-WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
-
-
 (*Write files for on-shell resonant reals, OS3645*)
 amps = {real3645Sfe};
 {realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
@@ -388,34 +406,9 @@ dir = SetupCodeDir[name<>"_realOS_3645", Drivers -> name <> "_drivers"];
 WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
 
 
-(*Write files for on-shell resonant reals, OS4536*)
-amps = {real4536Sfe};
-{realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
-
-col = ColourME[All, realOS];
-
-abbr = OptimizeAbbr[Abbr[]];
-subexpr = OptimizeAbbr[Subexpr[]];
-
-(*fortran can't handle arrays with dimensionality greater than 7*)
-(*apply back the subexpressions with number of arguments greater than 6*)
-subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-realOS = realOS//.subexpr6;
-abbr = abbr//.subexpr6;
-
-(*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-subexpr = subexpr//.subexpr6;
-
-dir = SetupCodeDir[name<>"_realOS_4536", Drivers -> name <> "_drivers"];
-WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
-
-
 (*Combine the amplitudes again, but this time the resonant diagrams are regulated*)
 (*Use here the regulated on shell amplitudes with summation over the sfermion indices*)
-real = Combine[realNR,real3546,real4635,real3645,real4536];
+real = Combine[realNR,real3546,real3645];
 
 (*Write real files with inserted regulator for on-shell diagrams*)
 amps = {real};

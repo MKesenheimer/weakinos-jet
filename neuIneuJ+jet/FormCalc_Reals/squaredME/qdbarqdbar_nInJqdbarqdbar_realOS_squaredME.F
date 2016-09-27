@@ -14,15 +14,7 @@
           goto 10
         endif
         if(ichan.ge.5 .and. ichan.le.8) then
-          call qdbarqdbar_nInJqdbarqdbar_4635_SquaredME(fc_result, helicities, flags)
-          goto 10
-        endif
-        if(ichan.ge.9 .and. ichan.le.12) then
           call qdbarqdbar_nInJqdbarqdbar_3645_SquaredME(fc_result, helicities, flags)
-          goto 10
-        endif
-        if(ichan.ge.13 .and. ichan.le.16) then
-          call qdbarqdbar_nInJqdbarqdbar_4536_SquaredME(fc_result, helicities, flags)
           goto 10
         endif
  10     continue

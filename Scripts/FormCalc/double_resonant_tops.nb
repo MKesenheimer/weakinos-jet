@@ -1,0 +1,3711 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[    147898,       3703]
+NotebookOptionsPosition[    145998,       3637]
+NotebookOutlinePosition[    146354,       3653]
+CellTagsIndexPosition[    146311,       3650]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{"Clear", "[", "\"\<Global`*\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"<<", " ", "FeynArts`"}], "\[IndentingNewLine]", 
+ RowBox[{"<<", " ", "FeynArts`Insert`"}]}], "Input",
+ CellChangeTimes->{{3.683539702865128*^9, 3.683539771530588*^9}, {
+  3.683540011599189*^9, 3.683540032797409*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["\<\"\"\>"], "Print",
+ CellChangeTimes->{
+  3.683456090203155*^9, 3.683515288773481*^9, 3.683531793449677*^9, 
+   3.683535495018919*^9, 3.683535660789145*^9, 3.6835366161347446`*^9, 
+   3.683538423097849*^9, 3.683538642707543*^9, 3.683538957129039*^9, 
+   3.683539708055892*^9, {3.683539745238023*^9, 3.683539773257347*^9}, {
+   3.68354002864509*^9, 3.6835400330975027`*^9}, {3.683543693532559*^9, 
+   3.683543712353073*^9}}],
+
+Cell[BoxData["\<\"FeynArts 3.9 (23 Sep 2015)\"\>"], "Print",
+ CellChangeTimes->{
+  3.683456090203155*^9, 3.683515288773481*^9, 3.683531793449677*^9, 
+   3.683535495018919*^9, 3.683535660789145*^9, 3.6835366161347446`*^9, 
+   3.683538423097849*^9, 3.683538642707543*^9, 3.683538957129039*^9, 
+   3.683539708055892*^9, {3.683539745238023*^9, 3.683539773257347*^9}, {
+   3.68354002864509*^9, 3.6835400330975027`*^9}, {3.683543693532559*^9, 
+   3.683543712366439*^9}}],
+
+Cell[BoxData["\<\"by Hagen Eck, Sepp Kueblbeck, and Thomas Hahn\"\>"], "Print",
+ CellChangeTimes->{
+  3.683456090203155*^9, 3.683515288773481*^9, 3.683531793449677*^9, 
+   3.683535495018919*^9, 3.683535660789145*^9, 3.6835366161347446`*^9, 
+   3.683538423097849*^9, 3.683538642707543*^9, 3.683538957129039*^9, 
+   3.683539708055892*^9, {3.683539745238023*^9, 3.683539773257347*^9}, {
+   3.68354002864509*^9, 3.6835400330975027`*^9}, {3.683543693532559*^9, 
+   3.683543712379718*^9}}]
+}, Open  ]],
+
+Cell[BoxData["\<\"Global`Insert`\"\>"], "Output",
+ CellChangeTimes->{
+  3.6835400331400833`*^9, {3.6835436936138697`*^9, 3.6835437124437313`*^9}}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"top", "=", 
+   RowBox[{"CreateTopologies", "[", 
+    RowBox[{"0", ",", 
+     RowBox[{"2", "\[Rule]", "4"}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.683457425202318*^9, 3.6834574289263268`*^9}, 
+   3.683535489698008*^9, {3.683540107406764*^9, 3.683540107576823*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"top3546", "=", 
+  RowBox[{"TopologyList", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Level", "[", 
+      RowBox[{"top", ",", "1"}], "]"}], "[", 
+     RowBox[{"[", "104", "]"}], "]"}], ",", 
+    RowBox[{
+     RowBox[{"Level", "[", 
+      RowBox[{"top", ",", "1"}], "]"}], "[", 
+     RowBox[{"[", "119", "]"}], "]"}], ",", 
+    RowBox[{
+     RowBox[{"Level", "[", 
+      RowBox[{"top", ",", "1"}], "]"}], "[", 
+     RowBox[{"[", "213", "]"}], "]"}], ",", 
+    RowBox[{
+     RowBox[{"Level", "[", 
+      RowBox[{"top", ",", "1"}], "]"}], "[", 
+     RowBox[{"[", "214", "]"}], "]"}]}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Paint", "[", 
+   RowBox[{"top3546", ",", 
+    RowBox[{"FieldNumbers", "\[Rule]", "True"}]}], "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.683456421199636*^9, 3.68345642798764*^9}, 
+   3.683457084928047*^9, {3.6834571547536373`*^9, 3.683457173069261*^9}, {
+   3.683457221078109*^9, 3.683457277504004*^9}, {3.683457421431011*^9, 
+   3.683457422161134*^9}, {3.68345772794732*^9, 3.683457733370818*^9}, {
+   3.6835355163703833`*^9, 3.6835355165457993`*^9}, 3.683535619765287*^9, 
+   3.68353624218729*^9}],
+
+Cell[BoxData[
+ RowBox[{"TopologyList", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Topology", "[", "1", "]"}], "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "1", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "4", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "2", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "4", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "3", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "4", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "5", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "6", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "4", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "4", "]"}], "[", "7", "]"}]}], "]"}]}], "]"}], 
+   ",", 
+   RowBox[{
+    RowBox[{"Topology", "[", "1", "]"}], "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "1", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "2", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "3", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "4", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "5", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "6", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}]}], "]"}],
+    ",", 
+   RowBox[{
+    RowBox[{"Topology", "[", "1", "]"}], "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "1", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "2", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "3", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "4", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "5", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "6", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}]}], "]"}],
+    ",", 
+   RowBox[{
+    RowBox[{"Topology", "[", "1", "]"}], "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "1", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "2", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "3", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "4", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "5", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "6", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}]}], 
+    "]"}]}], "]"}]], "Output",
+ CellChangeTimes->{
+  3.683456429421912*^9, 3.6834570853420067`*^9, {3.6834571687730703`*^9, 
+   3.6834571738905153`*^9}, {3.683457249912174*^9, 3.683457278071678*^9}, 
+   3.683457559870493*^9, 3.683457737398403*^9, 3.683515302663458*^9, 
+   3.683531797350725*^9, 3.6835355183640957`*^9, 3.683535620097904*^9, 
+   3.683535664562969*^9, 3.683536242377473*^9, 3.6835366204164753`*^9, 
+   3.6835384288609*^9, 3.683538647080864*^9, 3.683538966705696*^9, 
+   3.68354371265143*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"> Top. \"\>", "\[InvisibleSpace]", "1", 
+   "\[InvisibleSpace]", "\<\": \"\>", 
+   "\[InvisibleSpace]", "\<\"1 diagram\"\>"}],
+  SequenceForm["> Top. ", 1, ": ", "1 diagram"],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.6834564283483963`*^9, 3.6834570853610783`*^9, {3.683457168775816*^9, 
+   3.683457173891885*^9}, {3.6834572499135857`*^9, 3.683457278057167*^9}, 
+   3.683457559854251*^9, 3.68345773737092*^9, 3.6835153026107597`*^9, 
+   3.683531797291637*^9, 3.683535518293229*^9, 3.683535620111915*^9, 
+   3.683535664574275*^9, 3.683536242388731*^9, 3.683536620427618*^9, 
+   3.683538428873096*^9, 3.683538647093132*^9, 3.683538966718027*^9, 
+   3.683543712665634*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"> Top. \"\>", "\[InvisibleSpace]", "2", 
+   "\[InvisibleSpace]", "\<\": \"\>", 
+   "\[InvisibleSpace]", "\<\"1 diagram\"\>"}],
+  SequenceForm["> Top. ", 2, ": ", "1 diagram"],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.6834564283483963`*^9, 3.6834570853610783`*^9, {3.683457168775816*^9, 
+   3.683457173891885*^9}, {3.6834572499135857`*^9, 3.683457278057167*^9}, 
+   3.683457559854251*^9, 3.68345773737092*^9, 3.6835153026107597`*^9, 
+   3.683531797291637*^9, 3.683535518293229*^9, 3.683535620111915*^9, 
+   3.683535664574275*^9, 3.683536242388731*^9, 3.683536620427618*^9, 
+   3.683538428873096*^9, 3.683538647093132*^9, 3.683538966718027*^9, 
+   3.683543712675335*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"> Top. \"\>", "\[InvisibleSpace]", "3", 
+   "\[InvisibleSpace]", "\<\": \"\>", 
+   "\[InvisibleSpace]", "\<\"1 diagram\"\>"}],
+  SequenceForm["> Top. ", 3, ": ", "1 diagram"],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.6834564283483963`*^9, 3.6834570853610783`*^9, {3.683457168775816*^9, 
+   3.683457173891885*^9}, {3.6834572499135857`*^9, 3.683457278057167*^9}, 
+   3.683457559854251*^9, 3.68345773737092*^9, 3.6835153026107597`*^9, 
+   3.683531797291637*^9, 3.683535518293229*^9, 3.683535620111915*^9, 
+   3.683535664574275*^9, 3.683536242388731*^9, 3.683536620427618*^9, 
+   3.683538428873096*^9, 3.683538647093132*^9, 3.683538966718027*^9, 
+   3.683543712688308*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"> Top. \"\>", "\[InvisibleSpace]", "4", 
+   "\[InvisibleSpace]", "\<\": \"\>", 
+   "\[InvisibleSpace]", "\<\"1 diagram\"\>"}],
+  SequenceForm["> Top. ", 4, ": ", "1 diagram"],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.6834564283483963`*^9, 3.6834570853610783`*^9, {3.683457168775816*^9, 
+   3.683457173891885*^9}, {3.6834572499135857`*^9, 3.683457278057167*^9}, 
+   3.683457559854251*^9, 3.68345773737092*^9, 3.6835153026107597`*^9, 
+   3.683531797291637*^9, 3.683535518293229*^9, 3.683535620111915*^9, 
+   3.683535664574275*^9, 3.683536242388731*^9, 3.683536620427618*^9, 
+   3.683538428873096*^9, 3.683538647093132*^9, 3.683538966718027*^9, 
+   3.683543712702095*^9}],
+
+Cell[BoxData[
+ GraphicsBox[{InsetBox[
+    GraphicsBox[
+     {Thickness[0.005], 
+      LineBox[{{-5.4569682106375694`*^-12, 15.000000000005457`}, {
+       5.999999999996362, 10.000000000001819`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["1",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {2.7725602804361764`, 12.10611233652341}, \
+{1, 1}], LineBox[{{-9.094947017729282*^-12, 4.999999999992724}, {
+       5.999999999994543, 9.999999999994543}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["2",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {3.227439719563824, 7.106112336523411}, \
+{-1, 1}], 
+      LineBox[{{20.000000000010914`, 18.000000000003638`}, {
+       13.500000000012733`, 14.000000000007276`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["3",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {16.673473346636367`, 16.502355811715905`}, \
+{1, -1}], 
+      LineBox[{{20.000000000003638`, 12.000000000003638`}, {
+       13.500000000003638`, 7.000000000001819}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["4",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {19.1048, 11.895199999999999`}, {1, -1}], 
+      LineBox[{{20., 7.999999999998181}, {13.499999999998181`, 
+       13.999999999998181`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["5",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {19.1048, 8.104800000000001}, {1, 1}], 
+      LineBox[{{20., 2.}, {13.5, 6.999999999998181}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["6",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {16.5621760108954, 4.07438881416402}, {1, 1}],
+       LineBox[{{13.500000000009095`, 14.000000000003638`}, {
+       6.000000000007276, 10.000000000003638`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["7",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {9.743035294117647, 12.542258823529412`}, \
+{1, -1}], 
+      LineBox[{{13.49999999999909, 7.000000000003638}, {5.999999999998181, 
+       10.000000000003638`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["8",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {9.267192120739665, 7.897780301849163}, \
+{0, 1}], 
+      {PointSize[0.04], PointBox[{13.5, 14.}], PointBox[{13.5, 7.}], 
+       PointBox[{6., 10.}]}, InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["T1",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->7.997355371900827],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         7.997355371900827]& ], {10., -0.5}, {0, -1}]},
+     AspectRatio->1,
+     PlotRange->{{-1, 21}, {-1, 21}}], {0, 44}, {0, 0}, {22, 22}], InsetBox[
+    GraphicsBox[
+     {Thickness[0.005], 
+      LineBox[{{-3.637978807091713*^-12, 15.000000000005457`}, {
+       3.999999999998181, 10.000000000003638`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["1",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {1.5896705477240605`, 12.292696438179249`}, \
+{1, 1}], LineBox[{{-7.275957614183426*^-12, 4.999999999992724}, {
+       3.999999999994543, 9.999999999996362}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["2",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {2.4103294522759393`, 7.292696438179249}, \
+{-1, 1}], 
+      LineBox[{{20., 18.00000000000182}, {14.999999999998181`, 
+       13.500000000001819`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["3",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {17.235145848890816`, 16.111482390121317`}, \
+{1, -1}], 
+      LineBox[{{20., 12.000000000001819`}, {15.000000000003638`, 
+       7.000000000005457}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["4",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {19.6048, 12.395199999999999`}, {1, -1}], 
+      LineBox[{{20., 7.999999999998181}, {15., 13.5}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["5",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {19.6048, 8.104800000000001}, {1, 1}], 
+      LineBox[{{20., 2.000000000003638}, {15.000000000001819`, 
+       7.000000000001819}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["6",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {17.185561184457487`, 4.185561184457488}, \
+{1, 1}], LineBox[{{3.9999999999921148`, 10.}, {8.999999999998089, 10.}}], 
+      InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["7",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {6.5, 10.6952}, {0, -1}], 
+      LineBox[{{15.000000000007276`, 13.500000000003638`}, {9.000000000003638,
+        10.}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["8",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {11.949767666818687`, 12.268112571167965`}, \
+{1, -1}], LineBox[{{15.000000000001819`, 7.}, {9.000000000001819, 10.}}], 
+      InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["9",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {12.023422325850056`, 7.942044651700109}, \
+{1, 1}], 
+      {PointSize[0.04], PointBox[{4., 10.}], PointBox[{15., 13.5}], 
+       PointBox[{15., 7.}], PointBox[{9., 10.}]}, InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["T2",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->7.997355371900827],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         7.997355371900827]& ], {10., -0.5}, {0, -1}]},
+     AspectRatio->1,
+     PlotRange->{{-1, 21}, {-1, 21}}], {22, 44}, {0, 0}, {22, 22}], InsetBox[
+    GraphicsBox[
+     {Thickness[0.005], 
+      LineBox[{{-1.432454155292362*^-11, 14.999999999996362`}, {
+       7.999999999977717, 14.499999999996362`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["1",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {4.081091772001734, 15.442668352027756`}, \
+{0, -1}], 
+      LineBox[{{-5.229594535194337*^-12, 4.999999999996362}, {
+       7.999999999986812, 5.499999999996362}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["2",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {4.081091772001734, 4.557331647972244}, \
+{0, 1}], LineBox[{{20.000000000012733`, 18.000000000007276`}, {
+       14.000000000012733`, 14.000000000007276`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["3",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {16.883689744907205`, 16.476865382639197`}, \
+{1, -1}], 
+      LineBox[{{20.000000000003638`, 12.000000000003638`}, {
+       14.000000000003638`, 6.000000000003638}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["4",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {15.567745714043848`, 8.078324888851824}, \
+{1, -1}], 
+      LineBox[{{20.00000000000182, 8.000000000001819}, {14., 
+       14.000000000001819`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["5",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {16.214128507914737`, 12.386986412935393`}, \
+{-1, -1}], LineBox[{{20., 2.}, {13.999999999998181`, 6.}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["6",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {16.883689744907205`, 3.523134617360803}, \
+{1, 1}], LineBox[{{8., 14.50000000000417}, {8., 5.500000000005628}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["7",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {7.3048, 10.}, {1, 0}], 
+      LineBox[{{7.999999999998181, 14.5}, {13.99999999999227, 
+       14.000000000003638`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["8",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {11.107959123809861`, 14.940709485718344`}, \
+{0, -1}], 
+      LineBox[{{7.999999999998181, 5.499999999996362}, {13.99999999999227, 
+       5.999999999996362}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["9",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {11.107959123809863`, 5.059290514281656}, \
+{0, 1}], 
+      {PointSize[0.04], PointBox[{8., 14.5}], PointBox[{8., 5.5}], 
+       PointBox[{14., 14.}], PointBox[{14., 6.}]}, InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["T3",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->7.997355371900827],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         7.997355371900827]& ], {10., -0.5}, {0, -1}]},
+     AspectRatio->1,
+     PlotRange->{{-1, 21}, {-1, 21}}], {44, 44}, {0, 0}, {22, 22}], InsetBox[
+    GraphicsBox[
+     {Thickness[0.005], 
+      LineBox[{{-1.8189894035458565`*^-12, 15.000000000003638`}, {
+       9.999999999994543, 5.500000000005457}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["1",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {2.8952, 12.895199999999999`}, {-1, -1}], 
+      LineBox[{{-7.275957614183426*^-12, 4.999999999996362}, {
+       9.999999999992724, 14.499999999992724`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["2",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {2.8952, 7.1048}, {-1, 1}], 
+      LineBox[{{20., 18.}, {15.5, 13.999999999998181`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["3",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {17.491127009521104`, 16.36683211428876}, \
+{1, -1}], 
+      LineBox[{{20.000000000007276`, 12.000000000001819`}, {
+       16.000000000003638`, 6.000000000001819}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["4",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {17.60826624726853, 7.616181692160382}, \
+{-1, 1}], 
+      LineBox[{{20.00000000000182, 7.999999999998181}, {15.500000000003638`, 
+       14.}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["5",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {17.092984915069113`, 12.410087983215359`}, \
+{-1, -1}], LineBox[{{20., 2.000000000001819}, {16.00000000000182, 6.}}], 
+      InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["6",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {17.685561184457487`, 3.6855611844574883`}, \
+{1, 1}], LineBox[{{10., 5.499999999995831}, {10., 14.499999999994373`}}], 
+      InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["7",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {10.6952, 10.}, {-1, 0}], 
+      LineBox[{{9.999999999998181, 5.499999999996362}, {15.99999999999227, 
+       5.999999999996362}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["8",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {13.107959123809863`, 5.059290514281656}, \
+{0, 1}], LineBox[{{10.000000000000227`, 14.500000000003638`}, {
+       15.499999999998636`, 14.}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["9",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {12.867696469855273`, 14.939861168408015`}, \
+{0, -1}], 
+      {PointSize[0.04], PointBox[{10., 5.5}], PointBox[{10., 14.5}], 
+       PointBox[{15.5, 14.}], PointBox[{16., 6.}]}, InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["T4",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->7.997355371900827],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         7.997355371900827]& ], {10., -0.5}, {0, -1}]},
+     AspectRatio->1,
+     PlotRange->{{-1, 21}, {-1, 21}}], {0, 22}, {0, 0}, {22, 22}], InsetBox[
+    TagBox[
+     StyleBox[
+      TagBox["2",
+       DisplayForm],
+      FontFamily->"Helvetica",
+      FontSize->11.996033057851239`],
+     StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+      11.996033057851239`]& ], {28.5, 69.96}, {0, 0}], InsetBox[
+    TagBox[
+     StyleBox[
+      TagBox["\[RightArrow]",
+       DisplayForm],
+      FontFamily->"Helvetica",
+      FontSize->11.996033057851239`],
+     StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+      11.996033057851239`]& ], {33., 69.96}, {0, 0}], InsetBox[
+    TagBox[
+     StyleBox[
+      TagBox["4",
+       DisplayForm],
+      FontFamily->"Helvetica",
+      FontSize->11.996033057851239`],
+     StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+      11.996033057851239`]& ], {37.5, 69.96}, {0, 0}]},
+  AspectRatio->1.0999999999999999`,
+  ImageSize->{288, 288},
+  PlotRange->{{0, 66}, {0, 72.6}}]], "Print",
+ CellChangeTimes->{
+  3.6834564283483963`*^9, 3.6834570853610783`*^9, {3.683457168775816*^9, 
+   3.683457173891885*^9}, {3.6834572499135857`*^9, 3.683457278057167*^9}, 
+   3.683457559854251*^9, 3.68345773737092*^9, 3.6835153026107597`*^9, 
+   3.683531797291637*^9, 3.683535518293229*^9, 3.683535620111915*^9, 
+   3.683535664574275*^9, 3.683536242388731*^9, 3.683536620427618*^9, 
+   3.683538428873096*^9, 3.683538647093132*^9, 3.683538966718027*^9, 
+   3.683543712722848*^9},ImageCache->GraphicsData["CompressedBitmap", "\<\
+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
+yfv8dgS1bTE4dNBfSVOMHYvudmaooxfz8MpuDP9+IL4fOhKHzt/8zI4EcXFx
+mk2L76o6BltmTsJ3/fspvtSrVy/1Wa9BY+H/1kYsKurrmKfZnmTqkgY5UpKV
+L7xSi3iu7n327BkbfkFveJrFuOJzO4vtYEfekrYlCWPigtO3I4hOKRjdzhP5
+SjbEHGXdKVOnYPL0pXgZFutQQQsqKY8tUJXypJxlP0XIjHnSIz4UXcoWRv7C
+rihZ0l2xEleUbtATQR9T7K7alopsB0+OHDli+B17K2wIcTOV3R62Dtk2JHmS
+0xxse0opTzPu27ePTSPtmGm2YedWeVep9Iqgd/GMCreWJK/fPL4KJd3dMHP9
+fpYDYh45t8EUJrHD7hQ/40GitCMuiRjXuwaqtuyPV+8iERsTjcjID0hJTTvT
+ZI0g2+JLGtsv7IjxXAjrYzIZnvlgr444TJohPT328Lj5QMHY/uff7CewvXzw
+4EFTcWxNU3HspjEFZ1Cc4UNUGo/BsAPHoxvcyrcHu542zUmTj9SYO//sLYvm
+bp3ZjZa1PFCxZnMcv+QndUhM+GtMH/odOnTsoIqi/jh3PdDUIDtdnCENcW1m
+lJ0dyUbvg66jY+MqqFK3sSovfWUfKzjQTy3yLB6/eGs2063KtV1X0EAyJjQ6
+MAk97U6PpTdxz4NHnewpnU35jEqn1H379nWQUzdsVLPBKq1LjkdnIerzMA8V
+KlvINAY9lJ9zfgvuOZS2KTiPBXzZ1mG8KVtl1dH1ITwMMQkpqsp8j7nDvkYR
+95p4GBIrG8bMhlP7NUepmm2wY/cujO/XBcUrtMbTiEStIFtmZwTrzJ5Vmyk8
+OADj+n+NLl064eshY+AflHZKggcyqIe0CFdZKfEDNvzxCwrlcsLIGSvVxDD3
+pG8f+wtlXPOiXce2KOZeDptO3jWbfFb7ZNHX80jvxFFD8GWnLviq11DcfR7q
+YAvVvOlsR6+jM9esWVNxx2zo2bOn0WvkkQnue1GXDBT2wtj4Vvb6DwNcDUNp
+CQLccOK2mT1TcQ+DnxcqVMiIh1q1akmj2FY5mUJwQvooocZRq2XRuK/Qf5qh
+JCDmCdwLl8Men5emaVI/oGPJIpi/76rtkujHcK9cH+cDPpgIZiUs5onG1DgM
+aVURFZr3wu69O9CnTT183nwwPiTCtA/Nyfyhs4YJ6Nv/mo/T94z9PDw4tBp5
+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
+3Qt+GoSGLdqgW5dOKFggNzwrVcfhyw/N4KIW2X2TY7F0POf02ru2bREqlP4c
+IckwD7CzsyPdHP6ntGcSHroIXYOlKA1EOJLkmhr1Gi1di2KX72OT0WYsMfhI
+pbo/F/OOuoVDjRo1yugK2nqDmYwutv4x0wSbqoMHDzYOuAvTYNtu1JeN0XPU
+in91tb/G9YFTg27wV+VFzzp1MXrmOkREx0lyYmuxdevWxiOmLumVc3PnMtSo
+Ug+hpnJsZ4EbNmxouBWPks6YMYOgITBJVXM0VaabiSU1OgjNixXB31f9TRdi
+J7lZs2ZGFdCyZUtjAyMPEVJNQffq3Lkz8uXLh9q1axsp+tmzZ646iIkFY8aM
+MWBThaKo4+6pdSjoXhUP38aZJ7X/qY4sSIoKxleNPsfcrd6Y2K4LFm3wMVfF
+MKNJSJ0YL0Qv5/+uE1vqym50cblIpjUFKwb0kOFzhQTrtFa4o0FXCUuMNbbc
+NVfNY9FVi+LOFl1lNs4PcxjqVq1IGjJUIUsW4h83ZtgXJtSTlxXVs7FVzo4J
+IYvBr/O7BBuDaGK31ug2bL5dnclDkUF3T6N+xUoo7VIaSzb5SJfRAuiGu7KJ
+IaCfAaUeHPgT1bXaRC6CPr2PKVzdkkV/TFbMdRJalVyCrPKQI4/MyxEiVmtC
+e4W8ISEErVxtGhSiwIjmdaw1nfQ0HI+GoBFU9hOeQfvQlrYH1/EPZuSuNRv7
+8b0x/QPFvK8e34ESRZywcvd1yT72+hfeq6cYGLBw88V0JElyotxrzZ06T8pz
+tHxcafyPA9GgeiWUreWFd8npHwtk2UaMEBUzWunIzJtqOcJECPzMg3wyUOxu
+JdOf6ttDQ17j1uUTqFGkEHZc9c/4ZAjBT1IrP+M2Ej9XeilskY/Qy+daZCar
+Ot20Oq8fXg43lVKYMjxKlEDJ4sXRaeySf1MnUuOxcs5MnFRwa33kUdQpmGhV
+Z+EM6kyOw7EdW9GnYyO4Vq6FsKT0T9DQP1Rwm/rgPhuHYkJTRFOIGuEi/SMt
+/4WoZ8aeZZPhrrDQ4RNVqlx7IpOR8JKc8Lei+lLKy9Cg7GoxEkksRITgithW
+RueqNZqcEIeI8Aijw2j7Lxwfo2PtadTVjvZkZdaYLpQ+puPe+Btif0xO431y
+GltxUnNXiptkdAsmNuUHUtxLpcaKWpKRleWLDyucwMfQp+jSuBL2Xn8qMxHO
+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\
+\>"]]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+   "Modify", " ", "the", " ", "topology", " ", "list", " ", "by", " ", "hand",
+     " ", "in", " ", "a", " ", "way", " ", "that", " ", "equivalent", " ", 
+    "lines", " ", "have", " ", "the", " ", "same", " ", 
+    RowBox[{"FieldNumber", ".", " ", "This"}], " ", "is", " ", "necessary", 
+    " ", "to", " ", "assign", " ", "the", " ", "diagrams", " ", "to", " ", 
+    "the", " ", "correct", " ", "resonant", " ", "channel", " ", "structure", 
+    " ", "in", " ", "InsertFields", 
+    RowBox[{"(", 
+     RowBox[{
+     "which", " ", "is", " ", "difficult", " ", "if", " ", "the", " ", 
+      "fields", " ", "that", " ", "couple", " ", "to", " ", "the", " ", 
+      "same", " ", "final", " ", "state", " ", "particles", " ", "have", " ", 
+      "different", " ", "indices"}], ")"}]}], "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"top3546", " ", "=", " ", 
+     RowBox[{"TopologyList", "[", "\n", "\t", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Topology", "[", "1", "]"}], "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "1", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "4", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "2", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "4", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "3", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "4", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "5", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "6", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "4", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "4", "]"}], "[", "7", "]"}]}], "]"}]}], 
+        "]"}], ",", "\n", "\t", 
+       RowBox[{
+        RowBox[{"Topology", "[", "1", "]"}], "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "1", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "2", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "3", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "4", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "5", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "6", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",",
+          "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}]}], 
+        "]"}], ",", "\n", "\t", 
+       RowBox[{
+        RowBox[{"Topology", "[", "1", "]"}], "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "1", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "2", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "3", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "4", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",",
+          "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "5", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "6", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",",
+          "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",",
+          "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}]}], 
+        "]"}], ",", "\n", "\t", 
+       RowBox[{
+        RowBox[{"Topology", "[", "1", "]"}], "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "1", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "2", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "3", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "4", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",",
+          "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "5", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "6", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",",
+          "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",",
+          "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}]}], 
+        "]"}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Paint", "[", 
+     RowBox[{"top3546", ",", 
+      RowBox[{"FieldNumbers", "\[Rule]", "True"}]}], "]"}], 
+    ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.683535683973963*^9, 3.68353568719051*^9}, {
+   3.68353579377991*^9, 3.683535832739846*^9}, {3.683535866511978*^9, 
+   3.683536030491136*^9}, {3.683536217277008*^9, 3.683536238123912*^9}, {
+   3.6835363466659937`*^9, 3.6835363571377993`*^9}, {3.6835363908604517`*^9, 
+   3.683536417771903*^9}, {3.6835364538465443`*^9, 3.683536482821859*^9}, {
+   3.683536573463992*^9, 3.683536577434828*^9}, {3.683536632597013*^9, 
+   3.6835366492919292`*^9}, {3.683538410743642*^9, 3.683538415358757*^9}, 
+   3.6835416356253977`*^9, {3.6835419353192053`*^9, 3.6835419435876207`*^9}, {
+   3.6835420012486362`*^9, 3.683542094057968*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"> Top. \"\>", "\[InvisibleSpace]", "1", 
+   "\[InvisibleSpace]", "\<\": \"\>", 
+   "\[InvisibleSpace]", "\<\"1 diagram\"\>"}],
+  SequenceForm["> Top. ", 1, ": ", "1 diagram"],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.683538429028386*^9, 3.6835386472193823`*^9, 3.683538974852641*^9, 
+   3.683541970483346*^9, 3.683542017842372*^9, {3.6835420501063747`*^9, 
+   3.6835420946401*^9}, 3.683543712788344*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"> Top. \"\>", "\[InvisibleSpace]", "2", 
+   "\[InvisibleSpace]", "\<\": \"\>", 
+   "\[InvisibleSpace]", "\<\"1 diagram\"\>"}],
+  SequenceForm["> Top. ", 2, ": ", "1 diagram"],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.683538429028386*^9, 3.6835386472193823`*^9, 3.683538974852641*^9, 
+   3.683541970483346*^9, 3.683542017842372*^9, {3.6835420501063747`*^9, 
+   3.6835420946401*^9}, 3.683543712801208*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"> Top. \"\>", "\[InvisibleSpace]", "3", 
+   "\[InvisibleSpace]", "\<\": \"\>", 
+   "\[InvisibleSpace]", "\<\"1 diagram\"\>"}],
+  SequenceForm["> Top. ", 3, ": ", "1 diagram"],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.683538429028386*^9, 3.6835386472193823`*^9, 3.683538974852641*^9, 
+   3.683541970483346*^9, 3.683542017842372*^9, {3.6835420501063747`*^9, 
+   3.6835420946401*^9}, 3.683543712817236*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"> Top. \"\>", "\[InvisibleSpace]", "4", 
+   "\[InvisibleSpace]", "\<\": \"\>", 
+   "\[InvisibleSpace]", "\<\"1 diagram\"\>"}],
+  SequenceForm["> Top. ", 4, ": ", "1 diagram"],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.683538429028386*^9, 3.6835386472193823`*^9, 3.683538974852641*^9, 
+   3.683541970483346*^9, 3.683542017842372*^9, {3.6835420501063747`*^9, 
+   3.6835420946401*^9}, 3.683543712831148*^9}],
+
+Cell[BoxData[
+ GraphicsBox[{InsetBox[
+    GraphicsBox[
+     {Thickness[0.005], 
+      LineBox[{{-5.4569682106375694`*^-12, 15.000000000005457`}, {
+       5.999999999996362, 10.000000000001819`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["1",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {2.7725602804361764`, 12.10611233652341}, \
+{1, 1}], LineBox[{{-9.094947017729282*^-12, 4.999999999992724}, {
+       5.999999999994543, 9.999999999994543}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["2",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {3.227439719563824, 7.106112336523411}, \
+{-1, 1}], 
+      LineBox[{{20.000000000010914`, 18.000000000003638`}, {
+       13.500000000012733`, 14.000000000007276`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["3",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {16.673473346636367`, 16.502355811715905`}, \
+{1, -1}], 
+      LineBox[{{20.000000000003638`, 12.000000000003638`}, {
+       13.500000000003638`, 7.000000000001819}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["4",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {19.1048, 11.895199999999999`}, {1, -1}], 
+      LineBox[{{20., 7.999999999998181}, {13.499999999998181`, 
+       13.999999999998181`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["5",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {19.1048, 8.104800000000001}, {1, 1}], 
+      LineBox[{{20., 2.}, {13.5, 6.999999999998181}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["6",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {16.5621760108954, 4.07438881416402}, {1, 1}],
+       LineBox[{{13.500000000009095`, 14.000000000003638`}, {
+       6.000000000007276, 10.000000000003638`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["7",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {9.743035294117647, 12.542258823529412`}, \
+{1, -1}], 
+      LineBox[{{13.49999999999909, 7.000000000003638}, {5.999999999998181, 
+       10.000000000003638`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["8",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {9.267192120739665, 7.897780301849163}, \
+{0, 1}], 
+      {PointSize[0.04], PointBox[{13.5, 14.}], PointBox[{13.5, 7.}], 
+       PointBox[{6., 10.}]}, InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["T1",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->7.997355371900827],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         7.997355371900827]& ], {10., -0.5}, {0, -1}]},
+     AspectRatio->1,
+     PlotRange->{{-1, 21}, {-1, 21}}], {0, 44}, {0, 0}, {22, 22}], InsetBox[
+    GraphicsBox[
+     {Thickness[0.005], 
+      LineBox[{{-3.637978807091713*^-12, 15.000000000005457`}, {
+       3.999999999998181, 10.000000000003638`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["1",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {2.4103294522759393`, 12.707303561820751`}, \
+{-1, -1}], 
+      LineBox[{{-7.275957614183426*^-12, 4.999999999992724}, {
+       3.999999999994543, 9.999999999996362}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["2",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {1.5896705477240605`, 7.707303561820752}, \
+{1, -1}], 
+      LineBox[{{20., 18.00000000000182}, {15.000000000003638`, 
+       13.000000000005457`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["3",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {17.185561184457487`, 15.814438815542513`}, \
+{1, -1}], 
+      LineBox[{{20.00000000000182, 12.000000000001819`}, {15., 
+       6.499999999998181}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["4",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {19.6048, 11.895199999999999`}, {1, -1}], 
+      LineBox[{{20., 8.000000000003638}, {15.000000000001819`, 
+       13.000000000001819`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["5",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {19.6048, 7.6048}, {1, 1}], 
+      LineBox[{{20., 2.000000000001819}, {15., 6.500000000001819}}], 
+      InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["6",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {17.235145848890816`, 3.888517609878684}, \
+{1, 1}], LineBox[{{15.000000000001819`, 13.000000000003638`}, {
+       8.999999999998181, 10.}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["7",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {12.023422325850053`, 12.057955348299892`}, \
+{1, -1}], 
+      LineBox[{{14.999999999998181`, 6.5}, {8.999999999998181, 
+       9.999999999996362}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["8",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {11.949767666818687`, 7.731887428832037}, \
+{1, 1}], LineBox[{{3.9999999999921148`, 10.}, {8.999999999998089, 10.}}], 
+      InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["9",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {6.5, 9.3048}, {0, 1}], 
+      {PointSize[0.04], PointBox[{4., 10.}], PointBox[{15., 13.}], 
+       PointBox[{15., 6.5}], PointBox[{9., 10.}]}, InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["T2",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->7.997355371900827],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         7.997355371900827]& ], {10., -0.5}, {0, -1}]},
+     AspectRatio->1,
+     PlotRange->{{-1, 21}, {-1, 21}}], {22, 44}, {0, 0}, {22, 22}], InsetBox[
+    GraphicsBox[
+     {Thickness[0.005], 
+      LineBox[{{-1.432454155292362*^-11, 14.999999999996362`}, {
+       7.999999999977717, 14.499999999996362`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["1",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {4.081091772001734, 15.442668352027756`}, \
+{0, -1}], 
+      LineBox[{{-5.229594535194337*^-12, 4.999999999996362}, {
+       7.999999999986812, 5.499999999996362}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["2",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {4.081091772001734, 4.557331647972244}, \
+{0, 1}], LineBox[{{20.000000000012733`, 18.000000000007276`}, {
+       14.000000000012733`, 14.000000000007276`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["3",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {16.883689744907205`, 16.476865382639197`}, \
+{1, -1}], 
+      LineBox[{{20.000000000003638`, 12.000000000003638`}, {
+       14.000000000003638`, 6.000000000003638}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["4",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {16.214128507914737`, 7.613013587064607}, \
+{-1, 1}], 
+      LineBox[{{20., 8.000000000001819}, {13.999999999998181`, 
+       14.000000000001819`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["5",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {15.567745714043848`, 11.921675111148176`}, \
+{1, 1}], LineBox[{{20., 2.}, {13.999999999998181`, 6.}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["6",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {16.883689744907205`, 3.523134617360803}, \
+{1, 1}], LineBox[{{7.999999999998181, 14.5}, {13.99999999999227, 
+       14.000000000003638`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["7",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {10.892040876190139`, 13.559290514281656`}, \
+{0, 1}], LineBox[{{7.999999999998181, 5.499999999996362}, {13.99999999999227, 
+       5.999999999996362}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["8",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {11.107959123809863`, 5.059290514281656}, \
+{0, 1}], LineBox[{{8., 14.50000000000417}, {8., 5.500000000005628}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["9",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {8.6952, 10.}, {-1, 0}], 
+      {PointSize[0.04], PointBox[{8., 14.5}], PointBox[{8., 5.5}], 
+       PointBox[{14., 14.}], PointBox[{14., 6.}]}, InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["T3",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->7.997355371900827],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 7.997355371900827]
+        & ], {10., -0.5}, {0, -1}]},
+     AspectRatio->1,
+     PlotRange->{{-1, 21}, {-1, 21}}], {44, 44}, {0, 0}, {22, 22}], InsetBox[
+    GraphicsBox[
+     {Thickness[0.005], 
+      LineBox[{{-1.8189894035458565`*^-12, 15.000000000003638`}, {
+       9.999999999994543, 5.500000000005457}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["1",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {2.8952, 12.895199999999999`}, {-1, -1}], 
+      LineBox[{{-7.275957614183426*^-12, 4.999999999996362}, {
+       9.999999999992724, 14.499999999992724`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["2",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {2.8952, 7.1048}, {-1, 1}], 
+      LineBox[{{20.000000000005457`, 18.000000000005457`}, {16.00000000000182,
+        14.000000000001819`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["3",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {17.685561184457487`, 16.314438815542513`}, \
+{1, -1}], 
+      LineBox[{{20.000000000005457`, 12.000000000005457`}, {
+       15.500000000001819`, 6.000000000003638}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["4",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {17.092984915069113`, 7.58991201678464}, \
+{-1, 1}], LineBox[{{20., 7.999999999998181}, {16., 13.999999999998181`}}], 
+      InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["5",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {17.60826624726853, 12.383818307839618`}, \
+{-1, -1}], LineBox[{{20., 1.999999999998181}, {15.499999999998181`, 6.}}], 
+      InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["6",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {17.491127009521104`, 3.6331678857112424`}, \
+{1, 1}], LineBox[{{9.999999999998181, 14.5}, {15.99999999999227, 
+       14.000000000003638`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["7",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {12.892040876190139`, 13.559290514281656`}, \
+{0, 1}], LineBox[{{9.999999999991587, 5.5}, {15.499999999989768`, 
+       6.000000000003638}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["8",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {12.867696469855273`, 5.060138831591985}, \
+{0, 1}], LineBox[{{10., 5.499999999995831}, {10., 14.499999999994373`}}], 
+      InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["9",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {9.3048, 10.}, {1, 0}], 
+      {PointSize[0.04], PointBox[{10., 5.5}], PointBox[{10., 14.5}], 
+       PointBox[{16., 14.}], PointBox[{15.5, 6.}]}, InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["T4",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->7.997355371900827],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         7.997355371900827]& ], {10., -0.5}, {0, -1}]},
+     AspectRatio->1,
+     PlotRange->{{-1, 21}, {-1, 21}}], {0, 22}, {0, 0}, {22, 22}], InsetBox[
+    TagBox[
+     StyleBox[
+      TagBox["2",
+       DisplayForm],
+      FontFamily->"Helvetica",
+      FontSize->11.996033057851239`],
+     StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+      11.996033057851239`]& ], {28.5, 69.96}, {0, 0}], InsetBox[
+    TagBox[
+     StyleBox[
+      TagBox["\[RightArrow]",
+       DisplayForm],
+      FontFamily->"Helvetica",
+      FontSize->11.996033057851239`],
+     StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+      11.996033057851239`]& ], {33., 69.96}, {0, 0}], InsetBox[
+    TagBox[
+     StyleBox[
+      TagBox["4",
+       DisplayForm],
+      FontFamily->"Helvetica",
+      FontSize->11.996033057851239`],
+     StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+      11.996033057851239`]& ], {37.5, 69.96}, {0, 0}]},
+  AspectRatio->1.0999999999999999`,
+  ImageSize->{288, 288},
+  PlotRange->{{0, 66}, {0, 72.6}}]], "Print",
+ CellChangeTimes->{
+  3.683538429028386*^9, 3.6835386472193823`*^9, 3.683538974852641*^9, 
+   3.683541970483346*^9, 3.683542017842372*^9, {3.6835420501063747`*^9, 
+   3.6835420946401*^9}, 3.683543712850061*^9}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"top3645", "=", 
+  RowBox[{"TopologyList", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Level", "[", 
+      RowBox[{"top", ",", "1"}], "]"}], "[", 
+     RowBox[{"[", "106", "]"}], "]"}], ",", 
+    RowBox[{
+     RowBox[{"Level", "[", 
+      RowBox[{"top", ",", "1"}], "]"}], "[", 
+     RowBox[{"[", "220", "]"}], "]"}], ",", 
+    RowBox[{
+     RowBox[{"Level", "[", 
+      RowBox[{"top", ",", "1"}], "]"}], "[", 
+     RowBox[{"[", "122", "]"}], "]"}], ",", 
+    RowBox[{
+     RowBox[{"Level", "[", 
+      RowBox[{"top", ",", "1"}], "]"}], "[", 
+     RowBox[{"[", "219", "]"}], "]"}]}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Paint", "[", 
+   RowBox[{"top3645", ",", 
+    RowBox[{"FieldNumbers", "\[Rule]", "True"}]}], "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.6834572965881023`*^9, 3.683457327903207*^9}, {
+   3.683457417483612*^9, 3.683457417817892*^9}, 3.6834577444409733`*^9, {
+   3.683535529786422*^9, 3.683535530050292*^9}, 3.683535616623513*^9, 
+   3.683536246659416*^9, {3.683536542194275*^9, 3.683536544893729*^9}, {
+   3.683541329859352*^9, 3.683541334208933*^9}}],
+
+Cell[BoxData[
+ RowBox[{"TopologyList", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Topology", "[", "1", "]"}], "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "1", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "4", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "2", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "4", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "3", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "4", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "5", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "6", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "4", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "4", "]"}], "[", "7", "]"}]}], "]"}]}], "]"}], 
+   ",", 
+   RowBox[{
+    RowBox[{"Topology", "[", "1", "]"}], "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "1", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "2", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "3", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "4", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "5", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "6", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}]}], "]"}], 
+   ",", 
+   RowBox[{
+    RowBox[{"Topology", "[", "1", "]"}], "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "1", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "2", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "3", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "4", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "5", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "6", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}]}], "]"}],
+    ",", 
+   RowBox[{
+    RowBox[{"Topology", "[", "1", "]"}], "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "1", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "2", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "3", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "4", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "5", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "1", "]"}], "[", "6", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}], ",", 
+       RowBox[{
+        RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}]}], 
+    "]"}]}], "]"}]], "Output",
+ CellChangeTimes->{{3.6834573111139507`*^9, 3.68345732854954*^9}, 
+   3.683457418872006*^9, 3.683457557397943*^9, 3.683457745251665*^9, 
+   3.683515304699561*^9, 3.683531797437607*^9, 3.683535530768228*^9, 
+   3.6835356173719263`*^9, 3.683535664692449*^9, {3.683536542611491*^9, 
+   3.683536545137952*^9}, 3.683536620665428*^9, 3.683538429216692*^9, 
+   3.683538647356103*^9, 3.683543712922018*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"> Top. \"\>", "\[InvisibleSpace]", "1", 
+   "\[InvisibleSpace]", "\<\": \"\>", 
+   "\[InvisibleSpace]", "\<\"1 diagram\"\>"}],
+  SequenceForm["> Top. ", 1, ": ", "1 diagram"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.683457311098246*^9, 3.68345732853795*^9}, 
+   3.6834574188563337`*^9, 3.683457557379058*^9, 3.683457745229751*^9, 
+   3.683515304660275*^9, 3.68353179739517*^9, 3.6835355306962843`*^9, 
+   3.683535617380028*^9, 3.683535664700514*^9, {3.6835365426224937`*^9, 
+   3.683536545146071*^9}, 3.68353662067784*^9, 3.683538429229353*^9, 
+   3.6835386473710213`*^9, 3.683543712940331*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"> Top. \"\>", "\[InvisibleSpace]", "2", 
+   "\[InvisibleSpace]", "\<\": \"\>", 
+   "\[InvisibleSpace]", "\<\"1 diagram\"\>"}],
+  SequenceForm["> Top. ", 2, ": ", "1 diagram"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.683457311098246*^9, 3.68345732853795*^9}, 
+   3.6834574188563337`*^9, 3.683457557379058*^9, 3.683457745229751*^9, 
+   3.683515304660275*^9, 3.68353179739517*^9, 3.6835355306962843`*^9, 
+   3.683535617380028*^9, 3.683535664700514*^9, {3.6835365426224937`*^9, 
+   3.683536545146071*^9}, 3.68353662067784*^9, 3.683538429229353*^9, 
+   3.6835386473710213`*^9, 3.683543712953267*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"> Top. \"\>", "\[InvisibleSpace]", "3", 
+   "\[InvisibleSpace]", "\<\": \"\>", 
+   "\[InvisibleSpace]", "\<\"1 diagram\"\>"}],
+  SequenceForm["> Top. ", 3, ": ", "1 diagram"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.683457311098246*^9, 3.68345732853795*^9}, 
+   3.6834574188563337`*^9, 3.683457557379058*^9, 3.683457745229751*^9, 
+   3.683515304660275*^9, 3.68353179739517*^9, 3.6835355306962843`*^9, 
+   3.683535617380028*^9, 3.683535664700514*^9, {3.6835365426224937`*^9, 
+   3.683536545146071*^9}, 3.68353662067784*^9, 3.683538429229353*^9, 
+   3.6835386473710213`*^9, 3.683543712971542*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"> Top. \"\>", "\[InvisibleSpace]", "4", 
+   "\[InvisibleSpace]", "\<\": \"\>", 
+   "\[InvisibleSpace]", "\<\"1 diagram\"\>"}],
+  SequenceForm["> Top. ", 4, ": ", "1 diagram"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.683457311098246*^9, 3.68345732853795*^9}, 
+   3.6834574188563337`*^9, 3.683457557379058*^9, 3.683457745229751*^9, 
+   3.683515304660275*^9, 3.68353179739517*^9, 3.6835355306962843`*^9, 
+   3.683535617380028*^9, 3.683535664700514*^9, {3.6835365426224937`*^9, 
+   3.683536545146071*^9}, 3.68353662067784*^9, 3.683538429229353*^9, 
+   3.6835386473710213`*^9, 3.683543712989202*^9}],
+
+Cell[BoxData[
+ GraphicsBox[{InsetBox[
+    GraphicsBox[
+     {Thickness[0.005], 
+      LineBox[{{-5.4569682106375694`*^-12, 15.000000000005457`}, {
+       5.999999999996362, 10.000000000001819`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["1",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {2.7725602804361764`, 12.10611233652341}, \
+{1, 1}], LineBox[{{-9.094947017729282*^-12, 4.999999999992724}, {
+       5.999999999994543, 9.999999999994543}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["2",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {3.227439719563824, 7.106112336523411}, \
+{-1, 1}], 
+      LineBox[{{20.000000000003638`, 18.00000000000182}, {12.500000000003638`,
+        7.500000000001819}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["3",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {18.104799999999997`, 16.8952}, {1, -1}], 
+      LineBox[{{20., 12.}, {12.500000000000455`, 13.5}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["4",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {14., 13.895199999999999`}, {0, -1}], 
+      LineBox[{{20.00000000000182, 8.}, {12.500000000003638`, 
+       13.499999999998181`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["5",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {18.6048, 8.104800000000001}, {1, 1}], 
+      LineBox[{{20.00000000000182, 2.}, {12.500000000003638`, 
+       7.499999999998181}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["6",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {16.086027237284227`, 4.306473505387583}, \
+{1, 1}], LineBox[{{12.50000000000091, 7.5}, {5.9999999999990905`, 10.}}], 
+      InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["7",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {9.71667280310153, 9.358549288063976}, \
+{0, -1}], 
+      LineBox[{{12.499999999996362`, 13.5}, {5.999999999996362, 
+       9.999999999996362}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["8",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {9.238470230054478, 12.289812429898827`}, \
+{1, -1}], 
+      {PointSize[0.04], PointBox[{12.5, 7.5}], PointBox[{12.5, 13.5}], 
+       PointBox[{6., 10.}]}, InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["T1",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->7.997355371900827],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         7.997355371900827]& ], {10., -0.5}, {0, -1}]},
+     AspectRatio->1,
+     PlotRange->{{-1, 21}, {-1, 21}}], {0, 44}, {0, 0}, {22, 22}], InsetBox[
+    GraphicsBox[
+     {Thickness[0.005], 
+      LineBox[{{-1.432454155292362*^-11, 14.999999999996362`}, {
+       7.999999999977717, 14.499999999996362`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["1",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {4.081091772001734, 15.442668352027756`}, \
+{0, -1}], 
+      LineBox[{{-5.229594535194337*^-12, 4.999999999996362}, {
+       7.999999999986812, 5.499999999996362}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["2",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {4.081091772001734, 4.557331647972244}, \
+{0, 1}], LineBox[{{20., 18.}, {12., 6.}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["3",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {17.317509905562904`, 14.903350905905267`}, \
+{1, -1}], LineBox[{{20., 12.}, {16.00000000000182, 10.}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["4",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {18.3952, 11.104800000000001`}, {-1, 1}], 
+      LineBox[{{19.99999999999818, 7.999999999996362}, {15.999999999998181`, 
+       9.999999999996362}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["5",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {18.023422325850063`, 8.442044651700119}, \
+{1, 1}], LineBox[{{19.99999999999818, 2.}, {11.999999999998181`, 6.}}], 
+      InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["6",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {16.023422325850056`, 3.442044651700109}, \
+{1, 1}], LineBox[{{8., 14.50000000000417}, {8., 5.500000000005628}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["7",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {7.3048, 10.}, {1, 0}], 
+      LineBox[{{7.999999999992724, 14.500000000003638`}, {15.999999999998181`,
+        10.000000000003638`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["8",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {9.895199999999999, 13.895199999999999`}, \
+{-1, -1}], LineBox[{{7.999999999998181, 5.5}, {12., 6.}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["9",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {10.161245154965972`, 5.064838760272232}, \
+{0, 1}], 
+      {PointSize[0.04], PointBox[{8., 14.5}], PointBox[{8., 5.5}], 
+       PointBox[{12., 6.}], PointBox[{16., 10.}]}, InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["T2",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->7.997355371900827],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         7.997355371900827]& ], {10., -0.5}, {0, -1}]},
+     AspectRatio->1,
+     PlotRange->{{-1, 21}, {-1, 21}}], {22, 44}, {0, 0}, {22, 22}], InsetBox[
+    GraphicsBox[
+     {Thickness[0.005], 
+      LineBox[{{-3.637978807091713*^-12, 15.000000000005457`}, {
+       3.999999999998181, 10.000000000003638`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["1",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {1.5896705477240605`, 12.292696438179249`}, \
+{1, 1}], LineBox[{{-7.275957614183426*^-12, 4.999999999992724}, {
+       3.999999999994543, 9.999999999996362}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["2",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {2.4103294522759393`, 7.292696438179249}, \
+{-1, 1}], 
+      LineBox[{{20.000000000005457`, 18.000000000003638`}, {
+       11.000000000003638`, 15.}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["3",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {15.08890390417811, 17.128488287465668`}, \
+{0, -1}], LineBox[{{20., 12.}, {16.00000000000182, 10.}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["4",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {18.023422325850056`, 11.557955348299892`}, \
+{1, -1}], 
+      LineBox[{{19.99999999999818, 7.999999999996362}, {15.999999999998181`, 
+       9.999999999996362}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["5",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {18.3952, 8.895199999999999}, {-1, -1}], 
+      LineBox[{{19.999999999996362`, 1.999999999998181}, {10.999999999996362`,
+        14.999999999998181`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["6",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {17.1048, 4.6048}, {1, 1}], 
+      LineBox[{{3.9999999999959073`, 10.}, {8.500000000002728, 9.5}}], 
+      InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["7",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {6.1064390161027, 9.062751144924295}, {0, 1}],
+       LineBox[{{11., 15.000000000001819`}, {8.500000000003638, 
+       9.500000000007276}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["8",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {9.171323579298615, 12.18314382759154}, \
+{1, -1}], 
+      LineBox[{{16.00000000001296, 10.000000000003638`}, {8.500000000014552, 
+       9.500000000003638}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["9",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {11., 9.104800000000001}, {0, 1}], 
+      {PointSize[0.04], PointBox[{4., 10.}], PointBox[{11., 15.}], 
+       PointBox[{16., 10.}], PointBox[{8.5, 9.5}]}, InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["T3",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->7.997355371900827],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         7.997355371900827]& ], {10., -0.5}, {0, -1}]},
+     AspectRatio->1,
+     PlotRange->{{-1, 21}, {-1, 21}}], {44, 44}, {0, 0}, {22, 22}], InsetBox[
+    GraphicsBox[
+     {Thickness[0.005], 
+      LineBox[{{-1.432454155292362*^-11, 14.999999999996362`}, {
+       7.999999999977717, 14.499999999996362`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["1",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {4.081091772001734, 15.442668352027756`}, \
+{0, -1}], 
+      LineBox[{{-5.229594535194337*^-12, 4.999999999996362}, {
+       7.999999999986812, 5.499999999996362}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["2",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {4.081091772001734, 4.557331647972244}, \
+{0, 1}], LineBox[{{20.000000000003638`, 18.}, {12.000000000007276`, 
+       14.000000000003638`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["3",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {16.023422325850053`, 16.55795534829989}, \
+{1, -1}], LineBox[{{20., 12.}, {16.00000000000182, 10.}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["4",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {18.023422325850063`, 11.557955348299881`}, \
+{1, -1}], 
+      LineBox[{{19.99999999999818, 7.999999999996362}, {15.999999999998181`, 
+       9.999999999996362}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["5",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {18.4952, 9.045200000000001}, {-1, -1}], 
+      LineBox[{{20., 2.000000000001819}, {12.000000000003638`, 
+       14.000000000001819`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["6",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {17.604799999999997`, 4.6048}, {1, 1}], 
+      LineBox[{{8., 14.50000000000417}, {8., 5.500000000005628}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["7",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {7.3048, 10.}, {1, 0}], 
+      LineBox[{{7.999999999989996, 14.5}, {11.999999999991815`, 14.}}], 
+      InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["8",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {10.161245154965972`, 14.935161239727769`}, \
+{0, -1}], LineBox[{{7.999999999992724, 5.499999999996362}, {16., 10.}}], 
+      InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["9",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {10.395199999999999`, 6.1048}, {-1, 1}], 
+      {PointSize[0.04], PointBox[{8., 14.5}], PointBox[{8., 5.5}], 
+       PointBox[{12., 14.}], PointBox[{16., 10.}]}, InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["T4",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->7.997355371900827],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         7.997355371900827]& ], {10., -0.5}, {0, -1}]},
+     AspectRatio->1,
+     PlotRange->{{-1, 21}, {-1, 21}}], {0, 22}, {0, 0}, {22, 22}], InsetBox[
+    TagBox[
+     StyleBox[
+      TagBox["2",
+       DisplayForm],
+      FontFamily->"Helvetica",
+      FontSize->11.996033057851239`],
+     StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+      11.996033057851239`]& ], {28.5, 69.96}, {0, 0}], InsetBox[
+    TagBox[
+     StyleBox[
+      TagBox["\[RightArrow]",
+       DisplayForm],
+      FontFamily->"Helvetica",
+      FontSize->11.996033057851239`],
+     StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+      11.996033057851239`]& ], {33., 69.96}, {0, 0}], InsetBox[
+    TagBox[
+     StyleBox[
+      TagBox["4",
+       DisplayForm],
+      FontFamily->"Helvetica",
+      FontSize->11.996033057851239`],
+     StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+      11.996033057851239`]& ], {37.5, 69.96}, {0, 0}]},
+  AspectRatio->1.0999999999999999`,
+  ImageSize->{288, 288},
+  PlotRange->{{0, 66}, {0, 72.6}}]], "Print",
+ CellChangeTimes->{{3.683457311098246*^9, 3.68345732853795*^9}, 
+   3.6834574188563337`*^9, 3.683457557379058*^9, 3.683457745229751*^9, 
+   3.683515304660275*^9, 3.68353179739517*^9, 3.6835355306962843`*^9, 
+   3.683535617380028*^9, 3.683535664700514*^9, {3.6835365426224937`*^9, 
+   3.683536545146071*^9}, 3.68353662067784*^9, 3.683538429229353*^9, 
+   3.6835386473710213`*^9, 3.683543713012187*^9}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+   "Modify", " ", "the", " ", "topology", " ", "list", " ", "by", " ", "hand",
+     " ", "in", " ", "a", " ", "way", " ", "that", " ", "equivalent", " ", 
+    "lines", " ", "have", " ", "the", " ", "same", " ", 
+    RowBox[{"FieldNumber", ".", " ", "This"}], " ", "is", " ", "necessary", 
+    " ", "to", " ", "assign", " ", "the", " ", "diagrams", " ", "to", " ", 
+    "the", " ", "correct", " ", "resonant", " ", "channel", " ", "structure", 
+    " ", "in", " ", "InsertFields", 
+    RowBox[{"(", 
+     RowBox[{
+     "which", " ", "is", " ", "difficult", " ", "if", " ", "the", " ", 
+      "fields", " ", "that", " ", "couple", " ", "to", " ", "the", " ", 
+      "same", " ", "final", " ", "state", " ", "particles", " ", "have", " ", 
+      "different", " ", "indices"}], ")"}]}], "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"top3645", " ", "=", " ", 
+     RowBox[{"TopologyList", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Topology", "[", "1", "]"}], "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "1", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "4", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+         
+         RowBox[{
+          RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "2", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "4", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+         
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "3", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+         
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "4", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+         
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "5", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+         
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "6", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+         
+         RowBox[{
+          RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "4", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+         
+         RowBox[{
+          RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "4", "]"}], "[", "7", "]"}]}], "]"}]}], 
+        "]"}], ",", "\n", "\t", 
+       RowBox[{
+        RowBox[{"Topology", "[", "1", "]"}], "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "1", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "2", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "3", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "4", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",",
+          "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "5", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",",
+          "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "6", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",",
+          "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}]}], 
+        "]"}], ",", "\n", "\t", 
+       RowBox[{
+        RowBox[{"Topology", "[", "1", "]"}], "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "1", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "2", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "3", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "4", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "5", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "6", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",",
+          "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",",
+          "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}]}], 
+        "]"}], ",", "\n", "\t", 
+       RowBox[{
+        RowBox[{"Topology", "[", "1", "]"}], "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "1", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Incoming", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "2", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "3", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+         "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "4", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",",
+          "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "5", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",",
+          "\n", "\t", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Outgoing", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "1", "]"}], "[", "6", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "9", "]"}]}], "]"}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "10", "]"}]}], "]"}], ",",
+          "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"Propagator", "[", "Internal", "]"}], "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "7", "]"}], ",", 
+           RowBox[{
+            RowBox[{"Vertex", "[", "3", "]"}], "[", "8", "]"}]}], "]"}]}], 
+        "]"}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Paint", "[", 
+     RowBox[{"top3645", ",", 
+      RowBox[{"FieldNumbers", "\[Rule]", "True"}]}], "]"}], 
+    ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.683536590837791*^9, 3.683536593060124*^9}, {
+   3.683541320028532*^9, 3.683541324688802*^9}, 3.683541649558056*^9, {
+   3.683542187212236*^9, 3.6835422039102077`*^9}, {3.683542274483327*^9, 
+   3.683542280233699*^9}, {3.683542561703185*^9, 3.68354262201376*^9}, {
+   3.6835436809532347`*^9, 3.68354368334967*^9}, {3.683543756039097*^9, 
+   3.6835437808731623`*^9}, {3.683544054991796*^9, 3.6835440756800222`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"> Top. \"\>", "\[InvisibleSpace]", "1", 
+   "\[InvisibleSpace]", "\<\": \"\>", 
+   "\[InvisibleSpace]", "\<\"1 diagram\"\>"}],
+  SequenceForm["> Top. ", 1, ": ", "1 diagram"],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.683543713068222*^9, {3.683543759436553*^9, 3.683543782381716*^9}, {
+   3.683544057428616*^9, 3.683544076989797*^9}}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"> Top. \"\>", "\[InvisibleSpace]", "2", 
+   "\[InvisibleSpace]", "\<\": \"\>", 
+   "\[InvisibleSpace]", "\<\"1 diagram\"\>"}],
+  SequenceForm["> Top. ", 2, ": ", "1 diagram"],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.683543713068222*^9, {3.683543759436553*^9, 3.683543782381716*^9}, {
+   3.683544057428616*^9, 3.683544076996492*^9}}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"> Top. \"\>", "\[InvisibleSpace]", "3", 
+   "\[InvisibleSpace]", "\<\": \"\>", 
+   "\[InvisibleSpace]", "\<\"1 diagram\"\>"}],
+  SequenceForm["> Top. ", 3, ": ", "1 diagram"],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.683543713068222*^9, {3.683543759436553*^9, 3.683543782381716*^9}, {
+   3.683544057428616*^9, 3.683544077006526*^9}}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"> Top. \"\>", "\[InvisibleSpace]", "4", 
+   "\[InvisibleSpace]", "\<\": \"\>", 
+   "\[InvisibleSpace]", "\<\"1 diagram\"\>"}],
+  SequenceForm["> Top. ", 4, ": ", "1 diagram"],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.683543713068222*^9, {3.683543759436553*^9, 3.683543782381716*^9}, {
+   3.683544057428616*^9, 3.683544077009941*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{InsetBox[
+    GraphicsBox[
+     {Thickness[0.005], 
+      LineBox[{{-5.4569682106375694`*^-12, 15.000000000005457`}, {
+       5.999999999996362, 10.000000000001819`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["1",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {2.7725602804361764`, 12.10611233652341}, \
+{1, 1}], LineBox[{{-9.094947017729282*^-12, 4.999999999992724}, {
+       5.999999999994543, 9.999999999994543}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["2",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {3.227439719563824, 7.106112336523411}, \
+{-1, 1}], 
+      LineBox[{{20.000000000003638`, 18.00000000000182}, {12.500000000003638`,
+        7.500000000001819}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["3",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {18.104799999999997`, 16.8952}, {1, -1}], 
+      LineBox[{{20., 12.}, {12.500000000000455`, 13.5}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["4",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {14., 13.895199999999999`}, {0, -1}], 
+      LineBox[{{20.00000000000182, 8.}, {12.500000000003638`, 
+       13.499999999998181`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["5",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {18.6048, 8.104800000000001}, {1, 1}], 
+      LineBox[{{20.00000000000182, 2.}, {12.500000000003638`, 
+       7.499999999998181}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["6",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {16.086027237284227`, 4.306473505387583}, \
+{1, 1}], LineBox[{{12.50000000000091, 7.5}, {5.9999999999990905`, 10.}}], 
+      InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["7",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {9.71667280310153, 9.358549288063976}, \
+{0, -1}], 
+      LineBox[{{12.499999999996362`, 13.5}, {5.999999999996362, 
+       9.999999999996362}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["8",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {9.238470230054478, 12.289812429898827`}, \
+{1, -1}], 
+      {PointSize[0.04], PointBox[{12.5, 7.5}], PointBox[{12.5, 13.5}], 
+       PointBox[{6., 10.}]}, InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["T1",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->7.997355371900827],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         7.997355371900827]& ], {10., -0.5}, {0, -1}]},
+     AspectRatio->1,
+     PlotRange->{{-1, 21}, {-1, 21}}], {0, 44}, {0, 0}, {22, 22}], InsetBox[
+    GraphicsBox[
+     {Thickness[0.005], 
+      LineBox[{{-1.432454155292362*^-11, 14.999999999996362`}, {
+       7.999999999977717, 14.499999999996362`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["1",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {4.081091772001734, 15.442668352027756`}, \
+{0, -1}], 
+      LineBox[{{-5.229594535194337*^-12, 4.999999999996362}, {
+       7.999999999986812, 5.499999999996362}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["2",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {4.081091772001734, 4.557331647972244}, \
+{0, 1}], LineBox[{{20., 18.}, {12., 6.}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["3",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {17.6048, 15.395199999999999`}, {1, -1}], 
+      LineBox[{{20., 12.}, {16.00000000000182, 10.}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["4",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {18.4952, 10.954799999999999`}, {-1, 1}], 
+      LineBox[{{19.99999999999818, 7.999999999996362}, {15.999999999998181`, 
+       9.999999999996362}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["5",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {18.023422325850063`, 8.442044651700119}, \
+{1, 1}], LineBox[{{19.99999999999818, 2.}, {11.999999999998181`, 6.}}], 
+      InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["6",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {16.023422325850056`, 3.442044651700109}, \
+{1, 1}], LineBox[{{7.999999999998181, 5.5}, {12., 6.}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["7",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {9.838754845034028, 6.435161239727768}, \
+{0, -1}], 
+      LineBox[{{7.999999999992724, 14.500000000003638`}, {15.999999999998181`,
+        10.000000000003638`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["8",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {10.395199999999999`, 13.895199999999999`}, \
+{-1, -1}], LineBox[{{8., 14.50000000000417}, {8., 5.500000000005628}}], 
+      InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["9",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {8.6952, 10.}, {-1, 0}], 
+      {PointSize[0.04], PointBox[{8., 14.5}], PointBox[{8., 5.5}], 
+       PointBox[{12., 6.}], PointBox[{16., 10.}]}, InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["T2",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->7.997355371900827],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         7.997355371900827]& ], {10., -0.5}, {0, -1}]},
+     AspectRatio->1,
+     PlotRange->{{-1, 21}, {-1, 21}}], {22, 44}, {0, 0}, {22, 22}], InsetBox[
+    GraphicsBox[
+     {Thickness[0.005], 
+      LineBox[{{-3.637978807091713*^-12, 15.000000000005457`}, {
+       3.999999999998181, 10.000000000003638`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["1",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {2.4103294522759393`, 12.707303561820751`}, \
+{-1, -1}], 
+      LineBox[{{-7.275957614183426*^-12, 4.999999999992724}, {
+       3.999999999994543, 9.999999999996362}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["2",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {1.5896705477240605`, 7.707303561820752}, \
+{1, -1}], LineBox[{{20.000000000003638`, 18.}, {11., 4.999999999996362}}], 
+      InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["3",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {17.1048, 15.395199999999999`}, {1, -1}], 
+      LineBox[{{20., 12.}, {16.00000000000182, 10.}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["4",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {18.3952, 11.104800000000001`}, {-1, 1}], 
+      LineBox[{{19.99999999999818, 7.999999999996362}, {15.999999999998181`, 
+       9.999999999996362}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["5",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {18.023422325850056`, 8.442044651700108}, \
+{1, 1}], LineBox[{{20.00000000000091, 2.}, {11., 5.}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["6",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {15.08890390417811, 2.871511712534332}, \
+{0, 1}], LineBox[{{11., 5.}, {8.5, 10.5}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["7",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {9.171323579298615, 7.816856172408461}, \
+{1, 1}], LineBox[{{15.99999999999909, 10.000000000003638`}, {8.50000000000091,
+        10.500000000003638`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["8",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {11., 10.895199999999999`}, {0, -1}], 
+      LineBox[{{4.000000000005457, 10.}, {8.500000000012278, 10.5}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["9",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {6.1064390161027, 10.937248855075705`}, \
+{0, -1}], 
+      {PointSize[0.04], PointBox[{4., 10.}], PointBox[{11., 5.}], 
+       PointBox[{16., 10.}], PointBox[{8.5, 10.5}]}, InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["T3",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->7.997355371900827],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         7.997355371900827]& ], {10., -0.5}, {0, -1}]},
+     AspectRatio->1,
+     PlotRange->{{-1, 21}, {-1, 21}}], {44, 44}, {0, 0}, {22, 22}], InsetBox[
+    GraphicsBox[
+     {Thickness[0.005], 
+      LineBox[{{-1.432454155292362*^-11, 14.999999999996362`}, {
+       7.999999999977717, 14.499999999996362`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["1",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {4.081091772001734, 15.442668352027756`}, \
+{0, -1}], 
+      LineBox[{{-5.229594535194337*^-12, 4.999999999996362}, {
+       7.999999999986812, 5.499999999996362}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["2",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {4.081091772001734, 4.557331647972244}, \
+{0, 1}], LineBox[{{20.000000000003638`, 18.}, {12.000000000007276`, 
+       14.000000000003638`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["3",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {16.023422325850053`, 16.55795534829989}, \
+{1, -1}], LineBox[{{20., 12.}, {16.00000000000182, 10.}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["4",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {18.023422325850063`, 11.557955348299881`}, \
+{1, -1}], 
+      LineBox[{{19.99999999999818, 7.999999999996362}, {15.999999999998181`, 
+       9.999999999996362}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["5",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {18.3952, 8.895199999999999}, {-1, -1}], 
+      LineBox[{{20., 2.000000000001819}, {12.000000000003638`, 
+       14.000000000001819`}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["6",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {17.317509905562904`, 5.096649094094732}, \
+{1, 1}], LineBox[{{7.999999999989996, 14.5}, {11.999999999991815`, 14.}}], 
+      InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["7",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {9.838754845034028, 13.564838760272231`}, \
+{0, 1}], LineBox[{{7.999999999992724, 5.499999999996362}, {16., 10.}}], 
+      InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["8",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {9.895199999999999, 6.1048}, {-1, 1}], 
+      LineBox[{{8., 14.50000000000417}, {8., 5.500000000005628}}], InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["9",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->9.996694214876033],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         9.996694214876033]& ], {8.6952, 10.}, {-1, 0}], 
+      {PointSize[0.04], PointBox[{8., 14.5}], PointBox[{8., 5.5}], 
+       PointBox[{12., 14.}], PointBox[{16., 10.}]}, InsetBox[
+       TagBox[
+        StyleBox[
+         TagBox["T4",
+          DisplayForm],
+         FontFamily->"Helvetica",
+         FontSize->7.997355371900827],
+        StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+         7.997355371900827]& ], {10., -0.5}, {0, -1}]},
+     AspectRatio->1,
+     PlotRange->{{-1, 21}, {-1, 21}}], {0, 22}, {0, 0}, {22, 22}], InsetBox[
+    TagBox[
+     StyleBox[
+      TagBox["2",
+       DisplayForm],
+      FontFamily->"Helvetica",
+      FontSize->11.996033057851239`],
+     StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+      11.996033057851239`]& ], {28.5, 69.96}, {0, 0}], InsetBox[
+    TagBox[
+     StyleBox[
+      TagBox["\[RightArrow]",
+       DisplayForm],
+      FontFamily->"Helvetica",
+      FontSize->11.996033057851239`],
+     StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+      11.996033057851239`]& ], {33., 69.96}, {0, 0}], InsetBox[
+    TagBox[
+     StyleBox[
+      TagBox["4",
+       DisplayForm],
+      FontFamily->"Helvetica",
+      FontSize->11.996033057851239`],
+     StyleForm[#, FontFamily -> "Helvetica", FontSize -> 
+      11.996033057851239`]& ], {37.5, 69.96}, {0, 0}]},
+  AspectRatio->1.0999999999999999`,
+  ImageSize->{288, 288},
+  PlotRange->{{0, 66}, {0, 72.6}}]], "Print",
+ CellChangeTimes->{
+  3.683543713068222*^9, {3.683543759436553*^9, 3.683543782381716*^9}, {
+   3.683544057428616*^9, 3.683544077018154*^9}}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{974, 1073},
+WindowMargins->{{Automatic, 137}, {Automatic, 0}},
+FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
+2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 315, 5, 63, "Input"],
+Cell[CellGroupData[{
+Cell[920, 31, 438, 7, 21, "Print"],
+Cell[1361, 40, 464, 7, 22, "Print"],
+Cell[1828, 49, 483, 7, 22, "Print"]
+}, Open  ]],
+Cell[2326, 59, 146, 2, 28, "Output"]
+}, Open  ]],
+Cell[2487, 64, 310, 7, 28, "Input"],
+Cell[CellGroupData[{
+Cell[2822, 75, 1165, 29, 46, "Input"],
+Cell[3990, 106, 9995, 271, 352, "Output"],
+Cell[CellGroupData[{
+Cell[14010, 381, 730, 14, 22, "Print"],
+Cell[14743, 397, 730, 14, 22, "Print"],
+Cell[15476, 413, 730, 14, 22, "Print"],
+Cell[16209, 429, 730, 14, 22, "Print"],
+Cell[16942, 445, 34752, 736, 296, 16965, 444, "CachedBoxData", "BoxData", \
+"Print"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[51743, 1187, 13050, 326, 692, "Input"],
+Cell[CellGroupData[{
+Cell[64818, 1517, 465, 10, 22, "Print"],
+Cell[65286, 1529, 465, 10, 22, "Print"],
+Cell[65754, 1541, 465, 10, 22, "Print"],
+Cell[66222, 1553, 465, 10, 22, "Print"],
+Cell[66690, 1565, 17202, 447, 296, "Print"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[83941, 2018, 1116, 28, 46, "Input"],
+Cell[85060, 2048, 9918, 269, 352, "Output"],
+Cell[CellGroupData[{
+Cell[95003, 2321, 655, 12, 22, "Print"],
+Cell[95661, 2335, 655, 12, 22, "Print"],
+Cell[96319, 2349, 655, 12, 22, "Print"],
+Cell[96977, 2363, 655, 12, 22, "Print"],
+Cell[97635, 2377, 17127, 442, 296, "Print"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[114811, 2825, 12803, 324, 624, "Input"],
+Cell[CellGroupData[{
+Cell[127639, 3153, 395, 9, 22, "Print"],
+Cell[128037, 3164, 395, 9, 22, "Print"],
+Cell[128435, 3175, 395, 9, 22, "Print"],
+Cell[128833, 3186, 395, 9, 22, "Print"],
+Cell[129231, 3197, 16739, 436, 296, "Print"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
