@@ -331,7 +331,7 @@ REALS := $(notdir $(REALS_F:.F=.o))
 MREALS_F := $(wildcard $(MADREALS)/SubProcesses_nInJ+jet/*.f)
 MREALS := $(notdir $(MREALS_F:.f=.o))
 
-SOURCESMAIN = $(PWHG) $(PDFPACK) $(USER) $(PWHGANALYSIS) $(FUNC) $(VIRTUALS) $(REALS) \
+SOURCESMAIN = $(PWHG) $(PDFPACK) $(USER) $(PWHGANALYSIS) $(FUNC) \
 	$(FORMCALC) $(MADGRAPH) $(MREALS)
 
 SOURCESLHEF = $(LHEF) $(PWHGANALYSIS) $(MADGRAPH)
@@ -400,8 +400,18 @@ fastjetfortran.o: fastjetfortran.cc
 ## Rules, link
 ## type make -j4 [rule] to speed up the compilation
 
+formcalc_reals.a: $(REALS)
+	ar cr $@ $(patsubst %,build/%,$(REALS))
+	mv $@ $(FORMREALS)
+    
+formcalc_virtuals.a: $(VIRTUALS)
+	ar cr $@ $(patsubst %,build/%,$(VIRTUALS))
+	mv $@ $(FORMVIRTS)
+
+libs: formcalc_reals.a formcalc_virtuals.a
+
 pwhg_main_ninj+jet: $(SOURCESMAIN)
-	$(FC) $(ALL_FCFLAGS) $(patsubst %,build/%,$(SOURCESMAIN)) $(LINKER) -o $@
+	$(FC) $(ALL_FCFLAGS) $(patsubst %,build/%,$(SOURCESMAIN)) $(LINKER) $(FORMREALS)/formcalc_reals.a $(FORMVIRTS)/formcalc_virtuals.a -o $@
 
 lhef_analysis:$(SOURCESLHEF)
 	$(FC) $(ALL_FCFLAGS) $(patsubst %,build/%,$(SOURCESLHEF)) $(LINKER) -o $@ 
@@ -421,7 +431,7 @@ copy-scripts:
 	cp $(SCRIPTS)/reweight.sh     $(SUBWORKINGDIR) && \
 	cp $(SCRIPTS)/merge.sh        $(SUBWORKINGDIR)
 
-all: pwhg_main_ninj+jet copy-scripts merge-pwg-stat merge-data lhef_analysis main-PYTHIA-lhef
+all: libs pwhg_main_ninj+jet copy-scripts merge-pwg-stat merge-data lhef_analysis main-PYTHIA-lhef
 
 clean:
 	rm -f build/*.o pwhg_main_ninj+jet lhef_analysis main-PYTHIA-lhef merge-pwg-stat merge-data runparallel.sh clean_rundir.sh reweight.sh merge.sh
@@ -429,9 +439,11 @@ clean:
 clean-results:
 	find ./testrun ! \( -name '*.slha' -o -name '*.input' -o -name 'pwgseeds.dat' \) \
 	-type f -exec rm -f {} +
+    
+clean-libs:
+	rm $(FORMREALS)/formcalc_reals.a $(FORMVIRTS)/formcalc_virtuals.a
 
-clean-all: clean clean-results
-	rm -f pwhg_main_ninj+jet lhef_analysis main-PYTHIA-lhef
+clean-all: clean clean-results clean-libs
 
 do-pwhg do: pwhg_main_ninj+jet copy-scripts merge-pwg-stat merge-data
 	cd testrun && ../pwhg_main_ninj+jet

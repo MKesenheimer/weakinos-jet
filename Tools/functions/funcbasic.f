@@ -4,7 +4,6 @@ c last modified by MK, 18.12.2015
 c adapted from dislepton and disquark, plus additional helpful functions
 
 c############### functions #############################################
-
 c Kronecker delta
       double precision function kronecker(i,j)
         implicit none

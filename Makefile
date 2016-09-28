@@ -82,8 +82,8 @@ clean-libs:
 
 clean clean-all: clean-libs
 	cd neuIneuJ+jet && make clean-all
-	cd neuIchaJ+jet && make clean-all
-	cd chaIchaJ+jet && make clean-all
+	#cd neuIchaJ+jet && make clean-all
+	#cd chaIchaJ+jet && make clean-all
 	rm ./plot-aux/pastegnudata
 
 print-info:

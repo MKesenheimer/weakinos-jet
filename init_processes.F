@@ -273,7 +273,7 @@ c     set process id using slepton types
           enddo
         enddo
         
-#ifdef DEBUGQ
+#ifdef DEBUG
 ! Born process
         flst_nborn = 1
         flst_born(1,1) = 1
