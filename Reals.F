@@ -45,11 +45,6 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         ! function to calculate the squared momentum sum
         double precision momsum3sq, momsum2sq
         external momsum2sq, momsum3sq
-#ifdef DEBUG
-        double precision s35, s46
-        integer lstr
-        character*50 str
-#endif
 
         if (init_reals) then
           print*
@@ -65,57 +60,26 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
 
         ! get the formcalc real amplitudes
         call getRealAmps(p,rflav,amp)
-       
-#ifdef DEBUG
-        ! subtract the on shell contributions
+        
+        ! ...and subtract the resonant amplitudes
+#if defined(DSUB_II) || defined(DSUB_II_TEST)
         if(rflav(5).ne.0 .and. rflav(6).ne.0) then
           do ichan=1,cnosres
-            ! set the channel-related indices i,j,k and masses mi,mj,mk,mij
-            call set_channel(rflav,ichan)
-            i = osres_i
-            j = osres_j
-            k = osres_k
-            l = osres_l
-            mi = osres_mi
-            mj = osres_mj
-            mk = osres_mk
-            ml = osres_ml
-            mij = osres_mij
-            mkl = osres_mkl
-            wij = osres_wij
-            wkl = osres_wkl
-            
-            ! calculate the invariants
-            s12 = momsum2sq(p(0:3,1),p(0:3,2)) ! invariant mass of particle 1 + 2
-            sij = momsum2sq(p(0:3,i),p(0:3,j)) ! invariant mass of particle i + j
-            skl = momsum2sq(p(0:3,k),p(0:3,l)) ! invariant mass of particle k + l
-            
-            ! subtraction scheme for double resonances
-            if((s12.ge.(mij+mkl)**2).and.(mij.ge.(mi+mj)).and.(mkl.ge.(mk+ml))) then
-              ! with natural widths in double pole part
-              bwratio = (mij**2*mkl**2*wij**2*wkl**2*
-     &                  (mij**4 + (-mkl**2 + sij + skl)**2 + 
-     &                  mij**2*(2*mkl**2 - 2*(sij + skl) + 
-     &                  wij**2) + 2*mij*mkl*wij*wkl + 
-     &                  mkl**2*wkl**2)*
-     &                  (mij*(wij + wreg) + mkl*(wkl + wreg))**2)/
-     &                  (((mij**2 - sij)**2 + mij**2*wij**2)*
-     &                  (mij*wij + mkl*wkl)**2*
-     &                  ((mkl**2 - skl)**2 + mkl**2*wkl**2)*
-     &                  (mij**4 + mkl**4 + (sij + skl)**2 + 
-     &                  2*mij*mkl*(wij + wreg)*(wkl + wreg) + 
-     &                  mij**2*(2*mkl**2 - 2*sij - 2*skl + 
-     &                  (wij + wreg)**2) + 
-     &                  mkl**2*(-2*sij - 2*skl + (wkl + wreg)**2)))
-              ! off_to_on the momenta p to on-shell momenta p_os
-              call off_to_on(p,rflav,ichan,.true.,.true.,p_OS)
-              call getRealOSAmps(p_os,rflav,ichan,ampos)
-              ampCT = bwratio*ampos
-              ! rescale the counter term to fit into the new PS
-              !ampCT = corrfac(s12,mi,mj,mk,ml,mij,mkl,sij,skl)*ampCT
-              amp = amp - ampCT
-            endif
-            
+            ampos = 0D0
+            call getRealOSAmps(p,rflav,ichan,ampos)
+            amp = amp - ampos
+          enddo
+        endif
+#endif
+
+#ifdef DSUB_II_TEST
+        ! test the DSUB_II scheme (here without the correct jacobian)
+        ! this gives the same result as with flag DSUB_I set
+        if(rflav(5).ne.0 .and. rflav(6).ne.0) then
+         do ichan=1,cnosres
+            ampos = 0D0
+            call setosresreal(p,rflav,ichan,ampos)
+            amp = amp + ampos
           enddo
         endif  
 #endif
@@ -136,22 +100,6 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
           !print*,"got strange value for real amplitude...", ampreal
           ampreal = 0D0
         endif
-
-#ifdef DEBUG
-        ! fill histograms
-        if(dsqrt(p(1,5)**2+p(2,5)**2).gt.10D0 .and. dsqrt(p(1,6)**2+p(2,6)**2).gt.10D0) then
-          call process_name(nlegreal,rflav(1:nlegreal),str(1:20),lstr)
-          s35 = momsum2sq(p(0:3,3),p(0:3,5))
-          s46 = momsum2sq(p(0:3,4),p(0:3,6))
-          ! warning: don't fill more than 200 histograms!
-          if(abs(rflav(1)).lt.2) then
-            !call histogram("sqrt(s35)_"//str(1:lstr),100,400D0,800D0,dsqrt(s35),ampreal)
-            !call histogram("sqrt(s46)_"//str(1:lstr),100,400D0,800D0,dsqrt(s46),ampreal)
-            call histogram("int(s35)_"//str(1:lstr),1,1D1,1D6,dsqrt(s35),ampreal)
-            !call histogram("int(s46)_"//str(1:lstr),1,1D1,1D6,dsqrt(s46),ampreal)
-          endif
-        endif
-#endif
       end
 c############### end subroutine setreal ################################
 

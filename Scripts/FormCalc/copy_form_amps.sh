@@ -46,7 +46,7 @@ WORKINGDIR=${PWD}
 #                    the same as proc_nInJjj, but without channel identifiers)
 
 # the name of the target process directory
-PROCDIR="neuIneuJ+jet/FormCalc_Reals"
+PROCDIR="neuIneuJ+jet/FormCalc_Reals_bla"
 
 # where to copy the amplitudes to
 DEST=${PWD}/../../${PROCDIR}
@@ -55,19 +55,19 @@ DEST=${PWD}/../../${PROCDIR}
 NPART=6
 
 # process list file
-PROCF="./proc_nInJjj_nr"
+PROCF="./proc_nInJjj_os_gl"
 #PROCF="./proc_nInJjj_os"
 #PROCF="./proc_nInJjj_reg"
 
 # the name of Mathematica Scripts
-MSCRIPT="./nInJjj.m"
+MSCRIPT="./nInJjj_os_gl.m"
 #MSCRIPT="./nInJjj_os.m"
 #MSCRIPT=""
 
 # the type of the amplitudes (born, virt, real, realOS)
 #TYPE="born"
-#TYPE="realOS"
-TYPE="real"
+TYPE="realOS"
+#TYPE="real"
 
 # the number of subchannels of realOS amplitudes (f.e. ll, lr, rl, rr)
 NSUBCHANNELS=4

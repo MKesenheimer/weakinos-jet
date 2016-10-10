@@ -374,7 +374,7 @@ c rescaled by this correction factor
      &                          *kaellenSqrt(sij,mi**2,mj**2)
      &                          *kaellenSqrt(skl,mk**2,ml**2))
      
-#ifdef DSUB_II_TESTQ
+#ifdef DSUB_II_TEST
         corrfac = 1D0
 #endif
 

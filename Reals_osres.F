@@ -11,9 +11,8 @@ c by on-shell counter terms) evaluated at a phase space point where
 c sij = mij**2 holds.
 c the corrfac factor accounts for the restriction of the pahse-space and
 c modifies the jacobian.
-      subroutine  setosresreal(p,rflav,ichan,ampreal)
+      subroutine  setosresreal(p,rflav,ichan,amp)
         implicit none
-
 #include "PhysPars.h"
 #include "nlegborn.h"
 #include "pwhg_flst.h"
@@ -21,15 +20,14 @@ c modifies the jacobian.
 #include "pwhg_st.h"
 #include "Flags.h"
 #include "osres.h"
-
         double precision p(0:3,nlegreal)
         double precision p_os(0:3,nlegreal)
         integer rflav(nlegreal)
         integer ichan
         ! the real amplitudes
-        double precision ampreal
+        double precision amp
         ! local variables
-        double precision ampCT, amp, ampOS
+        double precision ampCT, ampOS
         ! function to calculate the squared momentum sum
         double precision momsum3sq, momsum2sq
         external momsum2sq, momsum3sq
@@ -43,22 +41,18 @@ c modifies the jacobian.
         integer i,j,k,l
         ! breit-wigner ratios
         double precision bwratio
-        ! check 4-momentum conservation
-        logical lresult
         ! initialization variables
         logical verbose
         logical init_real
         data init_real/.true./
-#ifdef DEBUGQ
-#define DEBUG1
-        ! debugging
-        integer counter
-        data counter/0/
-        save counter
+#ifdef DEBUG
+        double precision s35, s46
+        integer lstr
+        character*50 str
 #endif
         
 #if defined(DSUB_II) || defined(DSUB_II_TEST)
-        if (init_real) then
+        if(init_real) then
            print*
            print*, "=== Init resonant real... ==="
            print*, "Computing the integral of the "//
@@ -78,14 +72,11 @@ c modifies the jacobian.
           stop
         endif
 #endif
-
-        ! check four momentum conservation
-        call check_4conservation(p, nlegborn+1, 1, lresult)
         
         ! calculate the couplings for this PS point
         call set_ebe_couplings
         
-        ! set the channel-related indices i,j,k and masses mi,mj,mk,mij
+        ! set the channel-related indices
         call set_channel(rflav,ichan)
         i = osres_i
         j = osres_j
@@ -101,53 +92,69 @@ c modifies the jacobian.
         wkl = osres_wkl
 
         ! calculate the invariants
-        s12  = momsum2sq(p(0:3,1),p(0:3,2)) ! invariant mass of particle 1 + 2
-        sij  = momsum2sq(p(0:3,i),p(0:3,j)) ! invariant mass of particle i + j
-        skl  = momsum2sq(p(0:3,k),p(0:3,l)) ! invariant mass of particle k + l
-
+        s12 = momsum2sq(p(0:3,1),p(0:3,2)) ! invariant mass of particle 1 + 2
+        sij = momsum2sq(p(0:3,i),p(0:3,j)) ! invariant mass of particle i + j
+        skl = momsum2sq(p(0:3,k),p(0:3,l)) ! invariant mass of particle k + l
+        
         ! this is |M_R(res)|**2 (still with on-shell resonances)
         call getRealOSAmps(p,rflav,ichan,amp)
-
-        ! Prospino scheme for double resonances
+            
+        ! subtraction scheme for double resonances
         if((s12.ge.(mij+mkl)**2).and.(mij.ge.(mi+mj)).and.(mkl.ge.(mk+ml))) then
-          ! calculate the ratio of the breit wigner functions
-          bwratio = (mij*(wreg+wij))**2/((sij-mij**2)**2+(mij*(wreg+wij))**2)*
-     &              (mkl*(wreg+wkl))**2/((skl-mkl**2)**2+(mkl*(wreg+wkl))**2)
+          ! with natural widths in double pole part
+          bwratio = (mij**2*mkl**2*wij**2*wkl**2*
+     &              (mij**4 + (-mkl**2 + sij + skl)**2 + 
+     &              mij**2*(2*mkl**2 - 2*(sij + skl) + 
+     &              wij**2) + 2*mij*mkl*wij*wkl + 
+     &              mkl**2*wkl**2)*
+     &              (mij*(wij + wreg) + mkl*(wkl + wreg))**2)/
+     &              (((mij**2 - sij)**2 + mij**2*wij**2)*
+     &              (mij*wij + mkl*wkl)**2*
+     &              ((mkl**2 - skl)**2 + mkl**2*wkl**2)*
+     &              (mij**4 + mkl**4 + (sij + skl)**2 + 
+     &              2*mij*mkl*(wij + wreg)*(wkl + wreg) + 
+     &              mij**2*(2*mkl**2 - 2*sij - 2*skl + 
+     &              (wij + wreg)**2) + 
+     &              mkl**2*(-2*sij - 2*skl + (wkl + wreg)**2)))
           ! off_to_on the momenta p to on-shell momenta p_os
-          call off_to_on(p,rflav,ichan,p_OS)
-          call getRealOSAmps(p_os,rflav,ichan,ampos)
-          ampCT = bwratio*ampos
+          call off_to_on(p,rflav,ichan,.true.,.true.,p_OS)
+          call getRealOSAmps(p_os,rflav,ichan,ampOS)
+          ampCT = bwratio*ampOS
           ! rescale the counter term to fit into the new PS
-          !ampCT = corrfac(s12,mi,mj,mk,sij,mij)*ampCT
-        else
-          ampCT = 0D0
-        endif 
-
-        ! calculate the total resonant amplitude and substract the
-        ! on-shell counter terms -> no on-shell resonances anymore
-        ampreal = amp-ampCT
+          !ampCT = corrfac(s12,mi,mj,mk,ml,mij,mkl,sij,skl)*ampCT
+          amp = amp - ampCT
+        endif
  
-        if(isnan(ampreal)) then
+        if(isnan(amp)) then
           !print*,"got strange value for ampreal amplitude...",ampreal
-          ampreal = 0D0
+          amp = 0D0
         endif
  
         if(verbose) then
           print*, "process = ", rflav
           print*, "chan = ", ichan
           print*, "s12  = ", s12
-          print*, "on-shell resonant Real amplitude = ", ampreal
+          print*, "on-shell resonant Real amplitude = ", amp
           print*
         endif
         
-#ifdef DEBUG1
-        if(counter .lt. 5) then
-          print*,"real_osres = ", ampreal
-          counter = counter + 1
+#ifdef DEBUG
+        ! fill histograms
+        if(dsqrt(p(1,5)**2+p(2,5)**2).gt.10D0 .and. dsqrt(p(1,6)**2+p(2,6)**2).gt.10D0) then
+          call process_name(nlegreal,rflav(1:nlegreal),str(1:20),lstr)
+          s35 = momsum2sq(p(0:3,3),p(0:3,5))
+          s46 = momsum2sq(p(0:3,4),p(0:3,6))
+          ! warning: don't fill more than 200 histograms!
+          if(abs(abs(rflav(1))).le.2) then
+            !call histogram("sqrt(s35)_"//str(1:lstr),100,400D0,800D0,dsqrt(s35),amp)
+            !call histogram("sqrt(s46)_"//str(1:lstr),100,400D0,800D0,dsqrt(s46),amp)
+            call histogram("int(s35)_"//str(1:lstr),1,1D1,1D6,dsqrt(s35),amp)
+            !call histogram("int(s46)_"//str(1:lstr),1,1D1,1D6,dsqrt(s46),amp)
+          endif
         endif
 #endif
 #else
-        ampreal = 0d0
+        amp = 0D0
 #endif
       end
 c############### end subroutine setosresreal ###########################

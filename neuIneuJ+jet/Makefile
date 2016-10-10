@@ -14,10 +14,11 @@ SHELL = /bin/sh
 FC  =  gfortran
 CXX =  g++
 CC  =  gcc
-FCFLAGS  = -g
+# p-flag to enable code profiling with gprof: gprof ./pwhg_main* gmon.out > analysis.txt
+FCFLAGS  = -pg
 CXXFLAGS = -g
-CFLAGS   = -g
-LDFLAGS  = -ff2c -g
+CFLAGS   = -pg
+LDFLAGS  = -ff2c -pg
 
 # recommended compiler flags
 REC_FCFLAGS   = -fno-automatic -fno-range-check
@@ -150,12 +151,8 @@ USRFLAGS += -D NEGLECTBMASS
 #   are added: |M_R|**2 - BW*corrfac*|M_R^OS|**2. The latter gets 
 #   integrated seperately in sigosres.f and is included at a later point
 #   to the main result.
-#USRFLAGS += -D SLICING
-#USRFLAGS += -D DR_I
-#USRFLAGS += -D DR_II
-#USRFLAGS += -D DSUB_I
-USRFLAGS += -D DSUB_II_TEST
-#USRFLAGS += -D DSUB_II
+#USRFLAGS += -D DSUB_II_TEST
+USRFLAGS += -D DSUB_II
 
 ########################################################################
 #           -*- no editing is required below this line -*-             #

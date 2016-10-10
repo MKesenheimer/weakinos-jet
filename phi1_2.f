@@ -62,7 +62,6 @@ c psgen=2:     flat in log tau with arbitrary exponent
 c psgen=3:     flat in tan tau with arbitrary exponent 
       subroutine x1x2phspace(sbeams,minmass,xx,x1,x2,s,jac)
         implicit none
-
         ! input:
         double precision sbeams,minmass,xx(2)
         ! output, local variables:
@@ -147,7 +146,7 @@ c psgen=3:     flat in tan tau with arbitrary exponent
 c############### end subroutine x1x2phspace ############################
 
 c############### subroutine R2phsp #####################################
-c massive particle p0 in rest frame decaying into p1 with mass m1 
+c massive particle p0 in rest frame splitting into p1 with mass m1 
 c and p2 with mass m2. Vectors returned p1 and p2 are in the frame in
 c which p0 is supplied.
 c Result is R2(s) = 1/4 * |p|/sqrts * domega
@@ -157,7 +156,7 @@ c if you don't want to integrate over the azimuthal degree of freedom
 c just set xphi to zero - the jacobian will still be correct.
       subroutine R2phsp(xth,xphi,m1,m2,p0,p1,p2,jac)
         implicit none
-        ! masses of decaying particles
+        ! masses of splitted particles
         double precision m1,m2
         ! integration variables
         double precision xth,xphi
@@ -284,7 +283,7 @@ c############### end subroutine R2phsp #################################
 
 c############### subroutine R2phsp_s2 ##################################
 c This routine differs from R2phsp in that s2 is integrated over.
-c Massive particle p0 decaying into p1 mass m1 and p2 mass-squared s2.
+c Massive particle p0 splitting into p1 mass m1 and p2 mass-squared s2.
 c with invariant mass of particle three s2 integrated over.
 c s2min is the minimum value of s2.
 c Vectors returned p1 and p2 are in the same frame as p0 is supplied.
@@ -301,7 +300,7 @@ c psgen=2:     breit wigner in s2 and flat below resonance
         implicit none
         ! parameter to select the PS sampling for s2
         integer psgen
-        ! masses of decaying particles
+        ! masses of splitted particles
         double precision m1,m2
         ! integration variables
         double precision x2,xth,xphi
@@ -451,6 +450,193 @@ c psgen=2:     breit wigner in s2 and flat below resonance
         enddo  
       end
 c############### end subroutine R2phsp_s2 ##############################
+
+c############### subroutine R2phsp_s1s2 ################################
+c This routine differs from R2phsp in that s1 and s2 are integrated over.
+c Massive particle p0 splitting into p1 mass-squared s1 
+c and p2 mass-squared s2, with invariant mass s1 and s2 integrated over.
+c s1min and s2min is the minimum value of s1 and s2, respectively.
+c Vectors returned p1 and p2 are in the same frame as p0 is supplied.
+c Result is R2(s) * ds1 * ds2 = 1/4 * |p|/sqrts * domega * ds1 * ds2
+c Expression evaluated is 
+c R2(s) * ds1 * ds2 = ds1 ds2 d^3p1/(2 E1) d^3p2/(2 E2) delta^4(p0 - p1 - p2)
+c delta(p1^2-s1) delta(p2^2-s2)
+c Parameter to select phase space importance sampling:
+c psgen=0:     flat in s2 (bwmass and bwwidth is not required)
+c psgen=1:     breit wigner in s1 and s2
+c psgen=2:     breit wigner in s1 and s2 and flat below resonance
+      subroutine R2phsp_s1s2(psgen,x1,x2,xth,xphi,s1min,s1max,s2min,
+     &                   bwmass1,bwwidth1,bwmass2,bwwidth2,p0,p1,p2,jac)
+        implicit none
+        ! parameter to select the PS sampling for s2
+        integer psgen
+        ! masses of splitted particles
+        double precision m1,m2
+        ! integration variables
+        double precision x1,x2,xth,xphi
+        double precision xexp
+        ! borders of s2-integration
+        double precision s1max,s1min,s2max,s2min
+        ! momenta of incoming particle
+        double precision p0(0:3)
+        ! momenta of outgoing particles
+        double precision p1(0:3),p2(0:3)
+        ! momenta in CMS
+        double precision p2_cms(0:3),p1_cms(0:3)
+        ! angles
+        double precision phi,cosTh,sinTh
+        ! energies abs. momenta and invariants
+        double precision E1,E2,Pabs,s,sqrts,s1,s2
+        ! jacobians
+        double precision jac,jc1
+        ! variables for boosting into rest frame
+        double precision beta,vec(1:3),norm
+        ! breit wigner
+        double precision bwmass1,bwwidth1,bwmass2,bwwidth2
+        ! indices
+        integer i
+        ! functions
+        double precision kaellenSqrt,dotp
+        external kaellenSqrt,dotp
+        ! constants
+        double precision m_pi
+        parameter (m_pi = 4.D0*datan(1.D0))
+        double precision tiny
+        parameter (tiny = 1d-6)
+
+        ! reset the jacobian
+        jac = 1D0
+        jc1 = 1D0
+
+        s = dotp(p0,p0)
+        ! sort out bad phase space points
+        if (s .le. 0D0) then
+         print*, "warning: s is less than zero"
+         print*, "s =",s
+         print*, " => set jacobian  to 0"
+         jac = 0D0
+         return
+        endif
+        sqrts = dsqrt(s)
+
+        ! choose here sampling exponent for theta integration
+        xexp  = 1D0
+        cosTh = 2D0*xth**xexp-1D0
+        sinTh = dsqrt(dabs(1D0-cosTh**2))
+        jac   = jac*2D0*xexp*xth**(xexp-1D0)
+        phi   = 2D0*m_pi*xphi
+        jac   = jac*2D0*m_pi
+
+        ! sort out bad phase space points
+        if (s1min .gt. s1max) then 
+          print*,"warning: s1min should be smaller than s1max"
+          s1min = s1max 
+          jac   = 0D0
+          return
+        endif
+        
+        ! 0 = flat
+        ! 1 = breit wigner
+        ! 2 = breit wigner and flat below resonance
+        if( psgen .lt. 0 .or. psgen .gt. 2) then
+          print*,"error in R2phsp_s2: unknown psgen: ", psgen
+          stop
+        endif
+        if( (psgen.ne.0) .and. ((psgen.eq.1) .or. 
+     &       (s.ge.(bwmass1+m1)**2.and.psgen.eq.2)) ) then
+          call breitw(x1,s1min,s1max,bwmass1,bwwidth1,s1,jc1)
+        else
+          s1  = (s1max-s1min)*x1+s1min
+          jc1 = (s1max-s1min)
+        endif
+        jac = jac*jc1
+        m1  = dsqrt(s1)
+        
+        ! integration border for s2 integration
+        s2max = (sqrts-m1)**2
+        
+        ! sort out bad phase space points
+        if (s2min .gt. s2max) then 
+          print*,"warning: s2min should be smaller than s2max"
+          s2min = s2max 
+          jac   = 0D0
+          return
+        endif
+        
+        if( (psgen.ne.0) .and. ((psgen.eq.1) .or. 
+     &       (s.ge.(bwmass2+m2)**2.and.psgen.eq.2)) ) then
+          call breitw(x2,s2min,s2max,bwmass2,bwwidth2,s2,jc1)
+        else
+          s2  = (s2max-s2min)*x2+s2min
+          jc1 = (s2max-s2min)
+        endif
+        jac = jac*jc1
+        m2  = dsqrt(s2)
+        
+        E1 = (s+m1**2-m2**2)/(2D0*sqrts)
+        E2 = (s+m2**2-m1**2)/(2D0*sqrts)
+        Pabs = kaellenSqrt(s,m1**2,m2**2)/(2D0*sqrts)
+        
+        p1_cms(0) = E1
+        p1_cms(1) = Pabs*sinTh*dcos(phi)
+        p1_cms(2) = Pabs*sinTh*dsin(phi)
+        p1_cms(3) = Pabs*cosTh
+
+        p2_cms(0) = E2
+        p2_cms(1) = -p1_cms(1)
+        p2_cms(2) = -p1_cms(2)
+        p2_cms(3) = -p1_cms(3)
+                
+        ! call boost(sqrts,p0,p1_cms,p1)
+        ! new: use existing POWHEG-routines
+        norm = dsqrt(p0(1)**2 + p0(2)**2 + p0(3)**2)
+        if(norm.ne.0D0) then
+          do i = 1,3
+            vec(i) = p0(i)/norm
+          enddo
+          beta = norm/p0(0)
+          call mboost(1,vec,beta,p1_cms(0:3),p1(0:3))
+          call mboost(1,vec,beta,p2_cms(0:3),p2(0:3))
+        else
+          do i = 0,3
+            p2(i) = p2_cms(i)
+            p1(i) = p1_cms(i)
+          enddo
+        endif
+
+        ! physical phase space jacobian
+        jac = jac*Pabs/(4D0*sqrts)
+
+        ! filter unphysical momenta configurations
+        if ( p2(0) .lt. 0D0 .and. p2(0) .gt. -tiny ) jac = 0D0  
+        if ( p1(0) .lt. 0D0 .and. p1(0) .gt. -tiny ) jac = 0D0 
+        
+        ! tests
+        if (((p0(0).lt.0D0).or.(p1(0).lt.0D0).or.(p2(0).lt.0D0))
+     &       .and.jac.ne.0D0 ) then
+          print*,"warning: one of E1,E2,E3 is less than zero"
+          print*,"p0",p0(0),p0(0)**2-p0(1)**2-p0(2)**2-p0(3)**2,s
+          print*,"p1",p1(0),p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2
+          print*,"p2",p2(0),p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2
+          jac = 0D0
+          return
+        endif
+        
+        ! check if NaN occured
+        if(isnan(jac)) then
+          print*,"warning in phi1_2:440: NaN occured"
+          jac = 0D0
+          return
+        endif
+        do i=0,3
+          if(isnan(p1(i)) .or. isnan(p2(i))) then
+            print*,"warning in phi1_2:446: NaN occured"
+            jac = 0D0
+            return
+          endif
+        enddo  
+      end
+c############### end subroutine R2phsp_s1s2 ############################
 
 c############### subroutine breitw #####################################
 c Given a number 0<x<1 generate a mass-squared msq and a jacobian jac 

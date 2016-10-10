@@ -234,109 +234,23 @@ Component[Amp_,n_]:=Replace[Amp,Amp[_][x__]:>{x}][[n]]
 getReplacementHead[f_->_]:=f
 
 
-Print["On-Shell Squark resonances (double resonances)"]
+Print["Non resonant Diagrams"]
 
-(*On Shell Topologies*)
-top3546 =  TopologyList[
-    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[4][7]],
-    Propagator[Incoming][Vertex[1][2],Vertex[4][7]],
-    Propagator[Outgoing][Vertex[1][3],Vertex[3][8]],
-    Propagator[Outgoing][Vertex[1][4],Vertex[3][9]],
-    Propagator[Outgoing][Vertex[1][5],Vertex[3][8]],
-    Propagator[Outgoing][Vertex[1][6],Vertex[3][9]],
-    Propagator[Internal][Vertex[3][8],Vertex[4][7]],
-    Propagator[Internal][Vertex[3][9],Vertex[4][7]]],
-    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
-    Propagator[Incoming][Vertex[1][2],Vertex[3][7]],
-    Propagator[Outgoing][Vertex[1][3],Vertex[3][8]],
-    Propagator[Outgoing][Vertex[1][4],Vertex[3][9]],
-    Propagator[Outgoing][Vertex[1][5],Vertex[3][8]],
-    Propagator[Outgoing][Vertex[1][6],Vertex[3][9]],
-    Propagator[Internal][Vertex[3][8],Vertex[3][10]],
-    Propagator[Internal][Vertex[3][9],Vertex[3][10]],
-    Propagator[Internal][Vertex[3][7],Vertex[3][10]]],
-    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
-    Propagator[Incoming][Vertex[1][2],Vertex[3][8]],
-    Propagator[Outgoing][Vertex[1][3],Vertex[3][9]],
-    Propagator[Outgoing][Vertex[1][4],Vertex[3][10]],
-    Propagator[Outgoing][Vertex[1][5],Vertex[3][9]],
-    Propagator[Outgoing][Vertex[1][6],Vertex[3][10]],
-    Propagator[Internal][Vertex[3][7],Vertex[3][9]],
-    Propagator[Internal][Vertex[3][8],Vertex[3][10]],
-    Propagator[Internal][Vertex[3][7],Vertex[3][8]]],
-    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
-    Propagator[Incoming][Vertex[1][2],Vertex[3][8]],
-    Propagator[Outgoing][Vertex[1][3],Vertex[3][9]],
-    Propagator[Outgoing][Vertex[1][4],Vertex[3][10]],
-    Propagator[Outgoing][Vertex[1][5],Vertex[3][9]],
-    Propagator[Outgoing][Vertex[1][6],Vertex[3][10]],
-    Propagator[Internal][Vertex[3][8],Vertex[3][9]],
-    Propagator[Internal][Vertex[3][7],Vertex[3][10]],
-    Propagator[Internal][Vertex[3][7],Vertex[3][8]]]];
+tops = CreateTopologies[0, 2 -> 4];
+topNR = TopologyList[Sequence@@Delete[Level[tops,1],{{104},{119},{213},{214},{106},{220},{122},{219},{165},{177},{120},{169},{181},{125},{138},{153},{123},{142},{157},{127}}]];
+insNR = InsertFields[topNR, process];
+DoPaint[insNR, "realNR"];
 
-top3645 = TopologyList[Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[4][7]],
-    Propagator[Incoming][Vertex[1][2],Vertex[4][7]],
-    Propagator[Outgoing][Vertex[1][3],Vertex[3][8]],
-    Propagator[Outgoing][Vertex[1][4],Vertex[3][9]],
-    Propagator[Outgoing][Vertex[1][5],Vertex[3][9]],
-    Propagator[Outgoing][Vertex[1][6],Vertex[3][8]],
-    Propagator[Internal][Vertex[3][8],Vertex[4][7]],
-    Propagator[Internal][Vertex[3][9],Vertex[4][7]]],
-    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
-    Propagator[Incoming][Vertex[1][2],Vertex[3][8]],
-    Propagator[Outgoing][Vertex[1][3],Vertex[3][9]],
-    Propagator[Outgoing][Vertex[1][4],Vertex[3][10]],
-    Propagator[Outgoing][Vertex[1][5],Vertex[3][10]],
-    Propagator[Outgoing][Vertex[1][6],Vertex[3][9]],
-    Propagator[Internal][Vertex[3][8],Vertex[3][9]],
-    Propagator[Internal][Vertex[3][7],Vertex[3][10]],
-    Propagator[Internal][Vertex[3][7],Vertex[3][8]]],
-    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
-    Propagator[Incoming][Vertex[1][2],Vertex[3][7]],
-    Propagator[Outgoing][Vertex[1][3],Vertex[3][8]],
-    Propagator[Outgoing][Vertex[1][4],Vertex[3][9]],
-    Propagator[Outgoing][Vertex[1][5],Vertex[3][9]],
-    Propagator[Outgoing][Vertex[1][6],Vertex[3][8]],
-    Propagator[Internal][Vertex[3][8],Vertex[3][10]],
-    Propagator[Internal][Vertex[3][9],Vertex[3][10]],
-    Propagator[Internal][Vertex[3][7],Vertex[3][10]]],
-    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
-    Propagator[Incoming][Vertex[1][2],Vertex[3][8]],
-    Propagator[Outgoing][Vertex[1][3],Vertex[3][9]],
-    Propagator[Outgoing][Vertex[1][4],Vertex[3][10]],
-    Propagator[Outgoing][Vertex[1][5],Vertex[3][10]],
-    Propagator[Outgoing][Vertex[1][6],Vertex[3][9]],
-    Propagator[Internal][Vertex[3][7],Vertex[3][9]],
-    Propagator[Internal][Vertex[3][8],Vertex[3][10]],
-    Propagator[Internal][Vertex[3][7],Vertex[3][8]]]];
+(*insert the particle widths*)
+widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
 
-ins3546 = InsertFields[top3546, process]
-DoPaint[ins3546, "realOS_3546"];
-ins3645 = InsertFields[top3645, process]
-DoPaint[ins3645, "realOS_3645"];
+realNR = CalcFeynAmp[CreateFeynAmp[insNR](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
+(*realNR = realNR//.{PowerOf[a_]^x_:>PowerOf[a][x]};
+realNR = realNR//.{PowerOf[a_]:>PowerOf[a][1]};*)
+realNR = realNR/.{Den[x_,y_]:>Den[x,y/.widths]}
 
 
-(*widths and regulator replacement rules*)
-widths = {MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
-reg2 = {Den[sij_,MSf2[cij_,tij_,gij_]-I MSf[cij_,tij_,gij_] WSf[cij_,tij_,gij_]]Den[skl_,MSf2[ckl_,tkl_,gkl_]-I MSf[ckl_,tkl_,gkl_] WSf[ckl_,tkl_,gkl_]]:>((Den[sij,MSf2[cij,tij,gij]-I MSf[cij,tij,gij] (WSf[cij,tij,gij]+WREG2)]^-1+Den[skl,MSf2[ckl,tkl,gkl]-I MSf[ckl,tkl,gkl] (WSf[ckl,tkl,gkl]+WREG2)]^-1)^-1)*(Den[sij,MSf2[cij,tij,gij]-I MSf[cij,tij,gij] WSf[cij,tij,gij]]+Den[skl,MSf2[ckl,tkl,gkl]-I MSf[ckl,tkl,gkl] WSf[ckl,tkl,gkl]])};
-(*generate amplitudes*)
-real3546 = CalcFeynAmp[CreateFeynAmp[ins3546](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)]; (*uncomment ", InvSimplify -> False" for Mac OS X*)
-real3645 = CalcFeynAmp[CreateFeynAmp[ins3645](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
-(*real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
-real = real//.{PowerOf[a_]:>PowerOf[a][1]};*)
-(*insert widths*)
-real3546 = real3546/.{Den[x_,y_]:>Den[x,y/.widths]};
-real3645 = real3645/.{Den[x_,y_]:>Den[x,y/.widths]};
-(*insert the regulator*)
-real3546 = real3546/.reg2;
-real3645 = real3645/.reg2;
-
-(*set the sfermion index in the external fortran program (leave it open)*)
-real3546Sfe = real3546//.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]}
-real3645Sfe = real3645//.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]}
-
-
-Print["On-Shell Gluino resonances (single resonances)"]
+Print["On-Shell Diagrams"]
 
 top356=TopologyList[Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
     Propagator[Incoming][Vertex[1][2],Vertex[3][8]],
@@ -463,6 +377,7 @@ DoPaint[ins356, "realOS_465"];
 (*widths and regulator replacement rules*)
 widths = {MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
 reg1 = {Den[sijk_,MGl2-I MGl WGl]:>Den[sijk,MGl2-I MGl (WGl+WREG1)]};
+reg2 = {Den[sij_,MSf2[cij_,tij_,gij_]-I MSf[cij_,tij_,gij_] WSf[cij_,tij_,gij_]]Den[skl_,MSf2[ckl_,tkl_,gkl_]-I MSf[ckl_,tkl_,gkl_] WSf[ckl_,tkl_,gkl_]]:>((Den[sij,MSf2[cij,tij,gij]-I MSf[cij,tij,gij] (WSf[cij,tij,gij]+WREG2)]^-1+Den[skl,MSf2[ckl,tkl,gkl]-I MSf[ckl,tkl,gkl] (WSf[ckl,tkl,gkl]+WREG2)]^-1)^-1)*(Den[sij,MSf2[cij,tij,gij]-I MSf[cij,tij,gij] WSf[cij,tij,gij]]+Den[skl,MSf2[ckl,tkl,gkl]-I MSf[ckl,tkl,gkl] WSf[ckl,tkl,gkl]])};
 
 (*generate amplitudes*)
 real356 = CalcFeynAmp[CreateFeynAmp[ins356](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)]; (*uncomment ", InvSimplify -> False" for Mac OS X*)
@@ -481,204 +396,6 @@ real356 = real356/.reg1
 real365 = real365/.reg1
 real456 = real456/.reg1
 real465 = real465/.reg1
-
-
-Print["Non resonant Diagrams"]
-
-tops = CreateTopologies[0, 2 -> 4];
-ins = InsertFields[tops, process];
-
-(*Select the diagrams without on-shell divergences*)
-insNR = DiagramSelect[ins,(Not[SChannelExtQ[S[_],3,5][##] && SChannelExtQ[S[_],4,6][##]] &&
-                            Not[SChannelExtQ[S[_],3,6][##] && SChannelExtQ[S[_],4,5][##]])&];
-DoPaint[insNR, "realNR"];
-
-(*insert the particle widths*)
-widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
-
-realNR = CalcFeynAmp[CreateFeynAmp[insNR](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
-(*realNR = realNR//.{PowerOf[a_]^x_:>PowerOf[a][x]};
-realNR = realNR//.{PowerOf[a_]:>PowerOf[a][1]};*)
-realNR = realNR/.{Den[x_,y_]:>Den[x,y/.widths]}
-
-
-(*Write files for on-shell resonant reals, OS3546*)
-amps = {real3546Sfe};
-{realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
-
-col = ColourME[All, realOS];
-
-abbr = OptimizeAbbr[Abbr[]];
-subexpr = OptimizeAbbr[Subexpr[]];
-
-(*fortran can't handle arrays with dimensionality greater than 7*)
-(*apply back the subexpressions with number of arguments greater than 6*)
-subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-realOS = realOS//.subexpr6;
-abbr = abbr//.subexpr6;
-
-(*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-subexpr = subexpr//.subexpr6;
-
-dir = SetupCodeDir[name<>"_realOS_3546", Drivers -> name <> "_drivers"];
-WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
-
-
-(*Write files for on-shell resonant reals, OS3645*)
-amps = {real3645Sfe};
-{realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
-
-col = ColourME[All, realOS];
-
-abbr = OptimizeAbbr[Abbr[]];
-subexpr = OptimizeAbbr[Subexpr[]];
-
-(*fortran can't handle arrays with dimensionality greater than 7*)
-(*apply back the subexpressions with number of arguments greater than 6*)
-subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-realOS = realOS//.subexpr6;
-abbr = abbr//.subexpr6;
-
-(*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-subexpr = subexpr//.subexpr6;
-
-dir = SetupCodeDir[name<>"_realOS_3645", Drivers -> name <> "_drivers"];
-WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
-
-
-(*Write files for on-shell resonant reals, OS356*)
-amps = {real356};
-{realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
-
-col = ColourME[All, realOS];
-
-abbr = OptimizeAbbr[Abbr[]];
-subexpr = OptimizeAbbr[Subexpr[]];
-
-(*fortran can't handle arrays with dimensionality greater than 7*)
-(*apply back the subexpressions with number of arguments greater than 6*)
-subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-realOS = realOS//.subexpr6;
-abbr = abbr//.subexpr6;
-
-(*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-subexpr = subexpr//.subexpr6;
-
-dir = SetupCodeDir[name<>"_realOS_356", Drivers -> name <> "_drivers"];
-WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
-
-
-(*Write files for on-shell resonant reals, OS365*)
-amps = {real365};
-{realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
-
-col = ColourME[All, realOS];
-
-abbr = OptimizeAbbr[Abbr[]];
-subexpr = OptimizeAbbr[Subexpr[]];
-
-(*fortran can't handle arrays with dimensionality greater than 7*)
-(*apply back the subexpressions with number of arguments greater than 6*)
-subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-realOS = realOS//.subexpr6;
-abbr = abbr//.subexpr6;
-
-(*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-subexpr = subexpr//.subexpr6;
-
-dir = SetupCodeDir[name<>"_realOS_365", Drivers -> name <> "_drivers"];
-WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
-
-
-(*Write files for on-shell resonant reals, OS456*)
-amps = {real456};
-{realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
-
-col = ColourME[All, realOS];
-
-abbr = OptimizeAbbr[Abbr[]];
-subexpr = OptimizeAbbr[Subexpr[]];
-
-(*fortran can't handle arrays with dimensionality greater than 7*)
-(*apply back the subexpressions with number of arguments greater than 6*)
-subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-realOS = realOS//.subexpr6;
-abbr = abbr//.subexpr6;
-
-(*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-subexpr = subexpr//.subexpr6;
-
-dir = SetupCodeDir[name<>"_realOS_456", Drivers -> name <> "_drivers"];
-WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
-
-
-(*Write files for on-shell resonant reals, OS465*)
-amps = {real465};
-{realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
-
-col = ColourME[All, realOS];
-
-abbr = OptimizeAbbr[Abbr[]];
-subexpr = OptimizeAbbr[Subexpr[]];
-
-(*fortran can't handle arrays with dimensionality greater than 7*)
-(*apply back the subexpressions with number of arguments greater than 6*)
-subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-realOS = realOS//.subexpr6;
-abbr = abbr//.subexpr6;
-
-(*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-subexpr = subexpr//.subexpr6;
-
-dir = SetupCodeDir[name<>"_realOS_465", Drivers -> name <> "_drivers"];
-WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
-
-
-(*Combine the amplitudes again, but this time the resonant diagrams are regulated*)
-(*Use here the regulated on shell amplitudes with summation over the sfermion indices*)
-real = Combine[realNR,real3546,real3645,real356,real365,real456,real465];
-
-(*Write real files with inserted regulator for on-shell diagrams*)
-amps = {real};
-{real} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
-
-col = ColourME[All, real];
-
-abbr = OptimizeAbbr[Abbr[]];
-subexpr = OptimizeAbbr[Subexpr[]];
-
-(*fortran can't handle arrays with dimensionality greater than 7*)
-(*apply back the subexpressions with number of arguments greater than 6*)
-subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-real = real//.subexpr6;
-abbr = abbr//.subexpr6;
-
-(*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-subexpr = subexpr//.subexpr6;
-
-dir = SetupCodeDir[name<>"_real", Drivers -> name <> "_drivers"];
-WriteSquaredME[real, {}, col, abbr, subexpr, dir];
 
 
 Print["time used: ", SessionTime[] - time1]

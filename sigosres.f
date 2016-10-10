@@ -70,7 +70,7 @@ c keep this order
         sigosres_contr = 0D0
         do ichan=1,cnosres
           do lset=1,flst_nosres
-            call real_osres_phsp(xx,ichan,flst_osres(:,lset))
+            call real_osres_phsp(xx,flst_osres(:,lset),ichan)
             xjac = kn_jacreal*ww1*hc2
             call sigreal_osres(xjac,lset,ichan,rad_osres_arr(lset,ichan))
             sigosres_contr = sigosres_contr+rad_osres_arr(lset,ichan)
@@ -89,7 +89,7 @@ c keep this order
          print*,"sigosres_contr",sigosres_contr
          print*,"xjac",xjac
          print*
-         !stop
+         stop
 #endif
       end
 c############### end function sigosres #################################

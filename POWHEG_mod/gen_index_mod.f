@@ -128,17 +128,11 @@ c MK: added
 #include "pwhg_rad_add.h"
       integer iret
       real * 8 random, ran1
+      integer ran2
       external random
       integer ichan ! MK: added
       double precision rad_totosres_sum ! MK: added
       double precision rad_totosres_frac_sum ! MK: added
-
-#ifdef DEBUGQ
-      print*,"[DEBUG] in gen_index_mod:124"
-      print*,"uncomment to continue"
-      stop
-#endif
-      
       ! sum
       rad_totosres_sum = 0D0
       do ichan=1,cnosres
@@ -170,18 +164,24 @@ c MK: added
       ! the indices for the on-shell resonances by 2.
       ! => iret = ichan + 2 
       
+      ran1 = random()
+      ran2 = int(1+random()*(flst_nosres-1))
+#ifdef DEBUG
+      print*,"in gen_index_mod.f: check and uncommnet"  
+      print*,ran2,flst_osres(:,ran2)
+      stop
+#endif
+      
 c which version is better?
 #define GENOSRES1
 #ifdef GENOSRES1
-      ran1 = random()
       do ichan=1,cnosres  
         rad_totosres_frac_sum = rad_totosres_frac_sum
      &                           + rad_totosres(ichan)
         if(ran1.le.rad_totosres_frac_sum/rad_totosres_sum) then
           iret=2+ichan
-          call pick_random(flst_nosres,rad_osres_arr(:,ichan),
-     &                                                  rad_realosres)
-          call real_osres_phsp(rad_xradosres,ichan)
+          call pick_random(flst_nosres,rad_osres_arr(:,ichan),rad_realosres)
+          call real_osres_phsp(rad_xradosres,flst_osres(:,ran2),ichan) !xx,flav,ichan
           rad_ubornidx=flst_alr2born(rad_realosres)
           kn_emitter=flst_emitter(rad_realosres)
           goto 10
@@ -191,16 +191,14 @@ c which version is better?
 #endif
 
 #ifdef GENOSRES2
-      ran1 = random()
       rad_totosres_frac_sum = rad_totosres_sum
       do ichan=1,cnosres  
         rad_totosres_frac_sum = rad_totosres_frac_sum
      &                           - rad_totosres(ichan)
         if(ran1.gt.rad_totosres_frac_sum/rad_totosres_sum) then
           iret=2+ichan
-          call pick_random(flst_nosres,rad_osres_arr(:,ichan),
-     &                                                  rad_realosres)
-          call real_osres_phsp(rad_xradosres,ichan)
+          call pick_random(flst_nosres,rad_osres_arr(:,ichan),rad_realosres)
+          call real_osres_phsp(rad_xradosres,flst_osres(:,ran2),ichan)
           rad_ubornidx=flst_alr2born(rad_realosres)
           kn_emitter=flst_emitter(rad_realosres)
           goto 10
