@@ -17,6 +17,7 @@ c bigger changes over a whole section are marked with !===...
       include 'LesHouches.h'
 c ! MK: added
 #include "osres.h"
+#include "Flags.h"
 #include "pwhg_flst_add.h"
 #include "pwhg_rad_add.h"
       integer maxev
@@ -54,7 +55,7 @@ c ! MK: added
       ! Note: since pwhgnewweight uses indices rad_type=1,2,3 we have to shift
       ! the indices for the on-shell resonances by 3.
       ! => rad_type = ichan + 3 
-      elseif((rad_type.ge.4) .and. (rad_type.le.(cnosres+3))) then
+      elseif((rad_type.ge.4) .and. (rad_type.le.(nosres+3))) then
          call gen_sigosresrw
          newweight=rad_osres_arr(rad_realosres,rad_type-3)
       !=================================================================
@@ -138,10 +139,9 @@ c         write(iunrwgt,'(a)') trim(stringin)
       include 'pwhg_flst.h'
       include 'cgengrids.h'
 c MK: added
-#include "osres.h"
 #include "pwhg_flst_add.h"
+#include "Flags.h"
 #include "cgengrids_add.h"
-#include "pwhg_rad_add.h"
       real * 8 xx(ndiminteg)
       integer mcalls,icalls
       real * 8 sigosres
@@ -150,8 +150,8 @@ c MK: added
       icalls=0
       call gen(sigosres,ndiminteg,xgridosres,ymaxosres,ymaxratosres,
      &         xmmmosres,ifoldosres,2,mcalls,icalls,xx)
-      end
-
+      end      
+      
       subroutine openoutputrw(iunrwgt)
       implicit none
       include 'pwhg_flg.h'
@@ -352,7 +352,7 @@ c     regular
      $              gen_seed,gen_n1,gen_n2
             ! MK: added the following statements
             !===========================================================
-            elseif((rad_type.ge.4) .and. (rad_type.le.(3+cnosres))) then
+            elseif((rad_type.ge.4) .and. (rad_type.le.(3+nosres))) then
                read(string,*)rad_type,
      $              rad_realosres,rad_currentweight,
      $              gen_seed,gen_n1,gen_n2
