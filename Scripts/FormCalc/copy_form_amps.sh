@@ -12,15 +12,15 @@ WORKINGDIR=${PWD}
 #     MSCRIPT="./nInJj.m"
 #     TYPE="born"
 #
-# 2. generate and copy the amplitudes of purely non resonant diagrams:
+# 2. generate and copy the amplitudes with purely non resonant diagrams:
 #     PROCDIR="neuIneuJ+jet/FormCalc_Reals"
 #     NPART=6
 #     PROCF="./proc_nInJjj_nr"
 #     MSCRIPT="./nInJjj.m"
 #     TYPE="real"
 #
-# 3. Modify the part "on-shell subroutines" if needed (i.e. modify the
-#     Squark indices Sfe6 and Sfe7).
+# 3. If needed, modify the parts where squark indices get explicitly 
+#     replaced. Possible lines are marked with "-> modify this if needed"
 #
 # 4. generate and copy the amplitudes with possible on shell resonances
 #     PROCDIR="neuIneuJ+jet/FormCalc_Reals"
@@ -30,7 +30,7 @@ WORKINGDIR=${PWD}
 #     TYPE="realOS"
 #
 # 5. copy the regulated real processes (no creation of the amplitudes is
-#    needed, since the regulated reals were generated in step 3)
+#    needed, since the regulated reals were generated in step 4)
 #     PROCDIR="neuIneuJ+jet/FormCalc_Reals"
 #     NPART=6
 #     PROCF="./proc_nInJjj_reg"
@@ -42,11 +42,11 @@ WORKINGDIR=${PWD}
 # proc_nInJjj     -> all Real processes for p p > nI nJ j (real = nr + os)
 # proc_nInJjj_nr  -> processes that don't have resonant diagrams
 # proc_nInJjj_os  -> processes with resonant diagrams
-# proc_nInJjj_reg -> regulated real processes with resonant diagrams (os_reg, 
-#                    the same as proc_nInJjj, but without channel identifiers)
+# proc_nInJjj_reg -> regulated real processes with resonant diagrams (same 
+#                    as proc_nInJjj_os, but without channel identifiers)
 
 # the name of the target process directory
-PROCDIR="neuIneuJ+jet/FormCalc_Reals_bla"
+PROCDIR="neuIneuJ+jet/FormCalc_Reals"
 
 # where to copy the amplitudes to
 DEST=${PWD}/../../${PROCDIR}
@@ -55,22 +55,23 @@ DEST=${PWD}/../../${PROCDIR}
 NPART=6
 
 # process list file
-PROCF="./proc_nInJjj_os_gl"
+#PROCF="./proc_nInJjj_os_test"
+PROCF="./proc_nInJjj_reg_test"
 #PROCF="./proc_nInJjj_os"
 #PROCF="./proc_nInJjj_reg"
 
 # the name of Mathematica Scripts
-MSCRIPT="./nInJjj_os_gl.m"
 #MSCRIPT="./nInJjj_os.m"
 #MSCRIPT=""
 
 # the type of the amplitudes (born, virt, real, realOS)
 #TYPE="born"
-TYPE="realOS"
-#TYPE="real"
+#TYPE="realOS"
+TYPE="real"
 
 # the number of subchannels of realOS amplitudes (f.e. ll, lr, rl, rr)
-NSUBCHANNELS=4
+NSQUARKSUBCHANNELS=4
+NGLUINOSUBCHANNELS=2
 
 ########################################################################
 #       -*- usually no editing is required below this line -*-         #
@@ -173,8 +174,8 @@ function rename2() {
         sed -i -e "s/\<Cha6\>/2/g" $1
 }
 
-# read in the process list
-IFS=$' \r\n' command eval 'PART=($(cat $PROCF))'
+# read in the process list and ignore what comes after #
+IFS=$' \r\n' command eval 'PART=($(grep -v "^#" $PROCF | cut -f1 -d"#"))'
 unset IFS
 
 #echo ${PART[@]}
@@ -229,7 +230,7 @@ for i in `seq 0 1 $((NPROC-1))`; do
     echo "current process: $PROC"    
     
     if [[ $TYPE == "realOS" ]]; then
-        IFS=$',\r\n' command eval 'LIST=(${CHANNELS[i]})'
+        IFS=$',;\r\n' command eval 'LIST=(${CHANNELS[i]})'
         unset IFS
         echo "channels: ${LIST[@]}"
     fi
@@ -253,7 +254,7 @@ done
 for i in `seq 0 1 $((NPROC-1))`; do
     # if no on-shell resonant channels were defined CHANNEL has only one
     # entry which is "none"
-    IFS=$',\r\n' command eval 'CHANNEL=(${CHANNELS[i]})'
+    IFS=$',;\r\n' command eval 'CHANNEL=(${CHANNELS[i]})'
     unset IFS
     for j in ${CHANNEL[@]}; do
         if [[ $TYPE == "realOS" ]]; then
@@ -266,7 +267,7 @@ for i in `seq 0 1 $((NPROC-1))`; do
         echo "${PROCESSES[i]} ${TYPE}${APPEND}"
         echo "PRE1 = $PRE1"
         echo "PRE2 = $PRE2"
-        
+
         #echo "cleaning old files..."
         #echo $(ls ${DEST}/squaredME/${PRE2}*.F)
         #echo $(ls ${DEST}/include/${PRE2}_vars.h)
@@ -291,13 +292,29 @@ for i in `seq 0 1 $((NPROC-1))`; do
             # rename the variables
             echo "renaming variables in $file..."
             rename $file "${PRE2}_"
-            if [[ $TYPE == "realOS" ]]; then
-                sed -i -e "s/\<Sfe7\>/SfeSQ1/g" $file
-                sed -i -e "s/\<Sfe8\>/SfeSQ2/g" $file
+            # -> modify this if needed.
+            # if the channel identifiers contain the open squark indice "Sq1"
+            # rename Sfe8 with unassigned variable name
+            if [[ $PRE2 == *"Sq1" ]] && [[ $TYPE == "realOS" ]]; then
+                sed -i -e "s/\<Sfe8\>/Sq1/g" $file
+            fi
+            # if the channel identifiers contain the open squark indices "Sq1Sq2"
+            # rename Sfe7 and Sfe8 with unassigned variable names
+            if [[ $PRE2 == *"Sq1Sq2" ]] && [[ $TYPE == "realOS" ]]; then
+                sed -i -e "s/\<Sfe7\>/Sq1/g" $file
+                sed -i -e "s/\<Sfe8\>/Sq2/g" $file
             fi
         done
         rename2 ${PRE2}_vars.h
-        if [[ $TYPE == "realOS" ]]; then
+        # -> modify this if needed.
+        # if the channel identifiers contain the open squark indice "Sq1"
+        # rename Sfe8 with unassigned variable name
+        if [[ $PRE2 == *"Sq1" ]] && [[ $TYPE == "realOS" ]]; then
+            sed -i -e "s/\<Sfe8\>/2/g" ${PRE2}_vars.h
+        fi
+        # if the channel identifiers contain the open squark indices "Sq1Sq2"
+        # rename Sfe7 and Sfe8 with unassigned variable names
+        if [[ $PRE2 == *"Sq1Sq2" ]] && [[ $TYPE == "realOS" ]]; then
             sed -i -e "s/\<Sfe7\>/2/g" ${PRE2}_vars.h
             sed -i -e "s/\<Sfe8\>/2/g" ${PRE2}_vars.h
         fi
@@ -308,14 +325,14 @@ for i in `seq 0 1 $((NPROC-1))`; do
 done
 
 # on-shell subroutines:
-# modify this if needed.
+# -> modify this if needed.
 # generate the subroutines to call the on-shell amplitudes
 if [[ $TYPE == "realOS" ]]; then
     echo
     echo "generating on shell routines..."
     cd ${DEST}/squaredME
     for i in `seq 0 1 $((NPROC-1))`; do
-        IFS=$',\r\n' command eval 'CHANNEL=(${CHANNELS[i]})'
+        IFS=$',;\r\n' command eval 'CHANNEL=(${CHANNELS[i]})'
         unset IFS
         PRE2="${PROCESSES[i]}_${TYPE}"
         
@@ -327,14 +344,27 @@ if [[ $TYPE == "realOS" ]]; then
         echo "        integer flags,i,ichan" >> ${PRE2}_squaredME.F
         echo "        double precision fc_result(2)" >> ${PRE2}_squaredME.F
         echo "        fc_result(:) = 0D0" >> ${PRE2}_squaredME.F
-        echo "        ! sfeij and sfekl are defined in set_channel" >> ${PRE2}_squaredME.F
-        echo "        SfeSQ1 = osres_sfeij" >> ${PRE2}_squaredME.F
-        echo "        SFeSQ2 = osres_sfekl" >> ${PRE2}_squaredME.F
-        NCHANNELS=0
+        echo "        ! sfeij and sfekl get defined in subroutine set_channel" >> ${PRE2}_squaredME.F
+        # track the number of processed channels
+        ICHAN=0
         for j in ${CHANNEL[@]}; do
             PRE1="${PROCESSES[i]}_${j}"
-            NCHANNELS=$((1+NCHANNELS))
-            echo "        if(ichan.ge.$((NSUBCHANNELS*NCHANNELS-NSUBCHANNELS+1)) .and. ichan.le.$((NSUBCHANNELS*NCHANNELS))) then" >> ${PRE2}_squaredME.F
+            # -> modify this if needed.
+            # if there are subchannels (for example different chiralities for squarks)
+            # a different if statement is needed and the open indices have to be set
+            if [[ $j == *"Sq1Sq2" ]]; then
+                ICHAN=$((ICHAN+NSQUARKSUBCHANNELS))
+                echo "        if(ichan.ge.$((ICHAN-NSQUARKSUBCHANNELS+1)) .and. ichan.le.$ICHAN) then" >> ${PRE2}_squaredME.F
+                echo "          Sq1 = osres_sfeij" >> ${PRE2}_squaredME.F
+                echo "          Sq2 = osres_sfekl" >> ${PRE2}_squaredME.F
+            elif [[ $j == *"Sq1" ]]; then
+                ICHAN=$((ICHAN+NGLUINOSUBCHANNELS))
+                echo "        if(ichan.ge.$((ICHAN-NGLUINOSUBCHANNELS+1)) .and. ichan.le.$ICHAN) then" >> ${PRE2}_squaredME.F
+                echo "          Sq1 = osres_sfeij" >> ${PRE2}_squaredME.F
+            else
+                ICHAN=$((ICHAN+1))
+                echo "        if(ichan.eq.$ICHAN) then" >> ${PRE2}_squaredME.F
+            fi
             echo "          call ${PRE1}_SquaredME(fc_result, helicities, flags)" >> ${PRE2}_squaredME.F
             echo "          goto 10" >> ${PRE2}_squaredME.F
             echo "        endif" >> ${PRE2}_squaredME.F

@@ -68,7 +68,7 @@ c keep this order
         ! provide tan-mapping for the resonant particles
         ! sum over the resonances
         sigosres_contr = 0D0
-        do ichan=1,cnosres
+        do ichan=1,nosres
           do lset=1,flst_nosres
             call real_osres_phsp(xx,flst_osres(:,lset),ichan)
             xjac = kn_jacreal*ww1*hc2
@@ -203,12 +203,12 @@ c keep this order
 #include "pwhg_flst_add.h"
 #include "pwhg_rad_add.h"
         double precision sigosres
-        double precision dtotosres(cnosres),dtotabsosres(cnosres)
-        double precision dtotpososres(cnosres),dtotnegosres(cnosres)
-        double precision totosres(cnosres),etotosres(cnosres)
-        double precision totabsosres(cnosres),etotabsosres(cnosres)
-        double precision totpososres(cnosres),etotpososres(cnosres)
-        double precision totnegosres(cnosres),etotnegosres(cnosres)
+        double precision dtotosres(nosres),dtotabsosres(nosres)
+        double precision dtotpososres(nosres),dtotnegosres(nosres)
+        double precision totosres(nosres),etotosres(nosres)
+        double precision totabsosres(nosres),etotabsosres(nosres)
+        double precision totpososres(nosres),etotpososres(nosres)
+        double precision totnegosres(nosres),etotnegosres(nosres)
         integer ncalls,i,j
 
         common/cadduptotalsosres/totosres,etotosres,totabsosres
@@ -221,7 +221,7 @@ c keep this order
         !print*,ncalls
 
         ! reset all contributions
-        do j=1,cnosres
+        do j=1,nosres
           dtotosres(j)    = 0D0
           dtotabsosres(j) = 0D0
           dtotpososres(j) = 0D0
@@ -229,7 +229,7 @@ c keep this order
         enddo
 
         ! sum over resonances
-        do j=1,cnosres
+        do j=1,nosres
           ! sum over processes
           do i=1,flst_nosres
             dtotosres(j)    = dtotosres(j) + rad_osres_arr(i,j)
@@ -266,10 +266,10 @@ c set all new totals concerning regulars/remnants/osres to zero
       subroutine resettotalsosres
         implicit none
 #include "osres.h"
-        double precision totosres(cnosres),etotosres(cnosres)
-        double precision totabsosres(cnosres),etotabsosres(cnosres)
-        double precision totpososres(cnosres),etotpososres(cnosres)
-        double precision totnegosres(cnosres),etotnegosres(cnosres)
+        double precision totosres(nosres),etotosres(nosres)
+        double precision totabsosres(nosres),etotabsosres(nosres)
+        double precision totpososres(nosres),etotpososres(nosres)
+        double precision totnegosres(nosres),etotnegosres(nosres)
         integer ncalls,j
 
         common/cadduptotalsosres/totosres,etotosres,totabsosres
@@ -279,7 +279,7 @@ c set all new totals concerning regulars/remnants/osres to zero
 
         ncalls = 0
 
-        do j=1,cnosres
+        do j=1,nosres
           totosres(j)     = 0D0
           etotosres(j)    = 0D0
           totabsosres(j)  = 0D0
@@ -306,10 +306,10 @@ c keep this order
         double precision calc_error
         external calc_error
 
-        double precision totosres(cnosres),etotosres(cnosres)
-        double precision totabsosres(cnosres),etotabsosres(cnosres)
-        double precision totpososres(cnosres),etotpososres(cnosres)
-        double precision totnegosres(cnosres),etotnegosres(cnosres)
+        double precision totosres(nosres),etotosres(nosres)
+        double precision totabsosres(nosres),etotabsosres(nosres)
+        double precision totpososres(nosres),etotpososres(nosres)
+        double precision totnegosres(nosres),etotnegosres(nosres)
         integer ncalls,j
 
         common/cadduptotalsosres/totosres,etotosres,totabsosres
@@ -320,7 +320,7 @@ c keep this order
         ! if we never call the remnant-routines: avoid NaNs
         if(ncalls.eq.0) ncalls = 1
 
-        do j=1,cnosres
+        do j=1,nosres
           rad_totosres(j)     = totosres(j)/ncalls
           rad_etotosres(j)    = calc_error(totosres(j),
      &                                     etotosres(j),ncalls)

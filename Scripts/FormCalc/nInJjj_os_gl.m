@@ -398,5 +398,31 @@ real456 = real456/.reg1
 real465 = real465/.reg1
 
 
+Print["Non resonant Diagrams (gluino single poles removed)"]
+
+(*Test, plot all diagrams*)
+tops = CreateTopologies[0, 2 -> 4];
+ins = InsertFields[tops, process];
+DoPaint[ins, "realAll"];
+
+topsNR = TopologyList[Sequence@@Delete[
+           Level[tops,1],
+          {{104},{119},{213},{214},
+           {106},{220},{122},{219},
+           {165},{177},{120},{169},
+           {181},{125},{138},{153},
+           {123},{142},{157},{127}}]];
+insNR = InsertFields[topsNR, process];
+DoPaint[insNR, "realNR"];
+
+(*insert the particle widths*)
+widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
+
+realNR = CalcFeynAmp[CreateFeynAmp[insNR](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
+(*realNR = realNR//.{PowerOf[a_]^x_:>PowerOf[a][x]};
+realNR = realNR//.{PowerOf[a_]:>PowerOf[a][1]};*)
+realNR = realNR/.{Den[x_,y_]:>Den[x,y/.widths]}
+
+
 Print["time used: ", SessionTime[] - time1]
 Exit[];

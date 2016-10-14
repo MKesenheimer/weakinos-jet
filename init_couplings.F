@@ -102,7 +102,7 @@ c requires encoded process ID in lprup(1)
           print*, "                     ", par_Fin2mass
           print*, "                     ", par_Fin3mass
           print*
-          print*, "OS regulator WREG = ", wreg
+          print*, "OS regulator WREG1, WREG2 = ", wreg1, wreg2
           print*        
 #ifdef DEBUGQ
           print*
@@ -828,16 +828,22 @@ c ddbar_SquaredME.F and uubar_SquaredME.F.
 c############### end init_susy_restore subroutine ######################
 
 c############### subroutine set_os_regulator ###########################
-c set the on shell regulator wreg
+c set the on shell regulator wreg1 (single) and wreg2 (double resonances)
       subroutine set_os_regulator
         implicit none
 #include "PhysPars.h"
 #include "osres.h"
         integer i,j,k,nmass
-        double precision ewi,m_avrg
+        double precision ewi1,ewi2,m_avrg
         double precision powheginput
         external powheginput
 
+        ewi1  = 1D-2 ! (default)
+        if(powheginput("#ewi1").gt.0) then
+          ewi1 = powheginput("ewi1")
+        endif
+        wreg1 = ewi1*MGl ! Prospino like definition
+        
         nmass = 0
         m_avrg = 0D0
         do i=1,2 ! sfermion index s
@@ -850,10 +856,10 @@ c set the on shell regulator wreg
         enddo
         m_avrg = m_avrg/nmass
 
-        ewi  = 1D-2 ! (default)
-        if(powheginput("#ewi").gt.0) then
-          ewi = powheginput("ewi")
+        ewi2  = 1D-2 ! (default)
+        if(powheginput("#ewi2").gt.0) then
+          ewi2 = powheginput("ewi2")
         endif
-        wreg = ewi*m_avrg ! Prospino like definition
+        wreg2 = ewi2*m_avrg ! Prospino like definition        
       end
 c############### end subroutine set_os_regulator #######################

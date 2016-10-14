@@ -114,19 +114,19 @@ If[$CommandLine[[2]] === "-script",
      p[5] = ToString[$CommandLine[[8]]];
      p[6] = ToString[$CommandLine[[9]]];),
     (*Else*)
-    (p[1] = "qdbar";
-     p[2] = "qd";
+    (p[1] = "qubar";
+     p[2] = "qu";
      p[3] = "nI";
      p[4] = "nJ";
-     p[5] = "qdbar";
-     p[6] = "qd";)
+     p[5] = "qd";
+     p[6] = "qdbar";)
 ]
 
 CalcProcess = p[1]<>p[2]<>"_"<>p[3]<>p[4]<>p[5]<>p[6];
 name = CalcProcess;
 Print[CalcProcess]
 
-IOGluon = False;
+isIOGluon = False;
 For[i=1, i<7, i++,
 If[p[i] === "qu", P[i] = F[3],
 If[p[i] === "qubar", P[i] = -F[3],
@@ -138,7 +138,7 @@ If[p[i] === "xI-", P[i] = F[12],
 If[p[i] === "xI+", P[i] = -F[12],
 If[p[i] === "xJ-", P[i] = F[12],
 If[p[i] === "xJ+", P[i] = -F[12],
-If[p[i] === "g", (IOGluon = True; P[i] = V[5]),
+If[p[i] === "g", (isIOGluon = True; P[i] = V[5]),
 
 If[p[i] === "u", P[i] = F[3,{1}],
 If[p[i] === "ubar", P[i] = -F[3,{1}],
@@ -167,7 +167,16 @@ If[p[i] === "x2+", P[i] = -F[12,{2}]
 ]
 
 process = {P[1], P[2]} -> {P[3], P[4], P[5], P[6]};
-Print[process]
+Print["Process: ", process]
+
+(*Check if it is a process with gluino single resonances,*)
+(*gluino resonances can only occur in processes with same type*)
+(*of quark in initial or final state*)
+isGluinoRes = And[Abs[P[1]] === Abs[P[2]], Abs[P[5]] === Abs[P[6]]];
+
+(*Print Flags*)
+Print["isIOGluon: ", isIOGluon]
+Print["isGluinoRes: ", isGluinoRes]
 
 
 (*Neglect Masses (URL)*)
@@ -186,7 +195,7 @@ CKMC = IndexDelta;
 
 
 (*Options*)
-If[IOGluon,
+If[isIOGluon,
           (*no internal Weakinos*)
           lastsel = {!F[11],!F[12]};
           (*else*),
@@ -331,12 +340,13 @@ real3645 = real3645/.{Den[x_,y_]:>Den[x,y/.widths]};
 real3546 = real3546/.reg2;
 real3645 = real3645/.reg2;
 
-(*set the sfermion index in the external fortran program (leave it open)*)
+(*set the sfermion index in the external fortran program (leave it open here)*)
 real3546Sfe = real3546//.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]}
 real3645Sfe = real3645//.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]}
 
 
-Print["On-Shell Gluino resonances (single resonances)"]
+If[isGluinoRes,
+Print["On-Shell Gluino resonances (single resonances)"];
 
 top356=TopologyList[Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
     Propagator[Incoming][Vertex[1][2],Vertex[3][8]],
@@ -459,7 +469,6 @@ DoPaint[ins356, "realOS_456"];
 ins465 = InsertFields[top465, process];
 DoPaint[ins356, "realOS_465"];
 
-
 (*widths and regulator replacement rules*)
 widths = {MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
 reg1 = {Den[sijk_,MGl2-I MGl WGl]:>Den[sijk,MGl2-I MGl (WGl+WREG1)]};
@@ -477,18 +486,43 @@ real365 = real365/.{Den[x_,y_]:>Den[x,y/.widths]};
 real456 = real456/.{Den[x_,y_]:>Den[x,y/.widths]};
 real465 = real465/.{Den[x_,y_]:>Den[x,y/.widths]};
 (*insert the regulator*)
-real356 = real356/.reg1
-real365 = real365/.reg1
-real456 = real456/.reg1
-real465 = real465/.reg1
+real356 = real356/.reg1;
+real365 = real365/.reg1;
+real456 = real456/.reg1;
+real465 = real465/.reg1;
+
+(*set the sfermion index in the external fortran program (leave it open here)*)
+real356Sfe = real356//.{SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
+real365Sfe = real365//.{SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
+real456Sfe = real456//.{SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
+real465Sfe = real465//.{SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
+
+Print[real356Sfe];
+Print[real365Sfe];
+Print[real456Sfe];
+Print[real465Sfe];
+]
 
 
-Print["Non resonant Diagrams"]
+Print["Non resonant Diagrams (squark double and possible gluino single poles removed)"]
 
 tops = CreateTopologies[0, 2 -> 4];
 ins = InsertFields[tops, process];
+DoPaint[ins, "realAll"];
 
-(*Select the diagrams without on-shell divergences*)
+If[isGluinoRes,
+(*remove diagrams resp. topologies with gluino single resonances*)
+tops = TopologyList[Sequence@@Delete[
+           Level[tops,1],
+          {{104},{119},{213},{214},
+           {106},{220},{122},{219},
+           {165},{177},{120},{169},
+           {181},{125},{138},{153},
+           {123},{142},{157},{127}}]];
+ins = InsertFields[tops, process];
+]
+
+(*remove diagrams with squark double resonances*)
 insNR = DiagramSelect[ins,(Not[SChannelExtQ[S[_],3,5][##] && SChannelExtQ[S[_],4,6][##]] &&
                             Not[SChannelExtQ[S[_],3,6][##] && SChannelExtQ[S[_],4,5][##]])&];
 DoPaint[insNR, "realNR"];
@@ -523,7 +557,7 @@ subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])
        {i,1,Length[subexpr]}]/.Null->Sequence[];
 subexpr = subexpr//.subexpr6;
 
-dir = SetupCodeDir[name<>"_realOS_3546", Drivers -> name <> "_drivers"];
+dir = SetupCodeDir[name<>"_realOS_3546_Sq1Sq2", Drivers -> name <> "_drivers"];
 WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
 
 
@@ -548,12 +582,13 @@ subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])
        {i,1,Length[subexpr]}]/.Null->Sequence[];
 subexpr = subexpr//.subexpr6;
 
-dir = SetupCodeDir[name<>"_realOS_3645", Drivers -> name <> "_drivers"];
+dir = SetupCodeDir[name<>"_realOS_3645_Sq1Sq2", Drivers -> name <> "_drivers"];
 WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
 
 
+If[isGluinoRes,
 (*Write files for on-shell resonant reals, OS356*)
-amps = {real356};
+amps = {real356Sfe};
 {realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
 
 col = ColourME[All, realOS];
@@ -573,12 +608,14 @@ subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])
        {i,1,Length[subexpr]}]/.Null->Sequence[];
 subexpr = subexpr//.subexpr6;
 
-dir = SetupCodeDir[name<>"_realOS_356", Drivers -> name <> "_drivers"];
+dir = SetupCodeDir[name<>"_realOS_356_Sq1", Drivers -> name <> "_drivers"];
 WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
+]
 
 
+If[isGluinoRes,
 (*Write files for on-shell resonant reals, OS365*)
-amps = {real365};
+amps = {real365Sfe};
 {realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
 
 col = ColourME[All, realOS];
@@ -598,12 +635,14 @@ subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])
        {i,1,Length[subexpr]}]/.Null->Sequence[];
 subexpr = subexpr//.subexpr6;
 
-dir = SetupCodeDir[name<>"_realOS_365", Drivers -> name <> "_drivers"];
+dir = SetupCodeDir[name<>"_realOS_365_Sq1", Drivers -> name <> "_drivers"];
 WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
+]
 
 
+If[isGluinoRes,
 (*Write files for on-shell resonant reals, OS456*)
-amps = {real456};
+amps = {real456Sfe};
 {realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
 
 col = ColourME[All, realOS];
@@ -623,12 +662,14 @@ subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])
        {i,1,Length[subexpr]}]/.Null->Sequence[];
 subexpr = subexpr//.subexpr6;
 
-dir = SetupCodeDir[name<>"_realOS_456", Drivers -> name <> "_drivers"];
+dir = SetupCodeDir[name<>"_realOS_456_Sq1", Drivers -> name <> "_drivers"];
 WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
+]
 
 
+If[isGluinoRes,
 (*Write files for on-shell resonant reals, OS465*)
-amps = {real465};
+amps = {real465Sfe};
 {realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
 
 col = ColourME[All, realOS];
@@ -648,13 +689,18 @@ subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])
        {i,1,Length[subexpr]}]/.Null->Sequence[];
 subexpr = subexpr//.subexpr6;
 
-dir = SetupCodeDir[name<>"_realOS_465", Drivers -> name <> "_drivers"];
+dir = SetupCodeDir[name<>"_realOS_465_Sq1", Drivers -> name <> "_drivers"];
 WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
+]
 
 
 (*Combine the amplitudes again, but this time the resonant diagrams are regulated*)
 (*Use here the regulated on shell amplitudes with summation over the sfermion indices*)
-real = Combine[realNR,real3546,real3645,real356,real365,real456,real465];
+If[isGluinoRes,
+real = Combine[realNR,real3546,real3645,real356,real365,real456,real465];,
+(*else*)
+real = Combine[realNR,real3546,real3645];
+]
 
 (*Write real files with inserted regulator for on-shell diagrams*)
 amps = {real};

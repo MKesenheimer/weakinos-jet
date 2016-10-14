@@ -1,3 +1,4 @@
+# TODO: comment this file!
            g            g         nI     nJ           qd           qdbar
            g            g         nI     nJ           qu           qubar
            g            qd        nI     nJ           qd           g
@@ -5,7 +6,6 @@
            g            qu        nI     nJ           qu           g
            g            qubar     nI     nJ           qubar        g
            qd           qd        nI     nJ           qd           qd
-           qd           qdbar     nI     nJ           g            g
            qd           qdbar     nI     nJ           qd           qdbar
            qd           qdbar     nI     nJ           qdbar        qd
            qd           qdbar     nI     nJ           qu           qubar
@@ -13,7 +13,6 @@
            qd           qu        nI     nJ           qu           qd
            qd           qubar     nI     nJ           qd           qubar
            qd           qubar     nI     nJ           qubar        qd
-           qdbar        qd        nI     nJ           g            g
            qdbar        qd        nI     nJ           qd           qdbar
            qdbar        qd        nI     nJ           qdbar        qd
            qdbar        qd        nI     nJ           qu           qubar
@@ -27,7 +26,6 @@
            qu           qdbar     nI     nJ           qdbar        qu
            qu           qdbar     nI     nJ           qu           qdbar
            qu           qu        nI     nJ           qu           qu
-           qu           qubar     nI     nJ           g            g
            qu           qubar     nI     nJ           qd           qdbar
            qu           qubar     nI     nJ           qu           qubar
            qu           qubar     nI     nJ           qubar        qu
@@ -35,8 +33,11 @@
            qubar        qd        nI     nJ           qubar        qd
            qubar        qdbar     nI     nJ           qdbar        qubar
            qubar        qdbar     nI     nJ           qubar        qdbar
-           qubar        qu        nI     nJ           g            g
            qubar        qu        nI     nJ           qd           qdbar
            qubar        qu        nI     nJ           qu           qubar
            qubar        qu        nI     nJ           qubar        qu
            qubar        qubar     nI     nJ           qubar        qubar
+           qd           qdbar     nI     nJ           g            g
+           qdbar        qd        nI     nJ           g            g
+           qu           qubar     nI     nJ           g            g
+           qubar        qu        nI     nJ           g            g

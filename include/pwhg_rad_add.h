@@ -4,10 +4,10 @@ c additional flavor list for on-shell resonant diagrams
 
 c definitions
         ! results of on-shell resonant contributions for radiation phase
-        double precision rad_osres_arr(maxprocreal,cnosres)
+        double precision rad_osres_arr(maxprocreal,nosres)
         ! we want to work with positive contributions, so save the sign
         ! in an additional array
-        integer rad_osres_sign(maxprocreal,cnosres)
+        integer rad_osres_sign(maxprocreal,nosres)
         integer rad_reg_sign(maxprocreal)
         integer rad_damp_rem_sign(maxalr)
         integer rad_realosres
@@ -17,15 +17,15 @@ c definitions
         double precision rad_xradosres(ndiminteg)
 
         ! on-shell contributions to radiation (with errors)
-        double precision rad_totosres(cnosres), rad_etotosres(cnosres)
-        double precision rad_totabsosres(cnosres)
-        double precision rad_etotabsosres(cnosres)
-        double precision rad_totpososres(cnosres)
-        double precision rad_etotpososres(cnosres)
-        double precision rad_totnegosres(cnosres)
-        double precision rad_etotnegosres(cnosres)
-        double precision rad_totosresgen(cnosres)
-        double precision rad_etotosresgen(cnosres)
+        double precision rad_totosres(nosres), rad_etotosres(nosres)
+        double precision rad_totabsosres(nosres)
+        double precision rad_etotabsosres(nosres)
+        double precision rad_totpososres(nosres)
+        double precision rad_etotpososres(nosres)
+        double precision rad_totnegosres(nosres)
+        double precision rad_etotnegosres(nosres)
+        double precision rad_totosresgen(nosres)
+        double precision rad_etotosresgen(nosres)
 
         ! meaning is the same as for btilde
         double precision rad_totrem, rad_etotrem
@@ -52,7 +52,7 @@ c definitions
 
         integer ntot_osres
         parameter (ntot_osres = 5)
-        double precision rad_osres_totarr(2,ntot_osres,cnosres)
+        double precision rad_osres_totarr(2,ntot_osres,nosres)
 
         ! common blocks
         ! doubles

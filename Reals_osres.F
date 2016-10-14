@@ -37,7 +37,7 @@ c modifies the jacobian.
         ! kinematics
         double precision s12, sij, skl
         ! mass at resonance, mass of particle i,j,k,l
-        double precision wij, mij, wkl, mkl, mi, mj, mk, ml
+        double precision wijk, wij, wkl, mijk, mij, mkl, mi, mj, mk, ml
         integer i,j,k,l
         ! breit-wigner ratios
         double precision bwratio
@@ -90,6 +90,8 @@ c modifies the jacobian.
         mkl = osres_mkl
         wij = osres_wij
         wkl = osres_wkl
+        mijk = osres_mijk
+        wijk = osres_wijk
 
         ! calculate the invariants
         s12 = momsum2sq(p(0:3,1),p(0:3,2)) ! invariant mass of particle 1 + 2
@@ -100,30 +102,33 @@ c modifies the jacobian.
         call getRealOSAmps(p,rflav,ichan,amp)
             
         ! subtraction scheme for double resonances
-        if((s12.ge.(mij+mkl)**2).and.(mij.ge.(mi+mj)).and.(mkl.ge.(mk+ml))) then
+        if(ichan.ge.1 .and. ichan.le.8 .and. 
+     &     (s12.ge.(mij+mkl)**2).and.(mij.ge.(mi+mj)).and.(mkl.ge.(mk+ml))) then
           ! with natural widths in double pole part
           bwratio = (mij**2*mkl**2*wij**2*wkl**2*
      &              (mij**4 + (-mkl**2 + sij + skl)**2 + 
      &              mij**2*(2*mkl**2 - 2*(sij + skl) + 
      &              wij**2) + 2*mij*mkl*wij*wkl + 
      &              mkl**2*wkl**2)*
-     &              (mij*(wij + wreg) + mkl*(wkl + wreg))**2)/
+     &              (mij*(wij + wreg2) + mkl*(wkl + wreg2))**2)/
      &              (((mij**2 - sij)**2 + mij**2*wij**2)*
      &              (mij*wij + mkl*wkl)**2*
      &              ((mkl**2 - skl)**2 + mkl**2*wkl**2)*
      &              (mij**4 + mkl**4 + (sij + skl)**2 + 
-     &              2*mij*mkl*(wij + wreg)*(wkl + wreg) + 
+     &              2*mij*mkl*(wij + wreg2)*(wkl + wreg2) + 
      &              mij**2*(2*mkl**2 - 2*sij - 2*skl + 
-     &              (wij + wreg)**2) + 
-     &              mkl**2*(-2*sij - 2*skl + (wkl + wreg)**2)))
+     &              (wij + wreg2)**2) + 
+     &              mkl**2*(-2*sij - 2*skl + (wkl + wreg2)**2)))
           ! off_to_on the momenta p to on-shell momenta p_os
           call off_to_on(p,rflav,ichan,.true.,.true.,p_OS)
           call getRealOSAmps(p_os,rflav,ichan,ampOS)
           ampCT = bwratio*ampOS
-          ! rescale the counter term to fit into the new PS
+          ! rescale the counter term to fit into the new PS, TODO
           !ampCT = corrfac(s12,mi,mj,mk,ml,mij,mkl,sij,skl)*ampCT
           amp = amp - ampCT
         endif
+        
+        
  
         if(isnan(amp)) then
           !print*,"got strange value for ampreal amplitude...",ampreal
@@ -135,7 +140,6 @@ c modifies the jacobian.
           print*, "chan = ", ichan
           print*, "s12  = ", s12
           print*, "on-shell resonant Real amplitude = ", amp
-          print*
         endif
         
 #ifdef DEBUG

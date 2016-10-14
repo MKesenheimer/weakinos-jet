@@ -23,12 +23,12 @@ chainA '1000023->1000022,23;23->11,-11;'
 chainB '1000023->1000022,23;23->13,-13;'
 
 ! physics
-incomingflavors 2    ! (default 5) number of incoming flavor
+incomingflavors 5    ! (default 5) number of incoming flavor
 
 ! by default, these parameters are set according to the SLHA input file.
 ! however, they may be set to explicit values here.
 ! do not change any parameters unless you know what you do.
-SLHA  'input_test.slha'   !  name of the SLHA input-file, should not be longer than 100 signs
+SLHA  'input_orig.slha'   !  name of the SLHA input-file, should not be longer than 100 signs
 #inv_alpha  132.45335526012687d0 ! 1/(fine struct. const) (or 1/(eff.coupl.), must be greater than 0d0
 #Zmass      91.186996459960938d0 ! directly used for propagators (PDG2012), must be greater than 0d0
 #Zwidth     1d-10                ! directly used for propagators (PDG2012), must be greater than 0d0
@@ -91,7 +91,8 @@ facscfact     1d0    ! (default 1d0) fac scale factor: mufact = muref * facscfac
 #hfact        100d0  ! (default no damping factor) damp factor for high-pt radiation: > 0 dampfac=h**2/(pt2+h**2)
 #hdamp        100d0  ! damping factor h**2/(pt2+h**2) to separate real contributions between Sudakov and remnants
 #storemintupb   0    ! whether to save btilde calls to set up upper bounding envelope
-ewi           1d-3   ! regulator for on-shell divergences
+ewi1           1d+30   ! regulator for single on-shell resonances
+ewi2           1d-3   ! regulator for double on-shell resonances
 
 ! new POWHEG-BOX-V2 features (rev. >3306)
 compress_lhe 1      ! activate lhe compression 

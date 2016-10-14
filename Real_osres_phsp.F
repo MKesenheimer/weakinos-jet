@@ -30,7 +30,7 @@ c this subroutine uses subroutines defined in phi1_2.f (with boosts).
         double precision s12
         double precision sijkmin, sijmin, sijmax, sklmin
         ! mass at resonance, mass of particle i,j,k,l
-        double precision mij, mkl, mi, mj, mk, ml, wij, wkl
+        double precision mijk, mij, mkl, mi, mj, mk, ml, wijk, wij, wkl
         integer i,j,k,l
         ! jacobian
         double precision jac
@@ -46,7 +46,7 @@ c this subroutine uses subroutines defined in phi1_2.f (with boosts).
         parameter (m_pi = 4.D0*datan(1.D0))
         
         ! check the channel identifier
-        if( ichan.gt.cnosres .or. ichan.lt.0) then
+        if( ichan.gt.nosres .or. ichan.lt.0) then
           print*,"wrong channel number: ", ichan
           stop
         endif
@@ -65,6 +65,8 @@ c this subroutine uses subroutines defined in phi1_2.f (with boosts).
         mkl = osres_mkl
         wij = osres_wij
         wkl = osres_wkl
+        mijk = osres_mijk
+        wijk = osres_wijk
         
         ! reset the jacobians
         jac = 1D0
@@ -96,50 +98,52 @@ c this subroutine uses subroutines defined in phi1_2.f (with boosts).
         sijmax = (dsqrt(s12) - mk - ml)**2
         sklmin = (mk+ml)**2
         
-#define PHSP2
-#ifdef PHSP1
-        ! sequential phase space generation
-        ! phase space for splitting p12 -> pl + pijk
-        ! R2phsp_s2(psgen,x2,xth,xphi,s2min,m1,bwmass,bwwidth,p0,p1,p2,jac)
-        ! without phi integration
-        call R2phsp_s2(0,xx(3),xx(4),0D0,sijkmin,ml,0D0,0D0,
-     &                 p12(:),kn_cmpreal(:,l),pijk(:),jac)
-        kn_jacreal = kn_jacreal*jac
-        
-        ! phase space for splitting pijk -> pk + pij (1 = with breit wigner)
-        ! with phi integration
-        call R2phsp_s2(1,xx(5),xx(6),xx(7),sijmin,mk,mij,
-     &                 WREG,pijk(:),kn_cmpreal(:,k),pij(:),jac)
-        kn_jacreal = kn_jacreal*jac
-
-        ! phase space for splitting pij -> pi + pj
-        ! R2phsp(xth,xphi,m1,m2,p0,p1,p2,jac)
-        call R2phsp(xx(8),xx(9),mi,mj,pij(:),
-     &              kn_cmpreal(:,i),kn_cmpreal(:,j),jac)
-        kn_jacreal = kn_jacreal*jac
-#endif
-
-#ifdef PHSP2
-        ! tree like phase space generation
-        ! phase space for splitting p12 -> pij + pkl
-        ! R2phsp_s1s2(psgen,x1,x2,xth,xphi,s1min,s1max,s2min,bwmass1,bwwidth1,bwmass2,bwwidth2,p0,p1,p2,jac)
-        ! without phi integration
-        call R2phsp_s1s2(1,xx(3),xx(4),xx(5),0D0,sijmin,sijmax,sklmin,
+        if(ichan.ge.1 .and. ichan.le.8) then
+          ! tree like phase space generation
+          ! better suited for squark double resonances,
+          ! but not for gluino single resonances
+          ! phase space for splitting p12 -> pij + pkl
+          ! R2phsp_s1s2(psgen,x1,x2,xth,xphi,s1min,s1max,s2min,bwmass1,bwwidth1,bwmass2,bwwidth2,p0,p1,p2,jac)
+          ! without phi integration
+          call R2phsp_s1s2(1,xx(3),xx(4),xx(5),0D0,sijmin,sijmax,sklmin,
      &                     mij,wij,mkl,wkl,p12(:),pij(:),pkl(:),jac)
-        kn_jacreal = kn_jacreal*jac
+          kn_jacreal = kn_jacreal*jac
         
-        ! phase space for splitting pij -> pi + pj
-        ! R2phsp(xth,xphi,m1,m2,p0,p1,p2,jac)
-        call R2phsp(xx(6),xx(7),mi,mj,pij(:),
+          ! phase space for splitting pij -> pi + pj
+          ! R2phsp(xth,xphi,m1,m2,p0,p1,p2,jac)
+          call R2phsp(xx(6),xx(7),mi,mj,pij(:),
      &              kn_cmpreal(:,i),kn_cmpreal(:,j),jac)
-        kn_jacreal = kn_jacreal*jac
+          kn_jacreal = kn_jacreal*jac
         
-        ! phase space for splitting pkl -> pk + pl
-        ! R2phsp(xth,xphi,m1,m2,p0,p1,p2,jac)
-        call R2phsp(xx(8),xx(9),mk,ml,pkl(:),
-     &              kn_cmpreal(:,k),kn_cmpreal(:,l),jac)
-        kn_jacreal = kn_jacreal*jac
-#endif
+          ! phase space for splitting pkl -> pk + pl
+          ! R2phsp(xth,xphi,m1,m2,p0,p1,p2,jac)
+          call R2phsp(xx(8),xx(9),mk,ml,pkl(:),
+     &                kn_cmpreal(:,k),kn_cmpreal(:,l),jac)
+          kn_jacreal = kn_jacreal*jac
+        
+        elseif(ichan.ge.9 .and. ichan.le.16) then 
+          ! sequential phase space generation
+          ! better suited for gluino single resonances,
+          ! but not for squark double resonances
+          ! phase space for splitting p12 -> pl + pijk
+          ! R2phsp_s2(psgen,x2,xth,xphi,s2min,m1,bwmass,bwwidth,p0,p1,p2,jac)
+          ! without phi integration
+          call R2phsp_s2(1,xx(3),xx(4),0D0,sijkmin,ml,mijk,wijk,
+     &                   p12(:),kn_cmpreal(:,l),pijk(:),jac)
+          kn_jacreal = kn_jacreal*jac
+        
+          ! phase space for splitting pijk -> pk + pij
+          ! with phi integration
+          call R2phsp_s2(1,xx(5),xx(6),xx(7),sijmin,mk,mij,wij,
+     &                   pijk(:),kn_cmpreal(:,k),pij(:),jac)
+          kn_jacreal = kn_jacreal*jac
+
+          ! phase space for splitting pij -> pi + pj
+          ! R2phsp(xth,xphi,m1,m2,p0,p1,p2,jac)
+          call R2phsp(xx(8),xx(9),mi,mj,pij(:),
+     &              kn_cmpreal(:,i),kn_cmpreal(:,j),jac)
+          kn_jacreal = kn_jacreal*jac
+        endif
         
         ! physical phase space jacobian ((2*Pi)**(3n-4), n=4)
         kn_jacreal = kn_jacreal/(2D0*m_pi)**8
@@ -157,7 +161,7 @@ c this subroutine uses subroutines defined in phi1_2.f (with boosts).
         call mboost(nlegreal,vec,beta,kn_cmpreal(:,1),kn_preal(:,1))
 
         ! check four-momentum conservation
-        if( kn_jacreal .ne. 0D0) then
+        if(kn_jacreal .ne. 0D0) then
           call check_4conservation(kn_preal,nlegreal,2,lresult)
           ! if momenta are not conserved, set jacobian to zero but 
           ! continue with the calculation

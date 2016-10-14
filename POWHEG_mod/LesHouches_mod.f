@@ -520,8 +520,8 @@ c Btilde event: pass x1 and x2, id1, id2 etc. of the current underlying Born
          x2=kn_xb2
          call setscalesbtilde
       elseif(rad_type.eq.2.or.rad_type.eq.3.or.
-       ! MK: added 4<=rad_type<=3+cnosres
-     & ((rad_type.ge.4).and.(rad_type.le.(cnosres+3)))) then
+       ! MK: added 4<=rad_type<=3+nosres
+     & ((rad_type.ge.4).and.(rad_type.le.(nosres+3)))) then
          id1=idup(1)
          id2=idup(2)
          if(id1.eq.21) id1=0

@@ -184,7 +184,7 @@ c     print statistics
      1           ymaxratosres,xmmmosres,ifoldosres,0,
      2           mcalls,icalls,xx)
             rad_totosres_sum = 0D0
-            do ichan=1,cnosres
+            do ichan=1,nosres
               rad_totosres_sum = rad_totosres_sum + rad_totosres(ichan)
             enddo
             ! save random number seeds    
@@ -515,7 +515,7 @@ c add finalized remnant contributions in histograms
       do k=1,2
         do j=1,ntot_osres
           temparrosres(k,j)=0D0
-          do ichan=1,cnosres
+          do ichan=1,nosres
             temparrosres(k,j)=temparrosres(k,j)+
      &                        rad_osres_totarr(k,j,ichan)
           enddo
@@ -570,7 +570,7 @@ c respectively...
          rad_etotreggen = rad_etotabsreg
          rad_totremgen  = rad_totabsrem
          rad_etotremgen = rad_etotabsrem
-         do ichan=1,cnosres
+         do ichan=1,nosres
            rad_totosresgen(ichan)  = rad_totabsosres(ichan)
            rad_etotosresgen(ichan) = rad_etotabsosres(ichan)
          enddo
@@ -586,7 +586,7 @@ c negligible
          rad_etotreggen = rad_etotreg
          rad_totremgen  = rad_totrem
          rad_etotremgen = rad_etotrem
-         do ichan=1,cnosres 
+         do ichan=1,nosres 
            rad_totosresgen(ichan)  = rad_totosres(ichan)
            rad_etotosresgen(ichan) = rad_etotosres(ichan)
          enddo
@@ -601,7 +601,7 @@ c negligible
       rad_etotosres_sum2    = 0D0
       rad_totnegosres_sum   = 0D0
       
-      do ichan=1,cnosres
+      do ichan=1,nosres
         rad_totosresgen_sum   = rad_totosresgen_sum + 
      &                          rad_totosresgen(ichan)
         rad_etotosresgen_sum2 = rad_etotosresgen_sum2 + 
@@ -1095,7 +1095,7 @@ c MK: added
       call update_totarr ! MK: OK!
       write(iun) ((rad_totarr(j,k),j=1,2),k=1,ntot)
       write(iun) (((rad_osres_totarr(j,k,ichan),j=1,2),k=1,ntot_osres)
-     &                                              ,ichan=1,cnosres)
+     &                                              ,ichan=1,nosres)
       !=================================================================
       close(iun)
       end
@@ -1129,7 +1129,7 @@ c MK: added
      2     xymaxosres(50,ndiminteg),xymaxratosres(50,ndiminteg)
 !          real * 8 tot(2,8),rtot(2,8) ! CH: replaced with following lines
       real*8 tot(2,ntot) ! CH, MK: contains the rad_totarr-entries
-      real*8 tot_osres(2,ntot_osres,cnosres) ! MK: contains the rad_osres_totarr-entries
+      real*8 tot_osres(2,ntot_osres,nosres) ! MK: contains the rad_osres_totarr-entries
       integer ichan ! MK: added to distinguish the on-shell resonances
       integer ifold(ndiminteg),ifoldrm(ndiminteg),ifoldosres(ndiminteg)
       integer iifold(ndiminteg),iifoldrm(ndiminteg),iifoldosres(ndiminteg)
@@ -1264,7 +1264,7 @@ c random seeds
 !          read(iun,iostat=ios) ((tot(k,j),k=1,2),j=1,8)
          read(iun,iostat=ios) ((tot(k,j),k=1,2),j=1,ntot) ! CH, MK: changed
          read(iun,iostat=ios) (((tot_osres(k,j,ichan),k=1,2),
-     &                           j=1,ntot_osres),ichan=1,cnosres) ! MK: added
+     &                           j=1,ntot_osres),ichan=1,nosres) ! MK: added
          if(ios.ne.0) goto 998
          jfound=jfound+1
          if(jfound.lt.2) then
@@ -1297,7 +1297,7 @@ c random seeds
                enddo
                ! MK: added the following statements
                do j=1,ntot_osres
-                 do ichan=1,cnosres
+                 do ichan=1,nosres
                    rad_osres_totarr(k,j,ichan)=tot_osres(k,j,ichan)
                  enddo
                enddo
@@ -1371,7 +1371,7 @@ c osres. parts are naturally "mixed"-> simply recalculate these 2 entries at the
 
             ! MK: added the on-shell contributions
             do j=1,ntot_osres
-              do ichan=1,cnosres
+              do ichan=1,nosres
                 rad_osres_totarr(2,j,ichan)=
      &            dsqrt((rad_osres_totarr(2,j,ichan)**2*(jfound-1)**2+
      &            tot_osres(2,j,ichan)**2)/jfound**2+(jfound-1)*
@@ -1859,7 +1859,7 @@ c MK: added
       do k=1,2
         do j=1,ntot_osres
           temparrosres(k,j)=0D0
-          do ichan=1,cnosres
+          do ichan=1,nosres
             temparrosres(k,j)=temparrosres(k,j)+
      &                        rad_osres_totarr(k,j,ichan)
           enddo
@@ -1888,7 +1888,7 @@ c MK: added
      2     rad_tot,'+-',rad_etot
       endif
       rad_totnegosres_sum = 0D0
-      do ichan=1,cnosres
+      do ichan=1,nosres
         rad_totnegosres_sum   = rad_totnegosres_sum + 
      &                          rad_totnegosres(ichan)
       enddo
@@ -1958,7 +1958,7 @@ c save all variables in array rad_totarr and rad_osres_totarr
         rad_totarr(2,17) = rad_etotgen
 
         ! on-shell contributions
-        do ichan=1,cnosres
+        do ichan=1,nosres
           rad_osres_totarr(1,1,ichan) = rad_totosres(ichan)
           rad_osres_totarr(2,1,ichan) = rad_etotosres(ichan)
           rad_osres_totarr(1,2,ichan) = rad_totabsosres(ichan)
@@ -2029,7 +2029,7 @@ c write back the array rad_totarr and rad_osres_totarr to the original values
         rad_etotgen = rad_totarr(2,17)
 
         ! on-shell contributions
-        do ichan=1,cnosres
+        do ichan=1,nosres
           rad_totosres(ichan)     = rad_osres_totarr(1,1,ichan)
           rad_etotosres(ichan)    = rad_osres_totarr(2,1,ichan)
           rad_totabsosres(ichan)  = rad_osres_totarr(1,2,ichan)

@@ -1,19 +1,19 @@
 # --- variables defined by configure ---
 
 SRC = ./src
-PREFIX = 
+PREFIX = x86_64-linux
 
 EXE = 
 DEF = -D
 UNDERSCORE = 1
 
-FC = gfortran
-FFLAGS = -O0 -g -ffixed-line-length-none -ff2c -Wall -Wtabs   -DU77EXT=0
+FC = g77
+FFLAGS = -O0 -g -ffixed-line-length-none -Wall   -DU77EXT=0
 
 CC = gcc
 CFLAGS = -O3 -g -fomit-frame-pointer -ffast-math -Wall  -m64
 
-LDFLAGS = -lpthread -L/usr/lib/gcc/x86_64-linux-gnu/4.8 -L/usr/lib/gcc/x86_64-linux-gnu/4.8/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/4.8/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/4.8/../../.. -lgfortran -lm -lgcc_s -lquadmath -lm -lgcc_s -lgcc_s
+LDFLAGS = -lpthread -L/usr/lib/gcc/x86_64-linux-gnu/5/liblto_plugin.so -L/usr/lib/gcc/x86_64-linux-gnu/5 -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/5/../../.. -lgfortran -lm -lgcc_s -lquadmath -lm -lgcc_s -lgcc_s
 
 # --- end defs by configure ---
 

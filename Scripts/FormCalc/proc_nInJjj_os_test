@@ -1,1 +1,4 @@
-           qd           qubar     nI     nJ           qd           qubar    3546,3645
+# comment
+           qd           qdbar     nI     nJ           qu           qubar    3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1 # comment
+# another comment
+#           qu           qubar     nI     nJ           qd           qdbar    3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1 # comment

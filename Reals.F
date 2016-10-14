@@ -64,7 +64,7 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         ! ...and subtract the resonant amplitudes
 #if defined(DSUB_II) || defined(DSUB_II_TEST)
         if(rflav(5).ne.0 .and. rflav(6).ne.0) then
-          do ichan=1,cnosres
+          do ichan=1,nosres
             ampos = 0D0
             call getRealOSAmps(p,rflav,ichan,ampos)
             amp = amp - ampos
@@ -76,7 +76,7 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         ! test the DSUB_II scheme (here without the correct jacobian)
         ! this gives the same result as with flag DSUB_I set
         if(rflav(5).ne.0 .and. rflav(6).ne.0) then
-         do ichan=1,cnosres
+         do ichan=1,nosres
             ampos = 0D0
             call setosresreal(p,rflav,ichan,ampos)
             amp = amp + ampos

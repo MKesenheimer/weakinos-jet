@@ -9,7 +9,7 @@ c process definitions
         integer Neu(EXTLEGS), Cha(EXTLEGS), Gen(EXTLEGS)
         common/cindices/ Neu, Cha, Gen
         
-        integer SfeSQ1, SfeSQ2
-        common/cindices/ SfeSQ1, SfeSQ2
+        integer Sq1, Sq2
+        common/cindices/ Sq1, Sq2
 #endif
 c############### end indices.h #########################################
