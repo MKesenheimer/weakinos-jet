@@ -55,8 +55,8 @@ DEST=${PWD}/../../${PROCDIR}
 NPART=6
 
 # process list file
-#PROCF="./proc_nInJjj_os_test"
-PROCF="./proc_nInJjj_reg_test"
+PROCF="./proc_nInJjj_os_test"
+#PROCF="./proc_nInJjj_reg_test"
 #PROCF="./proc_nInJjj_os"
 #PROCF="./proc_nInJjj_reg"
 
@@ -66,8 +66,8 @@ PROCF="./proc_nInJjj_reg_test"
 
 # the type of the amplitudes (born, virt, real, realOS)
 #TYPE="born"
-#TYPE="realOS"
-TYPE="real"
+TYPE="realOS"
+#TYPE="real"
 
 # the number of subchannels of realOS amplitudes (f.e. ll, lr, rl, rr)
 NSQUARKSUBCHANNELS=4

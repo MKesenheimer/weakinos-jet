@@ -69,6 +69,9 @@ c keep this order
         ! sum over the resonances
         sigosres_contr = 0D0
         do ichan=1,nosres
+          ! TODO: nicht jeder Prozess hat alle möglichen Resonanzen
+          ! entscheide je nach Prozess, über wieviele Resonanzen
+          ! summiert werden soll -> Abfrage von flst_osres
           do lset=1,flst_nosres
             call real_osres_phsp(xx,flst_osres(:,lset),ichan)
             xjac = kn_jacreal*ww1*hc2

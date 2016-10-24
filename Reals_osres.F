@@ -29,13 +29,13 @@ c modifies the jacobian.
         ! local variables
         double precision ampCT, ampOS
         ! function to calculate the squared momentum sum
-        double precision momsum3sq, momsum2sq
+        double precision momsum2sq, momsum3sq
         external momsum2sq, momsum3sq
         ! jacobian for the on-shell terms
         double precision corrfac
         external corrfac
         ! kinematics
-        double precision s12, sij, skl
+        double precision s12, sij, skl, sijk
         ! mass at resonance, mass of particle i,j,k,l
         double precision wijk, wij, wkl, mijk, mij, mkl, mi, mj, mk, ml
         integer i,j,k,l
@@ -97,6 +97,7 @@ c modifies the jacobian.
         s12 = momsum2sq(p(0:3,1),p(0:3,2)) ! invariant mass of particle 1 + 2
         sij = momsum2sq(p(0:3,i),p(0:3,j)) ! invariant mass of particle i + j
         skl = momsum2sq(p(0:3,k),p(0:3,l)) ! invariant mass of particle k + l
+        sijk = momsum3sq(p(0:3,i),p(0:3,j),p(0:3,k))
         
         ! this is |M_R(res)|**2 (still with on-shell resonances)
         call getRealOSAmps(p,rflav,ichan,amp)
@@ -120,7 +121,7 @@ c modifies the jacobian.
      &              (wij + wreg2)**2) + 
      &              mkl**2*(-2*sij - 2*skl + (wkl + wreg2)**2)))
           ! off_to_on the momenta p to on-shell momenta p_os
-          call off_to_on(p,rflav,ichan,.true.,.true.,p_OS)
+          call off_to_on_ijkl(p,rflav,ichan,.true.,.true.,p_os)
           call getRealOSAmps(p_os,rflav,ichan,ampOS)
           ampCT = bwratio*ampOS
           ! rescale the counter term to fit into the new PS, TODO
@@ -128,7 +129,18 @@ c modifies the jacobian.
           amp = amp - ampCT
         endif
         
-        
+        ! subtraction scheme for single resonant gluino contributions
+        if(ichan.ge.9 .and. ichan.le.16 .and. 
+     &     (s12.ge.(mijk+ml)**2) .and. (mijk.ge.(mi+mj+mk))) then
+          bwratio = (mijk*wreg1)**2/((sijk-mijk**2)**2+(mijk*wreg1)**2)
+          ! off_to_on the momenta p to on-shell momenta p_os
+          call off_to_on_ijk(p,rflav,ichan,p_os)
+          call getRealOSAmps(p_os,rflav,ichan,ampOS)
+          ampCT = bwratio*ampOS
+          ! rescale the counter term to fit into the new PS, TODO
+          !ampCT = corrfac(s12,mi,mj,mk,ml,mij,mkl,sij,skl)*ampCT
+          amp = amp - ampCT
+        endif
  
         if(isnan(amp)) then
           !print*,"got strange value for ampreal amplitude...",ampreal
