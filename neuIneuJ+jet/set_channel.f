@@ -123,6 +123,8 @@ c
         if(ichan.ge.1 .and. ichan.le.8) then
           osres_mi = par_Fin1mass
           osres_mk = par_Fin2mass
+          osres_mijk = 0D0
+          osres_wijk = 0D0
           select case(abs(flav(osres_j)))
             case(1)
               osres_mj = par_MD
@@ -177,6 +179,8 @@ c
         elseif(ichan.ge.9 .and. ichan.le.16) then
           osres_mijk = par_MGl
           osres_wijk = par_WGl
+          osres_mkl = 0D0
+          osres_wkl = 0D0
           if(ichan.ge.9 .and. ichan.le.12) then
             osres_mi = par_Fin1mass
             osres_ml = par_Fin2mass
@@ -245,7 +249,7 @@ c
         print*,"mijk,wijk",osres_mijk,osres_wijk
         print*,"par_FinMasses",par_Fin1mass,par_Fin2mass
         print*
-        !stop
+        call nstop(nosres)
 #endif
       end
 c############### end subroutine set_channel ############################

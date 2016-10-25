@@ -46,7 +46,7 @@ c modifies the jacobian.
         logical init_real
         data init_real/.true./
 #ifdef DEBUG
-        double precision s35, s46
+        double precision s35, s46, s356
         integer lstr
         character*50 str
 #endif
@@ -132,7 +132,7 @@ c modifies the jacobian.
         ! subtraction scheme for single resonant gluino contributions
         if(ichan.ge.9 .and. ichan.le.16 .and. 
      &     (s12.ge.(mijk+ml)**2) .and. (mijk.ge.(mi+mj+mk))) then
-          bwratio = (mijk*wreg1)**2/((sijk-mijk**2)**2+(mijk*wreg1)**2)
+          bwratio = (mijk*(wijk+wreg1))**2/((sijk-mijk**2)**2+(mijk*(wijk+wreg1))**2)
           ! off_to_on the momenta p to on-shell momenta p_os
           call off_to_on_ijk(p,rflav,ichan,p_os)
           call getRealOSAmps(p_os,rflav,ichan,ampOS)
@@ -154,18 +154,22 @@ c modifies the jacobian.
           print*, "on-shell resonant Real amplitude = ", amp
         endif
         
-#ifdef DEBUG
+#ifdef DEBUGQ
         ! fill histograms
         if(dsqrt(p(1,5)**2+p(2,5)**2).gt.10D0 .and. dsqrt(p(1,6)**2+p(2,6)**2).gt.10D0) then
           call process_name(nlegreal,rflav(1:nlegreal),str(1:20),lstr)
           s35 = momsum2sq(p(0:3,3),p(0:3,5))
           s46 = momsum2sq(p(0:3,4),p(0:3,6))
+          s356 = momsum3sq(p(0:3,3),p(0:3,5),p(0:3,6))
           ! warning: don't fill more than 200 histograms!
           if(abs(abs(rflav(1))).le.2) then
             !call histogram("sqrt(s35)_"//str(1:lstr),100,400D0,800D0,dsqrt(s35),amp)
             !call histogram("sqrt(s46)_"//str(1:lstr),100,400D0,800D0,dsqrt(s46),amp)
-            call histogram("int(s35)_"//str(1:lstr),1,1D1,1D6,dsqrt(s35),amp)
+            call histogram("sqrt(s356)",100,400D0,800D0,dsqrt(s356),amp)
+            call histogram("sqrt(s356)_ampCT",100,400D0,800D0,dsqrt(s356),ampCT)
+            !call histogram("int(s35)_"//str(1:lstr),1,1D1,1D6,dsqrt(s35),amp)
             !call histogram("int(s46)_"//str(1:lstr),1,1D1,1D6,dsqrt(s46),amp)
+            call histogram("int(s356)",1,1D1,1D6,dsqrt(s356),amp)
           endif
         endif
 #endif

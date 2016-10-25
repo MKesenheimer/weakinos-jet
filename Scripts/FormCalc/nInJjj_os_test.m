@@ -114,11 +114,11 @@ If[$CommandLine[[2]] === "-script",
      p[5] = ToString[$CommandLine[[8]]];
      p[6] = ToString[$CommandLine[[9]]];),
     (*Else*)
-    (p[1] = "qdbar";
-     p[2] = "qdbar";
+    (p[1] = "qubar";
+     p[2] = "qu";
      p[3] = "nI";
      p[4] = "nJ";
-     p[5] = "qdbar";
+     p[5] = "qd";
      p[6] = "qdbar";)
 ]
 
@@ -126,7 +126,7 @@ CalcProcess = p[1]<>p[2]<>"_"<>p[3]<>p[4]<>p[5]<>p[6];
 name = CalcProcess;
 Print[CalcProcess]
 
-IOGluon = False;
+isIOGluon = False;
 For[i=1, i<7, i++,
 If[p[i] === "qu", P[i] = F[3],
 If[p[i] === "qubar", P[i] = -F[3],
@@ -138,7 +138,7 @@ If[p[i] === "xI-", P[i] = F[12],
 If[p[i] === "xI+", P[i] = -F[12],
 If[p[i] === "xJ-", P[i] = F[12],
 If[p[i] === "xJ+", P[i] = -F[12],
-If[p[i] === "g", (IOGluon = True; P[i] = V[5]),
+If[p[i] === "g", (isIOGluon = True; P[i] = V[5]),
 
 If[p[i] === "u", P[i] = F[3,{1}],
 If[p[i] === "ubar", P[i] = -F[3,{1}],
@@ -167,7 +167,16 @@ If[p[i] === "x2+", P[i] = -F[12,{2}]
 ]
 
 process = {P[1], P[2]} -> {P[3], P[4], P[5], P[6]};
-Print[process]
+Print["Process: ", process]
+
+(*Check if it is a process with gluino single resonances,*)
+(*gluino resonances can only occur in processes with same type*)
+(*of quark in initial or final state*)
+isGluinoRes = And[Abs[P[1]] === Abs[P[2]], Abs[P[5]] === Abs[P[6]]];
+
+(*Print Flags*)
+Print["isIOGluon: ", isIOGluon]
+Print["isGluinoRes: ", isGluinoRes]
 
 
 (*Neglect Masses (URL)*)
@@ -186,7 +195,7 @@ CKMC = IndexDelta;
 
 
 (*Options*)
-If[IOGluon,
+If[isIOGluon,
           (*no internal Weakinos*)
           lastsel = {!F[11],!F[12]};
           (*else*),
@@ -234,84 +243,255 @@ Component[Amp_,n_]:=Replace[Amp,Amp[_][x__]:>{x}][[n]]
 getReplacementHead[f_->_]:=f
 
 
-Print["On-Shell Diagrams"]
+If[isGluinoRes,
+Print["On-Shell Gluino resonances (single resonances)"];
 
-tops = TopologyList[Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
-    Propagator[Incoming][Vertex[1][2],Vertex[3][8]],
-    Propagator[Outgoing][Vertex[1][3],Vertex[3][7]],
-    Propagator[Outgoing][Vertex[1][4],Vertex[3][9]],
-    Propagator[Outgoing][Vertex[1][5],Vertex[3][9]],
-    Propagator[Outgoing][Vertex[1][6],Vertex[3][10]],
-    Propagator[Internal][Vertex[3][7],Vertex[3][8]],
-    Propagator[Internal][Vertex[3][8],Vertex[3][10]],
-    Propagator[Internal][Vertex[3][9],Vertex[3][10]]],
-    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
-    Propagator[Incoming][Vertex[1][2],Vertex[3][8]],
-    Propagator[Outgoing][Vertex[1][3],Vertex[3][7]],
-    Propagator[Outgoing][Vertex[1][4],Vertex[3][9]],
-    Propagator[Outgoing][Vertex[1][5],Vertex[3][10]],
-    Propagator[Outgoing][Vertex[1][6],Vertex[3][9]],
-    Propagator[Internal][Vertex[3][7],Vertex[3][8]],
-    Propagator[Internal][Vertex[3][8],Vertex[3][10]],
-    Propagator[Internal][Vertex[3][9],Vertex[3][10]]],
-    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
-    Propagator[Incoming][Vertex[1][2],Vertex[3][8]],
-    Propagator[Outgoing][Vertex[1][3],Vertex[3][8]],
-    Propagator[Outgoing][Vertex[1][4],Vertex[3][9]],
-    Propagator[Outgoing][Vertex[1][5],Vertex[3][9]],
-    Propagator[Outgoing][Vertex[1][6],Vertex[3][10]],
-    Propagator[Internal][Vertex[3][7],Vertex[3][8]],
-    Propagator[Internal][Vertex[3][7],Vertex[3][10]],
-    Propagator[Internal][Vertex[3][9],Vertex[3][10]]],
-    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
-    Propagator[Incoming][Vertex[1][2],Vertex[3][8]],
-    Propagator[Outgoing][Vertex[1][3],Vertex[3][8]],
-    Propagator[Outgoing][Vertex[1][4],Vertex[3][9]],
-    Propagator[Outgoing][Vertex[1][5],Vertex[3][10]],
-    Propagator[Outgoing][Vertex[1][6],Vertex[3][9]],
-    Propagator[Internal][Vertex[3][7],Vertex[3][8]],
-    Propagator[Internal][Vertex[3][7],Vertex[3][10]],
-    Propagator[Internal][Vertex[3][9],Vertex[3][10]]],
-    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
+top356=TopologyList[Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
     Propagator[Incoming][Vertex[1][2],Vertex[3][8]],
     Propagator[Outgoing][Vertex[1][3],Vertex[3][9]],
     Propagator[Outgoing][Vertex[1][4],Vertex[3][7]],
     Propagator[Outgoing][Vertex[1][5],Vertex[3][9]],
     Propagator[Outgoing][Vertex[1][6],Vertex[3][10]],
-    Propagator[Internal][Vertex[3][7],Vertex[3][8]],
     Propagator[Internal][Vertex[3][8],Vertex[3][10]],
-    Propagator[Internal][Vertex[3][9],Vertex[3][10]]],
-    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
-    Propagator[Incoming][Vertex[1][2],Vertex[3][8]],
-    Propagator[Outgoing][Vertex[1][3],Vertex[3][9]],
-    Propagator[Outgoing][Vertex[1][4],Vertex[3][7]],
-    Propagator[Outgoing][Vertex[1][5],Vertex[3][10]],
-    Propagator[Outgoing][Vertex[1][6],Vertex[3][9]],
-    Propagator[Internal][Vertex[3][7],Vertex[3][8]],
-    Propagator[Internal][Vertex[3][8],Vertex[3][10]],
-    Propagator[Internal][Vertex[3][9],Vertex[3][10]]],
+    Propagator[Internal][Vertex[3][9],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][8]]],
     Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
     Propagator[Incoming][Vertex[1][2],Vertex[3][8]],
     Propagator[Outgoing][Vertex[1][3],Vertex[3][9]],
     Propagator[Outgoing][Vertex[1][4],Vertex[3][8]],
     Propagator[Outgoing][Vertex[1][5],Vertex[3][9]],
     Propagator[Outgoing][Vertex[1][6],Vertex[3][10]],
-    Propagator[Internal][Vertex[3][7],Vertex[3][8]],
     Propagator[Internal][Vertex[3][7],Vertex[3][10]],
-    Propagator[Internal][Vertex[3][9],Vertex[3][10]]],
+    Propagator[Internal][Vertex[3][9],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][8]]],
+    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
+    Propagator[Incoming][Vertex[1][2],Vertex[3][7]],
+    Propagator[Outgoing][Vertex[1][3],Vertex[3][8]],
+    Propagator[Outgoing][Vertex[1][4],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][5],Vertex[3][8]],
+    Propagator[Outgoing][Vertex[1][6],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][9],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][8],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][9]]]];
+
+top365=TopologyList[Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
+    Propagator[Incoming][Vertex[1][2],Vertex[3][8]],
+    Propagator[Outgoing][Vertex[1][3],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][4],Vertex[3][7]],
+    Propagator[Outgoing][Vertex[1][5],Vertex[3][10]],
+    Propagator[Outgoing][Vertex[1][6],Vertex[3][9]],
+    Propagator[Internal][Vertex[3][8],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][9],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][8]]],
     Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
     Propagator[Incoming][Vertex[1][2],Vertex[3][8]],
     Propagator[Outgoing][Vertex[1][3],Vertex[3][9]],
     Propagator[Outgoing][Vertex[1][4],Vertex[3][8]],
     Propagator[Outgoing][Vertex[1][5],Vertex[3][10]],
     Propagator[Outgoing][Vertex[1][6],Vertex[3][9]],
-    Propagator[Internal][Vertex[3][7],Vertex[3][8]],
     Propagator[Internal][Vertex[3][7],Vertex[3][10]],
-    Propagator[Internal][Vertex[3][9],Vertex[3][10]]]]
+    Propagator[Internal][Vertex[3][9],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][8]]],
+    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
+    Propagator[Incoming][Vertex[1][2],Vertex[3][7]],
+    Propagator[Outgoing][Vertex[1][3],Vertex[3][8]],
+    Propagator[Outgoing][Vertex[1][4],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][5],Vertex[3][10]],
+    Propagator[Outgoing][Vertex[1][6],Vertex[3][8]],
+    Propagator[Internal][Vertex[3][9],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][8],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][9]]]];
 
+top456=TopologyList[Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
+    Propagator[Incoming][Vertex[1][2],Vertex[3][8]],
+    Propagator[Outgoing][Vertex[1][3],Vertex[3][7]],
+    Propagator[Outgoing][Vertex[1][4],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][5],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][6],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][8],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][9],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][8]]],
+    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
+    Propagator[Incoming][Vertex[1][2],Vertex[3][8]],
+    Propagator[Outgoing][Vertex[1][3],Vertex[3][8]],
+    Propagator[Outgoing][Vertex[1][4],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][5],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][6],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][9],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][8]]],
+    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
+    Propagator[Incoming][Vertex[1][2],Vertex[3][7]],
+    Propagator[Outgoing][Vertex[1][3],Vertex[3][8]],
+    Propagator[Outgoing][Vertex[1][4],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][5],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][6],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][8],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][9],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][8]]]];
+
+top465=TopologyList[Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
+    Propagator[Incoming][Vertex[1][2],Vertex[3][8]],
+    Propagator[Outgoing][Vertex[1][3],Vertex[3][7]],
+    Propagator[Outgoing][Vertex[1][4],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][5],Vertex[3][10]],
+    Propagator[Outgoing][Vertex[1][6],Vertex[3][9]],
+    Propagator[Internal][Vertex[3][8],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][9],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][8]]],
+    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
+    Propagator[Incoming][Vertex[1][2],Vertex[3][8]],
+    Propagator[Outgoing][Vertex[1][3],Vertex[3][8]],
+    Propagator[Outgoing][Vertex[1][4],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][5],Vertex[3][10]],
+    Propagator[Outgoing][Vertex[1][6],Vertex[3][9]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][9],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][8]]],
+    Topology[1][Propagator[Incoming][Vertex[1][1],Vertex[3][7]],
+    Propagator[Incoming][Vertex[1][2],Vertex[3][7]],
+    Propagator[Outgoing][Vertex[1][3],Vertex[3][8]],
+    Propagator[Outgoing][Vertex[1][4],Vertex[3][9]],
+    Propagator[Outgoing][Vertex[1][5],Vertex[3][10]],
+    Propagator[Outgoing][Vertex[1][6],Vertex[3][9]],
+    Propagator[Internal][Vertex[3][8],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][9],Vertex[3][10]],
+    Propagator[Internal][Vertex[3][7],Vertex[3][8]]]];
+
+ins356 = InsertFields[top356, process];
+DoPaint[ins356, "realOS_356"];
+ins365 = InsertFields[top365, process];
+(*DoPaint[ins356, "realOS_365"];*)
+ins456 = InsertFields[top456, process];
+(*DoPaint[ins356, "realOS_456"];*)
+ins465 = InsertFields[top465, process];
+(*DoPaint[ins356, "realOS_465"];*)
+
+(*widths and regulator replacement rules*)
+widths = {MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
+reg1 = {Den[sijk_,MGl2-I MGl WGl]:>Den[sijk,MGl2-I MGl (WGl+WREG1)]};
+
+(*generate amplitudes*)
+real356 = CalcFeynAmp[CreateFeynAmp[ins356](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)]; (*uncomment ", InvSimplify -> False" for Mac OS X*)
+real365 = CalcFeynAmp[CreateFeynAmp[ins365](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
+real456 = CalcFeynAmp[CreateFeynAmp[ins456](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)]; 
+real465 = CalcFeynAmp[CreateFeynAmp[ins465](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
+(*real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
+real = real//.{PowerOf[a_]:>PowerOf[a][1]};*)
+(*insert widths*)
+real356 = real356/.{Den[x_,y_]:>Den[x,y/.widths]};
+real365 = real365/.{Den[x_,y_]:>Den[x,y/.widths]};
+real456 = real456/.{Den[x_,y_]:>Den[x,y/.widths]};
+real465 = real465/.{Den[x_,y_]:>Den[x,y/.widths]};
+(*insert the regulator*)
+real356 = real356/.reg1;
+real365 = real365/.reg1;
+real456 = real456/.reg1;
+real465 = real465/.reg1;
+
+(*set the sfermion index in the external fortran program (leave it open here)*)
+real356Sfe = real356//.{SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
+real365Sfe = real365//.{SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
+real456Sfe = real456//.{SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
+real465Sfe = real465//.{SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
+
+Print[real356Sfe];
+Print[real365Sfe];
+Print[real456Sfe];
+Print[real465Sfe];
+]
+
+
+Print["Non resonant Diagrams (squark double and possible gluino single poles removed)"]
+
+tops = CreateTopologies[0, 2 -> 4];
 ins = InsertFields[tops, process];
+DoPaint[ins, "realAll"];
 
-DoPaint[ins, "realOS"];
+If[isGluinoRes,
+(*remove diagrams resp. topologies with gluino single resonances*)
+tops = TopologyList[Sequence@@Delete[
+           Level[tops,1],
+          {{104},{119},{213},{214},
+           {106},{220},{122},{219},
+           {165},{177},{120},{169},
+           {181},{125},{138},{153},
+           {123},{142},{157},{127}}]];
+ins = InsertFields[tops, process];
+]
+
+(*remove diagrams with squark double resonances*)
+insNR = DiagramSelect[ins,(Not[SChannelExtQ[S[_],3,5][##] && SChannelExtQ[S[_],4,6][##]] &&
+                            Not[SChannelExtQ[S[_],3,6][##] && SChannelExtQ[S[_],4,5][##]])&];
+DoPaint[insNR, "realNR"];
+
+(*insert the particle widths*)
+widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
+
+realNR = CalcFeynAmp[CreateFeynAmp[insNR](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
+(*realNR = realNR//.{PowerOf[a_]^x_:>PowerOf[a][x]};
+realNR = realNR//.{PowerOf[a_]:>PowerOf[a][1]};*)
+realNR = realNR/.{Den[x_,y_]:>Den[x,y/.widths]}
+
+
+If[isGluinoRes,
+(*Write files for on-shell resonant reals, OS356*)
+amps = {real356Sfe};
+{realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
+
+col = ColourME[All, realOS];
+
+abbr = OptimizeAbbr[Abbr[]];
+subexpr = OptimizeAbbr[Subexpr[]];
+
+(*fortran cant handle arrays with dimensionality greater than 7*)
+(*apply back the subexpressions with number of arguments greater than 6*)
+subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
+       {i,1,Length[subexpr]}]/.Null->Sequence[];
+realOS = realOS//.subexpr6;
+abbr = abbr//.subexpr6;
+
+(*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
+subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
+       {i,1,Length[subexpr]}]/.Null->Sequence[];
+subexpr = subexpr//.subexpr6;
+
+dir = SetupCodeDir[name<>"_realOS_356_Sq1", Drivers -> name <> "_drivers"];
+WriteSquaredME[realOS, {}, col, abbr, subexpr, dir];
+]
+
+
+(*Combine the amplitudes again, but this time the resonant diagrams are regulated*)
+(*Use here the regulated on shell amplitudes with summation over the sfermion indices*)
+If[isGluinoRes,
+real = Combine[realNR,real356];,
+(*else*)
+real = Combine[realNR];
+]
+
+(*Write real files with inserted regulator for on-shell diagrams*)
+amps = {real};
+{real} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
+
+col = ColourME[All, real];
+
+abbr = OptimizeAbbr[Abbr[]];
+subexpr = OptimizeAbbr[Subexpr[]];
+
+(*fortran cant handle arrays with dimensionality greater than 7*)
+(*apply back the subexpressions with number of arguments greater than 6*)
+subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
+       {i,1,Length[subexpr]}]/.Null->Sequence[];
+real = real//.subexpr6;
+abbr = abbr//.subexpr6;
+
+(*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
+subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
+       {i,1,Length[subexpr]}]/.Null->Sequence[];
+subexpr = subexpr//.subexpr6;
+
+dir = SetupCodeDir[name<>"_real", Drivers -> name <> "_drivers"];
+WriteSquaredME[real, {}, col, abbr, subexpr, dir];
 
 
 Print["time used: ", SessionTime[] - time1]
