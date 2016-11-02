@@ -39,9 +39,8 @@ c keep this order
         double precision xjac
         ! temporary results for calc. of resonant contributions
         double precision sigosres_contr
-        
-        ! -> return succes
-        sigosres = 1
+        ! sum only over relevant on-shell channels
+        integer nos
         
         ! set this to zero: radiation is always generated from production 
         ! process for osres contributions
@@ -58,42 +57,90 @@ c keep this order
         do idi=1,ndiminteg
           rad_xradosres(idi) = xx(idi)
         enddo
-        
-        ! reset result
-        retval = 0D0
 
+        ! reset
+        retval = 0D0
+        rad_osres_arr(:,:) = 0D0
+        
         ! TODO: use smartsig for sigosres_contr
     
         ! use the generic phase-space here,
         ! provide tan-mapping for the resonant particles
         ! sum over the resonances
-        sigosres_contr = 0D0
+#define VERSION2
+#ifdef VERSION1
         do ichan=1,nosres
-          ! TODO: nicht jeder Prozess hat alle möglichen Resonanzen
-          ! entscheide je nach Prozess, über wieviele Resonanzen
-          ! summiert werden soll -> Abfrage von flst_osres
+          ! reset result
+          sigosres_contr = 0D0
           do lset=1,flst_nosres
             call real_osres_phsp(xx,flst_osres(:,lset),ichan)
             xjac = kn_jacreal*ww1*hc2
             call sigreal_osres(xjac,lset,ichan,rad_osres_arr(lset,ichan))
+            ! sigosres_contr is summed over all processes for a given channel
             sigosres_contr = sigosres_contr+rad_osres_arr(lset,ichan)
           enddo
-          
           call transfersign(rad_osres_arr(:,ichan),
      &                      rad_osres_sign(:,ichan),flst_nosres)
           if(flg_nlotest) then
             call analysis_driver(sigosres_contr,1)
           endif
+          ! retval is summed over all processes and over all channels
           retval = retval + dabs(sigosres_contr)
         enddo
-        
+#endif
+! should be faster
+#ifdef VERSION2
+        do lset=1,flst_nosres
+          ! reset result
+          sigosres_contr = 0D0
+          ! check if gluino single resonances can occur (sum over nosres1 + nosres2)
+          ! if not, sum over double squark resonances only (sum over nosres1)
+          if(flst_osres(1,lset).eq.-flst_osres(2,lset) .and.
+     &       flst_osres(5,lset).eq.-flst_osres(6,lset) .and.
+     &       flst_osres(1,lset).ne.0 .and. flst_osres(5,lset).ne.0) then
+            nos = nosres1 + nosres2
+          else
+            nos = nosres1
+          endif
+          do ichan=1,nos
+            call real_osres_phsp(xx,flst_osres(:,lset),ichan)
+            xjac = kn_jacreal*ww1*hc2
+            call sigreal_osres(xjac,lset,ichan,rad_osres_arr(lset,ichan))
+            ! sigosres_contr is summed over all channels for a given process
+            sigosres_contr = sigosres_contr+rad_osres_arr(lset,ichan)
+          enddo
+          call transfersign(rad_osres_arr(lset,:),
+     &                      rad_osres_sign(lset,:),nosres)
+          if(flg_nlotest) then
+            call analysis_driver(sigosres_contr,1)
+          endif
+          ! retval is summed over all processes and over all channels
+          retval = retval + dabs(sigosres_contr)
+        enddo
+#endif
+
 #ifdef DEBUGQ
+        do lset=1,flst_nosres
+          if(flst_osres(1,lset).eq.-flst_osres(2,lset) .and.
+     &       flst_osres(5,lset).eq.-flst_osres(6,lset) .and.
+     &       flst_osres(1,lset).ne.0 .and. flst_osres(5,lset).ne.0) then
+            nos = nosres1 + nosres2
+          else
+            nos = nosres1
+          endif
+          print*,flst_osres(:,lset)
+          do ichan=1,nos
+            print*,ichan,lset,rad_osres_arr(lset,ichan),rad_osres_sign(lset,ichan)
+          enddo
+        enddo
          print*,"retval",retval
          print*,"sigosres_contr",sigosres_contr
          print*,"xjac",xjac
          print*
          stop
 #endif
+        ! -> return succes
+        sigosres = 1
       end
 c############### end function sigosres #################################
 

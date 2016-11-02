@@ -291,7 +291,8 @@ c############### subroutine getRealAmps ################################
         elseif(f1.eq.0 .and. f2.ne.0 .and. f5.eq.0 .and. f6.ne.0) then
           call crossing(nlegreal,ps,flavs,5,6)
           symfac = 96d0
-          helicities = 480586062
+          helicities = 480586062 ! with crossing 
+          !helicities = 480586186 ! no crossing
         ! F g -> F F g F
         elseif(f1.ne.0 .and. f2.eq.0 .and. f5.eq.0 .and. f6.ne.0) then
           call crossing(nlegreal,ps,flavs,1,2)
@@ -336,7 +337,7 @@ c############### subroutine getRealAmps ################################
               !call qdqdbar_nInJqdqdbar_squaredME(fc_result,helicities,flags)
               goto 20
             elseif(f1.gt.0 .and. f2.lt.0 .and. iseven(abs(f5)) .and. f5.gt.0) then  
-              call qdqdbar_nInJququbar_squaredME(fc_result,helicities,flags)
+              !call qdqdbar_nInJququbar_squaredME(fc_result,helicities,flags)
               goto 20
             elseif(f1.gt.0 .and. f2.lt.0 .and. isodd(abs(f5)) .and. f5.lt.0) then  
               !call qdqdbar_nInJqdbarqd_squaredME(fc_result,helicities,flags)
@@ -361,7 +362,7 @@ c############### subroutine getRealAmps ################################
               !call qubarqubar_nInJqubarqubar_squaredME(fc_result,helicities,flags)
               goto 20
             elseif(f1.gt.0 .and. f2.lt.0 .and. iseven(abs(f5)) .and. f5.gt.0) then
-              !call ququbar_nInJququbar_squaredME(fc_result,helicities,flags)
+              call ququbar_nInJququbar_squaredME(fc_result,helicities,flags)
               goto 20
             elseif(f1.gt.0 .and. f2.lt.0 .and. isodd(abs(f5)) .and. f5.gt.0) then
               !call ququbar_nInJqdqdbar_squaredME(fc_result,helicities,flags)
@@ -370,7 +371,7 @@ c############### subroutine getRealAmps ################################
               !call ququbar_nInJqubarqu_squaredME(fc_result,helicities,flags)
               goto 20
             elseif(f1.lt.0 .and. f2.gt.0 .and. iseven(abs(f5)) .and. f5.gt.0) then  
-              !call qubarqu_nInJququbar_squaredME(fc_result,helicities,flags)
+              call qubarqu_nInJququbar_squaredME(fc_result,helicities,flags)
               goto 20
             elseif(f1.lt.0 .and. f2.gt.0 .and. isodd(abs(f5)) .and. f5.gt.0) then  
               !call qubarqu_nInJqdqdbar_squaredME(fc_result,helicities,flags)
@@ -507,7 +508,7 @@ c############### subroutine getRealAmps ################################
       end
 c############### subroutine getRealAmps ################################
 
-c############### subroutine getRealAmps ################################
+c############### subroutine getRealOSAmps ##############################
       subroutine getRealOSAmps(p,flav,ichan,ampos)
         implicit none
 #include "nlegborn.h"
@@ -603,7 +604,7 @@ c############### subroutine getRealAmps ################################
               !call qdqdbar_nInJqdqdbar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
             elseif(f1.gt.0 .and. f2.lt.0 .and. iseven(abs(f5)) .and. f5.gt.0) then  
-              call qdqdbar_nInJququbar_realOS_squaredME(fc_result,ichan,helicities,flags)
+              !call qdqdbar_nInJququbar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
             elseif(f1.gt.0 .and. f2.lt.0 .and. isodd(abs(f5)) .and. f5.lt.0) then  
               !call qdqdbar_nInJqdbarqd_realOS_squaredME(fc_result,ichan,helicities,flags)
@@ -628,7 +629,7 @@ c############### subroutine getRealAmps ################################
               !call qubarqubar_nInJqubarqubar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
             elseif(f1.gt.0 .and. f2.lt.0 .and. iseven(abs(f5)) .and. f5.gt.0) then
-              !call ququbar_nInJququbar_realOS_squaredME(fc_result,ichan,helicities,flags)
+              call ququbar_nInJququbar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
             elseif(f1.gt.0 .and. f2.lt.0 .and. isodd(abs(f5)) .and. f5.gt.0) then
               !call ququbar_nInJqdqdbar_realOS_squaredME(fc_result,ichan,helicities,flags)
@@ -637,7 +638,7 @@ c############### subroutine getRealAmps ################################
               !call ququbar_nInJqubarqu_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
             elseif(f1.lt.0 .and. f2.gt.0 .and. iseven(abs(f5)) .and. f5.gt.0) then  
-              !call qubarqu_nInJququbar_realOS_squaredME(fc_result,ichan,helicities,flags)
+              call qubarqu_nInJququbar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
             elseif(f1.lt.0 .and. f2.gt.0 .and. isodd(abs(f5)) .and. f5.gt.0) then  
               !call qubarqu_nInJqdqdbar_realOS_squaredME(fc_result,ichan,helicities,flags)
@@ -735,7 +736,7 @@ c############### subroutine getRealAmps ################################
         print*, "flav = ", flav
         stop
  20     continue
- 
+
         ampos = fc_result(1)/symfac
       end
-c############### subroutine getRealAmps ################################
+c############### subroutine getRealOSAmps ##############################

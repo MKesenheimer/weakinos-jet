@@ -27,6 +27,9 @@ c     set process id using slepton types
         logical condition, mixed_channels
         integer max_flav,encode_pair
         integer temp
+#ifdef DEBUG
+        integer nflst_select
+#endif
 
         ! set number of active flavors for incoming partons
         max_flav = int(powheginput('incomingflavors'))
@@ -273,25 +276,38 @@ c     set process id using slepton types
           enddo
         enddo
         
+#ifdef DEBUGQ
+        nflst_select = 1 ! already tested, and ok: 1, 2, 3, 7
+
+        ! Real process
+        flst_nreal = 1
+        flst_real(1,1) = flst_real(1,nflst_select)
+        flst_real(2,1) = flst_real(2,nflst_select)
+        flst_real(3,1) = flst_real(3,nflst_select)
+        flst_real(4,1) = flst_real(4,nflst_select)
+        flst_real(5,1) = flst_real(5,nflst_select)
+        flst_real(6,1) = flst_real(6,nflst_select)
+#endif
+        
 #ifdef DEBUG
-! Born process
+        ! Born process
         flst_nborn = 1
-        flst_born(1,1) = 1
-        flst_born(2,1) = -1
+        flst_born(1,1) = -2
+        flst_born(2,1) = 2
         flst_born(3,1) = 1000022
         flst_born(4,1) = 1000023
         flst_born(5,1) = 0
 
-! Real process
+        ! Real process
         flst_nreal = 1
-        flst_real(1,1) = 1
-        flst_real(2,1) = -1
+        flst_real(1,1) = 2
+        flst_real(2,1) = -2
         flst_real(3,1) = 1000022
         flst_real(4,1) = 1000023
         flst_real(5,1) = 2
         flst_real(6,1) = -2
 #endif
-        
+
 #ifdef DEBUG
            print*,' born processes',flst_nborn
            do j=1,flst_nborn
@@ -314,6 +330,8 @@ c     set process id using slepton types
           print*,(flst_osres(k,j),k=1,nlegreal)
         enddo
 #endif
+
+        !stop
 
         return
  998    print*,'init_processes: increase maxprocreal'
@@ -346,6 +364,7 @@ c this list should not be confused with flst_realres.
           do i2=1,nlegreal
             f(i2) = flst_real(i2,i1)
           enddo
+          ! gluino and squark resonances
           if(f(5).ne.0 .and. f(6).ne.0) then
             flst_nosres = flst_nosres+1 
             do i2=1,nlegreal

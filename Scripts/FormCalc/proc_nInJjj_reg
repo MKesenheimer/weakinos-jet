@@ -1,6 +1,11 @@
-# TODO: comment this file!
+# All resonant processes defined in proc_nInJjj_os but without the 
+# channel identifiers. Required to generate the regulated matrix elements.
            g            g         nI     nJ           qd           qdbar
            g            g         nI     nJ           qu           qubar
+#           g            qd        nI     nJ           qd           g
+#           g            qdbar     nI     nJ           qdbar        g
+#           g            qu        nI     nJ           qu           g
+#           g            qubar     nI     nJ           qubar        g
            qd           qd        nI     nJ           qd           qd
            qd           qu        nI     nJ           qd           qu
            qd           qu        nI     nJ           qu           qd

@@ -212,7 +212,6 @@ c     print statistics
             flg_btilde=.true.
          endif
 #endif
-
          ! CH, MK: if the manyseeds-flag is set and we want to generate events using
          ! an old grid: simply set the random-number-generator to 
          ! the appropriate seed at this point

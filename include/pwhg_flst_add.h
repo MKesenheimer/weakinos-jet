@@ -9,6 +9,4 @@ c definitions
         integer flst_nosres
 
         common/pwhg_add_flst/ flst_osres,flst_nosres
-
-
 c############### end pwhg_add_flst.h ###################################

@@ -1,12 +1,9 @@
 (* ::Package:: *)
 
-(*  	neu1neu2+jet.m
-		generates the Fortran code for
-		p p -> weakino weakino jet jet in the MSSM
-		last modified July 2016
-
-This version introduces particle widths on the Amp level, which is much simpler than
-introducing them on the FeynAmp level.
+(*
+generates the Fortran code for
+p p -> weakino weakino jet jet in the MSSM
+last modified July 2016
 *)
 
 
@@ -44,12 +41,12 @@ If[$CommandLine[[2]] === "-script",
 	 p[5] = ToString[$CommandLine[[8]]];
 	 p[6] = ToString[$CommandLine[[9]]];),
 	(*Else*)
-	(p[1] = "qdbar";
-	 p[2] = "qdbar";
+	(p[1] = "g";
+	 p[2] = "qu";
 	 p[3] = "nI";
 	 p[4] = "nJ";
-	 p[5] = "qdbar";
-	 p[6] = "qdbar";)
+	 p[5] = "g";
+	 p[6] = "qu";)
 ]
 
 CalcProcess = p[1]<>p[2]<>"_"<>p[3]<>p[4]<>p[5]<>p[6];

@@ -101,7 +101,8 @@ c modifies the jacobian.
         
         ! this is |M_R(res)|**2 (still with on-shell resonances)
         call getRealOSAmps(p,rflav,ichan,amp)
-            
+        !print*,"amp",amp
+        
         ! subtraction scheme for double resonances
         if(ichan.ge.1 .and. ichan.le.8 .and. 
      &     (s12.ge.(mij+mkl)**2).and.(mij.ge.(mi+mj)).and.(mkl.ge.(mk+ml))) then
@@ -127,7 +128,9 @@ c modifies the jacobian.
           ! rescale the counter term to fit into the new PS, TODO
           !ampCT = corrfac(s12,mi,mj,mk,ml,mij,mkl,sij,skl)*ampCT
           amp = amp - ampCT
+          !print*,"ampCt",ichan,ampCT
         endif
+        !print*,"amp-ampCT",amp
         
         ! subtraction scheme for single resonant gluino contributions
         if(ichan.ge.9 .and. ichan.le.16 .and. 
@@ -154,7 +157,7 @@ c modifies the jacobian.
           print*, "on-shell resonant Real amplitude = ", amp
         endif
         
-#ifdef DEBUGQ
+#ifdef DEBUG
         ! fill histograms
         if(dsqrt(p(1,5)**2+p(2,5)**2).gt.10D0 .and. dsqrt(p(1,6)**2+p(2,6)**2).gt.10D0) then
           call process_name(nlegreal,rflav(1:nlegreal),str(1:20),lstr)
@@ -163,11 +166,11 @@ c modifies the jacobian.
           s356 = momsum3sq(p(0:3,3),p(0:3,5),p(0:3,6))
           ! warning: don't fill more than 200 histograms!
           if(abs(abs(rflav(1))).le.2) then
-            !call histogram("sqrt(s35)_"//str(1:lstr),100,400D0,800D0,dsqrt(s35),amp)
+            call histogram("sqrt(s35)",100,400D0,800D0,dsqrt(s35),amp)
             !call histogram("sqrt(s46)_"//str(1:lstr),100,400D0,800D0,dsqrt(s46),amp)
             call histogram("sqrt(s356)",100,400D0,800D0,dsqrt(s356),amp)
-            call histogram("sqrt(s356)_ampCT",100,400D0,800D0,dsqrt(s356),ampCT)
-            !call histogram("int(s35)_"//str(1:lstr),1,1D1,1D6,dsqrt(s35),amp)
+            !call histogram("sqrt(s356)_ampCT",100,400D0,800D0,dsqrt(s356),ampCT)
+            call histogram("int(s35)",1,1D1,1D6,dsqrt(s35),amp)
             !call histogram("int(s46)_"//str(1:lstr),1,1D1,1D6,dsqrt(s46),amp)
             call histogram("int(s356)",1,1D1,1D6,dsqrt(s356),amp)
           endif

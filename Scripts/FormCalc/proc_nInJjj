@@ -1,4 +1,4 @@
-# TODO: comment this file!
+# These are all possible processes that can occur in weakino-pair + jet production.
            g            g         nI     nJ           qd           qdbar
            g            g         nI     nJ           qu           qubar
            g            qd        nI     nJ           qd           g

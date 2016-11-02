@@ -838,8 +838,8 @@ c set the on shell regulator wreg1 (single) and wreg2 (double resonances)
         double precision powheginput
         external powheginput
 
-        ewi1  = 1D-2 ! (default)
-        if(powheginput("#ewi1").gt.0) then
+        ewi1  = 0D0 ! (default)
+        if(powheginput("#ewi1").ne.0) then
           ewi1 = powheginput("ewi1")
         endif
         wreg1 = ewi1*MGl ! Prospino like definition
@@ -856,8 +856,8 @@ c set the on shell regulator wreg1 (single) and wreg2 (double resonances)
         enddo
         m_avrg = m_avrg/nmass
 
-        ewi2  = 1D-2 ! (default)
-        if(powheginput("#ewi2").gt.0) then
+        ewi2  = 0D0 ! (default)
+        if(powheginput("#ewi2").ne.0) then
           ewi2 = powheginput("ewi2")
         endif
         wreg2 = ewi2*m_avrg ! Prospino like definition        

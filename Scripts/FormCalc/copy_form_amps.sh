@@ -55,12 +55,12 @@ DEST=${PWD}/../../${PROCDIR}
 NPART=6
 
 # process list file
+#PROCF="./proc_nInJjj_nr_test"
 #PROCF="./proc_nInJjj_os_test"
 PROCF="./proc_nInJjj_reg_test"
-#PROCF="./proc_nInJjj_os"
-#PROCF="./proc_nInJjj_reg"
 
 # the name of Mathematica Scripts
+#MSCRIPT="./nInJjj_test.m"
 #MSCRIPT="./nInJjj_os.m"
 MSCRIPT=""
 

@@ -23,7 +23,7 @@ chainA '1000023->1000022,23;23->11,-11;'
 chainB '1000023->1000022,23;23->13,-13;'
 
 ! physics
-incomingflavors 5    ! (default 5) number of incoming flavor
+incomingflavors 2    ! (default 5) number of incoming flavor
 
 ! by default, these parameters are set according to the SLHA input file.
 ! however, they may be set to explicit values here.
@@ -91,8 +91,8 @@ facscfact     1d0    ! (default 1d0) fac scale factor: mufact = muref * facscfac
 #hfact        100d0  ! (default no damping factor) damp factor for high-pt radiation: > 0 dampfac=h**2/(pt2+h**2)
 #hdamp        100d0  ! damping factor h**2/(pt2+h**2) to separate real contributions between Sudakov and remnants
 #storemintupb   0    ! whether to save btilde calls to set up upper bounding envelope
-ewi1           1d-2  ! regulator for single on-shell resonances
-ewi2           1d-2  ! regulator for double on-shell resonances
+ewi1           0d0  ! regulator for single on-shell resonances
+ewi2           0d0  ! regulator for double on-shell resonances
 
 ! new POWHEG-BOX-V2 features (rev. >3306)
 compress_lhe 1      ! activate lhe compression 

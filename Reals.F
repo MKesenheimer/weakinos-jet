@@ -45,6 +45,11 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         ! function to calculate the squared momentum sum
         double precision momsum3sq, momsum2sq
         external momsum2sq, momsum3sq
+        ! sum only over relevant on-shell channels
+        integer nos
+#ifdef DEBUG
+        double precision ampM
+#endif
 
         if (init_reals) then
           print*
@@ -61,12 +66,44 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         ! get the formcalc real amplitudes
         call getRealAmps(p,rflav,amp)
         
-        ! ...and subtract the resonant amplitudes
+#ifdef DEBUGQ
+        ! compare with MadGraph amplitudes
+        call sreal_proc(p,rflav,ampM)
+        if(dsqrt(p(1,5)**2+p(2,5)**2).gt.10D0 .and. dsqrt(p(1,6)**2+p(2,6)**2).gt.10D0) then
+          if((abs((amp - ampM)/(amp + ampM)) > 1d-04) ) then ! the relative error is probably larger for smaller amplitudes
+            print*,"process",rflav
+            do i=1,6
+              print*, "p(",i,") = ", p(:,i)
+            enddo
+            print*,"pt(5)",dsqrt(p(1,5)**2+p(2,5)**2)
+            print*,"pt(6)",dsqrt(p(1,6)**2+p(2,6)**2)
+            print*,"amp (formcalc)  = ", amp
+            print*,"amp (maqdgraph) = ", ampM
+            print*,"rel. err. = ", abs((amp - ampM)/(amp + ampM))
+            print*,"amp/ampM  = ", amp/ampM, ampM/amp
+            print*
+            !call nstop(3)
+          endif
+        endif
+        !amp = ampM
+#endif
+        
 #if defined(DSUB_II) || defined(DSUB_II_TEST)
+        ! subtract the resonant amplitudes (move the resonant contributions 
+        ! to Reals_osres.F)
+        ! check if gluino single resonances can occur (sum over nosres1 + nosres2)
+        ! if not, sum over double squark resonances only (sum over nosres1)
+        if(rflav(1).eq.-rflav(2) .and. rflav(5).eq.-rflav(6) .and.
+     &     rflav(1).ne.0 .and. rflav(5).ne.0) then
+          nos = nosres1 + nosres2
+        else
+          nos = nosres1
+        endif
         if(rflav(5).ne.0 .and. rflav(6).ne.0) then
-          do ichan=1,nosres
+          do ichan=1,nos
             ampos = 0D0
             call getRealOSAmps(p,rflav,ichan,ampos)
+            !print*,ichan,amp,ampos,amp-ampos
             amp = amp - ampos
           enddo
         endif
@@ -75,8 +112,14 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
 #ifdef DSUB_II_TEST
         ! test the DSUB_II scheme (here without the correct jacobian)
         ! this gives the same result as with flag DSUB_I set
+        if(rflav(1).eq.-rflav(2) .and. rflav(5).eq.-rflav(6) .and.
+     &     rflav(1).ne.0 .and. rflav(5).ne.0) then
+          nos = nosres1 + nosres2
+        else
+          nos = nosres1
+        endif
         if(rflav(5).ne.0 .and. rflav(6).ne.0) then
-         do ichan=1,nosres
+         do ichan=1,nos
             ampos = 0D0
             call setosresreal(p,rflav,ichan,ampos)
             amp = amp + ampos
