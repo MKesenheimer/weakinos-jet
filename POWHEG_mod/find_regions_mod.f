@@ -1273,13 +1273,6 @@ c     cannot come from the same splitting
       logical is_charged
       integer fl,flcp
       flcp=mod(fl,pdgfac) ! CH: take sparticles into account
-#ifdef DEBUG
-      print*,"in find_regions_mod.f:1279"
-      print*,"Uncomment to continue"
-      print*,fl
-      print*,flcp
-      stop
-#endif
       if(fl.eq.0) then
          is_charged=.false.
       elseif(abs(fl).le.6) then
@@ -1296,6 +1289,14 @@ c     cannot come from the same splitting
       else
          is_charged=.false.
       endif
+#ifdef DEBUG
+      print*,"in find_regions_mod.f:1279"
+      print*,"Uncomment to continue"
+      print*,fl
+      print*,flcp
+      print*,is_charged
+      stop
+#endif
       end
 
       function is_coloured(fl)

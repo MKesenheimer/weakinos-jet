@@ -11,20 +11,30 @@ SHELL = /bin/sh
 ## Flags
 
 ## Compiler and additional compiler Flags
-FC  =  gfortran
-CXX =  g++
-CC  =  gcc
+# use "./configure ifort" first
+#FC  = ifort
+# use "./configure gfortran" first
+FC  = gfortran
+CXX = g++
+CC  = gcc
+
 # p-flag to enable code profiling with gprof: gprof ./pwhg_main* gmon.out > analysis.txt
 FCFLAGS  = -pg
 CXXFLAGS = -g
 CFLAGS   = -pg
 LDFLAGS  = -ff2c -pg
-
+  
 # recommended compiler flags
-REC_FCFLAGS   = -fno-automatic -fno-range-check
-REC_FCFLAGS  += -ffixed-line-length-none -lgfortran -DU77EXT=0 -DQuad=0
-REC_FCFLAGS  += -ff2c -fno-second-underscore
-REC_FCFLAGS  += $(FCFLAGS)
+ifeq ($(FC), ifort)
+  REC_FCFLAGS   = -fpp -extend-source
+  REC_FCFLAGS  += $(FCFLAGS)
+else ifeq ($(FC), gfortran)
+  REC_FCFLAGS   = -fno-automatic -fno-range-check
+  REC_FCFLAGS  += -ffixed-line-length-none -lgfortran -DU77EXT=0 -DQuad=0
+  REC_FCFLAGS  += -ff2c -fno-second-underscore
+  REC_FCFLAGS  += $(FCFLAGS)
+  #$(error $(REC_FCFLAGS))
+endif
 REC_CXXFLAGS  = -fomit-frame-pointer -ffast-math -Wall -m64
 REC_CXXFLAGS += $(CXXFLAGS)
 REC_CFLAGS    = -fomit-frame-pointer -ffast-math -Wall -m64
@@ -334,7 +344,7 @@ MREALS := $(notdir $(MREALS_F:.f=.o))
 SOURCESMAIN = $(PWHG) $(PDFPACK) $(USER) $(PWHGANALYSIS) $(FUNC) \
 	$(FORMCALC) $(MADGRAPH) $(MREALS)
 
-SOURCESLHEF = $(LHEF) $(PWHGANALYSIS) $(MADGRAPH)
+SOURCESLHEF = $(LHEF) $(PWHGANALYSIS) $(MADGRAPH) set_channel.o
 
 SOURCESPYTHIA = $(PYTHIA) $(PWHGANALYSIS) $(MADGRAPH)
 

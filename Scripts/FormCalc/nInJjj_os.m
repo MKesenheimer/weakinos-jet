@@ -121,8 +121,8 @@ If[$CommandLine[[2]] === "-script",
    p[5] = ToString[$CommandLine[[8]]];
    p[6] = ToString[$CommandLine[[9]]];),
   (*Else*)
-  (p[1] = "g";
-   p[2] = "g";
+  (p[1] = "qd";
+   p[2] = "qdbar";
    p[3] = "nI";
    p[4] = "nJ";
    p[5] = "qd";

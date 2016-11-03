@@ -17,6 +17,11 @@
 	external lnblnk
 #endif
 
+#ifndef __GFORTRAN__
+	integer lnblnk
+	external lnblnk
+#endif
+
 	integer SLHAExist
 	external SLHAExist
 

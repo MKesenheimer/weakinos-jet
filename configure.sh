@@ -8,5 +8,5 @@ PYTHIA=$WORKINGDIR/Tools/pythia8215
 
 #cd $PYTHIA && ./configure --prefix-lib=$WORKINGDIR/Tools --cxx-common='-O2 -fomit-frame-pointer -ffast-math -Wall -m64 -stdlib=libstdc++ -mmacosx-version-min=10.6 -Qunused-arguments -g -ansi -pedantic -W -Wall -Wshadow -fPIC'
 cd $PYTHIA && ./configure --prefix-lib=$WORKINGDIR/Tools
-cd $LT && ./configure
-cd $SLHA && ./configure
+cd $LT && ./configure FC=$1
+cd $SLHA && ./configure FC=$1

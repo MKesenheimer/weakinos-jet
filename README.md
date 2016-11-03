@@ -19,7 +19,9 @@ and if you want the Pythia8 static library
 
 for your own operating system. To do this, call the configuration scripts in the main directory by simply typing
 
-        $ ./configure
+        $ ./configure [compiler]
+
+where the optional parameter compiler is whether gfortran or ifort.
 
 Afterwards you can compile the libraries by typing
 

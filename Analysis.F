@@ -30,7 +30,7 @@ c book all histograms, will be filled later
         call inihists
 
         ! check program that runs analysis
-        print*,
+        print*
         print*, "===================================================="
         if(whcprg.eq."NLO") then
           print*, "fixed-order NLO analysis"
@@ -346,7 +346,7 @@ c calculate quantities that shall be plotted and fill histograms
           print*, "hardest lepton   p_t >",ptDmin," GeV"
           print*, "hardest lepton |eta| <",etaDmax
           print*, "R-separation   R_min >",RDsepmin
-          print*,
+          print*
           print*, "p_t-threshold        >",ptmissmin," GeV"
           print*
           print*, "===================================================="
