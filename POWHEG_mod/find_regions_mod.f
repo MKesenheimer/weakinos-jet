@@ -1289,7 +1289,7 @@ c     cannot come from the same splitting
       else
          is_charged=.false.
       endif
-#ifdef DEBUG
+#ifdef DEBUGQ
       print*,"in find_regions_mod.f:1279"
       print*,"Uncomment to continue"
       print*,fl

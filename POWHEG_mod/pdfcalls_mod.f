@@ -36,13 +36,25 @@
       !pdf(0) = 0D0
       ! u, d, s, c, b, t pdfs equal to zero
       !pdf(1) = 0D0
-      pdf(2) = 0D0      
+      !pdf(2) = 0D0      
+      !pdf(3) = 0D0
+      !pdf(4) = 0D0
+      !pdf(5) = 0D0
+      !pdf(6) = 0D0
+      !pdf(-1) = 0D0  
+      !pdf(-2) = 0D0  
+      !pdf(-3) = 0D0
+      !pdf(-4) = 0D0
+      !pdf(-5) = 0D0
+      !pdf(-6) = 0D0
+      ! test u ubar -> u ubar
+      pdf(0) = 0D0
+      pdf(1) = 0D0    
       pdf(3) = 0D0
       pdf(4) = 0D0
       pdf(5) = 0D0
       pdf(6) = 0D0
-      pdf(-1) = 0D0  
-      pdf(-2) = 0D0  
+      pdf(-1) = 0D0   
       pdf(-3) = 0D0
       pdf(-4) = 0D0
       pdf(-5) = 0D0
@@ -68,30 +80,6 @@
       print*,"pdf(6)",pdf(6)
       stop
 #endif
-
-#ifdef DEBUGQ
-      ! gluon pdf equal zero (test for no gluons in the initial state)
-      !pdf(0) = 0D0
-      ! u, d, s, c, b, t pdfs equal to zero
-      !pdf(1) = 0D0
-      pdf(2) = 0D0      
-      pdf(3) = 0D0
-      pdf(4) = 0D0
-      pdf(5) = 0D0
-      pdf(6) = 0D0
-      pdf(-1) = 0D0  
-      pdf(-2) = 0D0  
-      pdf(-3) = 0D0
-      pdf(-4) = 0D0
-      pdf(-5) = 0D0
-      pdf(-6) = 0D0
-#endif
-
-#ifdef DEBUGQ
-      ! gluon pdf equal zero (test for no gluons in the initial state)
-      pdf(0) = 0D0
-#endif
-      
       end
 
 

@@ -290,13 +290,13 @@ c     set process id using slepton types
 #endif
         
 #ifdef DEBUG
-        ! Born process
-        flst_nborn = 1
-        flst_born(1,1) = 2
-        flst_born(2,1) = -2
-        flst_born(3,1) = 1000022
-        flst_born(4,1) = 1000023
-        flst_born(5,1) = 0
+!         ! Born process
+!         flst_nborn = 1
+!         flst_born(1,1) = 2
+!         flst_born(2,1) = -2
+!         flst_born(3,1) = 1000022
+!         flst_born(4,1) = 1000023
+!         flst_born(5,1) = 0
 
         ! Real process
         flst_nreal = 1

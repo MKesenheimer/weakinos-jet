@@ -47,8 +47,6 @@ c Notes: The flux factor F and the spin factors should be supplied in
 c your phase space routines Born_phsp or Real_osres_phsp if not already 
 c done by the POWHEG-BOX.
 
-
-
 c############### subroutine x1x2phspace ################################
 c uses the two random numbers provided in xx
 c to generate the fraction of the beam momentum

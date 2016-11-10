@@ -12,9 +12,9 @@ SHELL = /bin/sh
 
 ## Compiler and additional compiler Flags
 # use "./configure ifort" first
-#FC  = ifort
+FC  = ifort
 # use "./configure gfortran" first
-FC  = gfortran
+#FC  = gfortran
 CXX = g++
 CC  = gcc
 
@@ -22,13 +22,14 @@ CC  = gcc
 FCFLAGS  = -pg
 CXXFLAGS = -g
 CFLAGS   = -g
-LDFLAGS  = -ff2c -pg
   
 # recommended compiler flags
 ifeq ($(FC), ifort)
+  LDFLAGS  = -pg
   REC_FCFLAGS   = -fpp -extend-source
   REC_FCFLAGS  += $(FCFLAGS)
 else ifeq ($(FC), gfortran)
+  LDFLAGS  = -ff2c -pg
   REC_FCFLAGS   = -fno-automatic -fno-range-check
   REC_FCFLAGS  += -ffixed-line-length-none -lgfortran -DU77EXT=0 -DQuad=0
   REC_FCFLAGS  += -ff2c -fno-second-underscore

@@ -12,9 +12,9 @@ SHELL = /bin/sh
 
 ## Compiler and additional compiler Flags
 # use "./configure ifort" first
-#FC  = ifort
+FC  = ifort
 # use "./configure gfortran" first
-FC  = gfortran
+#FC  = gfortran
 CXX = g++
 CC  = gcc
 
@@ -22,13 +22,14 @@ CC  = gcc
 FCFLAGS  = -pg
 CXXFLAGS = -g
 CFLAGS   = -pg
-LDFLAGS  = -ff2c -pg
   
 # recommended compiler flags
 ifeq ($(FC), ifort)
+  LDFLAGS  = -pg
   REC_FCFLAGS   = -fpp -extend-source
   REC_FCFLAGS  += $(FCFLAGS)
 else ifeq ($(FC), gfortran)
+  LDFLAGS  = -ff2c -pg
   REC_FCFLAGS   = -fno-automatic -fno-range-check
   REC_FCFLAGS  += -ffixed-line-length-none -lgfortran -DU77EXT=0 -DQuad=0
   REC_FCFLAGS  += -ff2c -fno-second-underscore
@@ -300,7 +301,7 @@ PWHG += cernroutines_mod.o find_regions_mod.o gen_real_phsp_mod.o	\
 	sigvirtual_mod.o bbinit_mod.o LesHouches_mod.o 			\
 	LesHouchesreg_mod.o gen_index_mod.o lhefwrite_mod.o		\
 	gen_radiation_mod.o sigremnants_mod.o pwhgreweight_mod.o 	\
-	pdfcalls.o newunit_mod.o pwhg_main_mod.o
+	pdfcalls_mod.o newunit_mod.o pwhg_main_mod.o
 
 ### LHEF ###
 # analyze LHEF output
