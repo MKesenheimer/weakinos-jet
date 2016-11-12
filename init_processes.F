@@ -300,8 +300,8 @@ c     set process id using slepton types
 
         ! Real process
         flst_nreal = 1
-        flst_real(1,1) = 2
-        flst_real(2,1) = -2
+        flst_real(1,1) = -2
+        flst_real(2,1) = 2
         flst_real(3,1) = 1000022
         flst_real(4,1) = 1000023
         flst_real(5,1) = 2

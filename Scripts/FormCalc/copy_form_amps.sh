@@ -60,9 +60,9 @@ NPART=6
 PROCF="./proc_nInJjj_reg_test"
 
 # the name of Mathematica Scripts
-#MSCRIPT="./nInJjj_test.m"
+#MSCRIPT="./nInJjj_os_test.m"
 #MSCRIPT="./nInJjj_os.m"
-MSCRIPT=""
+#MSCRIPT=""
 
 # the type of the amplitudes (born, virt, real, realOS)
 #TYPE="born"
