@@ -21,8 +21,8 @@ time1 = SessionTime[]
 
 
 (*Helpful functions*)
-(*Extract parts of a Feynman amplitude*)
-Component[Amp_,n_]:=Replace[Amp,Amp[_][x__]:>{x}][[n]]
+(*Extract the n-th Amplitudes of a FeynAmplist*)
+Component[FeynAmpList_,n_]:=Replace[FeynAmpList,FeynAmpList[_][x__]:>{x}][[n]]
 (*Get the object that gets replaced in a replacement list {a\[Rule]4} => a*)
 getReplacementHead[f_->_]:=f
 
@@ -51,6 +51,24 @@ FieldMatchExtQ[{Mix[fi__],exti1_,exti2_},{Rev[fi__],extj1_,extj2_}] := And[Match
 FieldMatchExtQ[{fi1_,exti1_,exti2_},{fi2_,extj1_,extj2_}] := And[MatchQ[fi1, fi2],MatchQ[exti1,extj1],MatchQ[exti2,extj2]]
 
 FieldMemberExtQ[ li_, fi_ ] := !VectorQ[List@@ li, !FieldMatchExtQ[#, fi]&]
+
+
+(*Modifying the On-Shell Amplitudes makes it necessary to rearrange the FormCalc Amplitudes.*)
+(*This functions compresses amplitudes with similar summation into a single expression.*)
+(*Not using this function if the summation of an amplitude was modified, can cause FormCalc to write multiple times into the same file.*)
+Clear[AmpSimplify,EvaluateExpr]
+SetAttributes[EvaluateExpr,Orderless];
+SetAttributes[AmpSimplify,Orderless];
+EvaluateExpr[(amp1_)expr1_,(amp2_)expr2_,x___]:=Sequence[{amp1+amp2,expr1},x]/;expr1===expr2
+EvaluateExpr[(amp1_)expr1_,(amp2_)expr2_,x___]:=Sequence[{amp1,expr1},{amp2,expr2},x]/;expr1=!=expr2
+AmpSimplify[famp_[process_][amp___]]:=Times@@@famp[process][EvaluateExpr[amp]]
+
+(*Test*)
+AmpSimplify[Amp[F1][(2+a[i])SumOver[i,2,External],(r*q+b[i])SumOver[i,2,External]]]
+AmpSimplify[Amp[F1][(2+a[i])SumOver[i,2,External],(r*q+b[i])SumOver[i,2,External],(c[j]+c[t])SumOver[j,2,External]]]
+AmpSimplify[Amp[F1][(2+a[i])SumOver[i,2,External],(c[j]+c[t])SumOver[j,2,External],(r*q+b[i])SumOver[i,2,External]]]
+AmpSimplify[Amp[F1][(2+a[i])SumOver[i,2,External],(c[j]+c[t])SumOver[j,2,External],(r*q+b[k])SumOver[k,2,External]]]
+AmpSimplify[Amp[F1][(2+a[i])SumOver[i,2,External],(c[j]+c[t])SumOver[j,2,External],(r*q+b[k])SumOver[k,2,External],d[k]SumOver[k,2,External]]]
 
 
 (*Functions to check for a given particle in s- or t-channel*)
@@ -110,7 +128,7 @@ NotTChannelExtQ[ fi_,ext1_,ext2_ ][ gr_, top_, ___ ] :=
   Not[FieldMemberExtQ[STChannelFieldsExt[top][[2]] /. List@@ gr, {fi,ext1,ext2}]]
 
 
-(*Process dependet input parameters and flags*)
+(*Process dependent input parameters and flags*)
 (*You can now load the script with the command $ MathKernel -script nInJjj.m "d" "dbar" "n1" "n2" "d" "dbar"*)
 Print[$CommandLine]
 If[$CommandLine[[2]] === "-script",
@@ -121,12 +139,12 @@ If[$CommandLine[[2]] === "-script",
    p[5] = ToString[$CommandLine[[8]]];
    p[6] = ToString[$CommandLine[[9]]];),
   (*Else*)
-  (p[1] = "qd";
-   p[2] = "qdbar";
+  (p[1] = "qu";
+   p[2] = "qubar";
    p[3] = "nI";
    p[4] = "nJ";
-   p[5] = "qd";
-   p[6] = "qdbar";)
+   p[5] = "qu";
+   p[6] = "qubar";)
 ]
 
 CalcProcess = p[1]<>p[2]<>"_"<>p[3]<>p[4]<>p[5]<>p[6];
@@ -348,8 +366,9 @@ If[isSquarkRes1,
   (*generate amplitudes*)
   real3546Sq1 = CalcFeynAmp[CreateFeynAmp[ins3546](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)]; (*uncomment ", InvSimplify -> False" for Mac OS X*)
   real3645Sq1 = CalcFeynAmp[CreateFeynAmp[ins3645](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
-  (*real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
-  real = real//.{PowerOf[a_]:>PowerOf[a][1]};*)
+  (*real = real/.{PowerOf[a_]^x_:>PowerOf[a][x]};
+  real = real/.{PowerOf[a_]:>PowerOf[a][1]};*)
+  
   (*insert widths*)
   real3546Sq1 = real3546Sq1/.{Den[x_,y_]:>Den[x,y/.widths]};
   real3645Sq1 = real3645Sq1/.{Den[x_,y_]:>Den[x,y/.widths]};
@@ -357,10 +376,62 @@ If[isSquarkRes1,
   real3546Sq1 = real3546Sq1/.reg2;
   real3645Sq1 = real3645Sq1/.reg2;
 
-  (*set the sfermion index in the external fortran program (leave it open here)*)
-  real3546Sq1ExtSum = real3546Sq1//.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
-  real3645Sq1ExtSum = real3645Sq1//.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
+  (*Print the results*)
+  (*Print["real3546Sq1 = "];
+  Print[real3546Sq1];
+  Print["real3645Sq1 = "];
+  Print[real3645Sq1];*)
+
+  (*generate the os-amplitudes with sums which are evaluated externally*)
+  (*insert an additional IndexDelta if the sum over sfermion indices occurs only once*)
+  (*we sum over two sfermion indices in the external fortran program*)
+  (*Hack: If an IndexDelta[Sfe7, Sfe8] is inserted FormCalc gets automatically rid of it after simplifying the summed expression.*)
+  (*=> We have to insert the place holder IndexDelta[Sq1, Sq2] which is not known by FormCalc.*)
+  Clear[AdditionalDelta];
+  AdditionalDelta[args__] := IndexDelta[Sq1,Sq2] /;
+    (! FreeQ[{args}, SumOver[Index[Sfermion, 7], 2]] && FreeQ[{args}, SumOver[Index[Sfermion, 8], 2]]) ||
+    (FreeQ[{args}, SumOver[Index[Sfermion, 8], 2]] && ! FreeQ[{args}, SumOver[Index[Sfermion, 7], 2]]);
+  _AdditionalDelta = 1;
+  
+  (*generate amplitudes*)
+  famps3546 = CreateFeynAmp[ins3546];
+  famps3546 = MultiplyDiagrams[AdditionalDelta][famps3546];
+  real3546Sq1ExtSum = CalcFeynAmp[famps3546(*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)]; (*uncomment ", InvSimplify -> False" for Mac OS X*)
+  famps3645 = CreateFeynAmp[ins3645];
+  famps3645 = MultiplyDiagrams[AdditionalDelta][famps3645];
+  real3645Sq1ExtSum = CalcFeynAmp[famps3645(*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
+  (*real = real/.{PowerOf[a_]^x_:>PowerOf[a][x]};
+  real = real/.{PowerOf[a_]:>PowerOf[a][1]};*)
+  
+  (*insert widths*)
+  real3546Sq1ExtSum = real3546Sq1ExtSum/.{Den[x_,y_]:>Den[x,y/.widths]};
+  real3645Sq1ExtSum = real3645Sq1ExtSum/.{Den[x_,y_]:>Den[x,y/.widths]};
+  (*insert the regulator*)
+  real3546Sq1ExtSum = real3546Sq1ExtSum/.reg2;
+  real3645Sq1ExtSum = real3645Sq1ExtSum/.reg2;
+  
+  (*set the sfermion index with the external fortran program (leave it open here)*)
+  (*first replace possible occurrences of a double sum*)
+  real3546Sq1ExtSum = real3546Sq1ExtSum/.{SumOver[Sfe7,i_] SumOver[Sfe8,i_]:>SumOver[Sfe7,i,External] SumOver[Sfe8,i,External]};
+  real3645Sq1ExtSum = real3645Sq1ExtSum/.{SumOver[Sfe7,i_] SumOver[Sfe8,i_]:>SumOver[Sfe7,i,External] SumOver[Sfe8,i,External]};
+  (*then replace single sums with a double sum*)
+  real3546Sq1ExtSum = real3546Sq1ExtSum/.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External] SumOver[Sfe8,i,External]};
+  real3546Sq1ExtSum = real3546Sq1ExtSum/.{SumOver[Sfe8,i_]:>SumOver[Sfe7,i,External] SumOver[Sfe8,i,External]};
+  real3645Sq1ExtSum = real3645Sq1ExtSum/.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External] SumOver[Sfe8,i,External]};
+  real3645Sq1ExtSum = real3645Sq1ExtSum/.{SumOver[Sfe8,i_]:>SumOver[Sfe7,i,External] SumOver[Sfe8,i,External]};
+
+  (*Compress the FormCalc amplitude*)
+  real3546Sq1ExtSum = AmpSimplify[real3546Sq1ExtSum];
+  real3645Sq1ExtSum = AmpSimplify[real3645Sq1ExtSum];
+
+  (*finally replace the place holder, this is fine now since the sums over Sfe7 and Sfe8 are carried out externally*)
+  real3546Sq1ExtSum = real3546Sq1ExtSum/.{Sq1->Sfe7,Sq2->Sfe8};
+  real3645Sq1ExtSum = real3645Sq1ExtSum/.{Sq1->Sfe7,Sq2->Sfe8};
+
+  (*Print the results*)
+  Print["real3546Sq1ExtSum = "];
   Print[real3546Sq1ExtSum];
+  Print["real3645Sq1ExtSum = "];
   Print[real3645Sq1ExtSum];
 ]
 
@@ -499,8 +570,8 @@ If[isGluinoRes,
   real365Gl = CalcFeynAmp[CreateFeynAmp[ins365](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
   real456Gl = CalcFeynAmp[CreateFeynAmp[ins456](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)]; 
   real465Gl = CalcFeynAmp[CreateFeynAmp[ins465](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
-  (*real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
-  real = real//.{PowerOf[a_]:>PowerOf[a][1]};*)
+  (*real = real/.{PowerOf[a_]^x_:>PowerOf[a][x]};
+  real = real/.{PowerOf[a_]:>PowerOf[a][1]};*)
   (*insert widths*)
   real356Gl = real356Gl/.{Den[x_,y_]:>Den[x,y/.widths]};
   real365Gl = real365Gl/.{Den[x_,y_]:>Den[x,y/.widths]};
@@ -513,10 +584,10 @@ If[isGluinoRes,
   real465Gl = real465Gl/.reg1;
 
   (*set the sfermion index in the external fortran program (leave it open here)*)
-  real356GlExtSum = real356Gl//.{SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
-  real365GlExtSum = real365Gl//.{SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
-  real456GlExtSum = real456Gl//.{SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
-  real465GlExtSum = real465Gl//.{SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
+  real356GlExtSum = real356Gl/.{SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
+  real365GlExtSum = real365Gl/.{SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
+  real456GlExtSum = real456Gl/.{SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
+  real465GlExtSum = real465Gl/.{SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
 
   Print[real356GlExtSum];
   Print[real365GlExtSum];
@@ -659,8 +730,8 @@ If[isSquarkRes2,
   real365Sq2 = CalcFeynAmp[CreateFeynAmp[ins365](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
   real456Sq2 = CalcFeynAmp[CreateFeynAmp[ins456](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)]; 
   real465Sq2 = CalcFeynAmp[CreateFeynAmp[ins465](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
-  (*real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
-  real = real//.{PowerOf[a_]:>PowerOf[a][1]};*)
+  (*real = real/.{PowerOf[a_]^x_:>PowerOf[a][x]};
+  real = real/.{PowerOf[a_]:>PowerOf[a][1]};*)
   (*insert widths*)
   real356Sq2 = real356Sq2/.{Den[x_,y_]:>Den[x,y/.widths]};
   real365Sq2 = real365Sq2/.{Den[x_,y_]:>Den[x,y/.widths]};
@@ -673,10 +744,10 @@ If[isSquarkRes2,
   real465Sq2 = real465Sq2/.reg2;
 
   (*set the sfermion index in the external fortran program (leave it open here)*)
-  real356Sq2ExtSum = real356Sq2//.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
-  real365Sq2ExtSum = real365Sq2//.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
-  real456Sq2ExtSum = real456Sq2//.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
-  real465Sq2ExtSum = real465Sq2//.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
+  real356Sq2ExtSum = real356Sq2/.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
+  real365Sq2ExtSum = real365Sq2/.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
+  real456Sq2ExtSum = real456Sq2/.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
+  real465Sq2ExtSum = real465Sq2/.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External], SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
 
   Print[real356Sq2ExtSum];
   Print[real365Sq2ExtSum];
@@ -714,8 +785,8 @@ DoPaint[insNR, "realNR"];
 widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
 
 realNR = CalcFeynAmp[CreateFeynAmp[insNR](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify -> False*)];
-(*realNR = realNR//.{PowerOf[a_]^x_:>PowerOf[a][x]};
-realNR = realNR//.{PowerOf[a_]:>PowerOf[a][1]};*)
+(*realNR = realNR/.{PowerOf[a_]^x_:>PowerOf[a][x]};
+realNR = realNR/.{PowerOf[a_]:>PowerOf[a][1]};*)
 realNR = realNR/.{Den[x_,y_]:>Den[x,y/.widths]}
 
 
