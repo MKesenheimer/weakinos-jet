@@ -173,8 +173,8 @@ DoPaint[ins, "real"];
 real = CalcFeynAmp[CreateFeynAmp[ins](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*), InvSimplify->False];
 (*Export["real."<>name<>".wdx",real,"WDX"]*)
 (*apply max coupling rules*)
-(*real = real//.{PowerOf[a_]^x_:>PowerOf[a][x]};
-real = real//.{PowerOf[a_]:>PowerOf[a][1]};*)
+(*real = real/.{PowerOf[a_]^x_:>PowerOf[a][x]};
+real = real/.{PowerOf[a_]:>PowerOf[a][1]};*)
 (*Export["real0."<>name<>".wdx",real,"WDX"]*)
 
 (*insert the particle widths*)
