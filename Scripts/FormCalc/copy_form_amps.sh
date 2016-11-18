@@ -56,18 +56,18 @@ NPART=6
 
 # process list file
 #PROCF="./proc_nInJjj_nr"
-PROCF="./proc_nInJjj_os"
-#PROCF="./proc_nInJjj_reg"
+#PROCF="./proc_nInJjj_os_test"
+PROCF="./proc_nInJjj_reg_test"
 
 # the name of Mathematica Scripts
 #MSCRIPT="./nInJjj.m"
-MSCRIPT="./nInJjj_os.m"
-#MSCRIPT=""
+#MSCRIPT="./nInJjj_os.m"
+MSCRIPT=""
 
 # the type of the amplitudes (born, virt, real, realOS)
 #TYPE="born"
-TYPE="realOS"
-#TYPE="real"
+#TYPE="realOS"
+TYPE="real"
 
 # the number of subchannels of realOS amplitudes (f.e. ll, lr, rl, rr)
 NSQUARKSUBCHANNELS=4
@@ -294,9 +294,9 @@ for i in `seq 0 1 $((NPROC-1))`; do
             rename $file "${PRE2}_"
             # -> modify this if needed.
             # if the channel identifiers contain the open squark indice "Sq1"
-            # rename Sfe8 with unassigned variable name
+            # rename Sfe7 with unassigned variable name
             if [[ $PRE2 == *"Sq1" ]] && [[ $TYPE == "realOS" ]]; then
-                sed -i -e "s/\<Sfe8\>/Sq1/g" $file
+                sed -i -e "s/\<Sfe7\>/Sq1/g" $file
             fi
             # if the channel identifiers contain the open squark indices "Sq1Sq2"
             # rename Sfe7 and Sfe8 with unassigned variable names
@@ -308,9 +308,9 @@ for i in `seq 0 1 $((NPROC-1))`; do
         rename2 ${PRE2}_vars.h
         # -> modify this if needed.
         # if the channel identifiers contain the open squark indice "Sq1"
-        # rename Sfe8 with unassigned variable name
+        # rename Sfe7 with unassigned variable name
         if [[ $PRE2 == *"Sq1" ]] && [[ $TYPE == "realOS" ]]; then
-            sed -i -e "s/\<Sfe8\>/2/g" ${PRE2}_vars.h
+            sed -i -e "s/\<Sfe7\>/2/g" ${PRE2}_vars.h
         fi
         # if the channel identifiers contain the open squark indices "Sq1Sq2"
         # rename Sfe7 and Sfe8 with unassigned variable names

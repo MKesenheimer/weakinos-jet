@@ -103,11 +103,18 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
           do ichan=1,nos
             ampos = 0D0
             call getRealOSAmps(p,rflav,ichan,ampos)
-            !print*,ichan,amp,ampos,amp-ampos
+#ifdef DEBUGQ
+            print*,"ichan: ",ichan
+            print*,"amp  : ",amp
+            print*,"ampos: ",ampos
+            print*,"amp-ampos: ",amp-ampos
+            print*
+#endif
             amp = amp - ampos
           enddo
         endif
 #endif
+        
 
 #ifdef DSUB_II_TEST
         ! test the DSUB_II scheme (here without the correct jacobian)

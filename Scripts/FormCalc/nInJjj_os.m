@@ -143,8 +143,8 @@ If[$CommandLine[[2]] === "-script",
    p[2] = "qubar";
    p[3] = "nI";
    p[4] = "nJ";
-   p[5] = "qu";
-   p[6] = "qubar";)
+   p[5] = "qd";
+   p[6] = "qdbar";)
 ]
 
 CalcProcess = p[1]<>p[2]<>"_"<>p[3]<>p[4]<>p[5]<>p[6];
@@ -584,10 +584,10 @@ If[isGluinoRes,
   real465Gl = real465Gl/.reg1;
 
   (*set the sfermion index in the external fortran program (leave it open here)*)
-  real356GlExtSum = real356Gl/.{SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
-  real365GlExtSum = real365Gl/.{SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
-  real456GlExtSum = real456Gl/.{SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
-  real465GlExtSum = real465Gl/.{SumOver[Sfe8,i_]:>SumOver[Sfe8,i,External]};
+  real356GlExtSum = real356Gl/.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External]};
+  real365GlExtSum = real365Gl/.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External]};
+  real456GlExtSum = real456Gl/.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External]};
+  real465GlExtSum = real465Gl/.{SumOver[Sfe7,i_]:>SumOver[Sfe7,i,External]};
 
   Print[real356GlExtSum];
   Print[real365GlExtSum];

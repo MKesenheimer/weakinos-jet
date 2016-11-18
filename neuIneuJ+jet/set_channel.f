@@ -119,7 +119,9 @@ c
           endif
         endif
         
-        ! set the masses
+        ! TODO: indices aus subroutine set_process(nlegs, id, M) verwenden!
+        
+        ! set the masses, squark double resonances
         if(ichan.ge.1 .and. ichan.le.8) then
           osres_mi = par_Fin1mass
           osres_mk = par_Fin2mass
@@ -175,7 +177,8 @@ c
               print*, "error in set_channel: flav(l)", flav(osres_l)
               stop
           endselect
-          
+        
+        ! gluino single resonances
         elseif(ichan.ge.9 .and. ichan.le.16) then
           osres_mijk = par_MGl
           osres_wijk = par_WGl
