@@ -46,28 +46,31 @@ WORKINGDIR=${PWD}
 #                    as proc_nInJjj_os, but without channel identifiers)
 
 # the name of the target process directory
-PROCDIR="neuIneuJ+jet/FormCalc_Reals"
+PROCDIR="neuIneuJ+jet/FormCalc_Virtuals"
 
 # where to copy the amplitudes to
 DEST=${PWD}/../../${PROCDIR}
 
 # number of particles (incoming + outgoing)
-NPART=6
+NPART=5
 
 # process list file
+PROCF="./proc_nInJj_test"
 #PROCF="./proc_nInJjj_nr"
 #PROCF="./proc_nInJjj_os_test"
-PROCF="./proc_nInJjj_reg_test"
+#PROCF="./proc_nInJjj_reg_test"
 
 # the name of Mathematica Scripts
+MSCRIPT="./nInJj_virt.m"
 #MSCRIPT="./nInJjj.m"
 #MSCRIPT="./nInJjj_os.m"
-MSCRIPT=""
+#MSCRIPT=""
 
 # the type of the amplitudes (born, virt, real, realOS)
 #TYPE="born"
+TYPE="virt"
 #TYPE="realOS"
-TYPE="real"
+#TYPE="real"
 
 # the number of subchannels of realOS amplitudes (f.e. ll, lr, rl, rr)
 NSQUARKSUBCHANNELS=4
@@ -76,6 +79,20 @@ NGLUINOSUBCHANNELS=2
 ########################################################################
 #       -*- usually no editing is required below this line -*-         #
 ########################################################################
+
+# does the script run on Linux or Mac?
+UNAME=$(uname)
+if [[ $UNAME == Darwin ]]; then
+    # name of sed(gsed for Mac OSX)
+    SED=gsed
+    # name MathKernel
+    MATHK=/Applications/Mathematica.app/Contents/MacOS/MathKernel
+else
+    # name of sed (sed for Linux)
+    SED=sed
+    # name MathKernel
+    MATHK=MathKernel
+fi
 
 # convert PDG numbers to particle names
 # $1: PDG number
@@ -110,68 +127,68 @@ function pdg2names() {
 # $1: filename
 # $2: prefix of new variable
 function rename() {
-    sed -i -e "s/\t/        /g" $1
-    sed -i -e "s/vars.h/${2}vars.h/g" $1
-    sed -i -e "s/${TYPE}/${2}${TYPE}/g" $1
-    sed -i -e "s/vert/${2}vert/g" $1
-    sed -i -e "s/self/${2}self/g" $1
-    sed -i -e "s/box/${2}box/g" $1
-    sed -i -e "s/SquaredME/${2}SquaredME/g" $1
-    sed -i -e "s/abbr0h/${2}abbr0h/g" $1
-    sed -i -e "s/abbr1h/${2}abbr1h/g" $1
-    sed -i -e "s/abbr0s/${2}abbr0s/g" $1
-    sed -i -e "s/abbr0a/${2}abbr0a/g" $1
-    sed -i -e "s/abbr1s/${2}abbr1s/g" $1
-    sed -i -e "s/abbr1a/${2}abbr1a/g" $1    
-    sed -i -e 's/#ifdef DEBUG/#ifdef DEBUGQ/g' $1
+    $SED -i -e "s/\t/        /g" $1
+    $SED -i -e "s/vars.h/${2}vars.h/g" $1
+    $SED -i -e "s/${TYPE}/${2}${TYPE}/g" $1
+    $SED -i -e "s/vert/${2}vert/g" $1
+    $SED -i -e "s/self/${2}self/g" $1
+    $SED -i -e "s/box/${2}box/g" $1
+    $SED -i -e "s/SquaredME/${2}SquaredME/g" $1
+    $SED -i -e "s/abbr0h/${2}abbr0h/g" $1
+    $SED -i -e "s/abbr1h/${2}abbr1h/g" $1
+    $SED -i -e "s/abbr0s/${2}abbr0s/g" $1
+    $SED -i -e "s/abbr0a/${2}abbr0a/g" $1
+    $SED -i -e "s/abbr1s/${2}abbr1s/g" $1
+    $SED -i -e "s/abbr1a/${2}abbr1a/g" $1    
+    $SED -i -e 's/#ifdef DEBUG/#ifdef DEBUGQ/g' $1
     # handling of general process indices
-    sed -i -e "s/\<Gen1\>/Gen(1)/g" $1
-    sed -i -e "s/\<Gen2\>/Gen(2)/g" $1
-    sed -i -e "s/\<Gen3\>/Gen(3)/g" $1
-    sed -i -e "s/\<Gen4\>/Gen(4)/g" $1
-    sed -i -e "s/\<Gen5\>/Gen(5)/g" $1
-    sed -i -e "s/\<Gen6\>/Gen(6)/g" $1
-    sed -i -e "s/\<Neu1\>/Neu(1)/g" $1
-    sed -i -e "s/\<Neu2\>/Neu(2)/g" $1
-    sed -i -e "s/\<Neu3\>/Neu(3)/g" $1
-    sed -i -e "s/\<Neu4\>/Neu(4)/g" $1
-    sed -i -e "s/\<Neu5\>/Neu(5)/g" $1
-    sed -i -e "s/\<Neu6\>/Neu(6)/g" $1
-    sed -i -e "s/\<Cha1\>/Cha(1)/g" $1
-    sed -i -e "s/\<Cha2\>/Cha(2)/g" $1
-    sed -i -e "s/\<Cha3\>/Cha(3)/g" $1
-    sed -i -e "s/\<Cha4\>/Cha(4)/g" $1
-    sed -i -e "s/\<Cha5\>/Cha(5)/g" $1
-    sed -i -e "s/\<Cha6\>/Cha(6)/g" $1
+    $SED -i -e "s/\<Gen1\>/Gen(1)/g" $1
+    $SED -i -e "s/\<Gen2\>/Gen(2)/g" $1
+    $SED -i -e "s/\<Gen3\>/Gen(3)/g" $1
+    $SED -i -e "s/\<Gen4\>/Gen(4)/g" $1
+    $SED -i -e "s/\<Gen5\>/Gen(5)/g" $1
+    $SED -i -e "s/\<Gen6\>/Gen(6)/g" $1
+    $SED -i -e "s/\<Neu1\>/Neu(1)/g" $1
+    $SED -i -e "s/\<Neu2\>/Neu(2)/g" $1
+    $SED -i -e "s/\<Neu3\>/Neu(3)/g" $1
+    $SED -i -e "s/\<Neu4\>/Neu(4)/g" $1
+    $SED -i -e "s/\<Neu5\>/Neu(5)/g" $1
+    $SED -i -e "s/\<Neu6\>/Neu(6)/g" $1
+    $SED -i -e "s/\<Cha1\>/Cha(1)/g" $1
+    $SED -i -e "s/\<Cha2\>/Cha(2)/g" $1
+    $SED -i -e "s/\<Cha3\>/Cha(3)/g" $1
+    $SED -i -e "s/\<Cha4\>/Cha(4)/g" $1
+    $SED -i -e "s/\<Cha5\>/Cha(5)/g" $1
+    $SED -i -e "s/\<Cha6\>/Cha(6)/g" $1
     # jede Zeile löschen, die #include "inline.h" enthält
-    sed -i -e '/^#include "inline.h"/d' $1
+    $SED -i -e '/^#include "inline.h"/d' $1
 }
 
 # rename variables in include files
 # $1: filename
 function rename2() {
-        sed -i -e "s/\t/        /g" $1
-        sed -i -e "s/formfactors/${PRE2}_formfactors/g" $1
+        $SED -i -e "s/\t/        /g" $1
+        $SED -i -e "s/formfactors/${PRE2}_formfactors/g" $1
         # replace the indices \<Neu3\>, Neu4, Cha3, Cha4, ... with constants
         # max generation
-        sed -i -e "s/\<Gen1\>/3/g" $1
-        sed -i -e "s/\<Gen2\>/3/g" $1
-        sed -i -e "s/\<Gen3\>/3/g" $1
-        sed -i -e "s/\<Gen4\>/3/g" $1
-        sed -i -e "s/\<Gen5\>/3/g" $1
-        sed -i -e "s/\<Gen6\>/3/g" $1
-        sed -i -e "s/\<Neu1\>/4/g" $1
-        sed -i -e "s/\<Neu2\>/4/g" $1
-        sed -i -e "s/\<Neu3\>/4/g" $1
-        sed -i -e "s/\<Neu4\>/4/g" $1
-        sed -i -e "s/\<Neu5\>/4/g" $1
-        sed -i -e "s/\<Neu6\>/4/g" $1
-        sed -i -e "s/\<Cha1\>/2/g" $1
-        sed -i -e "s/\<Cha2\>/2/g" $1
-        sed -i -e "s/\<Cha3\>/2/g" $1
-        sed -i -e "s/\<Cha4\>/2/g" $1
-        sed -i -e "s/\<Cha5\>/2/g" $1
-        sed -i -e "s/\<Cha6\>/2/g" $1
+        $SED -i -e "s/\<Gen1\>/3/g" $1
+        $SED -i -e "s/\<Gen2\>/3/g" $1
+        $SED -i -e "s/\<Gen3\>/3/g" $1
+        $SED -i -e "s/\<Gen4\>/3/g" $1
+        $SED -i -e "s/\<Gen5\>/3/g" $1
+        $SED -i -e "s/\<Gen6\>/3/g" $1
+        $SED -i -e "s/\<Neu1\>/4/g" $1
+        $SED -i -e "s/\<Neu2\>/4/g" $1
+        $SED -i -e "s/\<Neu3\>/4/g" $1
+        $SED -i -e "s/\<Neu4\>/4/g" $1
+        $SED -i -e "s/\<Neu5\>/4/g" $1
+        $SED -i -e "s/\<Neu6\>/4/g" $1
+        $SED -i -e "s/\<Cha1\>/2/g" $1
+        $SED -i -e "s/\<Cha2\>/2/g" $1
+        $SED -i -e "s/\<Cha3\>/2/g" $1
+        $SED -i -e "s/\<Cha4\>/2/g" $1
+        $SED -i -e "s/\<Cha5\>/2/g" $1
+        $SED -i -e "s/\<Cha6\>/2/g" $1
 }
 
 # read in the process list and ignore what comes after #
@@ -241,8 +258,7 @@ for i in `seq 0 1 $((NPROC-1))`; do
         echo "removing ${PROC}_${TYPE}"
         rm -rf ${PROC}_${TYPE}
         echo "calling Mathematica $MSCRIPT -script $MSCRIPT ${P[@]}"
-        #/Applications/Mathematica.app/Contents/MacOS/MathKernel -script $MSCRIPT ${P[@]}
-        MathKernel -script $MSCRIPT ${P[@]}
+        $MATHK -script $MSCRIPT ${P[@]}
     fi
     PROCESSES+=($PROC)
 done
@@ -296,13 +312,13 @@ for i in `seq 0 1 $((NPROC-1))`; do
             # if the channel identifiers contain the open squark indice "Sq1"
             # rename Sfe7 with unassigned variable name
             if [[ $PRE2 == *"Sq1" ]] && [[ $TYPE == "realOS" ]]; then
-                sed -i -e "s/\<Sfe7\>/Sq1/g" $file
+                $SED -i -e "s/\<Sfe7\>/Sq1/g" $file
             fi
             # if the channel identifiers contain the open squark indices "Sq1Sq2"
             # rename Sfe7 and Sfe8 with unassigned variable names
             if [[ $PRE2 == *"Sq1Sq2" ]] && [[ $TYPE == "realOS" ]]; then
-                sed -i -e "s/\<Sfe7\>/Sq1/g" $file
-                sed -i -e "s/\<Sfe8\>/Sq2/g" $file
+                $SED -i -e "s/\<Sfe7\>/Sq1/g" $file
+                $SED -i -e "s/\<Sfe8\>/Sq2/g" $file
             fi
         done
         rename2 ${PRE2}_vars.h
@@ -310,13 +326,13 @@ for i in `seq 0 1 $((NPROC-1))`; do
         # if the channel identifiers contain the open squark indice "Sq1"
         # rename Sfe7 with unassigned variable name
         if [[ $PRE2 == *"Sq1" ]] && [[ $TYPE == "realOS" ]]; then
-            sed -i -e "s/\<Sfe7\>/2/g" ${PRE2}_vars.h
+            $SED -i -e "s/\<Sfe7\>/2/g" ${PRE2}_vars.h
         fi
         # if the channel identifiers contain the open squark indices "Sq1Sq2"
         # rename Sfe7 and Sfe8 with unassigned variable names
         if [[ $PRE2 == *"Sq1Sq2" ]] && [[ $TYPE == "realOS" ]]; then
-            sed -i -e "s/\<Sfe7\>/2/g" ${PRE2}_vars.h
-            sed -i -e "s/\<Sfe8\>/2/g" ${PRE2}_vars.h
+            $SED -i -e "s/\<Sfe7\>/2/g" ${PRE2}_vars.h
+            $SED -i -e "s/\<Sfe8\>/2/g" ${PRE2}_vars.h
         fi
         cp ${DEST}/${PRE2}_squaredME/*.F ${DEST}/squaredME/
         cp ${DEST}/${PRE2}_squaredME/${PRE2}_vars.h ${DEST}/include

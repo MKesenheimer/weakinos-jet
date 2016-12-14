@@ -95,7 +95,7 @@ c levi-civita symbol
         x(2,3) = 0
         x(3,3) = 1
         ! calculate levi_civita as determinant of (x1,x2,x3)
-        levi_civita = -(x(i,3)*x(j,2)*x(k,1)) + x(i,2)*x(j,3)*x(k,1)
+        levi_civita = - x(i,3)*x(j,2)*x(k,1) + x(i,2)*x(j,3)*x(k,1)
      &                + x(i,3)*x(j,1)*x(k,2) - x(i,1)*x(j,3)*x(k,2)
      &                - x(i,2)*x(j,1)*x(k,3) + x(i,1)*x(j,2)*x(k,3)
       end
@@ -105,6 +105,24 @@ c denominator function needed by FormCalc
         implicit none
         double precision x,y
         Den = 1/(x-y)
+      end
+      
+c the epsilon tensor fully contracted with four-momenta k1..k4
+      double precision function Epsilon(k1,k2,k3,k4)
+        implicit none
+        double precision k1(0:3),k2(0:3),k3(0:3),k4(0:3)
+        Epsilon = k1(3)*k2(2)*k3(1)*k4(0) - k1(2)*k2(3)*k3(1)*k4(0) - 
+     &            k1(3)*k2(1)*k3(2)*k4(0) + k1(1)*k2(3)*k3(2)*k4(0) + 
+     &            k1(2)*k2(1)*k3(3)*k4(0) - k1(1)*k2(2)*k3(3)*k4(0) - 
+     &            k1(3)*k2(2)*k3(0)*k4(1) + k1(2)*k2(3)*k3(0)*k4(1) + 
+     &            k1(3)*k2(0)*k3(2)*k4(1) - k1(0)*k2(3)*k3(2)*k4(1) - 
+     &            k1(2)*k2(0)*k3(3)*k4(1) + k1(0)*k2(2)*k3(3)*k4(1) + 
+     &            k1(3)*k2(1)*k3(0)*k4(2) - k1(1)*k2(3)*k3(0)*k4(2) - 
+     &            k1(3)*k2(0)*k3(1)*k4(2) + k1(0)*k2(3)*k3(1)*k4(2) + 
+     &            k1(1)*k2(0)*k3(3)*k4(2) - k1(0)*k2(1)*k3(3)*k4(2) - 
+     &            k1(2)*k2(1)*k3(0)*k4(3) + k1(1)*k2(2)*k3(0)*k4(3) + 
+     &            k1(2)*k2(0)*k3(1)*k4(3) - k1(0)*k2(2)*k3(1)*k4(3) - 
+     &            k1(1)*k2(0)*k3(2)*k4(3) + k1(0)*k2(1)*k3(2)*k4(3)
       end
       
 c takes an array with n entries, if entry is negative: 

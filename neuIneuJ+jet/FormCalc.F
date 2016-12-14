@@ -1,4 +1,4 @@
-c############### FormCalc.f ################################################
+c############### FormCalc.f ############################################
 c last modified by MK, 22.01.2015
 c weakino pair + jet production
 c Interface to the FormCalc amplitudes
@@ -74,6 +74,12 @@ c############### subroutine getBornAmps ################################
         ! TODO: calculate bmunu with FormCalc
         ! for now it is calculated by MadGraph
         call sborn_proc(p,flav,born,bornjk,bmunu)
+        call bornmunu_ubaru_n1n2g(p,bmunu)
+        
+        !print*,bmunu(0,:,5)
+        !print*,bmunu(1,:,5)
+        !print*,bmunu(2,:,5)
+        !print*,bmunu(3,:,5)
         
         ! flags: Bit0 (reset) = 1, Bit1 (loop) = 0 -> B01 = D1
         flags = 1
@@ -227,6 +233,7 @@ c############### subroutine getAmps ####################################
         else
           if(isodd(abs(f1)) .and. isodd(abs(f2))) then
             call qdqdbar_nInJg_squaredME(fc_result,helicities,flags)
+            !call qdbarqd_nInJg_squaredME(fc_result,helicities,flags) ! TEST
             goto 20
           elseif(iseven(abs(f1)) .and. iseven(abs(f2))) then
             call ququbar_nInJg_squaredME(fc_result,helicities,flags)

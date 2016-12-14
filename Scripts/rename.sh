@@ -1,8 +1,8 @@
 #!/bin/bash
 # what to replace
-FIND="cnosres"
+FIND="Gen(6)"
 # replacement
-REP="nosres"
+REP="Gen6"
 
 
 for filename in $(grep -lirn $FIND .); do
@@ -12,3 +12,5 @@ for filename in $(grep -lirn $FIND .); do
     echo $filename
     sed -i -e "s/${FIND}/${REP}/g" $filename
 done
+
+rm *.F-e
