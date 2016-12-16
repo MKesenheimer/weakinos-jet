@@ -61,6 +61,10 @@ c############### subroutine getBornAmps ################################
         integer flav(nlegborn)
         double precision amp(2),born,bornjk(nlegborn,nlegborn)
         double precision bmunu(0:3,0:3,nlegborn)
+#ifdef DEBUG
+        double precision bmunu1(0:3,0:3,nlegborn)
+        double precision b
+#endif
         integer flags
         double precision NC, CF, CA, eighth
         parameter (NC=3D0, CF=4D0/3D0, CA=3D0, eighth=1D0/8D0)
@@ -74,12 +78,26 @@ c############### subroutine getBornAmps ################################
         ! TODO: calculate bmunu with FormCalc
         ! for now it is calculated by MadGraph
         call sborn_proc(p,flav,born,bornjk,bmunu)
-        call bornmunu_ubaru_n1n2g(p,bmunu)
         
-        !print*,bmunu(0,:,5)
-        !print*,bmunu(1,:,5)
-        !print*,bmunu(2,:,5)
-        !print*,bmunu(3,:,5)
+#ifdef DEBUGQ
+        if(flav(1).eq.-2 .and. flav(2).eq.2 .and. flav(5).eq.0) then
+          call bornmunu_ubaru_n1n2g(p,bmunu1)
+          call born_ubaru_n1n2g(p,b)
+          print*,born,b,born/b
+          print*
+          print*,bmunu(0,:,5)
+          print*,bmunu(1,:,5)
+          print*,bmunu(2,:,5)
+          print*,bmunu(3,:,5)
+          print*
+          print*,bmunu1(0,:,5)
+          print*,bmunu1(1,:,5)
+          print*,bmunu1(2,:,5)
+          print*,bmunu1(3,:,5)
+          print*
+          stop
+        endif
+#endif
         
         ! flags: Bit0 (reset) = 1, Bit1 (loop) = 0 -> B01 = D1
         flags = 1

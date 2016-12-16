@@ -260,6 +260,9 @@ C ----------
       JAMP(   1) = -AMP(   1)-AMP(   2)-AMP(   3)-AMP(   4)-AMP(   5)
      &             -AMP(   6)+AMP(   7)+AMP(   8)+AMP(   9)+AMP(  10)
      &             +AMP(  11)+AMP(  12)+AMP(  13)+AMP(  14)
+#ifdef DEBUGQ
+      JAMP(   1) = +AMP(   13)+AMP(   14)
+#endif
       B_CL_005_002 = 0.D0 
       DO I = 1, NCOLOR
           ZTEMP =(0.D0,0.D0)

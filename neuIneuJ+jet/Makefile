@@ -12,9 +12,9 @@ SHELL = /bin/sh
 
 ## Compiler and additional compiler Flags
 # use "./configure ifort" first
-FC  = ifort
+#FC  = ifort
 # use "./configure gfortran" first
-#FC  = gfortran
+FC  = gfortran
 CXX = g++
 CC  = gcc
 

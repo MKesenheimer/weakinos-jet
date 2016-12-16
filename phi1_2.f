@@ -58,7 +58,7 @@ c psgen=0:     flat in 1/tau
 c psgen=1:     flat in tau
 c psgen=2:     flat in log tau with arbitrary exponent
 c psgen=3:     flat in tan tau with arbitrary exponent 
-      subroutine x1x2phspace(sbeams,minmass,xx,x1,x2,s,jac)
+      subroutine x1x2phspace(psgen,sbeams,minmass,xx,x1,x2,s,jac)
         implicit none
         ! input:
         double precision sbeams,minmass,xx(2)
@@ -80,9 +80,6 @@ c psgen=3:     flat in tan tau with arbitrary exponent
 #define DEBUG1
         xx(1) = 1D0
 #endif        
-
-        ! select phase space importance sampling
-        psgen = 2
 
         ! map xx(1) to tau = x1*x2
         ! with condition:

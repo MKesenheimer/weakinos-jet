@@ -13,119 +13,13 @@ To be on the sure side use FeynArts 3.9 and FormCal 8.4.
 Clear["Global`*"]
 SetDirectory[NotebookDirectory[]];
 << FeynArts`
+<< FeynArtsAdd`
 << FormCalc`
+<< FormCalcAdd`
 ClearProcess[]
 <<"!rm *.frm"
 
 time1 = SessionTime[]
-
-
-(*Helpful functions*)
-(*Extract the n-th Amplitudes of a FeynAmplist*)
-Component[FeynAmpList_,n_]:=Replace[FeynAmpList,FeynAmpList[_][x__]:>{x}][[n]]
-(*Get the object that gets replaced in a replacement list {a\[Rule]4} => a*)
-getReplacementHead[f_->_]:=f
-
-(*count the arguments of a function*)
-ClearAll[countArgs];
-SetAttributes[countArgs,{(*HoldAll,*)Listable}];
-countArgs[f_Symbol]:=With[{dv=DownValues[f]},countArgs[dv]];
-countArgs[Verbatim[HoldPattern][HoldPattern[f_Symbol[args___]]]:>_]:=countArgs[f[args]];
-countArgs[f_[Except[_Optional|_OptionsPattern|Verbatim[Pattern][_,_OptionsPattern]],rest___]]:={1,0,0}+countArgs[f[rest]];
-countArgs[f_[o__Optional,rest___]]:={0,Length[HoldComplete[o]],0}+countArgs[f[rest]];
-countArgs[f_[_OptionsPattern|Verbatim[Pattern][_,_OptionsPattern]]]:={0,0,1};
-countArgs[f_[]]:={0,0,0};
-
-countArgs[f[x,1]]
-countArgs[f[1,2,3]]
-
-
-(*rewrite the FieldMemberQ function to allow checks with leg numbers*)
-FieldMatchExtQ[{_. (fi:P$Generic)[___],exti1_,exti2_},{_. fi_,extj1_,extj2_} ] := And[MatchQ[exti1,extj1],MatchQ[exti2,extj2]]
-FieldMatchExtQ[{_. (fi:P$Generic)[i_, ___],exti1_,exti2_},{_. fi_[j_],extj1_,extj2_} ] := And[MatchQ[i, j],MatchQ[exti1,extj1],MatchQ[exti2,extj2]]
-FieldMatchExtQ[{_. (fi:P$Generic)[i__],exti1_,exti2_},{_. fi_[j_, {r__}],extj1_,extj2_} ] :=
-  And[MatchQ[{i}, {j, {r, ___}}],MatchQ[exti1,extj1],MatchQ[exti2,extj2]]
-FieldMatchExtQ[{_. fi:P$Generic,exti1_,exti2_},{_. fi_,extj1_,extj2_}] := And[MatchQ[exti1,extj1],MatchQ[exti2,extj2]]
-FieldMatchExtQ[{Rev[fi__],exti1_,exti2_},{Mix[fi__],extj1_,extj2_}] := And[MatchQ[exti1,extj1],MatchQ[exti2,extj2]]
-FieldMatchExtQ[{Mix[fi__],exti1_,exti2_},{Rev[fi__],extj1_,extj2_}] := And[MatchQ[exti1,extj1],MatchQ[exti2,extj2]]
-FieldMatchExtQ[{fi1_,exti1_,exti2_},{fi2_,extj1_,extj2_}] := And[MatchQ[fi1, fi2],MatchQ[exti1,extj1],MatchQ[exti2,extj2]]
-
-FieldMemberExtQ[ li_, fi_ ] := !VectorQ[List@@ li, !FieldMatchExtQ[#, fi]&]
-
-
-(*Modifying the On-Shell Amplitudes makes it necessary to rearrange the FormCalc Amplitudes.*)
-(*This functions compresses amplitudes with similar summation into a single expression.*)
-(*Not using this function if the summation of an amplitude was modified, can cause FormCalc to write multiple times into the same file.*)
-Clear[AmpSimplify,EvaluateExpr]
-SetAttributes[EvaluateExpr,Orderless];
-SetAttributes[AmpSimplify,Orderless];
-EvaluateExpr[(amp1_)expr1_,(amp2_)expr2_,x___]:=Sequence[{amp1+amp2,expr1},x]/;expr1===expr2
-EvaluateExpr[(amp1_)expr1_,(amp2_)expr2_,x___]:=Sequence[{amp1,expr1},{amp2,expr2},x]/;expr1=!=expr2
-AmpSimplify[famp_[process_][amp___]]:=Times@@@famp[process][EvaluateExpr[amp]]
-
-(*Test*)
-AmpSimplify[Amp[F1][(2+a[i])SumOver[i,2,External],(r*q+b[i])SumOver[i,2,External]]]
-AmpSimplify[Amp[F1][(2+a[i])SumOver[i,2,External],(r*q+b[i])SumOver[i,2,External],(c[j]+c[t])SumOver[j,2,External]]]
-AmpSimplify[Amp[F1][(2+a[i])SumOver[i,2,External],(c[j]+c[t])SumOver[j,2,External],(r*q+b[i])SumOver[i,2,External]]]
-AmpSimplify[Amp[F1][(2+a[i])SumOver[i,2,External],(c[j]+c[t])SumOver[j,2,External],(r*q+b[k])SumOver[k,2,External]]]
-AmpSimplify[Amp[F1][(2+a[i])SumOver[i,2,External],(c[j]+c[t])SumOver[j,2,External],(r*q+b[k])SumOver[k,2,External],d[k]SumOver[k,2,External]]]
-
-
-(*Functions to check for a given particle in s- or t-channel*)
-(*now with additional functions which can be used to check for an explicit coupling to external fields.*)
-Fext[ _[Incoming][f_, t_, ___],{n_}] := {f, t, {{Fx[n]}}}
-Fext[ _[Outgoing][f_, t_, ___],{n_}] := {f, t, {{-Fx[n]}}}
-Fext[ _[f_, t_, ___], {n_} ] := {f, t, {{Fi[n]}}}
-Fsel[ftop_][v_] := Level[Select[ftop, MemberQ[#, v]&], {4}, Fs]
-Ftel[ftop_][v_] := Level[Select[ftop, MemberQ[#, v]&], {4}, Ft]
-Attributes[Fs] = Attributes[Ft] = {Orderless};
-Fs[Fx[i_Integer],Fx[j_Integer], Fi[n_]] := (Fv[i,j,n]=1;Fi[n] = 1; Seq[])
-Fs[-Fx[i_Integer],-Fx[j_Integer], Fi[n_]] := (Fv[i,j,n]=-1;Fi[n] = -1; Seq[])
-Fs[1,1, Fi[n_]] := (Fv[i,j,n]=1;Fi[n] = 1; Seq[])
-Fs[-1,-1, Fi[n_]] := (Fv[i,j,n]=-1;Fi[n] = -1; Seq[])
-Ft[Fx[i_Integer],-Fx[j_Integer],Fi[n_]] := (Fv[i,j,n]=0;Fi[n] = 0; Seq[])
-Ft[1,-1,Fi[n_]] := (Fv[i,j,n]=0;Fi[n] = 0; Seq[])
-
-STChannelFields[ top:P$Topology ] := STChannelFields[top] =
-Block[ {Fi, Fx,Fv, ttop = ToTree[top]},
-  FixedPoint[Evaluate, Ft@@@
-     FixedPoint[Evaluate,
-       Fsel[MapIndexed[Fext, ttop]]/@ Vertices[ttop]]];
-  Flatten/@ Transpose[Cases[ DownValues[Fi], _[_[_[n_]], i_] :>
-    ReplacePart[{{}, {}}, Field[n], 2 - Abs[i]] ]]]
-
-STChannelFieldsExt[ top:P$Topology ] := STChannelFieldsExt[top] =
-Block[ {Fi,Fx,Fv, ttop = ToTree[top]},
-  FixedPoint[Evaluate, Ft@@@
-     FixedPoint[Evaluate,
-       Fsel[MapIndexed[Fext, ttop]]/@ Vertices[ttop]]];
-  ReplaceAll[Transpose[Cases[DownValues[Fv], _[_[_[l_,m_,n_]], i_] :>
-    ReplacePart[{{}, {}}, {Field[n],l,m}, 2 - Abs[i]]]],{}->Sequence[]]]
-
-SChannelQ[ fi_ ][ gr_, top_, ___ ] :=
-  FieldMemberQ[STChannelFields[top][[1]] /. List@@ gr, fi]
-TChannelQ[ fi_ ][ gr_, top_, ___ ] :=
-  FieldMemberQ[STChannelFields[top][[2]] /. List@@ gr, fi]
-
-(*All diagrams without the ones with the fields in s- or t-channel*)
-NotSChannelQ[ fi_ ][ gr_, top_, ___ ] :=
-  Not[FieldMemberQ[STChannelFields[top][[1]] /. List@@ gr, fi]]
-NotTChannelQ[ fi_ ][ gr_, top_, ___ ] :=
-  Not[FieldMemberQ[STChannelFields[top][[2]] /. List@@ gr, fi]]
-
-(*The same as SChannelQ, but with an additional rule that checks the external fields which couple to the s- or t-channel fields.*)
-Attributes[SChannelExtQ] = Attributes[TChannelExtQ] = {Orderless};
-SChannelExtQ[ fi_,ext1_,ext2_][ gr_, top_, ___ ] :=
-  FieldMemberExtQ[STChannelFieldsExt[top][[1]] /. List@@ gr, {fi,ext1,ext2}]
-TChannelExtQ[ fi_,ext1_,ext2_ ][ gr_, top_, ___ ] :=
-  FieldMemberExtQ[STChannelFieldsExt[top][[2]] /. List@@ gr, {fi,ext1,ext2}]
-
-(*Same as above.*)
-Attributes[NotSChannelExtQ] = Attributes[NotTChannelExtQ] = {Orderless};
-NotSChannelExtQ[ fi_,ext1_,ext2_][ gr_, top_, ___ ] :=
-  Not[FieldMemberExtQ[STChannelFieldsExt[top][[1]] /. List@@ gr, {fi,ext1,ext2}]]
-NotTChannelExtQ[ fi_,ext1_,ext2_ ][ gr_, top_, ___ ] :=
-  Not[FieldMemberExtQ[STChannelFieldsExt[top][[2]] /. List@@ gr, {fi,ext1,ext2}]]
 
 
 (*Process dependent input parameters and flags*)
@@ -152,7 +46,7 @@ name = CalcProcess;
 Print[CalcProcess]
 
 isIOGluon = False;
-For[i=1, i<7, i++,
+For[i=1, i<=6, i++,
 If[p[i] === "qu", P[i] = F[3],
 If[p[i] === "qubar", P[i] = -F[3],
 If[p[i] === "qd", P[i] = F[4],
@@ -163,7 +57,12 @@ If[p[i] === "xI-", P[i] = F[12],
 If[p[i] === "xI+", P[i] = -F[12],
 If[p[i] === "xJ-", P[i] = F[12],
 If[p[i] === "xJ+", P[i] = -F[12],
+
 If[p[i] === "g", (isIOGluon = True; P[i] = V[5]),
+If[p[i] === "gam", P[i] = V[1],
+If[p[i] === "Z", P[i] = V[2],
+If[p[i] === "W+", P[i] = V[3],
+If[p[i] === "W-", P[i] = -V[3],
 
 If[p[i] === "u", P[i] = F[3,{1}],
 If[p[i] === "ubar", P[i] = -F[3,{1}],
@@ -188,7 +87,7 @@ If[p[i] === "x1-", P[i] = F[12,{1}],
 If[p[i] === "x1+", P[i] = -F[12,{1}],
 If[p[i] === "x2-", P[i] = F[12,{2}],
 If[p[i] === "x2+", P[i] = -F[12,{2}]
-]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 ]
 
 process = {P[1], P[2]} -> {P[3], P[4], P[5], P[6]};
@@ -802,13 +701,13 @@ If[And[isSquarkRes1, Not[Component[real3546Sq1ExtSum,1]===0]],
 
   (*fortran can't handle arrays with dimensionality greater than 7*)
   (*apply back the subexpressions with number of arguments greater than 6*)
-  subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
+  subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
                {i,1,Length[subexpr]}]/.Null->Sequence[];
   realOS = realOS//.subexpr6;
   abbr = abbr//.subexpr6;
 
   (*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-  subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
+  subexpr = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
               {i,1,Length[subexpr]}]/.Null->Sequence[];
   subexpr = subexpr//.subexpr6;
 
@@ -829,13 +728,13 @@ If[And[isSquarkRes1, Not[Component[real3645Sq1ExtSum,1]===0]],
 
   (*fortran can't handle arrays with dimensionality greater than 7*)
   (*apply back the subexpressions with number of arguments greater than 6*)
-  subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
+  subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
                {i,1,Length[subexpr]}]/.Null->Sequence[];
   realOS = realOS//.subexpr6;
   abbr = abbr//.subexpr6;
 
   (*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-  subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
+  subexpr = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
               {i,1,Length[subexpr]}]/.Null->Sequence[];
   subexpr = subexpr//.subexpr6;
 
@@ -856,13 +755,13 @@ If[And[isGluinoRes, Not[Component[real356GlExtSum,1]===0]],
 
   (*fortran can't handle arrays with dimensionality greater than 7*)
   (*apply back the subexpressions with number of arguments greater than 6*)
-  subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
+  subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
                {i,1,Length[subexpr]}]/.Null->Sequence[];
   realOS = realOS//.subexpr6;
   abbr = abbr//.subexpr6;
 
   (*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-  subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
+  subexpr = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
               {i,1,Length[subexpr]}]/.Null->Sequence[];
   subexpr = subexpr//.subexpr6;
 
@@ -883,13 +782,13 @@ If[And[isGluinoRes, Not[Component[real365GlExtSum,1]===0]],
 
   (*fortran can't handle arrays with dimensionality greater than 7*)
   (*apply back the subexpressions with number of arguments greater than 6*)
-  subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
+  subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
                {i,1,Length[subexpr]}]/.Null->Sequence[];
   realOS = realOS//.subexpr6;
   abbr = abbr//.subexpr6;
 
   (*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-  subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
+  subexpr = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
               {i,1,Length[subexpr]}]/.Null->Sequence[];
   subexpr = subexpr//.subexpr6;
 
@@ -910,13 +809,13 @@ If[And[isGluinoRes, Not[Component[real456GlExtSum,1]===0]],
 
   (*fortran can't handle arrays with dimensionality greater than 7*)
   (*apply back the subexpressions with number of arguments greater than 6*)
-  subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
+  subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
                {i,1,Length[subexpr]}]/.Null->Sequence[];
   realOS = realOS//.subexpr6;
   abbr = abbr//.subexpr6;
 
   (*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-  subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
+  subexpr = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
               {i,1,Length[subexpr]}]/.Null->Sequence[];
   subexpr = subexpr//.subexpr6;
 
@@ -937,13 +836,13 @@ If[And[isGluinoRes, Not[Component[real465GlExtSum,1]===0]],
 
   (*fortran can't handle arrays with dimensionality greater than 7*)
   (*apply back the subexpressions with number of arguments greater than 6*)
-  subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
+  subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
                {i,1,Length[subexpr]}]/.Null->Sequence[];
   realOS = realOS//.subexpr6;
   abbr = abbr//.subexpr6;
 
   (*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-  subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
+  subexpr = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
               {i,1,Length[subexpr]}]/.Null->Sequence[];
   subexpr = subexpr//.subexpr6;
 
@@ -964,13 +863,13 @@ If[And[isSquarkRes2, Not[Component[real356Sq2ExtSum,1]===0]],
 
   (*fortran can't handle arrays with dimensionality greater than 7*)
   (*apply back the subexpressions with number of arguments greater than 6*)
-  subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
+  subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
                {i,1,Length[subexpr]}]/.Null->Sequence[];
   realOS = realOS//.subexpr6;
   abbr = abbr//.subexpr6;
 
   (*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-  subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
+  subexpr = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
               {i,1,Length[subexpr]}]/.Null->Sequence[];
   subexpr = subexpr//.subexpr6;
 
@@ -991,13 +890,13 @@ If[And[isSquarkRes2, Not[Component[real365Sq2ExtSum,1]===0]],
 
   (*fortran can't handle arrays with dimensionality greater than 7*)
   (*apply back the subexpressions with number of arguments greater than 6*)
-  subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
+  subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
                {i,1,Length[subexpr]}]/.Null->Sequence[];
   realOS = realOS//.subexpr6;
   abbr = abbr//.subexpr6;
 
   (*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-  subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
+  subexpr = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
               {i,1,Length[subexpr]}]/.Null->Sequence[];
   subexpr = subexpr//.subexpr6;
 
@@ -1018,13 +917,13 @@ If[And[isSquarkRes2, Not[Component[real456Sq2ExtSum,1]===0]],
 
   (*fortran can't handle arrays with dimensionality greater than 7*)
   (*apply back the subexpressions with number of arguments greater than 6*)
-  subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
+  subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
                {i,1,Length[subexpr]}]/.Null->Sequence[];
   realOS = realOS//.subexpr6;
   abbr = abbr//.subexpr6;
 
   (*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-  subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
+  subexpr = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
               {i,1,Length[subexpr]}]/.Null->Sequence[];
   subexpr = subexpr//.subexpr6;
 
@@ -1045,13 +944,13 @@ If[And[isSquarkRes2, Not[Component[real465Sq2ExtSum,1]===0]],
 
   (*fortran can't handle arrays with dimensionality greater than 7*)
   (*apply back the subexpressions with number of arguments greater than 6*)
-  subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
+  subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
                {i,1,Length[subexpr]}]/.Null->Sequence[];
   realOS = realOS//.subexpr6;
   abbr = abbr//.subexpr6;
 
   (*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-  subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
+  subexpr = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
               {i,1,Length[subexpr]}]/.Null->Sequence[];
   subexpr = subexpr//.subexpr6;
 
@@ -1084,13 +983,13 @@ subexpr = OptimizeAbbr[Subexpr[]];
 
 (*fortran can't handle arrays with dimensionality greater than 7*)
 (*apply back the subexpressions with number of arguments greater than 6*)
-subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
+subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
        {i,1,Length[subexpr]}]/.Null->Sequence[];
 real = real//.subexpr6;
 abbr = abbr//.subexpr6;
 
 (*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
+subexpr = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
        {i,1,Length[subexpr]}]/.Null->Sequence[];
 subexpr = subexpr//.subexpr6;
 

@@ -10,7 +10,9 @@ last modified December 2016
 Clear["Global`*"]
 SetDirectory[NotebookDirectory[]];
 << FeynArts`
+<< FeynArtsAdd`
 << FormCalc`
+<< FormCalcAdd`
 ClearProcess[]
 <<"!rm *.frm"
 
@@ -37,7 +39,7 @@ CalcProcess = p[1]<>p[2]<>"_"<>p[3]<>p[4]<>p[5];
 name = CalcProcess;
 Print[CalcProcess]
 
-For[i=1, i<6, i++,
+For[i=1, i<=5, i++,
 If[p[i] === "qu", P[i] = F[3],
 If[p[i] === "qubar", P[i] = -F[3],
 If[p[i] === "qd", P[i] = F[4],
@@ -48,7 +50,12 @@ If[p[i] === "xI-", P[i] = F[12],
 If[p[i] === "xI+", P[i] = -F[12],
 If[p[i] === "xJ-", P[i] = F[12],
 If[p[i] === "xJ+", P[i] = -F[12],
+
 If[p[i] === "g", P[i] = V[5],
+If[p[i] === "gam", P[i] = V[1],
+If[p[i] === "Z", P[i] = V[2],
+If[p[i] === "W+", P[i] = V[3],
+If[p[i] === "W-", P[i] = -V[3],
 
 If[p[i] === "u", P[i] = F[3,{1}],
 If[p[i] === "ubar", P[i] = -F[3,{1}],
@@ -73,7 +80,7 @@ If[p[i] === "x1-", P[i] = F[12,{1}],
 If[p[i] === "x1+", P[i] = -F[12,{1}],
 If[p[i] === "x2-", P[i] = F[12,{2}],
 If[p[i] === "x2+", P[i] = -F[12,{2}]
-]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 ]
 
 process = {P[1], P[2]} -> {P[3], P[4], P[5]};
@@ -130,9 +137,6 @@ PowerOf[GS][x_Integer] := 0/;x>OrderGS
 PowerOf[GS][OrderGS] := 1
 PowerOf[EL][x_Integer] := 0/;x>OrderEL
 PowerOf[EL][OrderEL] := 1
-
-(*helpful function to extract parts of a Feynman amplitude*)
-Component[Amp_,n_]:=Replace[Amp,Amp[_][x__]:>{x}][[n]]
 
 widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
 (*insertion of widths via complex masses. Theses masses are set in the external fortran code*)

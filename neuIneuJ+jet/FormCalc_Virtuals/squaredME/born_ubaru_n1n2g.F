@@ -1,4 +1,4 @@
-      subroutine bornmunu_ubaru_n1n2g(p,bmunu)
+      subroutine born_ubaru_n1n2g(p,b)
       implicit none
 #include "PhysPars.h"
 #include "pwhg_math.h"
@@ -7,7 +7,7 @@
       double precision p(0:3,nlegborn)
       double precision al(0:3), be(0:3)
       double precision k1(0:3), k2(0:3), k3(0:3), k4(0:3), k5(0:3)
-      double precision bmunu(0:3,0:3,nlegborn)
+      double precision b
       double precision S, T, U, S34, T14, T24
       integer Sfe6, Sfe6c
       integer alind, beind
@@ -17,13 +17,12 @@
       external Epsilon, DotP, Den
       external momsq, momsum2sq, momsum3sq
 
-      double precision Sub13,Pair5,Pair7,Pair6
-      double precision Pair8,Sub4(2),Sub1(2),Sub10(2)
-      double precision Sub9(2),Abb5,Sub5,Sub7
-      double precision Sub2(2),Sub11(2),Sub6(2),Sub3(2)
-      double precision Sub12(2),Sub8(2),Sub14(2,2),Sub15(2,2)
+      double precision Sub16,Sub4(2),Sub1(2),Sub10(2)
+      double precision Sub9(2),Sub5,Sub7,Sub2(2)
+      double precision Sub11(2),Sub6(2),Sub3(2),Sub12(2)
+      double precision Sub14(2,2),Sub15(2,2),Sub8(2)
 
-      bmunu(:,:,:) = 0D0
+      b = 0D0
 
       k1(:) = p(:,1)
       k2(:) = p(:,2)
@@ -37,20 +36,8 @@
       T14 = momsum2sq(k1(:),-k4(:))
       T24 = momsum2sq(k2(:),-k3(:))
 
-      do alind=0,3
-      do beind=0,3
 
-      al(:) = 0D0
-      al(alind) = 1D0
-      be(:) = 0D0
-      be(beind) = 1D0
-
-      Sub13 = T24*(T - MNeu2(1)) + (-T + MNeu2(1))*MNeu2(2)
-      Pair5 = DotP(k1,al)
-      Pair7 = DotP(k1,be)
-      Pair6 = DotP(k3,al)
-      Pair8 = DotP(k3,be)
-      Abb5 = (Pair5 - Pair6)*(Pair7 - Pair8)
+      Sub16 = T24*(T**2 - T*MNeu2(1)) + (-T**2 + T*MNeu2(1))*MNeu2(2)
       Sub5 = SW*ZNeu(1,1) + 3*CW*ZNeu(1,2)
       Sub7 = SW*ZNeuC(1,1) + 3*CW*ZNeuC(1,2)
 
@@ -80,33 +67,38 @@
       Sub15(Sfe6,Sfe6c) = Sub12(Sfe6c)*Sub3(Sfe6) + Sub4(Sfe6)*Sub9(Sfe6c)
       enddo
       enddo
+      
+      print*,"Sub1",Sub1
+      print*,"Sub10",Sub10
+      print*,"Sub6",Sub6
+      print*,"Sub8",Sub8
+      print*,"Sub14",Sub14
+      print*,"Sub15",Sub15
+      stop
 
-      bmunu(alind,beind,5) =         (8*Abb5*Alfa2*Alfas*Pi**3*Sub13*
+      b =         (-16*Alfa2*Alfas*Pi**3*Sub16*
      -     Den(T,MSf2(1,3,1) - ii*MSf(1,3,1)*WSf(1,3,1))*
      -     Den(T,MSf2(1,3,1) + ii*MSf(1,3,1)*WSf(1,3,1))*
      -     Den(T24,MSf2(1,3,1) - ii*MSf(1,3,1)*WSf(1,3,1))*
      -     Den(T24,MSf2(1,3,1) + ii*MSf(1,3,1)*WSf(1,3,1))*Sub14(1,1)*
-     -     Sub15(1,1))/(81.*CW2**2*MW2**2*SB2**2*SW2**2) + 
-     -  (8*Abb5*Alfa2*Alfas*Pi**3*Sub13*
+     -     Sub15(1,1))/(81.*CW2**2*MW2**2*SB2**2*SW2**2) - 
+     -  (16*Alfa2*Alfas*Pi**3*Sub16*
      -     Den(T,MSf2(1,3,1) - ii*MSf(1,3,1)*WSf(1,3,1))*
      -     Den(T,MSf2(2,3,1) + ii*MSf(2,3,1)*WSf(2,3,1))*
      -     Den(T24,MSf2(1,3,1) - ii*MSf(1,3,1)*WSf(1,3,1))*
      -     Den(T24,MSf2(2,3,1) + ii*MSf(2,3,1)*WSf(2,3,1))*Sub14(1,2)*
-     -     Sub15(1,2))/(81.*CW2**2*MW2**2*SB2**2*SW2**2) + 
-     -  (8*Abb5*Alfa2*Alfas*Pi**3*Sub13*
+     -     Sub15(1,2))/(81.*CW2**2*MW2**2*SB2**2*SW2**2) - 
+     -  (16*Alfa2*Alfas*Pi**3*Sub16*
      -     Den(T,MSf2(1,3,1) + ii*MSf(1,3,1)*WSf(1,3,1))*
      -     Den(T,MSf2(2,3,1) - ii*MSf(2,3,1)*WSf(2,3,1))*
      -     Den(T24,MSf2(1,3,1) + ii*MSf(1,3,1)*WSf(1,3,1))*
      -     Den(T24,MSf2(2,3,1) - ii*MSf(2,3,1)*WSf(2,3,1))*Sub14(2,1)*
-     -     Sub15(2,1))/(81.*CW2**2*MW2**2*SB2**2*SW2**2) + 
-     -  (8*Abb5*Alfa2*Alfas*Pi**3*Sub13*
+     -     Sub15(2,1))/(81.*CW2**2*MW2**2*SB2**2*SW2**2) - 
+     -  (16*Alfa2*Alfas*Pi**3*Sub16*
      -     Den(T,MSf2(2,3,1) - ii*MSf(2,3,1)*WSf(2,3,1))*
      -     Den(T,MSf2(2,3,1) + ii*MSf(2,3,1)*WSf(2,3,1))*
      -     Den(T24,MSf2(2,3,1) - ii*MSf(2,3,1)*WSf(2,3,1))*
      -     Den(T24,MSf2(2,3,1) + ii*MSf(2,3,1)*WSf(2,3,1))*Sub14(2,2)*
      -     Sub15(2,2))/(81.*CW2**2*MW2**2*SB2**2*SW2**2)
-
-      enddo
-      enddo
 
       end

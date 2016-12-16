@@ -1,3 +1,12 @@
+c subroutines to fill simple histograms. Example code to call and fill
+c the histograms:
+c
+c    ! fill histograms
+c    s35 = momsum2sq(p(0:3,3),p(0:3,5))
+c    s45 = momsum2sq(p(0:3,4),p(0:3,5))
+c    call histogram("sqrt(s35)",90,100D0,1000D0,dsqrt(s35),weight)
+c    call histogram("sqrt(s45)",90,100D0,1000D0,dsqrt(s45),weight)
+
 c############### generate histograms ###################################
       subroutine histogram(name,nbins,xm,xp,xval,weight)
         implicit none

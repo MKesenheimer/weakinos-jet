@@ -10,25 +10,13 @@ last modified July 2016
 Clear["Global`*"]
 SetDirectory[NotebookDirectory[]];
 << FeynArts`
+<< FeynArtsAdd`
 << FormCalc`
+<< FormCalcAdd`
 ClearProcess[]
 <<"!rm *.frm"
 
 time1 = SessionTime[]
-
-
-(*count the arguments of a function*)
-ClearAll[countArgs];
-SetAttributes[countArgs,{(*HoldAll,*)Listable}];
-countArgs[f_Symbol]:=With[{dv=DownValues[f]},countArgs[dv]];
-countArgs[Verbatim[HoldPattern][HoldPattern[f_Symbol[args___]]]:>_]:=countArgs[f[args]];
-countArgs[f_[Except[_Optional|_OptionsPattern|Verbatim[Pattern][_,_OptionsPattern]],rest___]]:={1,0,0}+countArgs[f[rest]];
-countArgs[f_[o__Optional,rest___]]:={0,Length[HoldComplete[o]],0}+countArgs[f[rest]];
-countArgs[f_[_OptionsPattern|Verbatim[Pattern][_,_OptionsPattern]]]:={0,0,1};
-countArgs[f_[]]:={0,0,0};
-
-countArgs[f[x,1]]
-countArgs[f[1,2,3]]
 
 
 (*You can now load the script with the command $ MathKernel -script nInJjj.m "d" "dbar" "n1" "n2" "d" "dbar"*)
@@ -54,7 +42,7 @@ name = CalcProcess;
 Print[CalcProcess]
 
 IOGluon = False;
-For[i=1, i<7, i++,
+For[i=1, i<=6, i++,
 If[p[i] === "qu", P[i] = F[3],
 If[p[i] === "qubar", P[i] = -F[3],
 If[p[i] === "qd", P[i] = F[4],
@@ -65,7 +53,12 @@ If[p[i] === "xI-", P[i] = F[12],
 If[p[i] === "xI+", P[i] = -F[12],
 If[p[i] === "xJ-", P[i] = F[12],
 If[p[i] === "xJ+", P[i] = -F[12],
+
 If[p[i] === "g", (IOGluon = True; P[i] = V[5]),
+If[p[i] === "gam", P[i] = V[1],
+If[p[i] === "Z", P[i] = V[2],
+If[p[i] === "W+", P[i] = V[3],
+If[p[i] === "W-", P[i] = -V[3],
 
 If[p[i] === "u", P[i] = F[3,{1}],
 If[p[i] === "ubar", P[i] = -F[3,{1}],
@@ -90,7 +83,7 @@ If[p[i] === "x1-", P[i] = F[12,{1}],
 If[p[i] === "x1+", P[i] = -F[12,{1}],
 If[p[i] === "x2-", P[i] = F[12,{2}],
 If[p[i] === "x2+", P[i] = -F[12,{2}]
-]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 ]
 
 process = {P[1], P[2]} -> {P[3], P[4], P[5], P[6]};
@@ -155,11 +148,6 @@ PowerOf[GS][OrderGS] := 1
 PowerOf[EL][x_Integer] := 0/;x>OrderEL
 PowerOf[EL][OrderEL] := 1
 
-(*helpful function to extract parts of a Feynman amplitude*)
-Component[Amp_,n_]:=Replace[Amp,Amp[_][x__]:>{x}][[n]]
-(*Get the object that gets replaced in a replacement list {a\[Rule]4} => a*)
-getReplacementHead[f_->_]:=f
-
 
 Print["Reals"]
 
@@ -193,13 +181,13 @@ subexpr = OptimizeAbbr[Subexpr[]]
 
 (*fortran can't handle arrays with dimensionality greater than 7*)
 (*apply back the subexpressions with number of arguments greater than 6*)
-subexpr6 = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
+subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
        {i,1,Length[subexpr]}]/.Null->Sequence[];
 real = real//.subexpr6;
 abbr = abbr//.subexpr6;
 
 (*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-subexpr = Table[If[(countArgs[getReplacementHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
+subexpr = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
        {i,1,Length[subexpr]}]/.Null->Sequence[];
 subexpr = subexpr//.subexpr6;
 

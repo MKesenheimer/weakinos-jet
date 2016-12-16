@@ -164,13 +164,13 @@ c############### end check_4conservation subroutine ####################
 
 c############### subroutine set_process ################################
 c pick SUSY masses relevant for specific initial state
-      subroutine set_process(nlegs, id, M)
+      subroutine set_process(nlegs, flav, M)
         implicit none
 #include "PhysPars.h"
 #include "nlegborn.h"
 #include "indices.h"
         integer nlegs
-        integer id(nlegs), i
+        integer flav(nlegs), i
         double precision M(nlegs)
 
         Gen(:) = 0
@@ -178,7 +178,7 @@ c pick SUSY masses relevant for specific initial state
         Cha(:) = 0
         
         do i=1,nlegs
-          select case(abs(id(i)))
+          select case(abs(flav(i)))
           case(1) ! d
             M(i) = par_MD
             Gen(i) = 1
@@ -200,29 +200,35 @@ c pick SUSY masses relevant for specific initial state
           case(0) ! gluon
             M(i) = 0D0
           case(1000022)
+            M(i) = MNeu(1)
             Neu(i) = 1
           case(1000023)
+            M(i) = MNeu(2)
             Neu(i) = 2
           case(1000025)
+            M(i) = MNeu(3)
             Neu(i) = 3
           case (1000035)
+            M(i) = MNeu(4)
             Neu(i) = 4
           case(1000024)
+            M(i) = MCha(1)
             Cha(i) = 1
           case(1000037)
+            M(i) = MCha(2)
             Cha(i) = 2
           case default
             print*, "funcprocess.f: encountered unhandled "//
-     &              "incoming ID ", id(i)
+     &              "incoming ID ", flav(i)
             stop
           endselect
         enddo
         
-        M(3) = par_Fin1mass
-        M(4) = par_Fin2mass
+        !M(3) = par_Fin1mass
+        !M(4) = par_Fin2mass
         
 #ifdef DEBUGQ
-        print*,"id",id
+        print*,"flav",flav
         print*,"Gen",Gen
         print*,"Neu",Neu
         print*,"Cha",Cha
