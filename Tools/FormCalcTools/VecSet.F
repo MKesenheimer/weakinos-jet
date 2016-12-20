@@ -2,14 +2,13 @@
 * construct the CMS representation of a momentum and the
 * three corresponding polarization vectors
 * this file is part of FormCalc
-* last modified 8 May 13 th
+* last modified 29 Mar 16 th
 
-#include "types.h"
-#include "util.h"
+#include "vecset_types.h"
+#include "vecset_util.h"
 
 
 * i: the index of the momentum
-* a: antiparticle sign
 * m, p: mass and three-momentum of the particle
 * ex,ey,ez: the unit three-vector of the momentum
 
@@ -18,14 +17,14 @@
 	integer i
 	RealType m, p, ex,ey,ez
 
-#include "util.h"
+#include "vecset_util.h"
 
-#define K(x,y)     vec(x,y, 1+nvec*(i-1))
-#define EpsTR(x,y) vec(x,y, 2+nvec*(i-1))
-#define EpsL(x,y)  vec(x,y, 3+nvec*(i-1))
-#define EpsTL(x,y) vec(x,y, 4+nvec*(i-1))
+#define K(x,y)     vec0(x,y, 1+nvec0*(i-1))
+#define EpsTR(x,y) vec0(x,y, 2+nvec0*(i-1))
+#define EpsL(x,y)  vec0(x,y, 3+nvec0*(i-1))
+#define EpsTL(x,y) vec0(x,y, 4+nvec0*(i-1))
 
-#define Spi(af,hel,om,d,x) vec(x, om-5, af*2+(hel)+d+7+nvec*(i-1))
+#define Spi(af,hel,om,d,x) vec0(x, om-5, af*2+(hel)+d+7+nvec0*(i-1))
 
 * i.e., spi(x, 6, 5, i) = left-handed,  undotted, upper
 *       spi(x, 7, 5, i) = left-handed,  undotted, lower
@@ -99,14 +98,12 @@
 	EpsTL(2,1) = 1/sqrt2*onePez*expIphi
 	EpsTR(1,2) = Conjugate(EpsTL(2,1))
 
-#define safelog(x) log(max(x, 1D-300))
-
 	momspec(SPEC_KT,i) = p*sinth
-	momspec(SPEC_ET,i) = sqrt(momspec(SPEC_KT,i)**2 + m2)
-	momspec(SPEC_PRAP,i) = safelog(onePez) -
-     &    safelog(sinth)
-	momspec(SPEC_RAP,i) = safelog(Re(K(1,1))) -
-     &    safelog(momspec(SPEC_ET,i))
+	momspec(SPEC_ET,i) = p0*sinth
+	momspec(SPEC_PRAP,i) = SafeLog(onePez) -
+     &    SafeLog(sinth)
+	momspec(SPEC_RAP,i) = SafeLog(Re(K(1,1))) -
+     &    SafeLog(sqrt(momspec(SPEC_KT,i)**2 + m2))
 
 * this is E^(I phi) cos(th/2) = 1/sqrt2*sqrt(1 + ez)*expIphi:
 	expIphi = 1/sqrt2*sqrt(onePez)*expIphi

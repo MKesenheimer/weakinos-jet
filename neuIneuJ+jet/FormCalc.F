@@ -99,8 +99,8 @@ c############### subroutine getBornAmps ################################
         endif
 #endif
         
-        ! flags: Bit0 (reset) = 1, Bit1 (loop) = 0 -> B01 = D1
-        flags = 1
+        ! = 010d, Bit0: set mass, Bit1: reset, Bit2: loop
+        flags = 2
         call getAmps(p,flav,flags,amp)
         born = amp(1)
         
@@ -144,10 +144,10 @@ c############### subroutine getVirtAmps ################################
         double precision amps(2)
         integer flags
         if(flg_fakevirtuals) then
-          ! flags: Bit0 (reset) = 1, Bit1 (loop) = 0 -> B01 = D1
-          flags = 1
+          ! = 010d, Bit0: set mass, Bit1: reset, Bit2: loop
+          flags = 2
         else
-          ! flags: Bit0 (reset) = 1, Bit1 (loop) = 1 -> B11 = D3
+          ! = 011d, Bit0: set mass, Bit1: reset, Bit2: loop
           flags = 3
           call calcRenConst
         endif
@@ -251,7 +251,6 @@ c############### subroutine getAmps ####################################
         else
           if(isodd(abs(f1)) .and. isodd(abs(f2))) then
             call qdqdbar_nInJg_squaredME(fc_result,helicities,flags)
-            !call qdbarqd_nInJg_squaredME(fc_result,helicities,flags) ! TEST
             goto 20
           elseif(iseven(abs(f1)) .and. iseven(abs(f2))) then
             call ququbar_nInJg_squaredME(fc_result,helicities,flags)
@@ -268,6 +267,11 @@ c############### subroutine getAmps ####################################
  
         amp(1) = fc_result(1)/symfac
         amp(2) = fc_result(2)/symfac
+
+#ifdef DEBUGQ
+        print*,amp
+        stop
+#endif
       end
 c############### subroutine getAmps ####################################
 
@@ -293,8 +297,8 @@ c############### subroutine getRealAmps ################################
         flavs(:) = flav(:)
         ps(:,:) = p(:,:)
         amp = 0D0
-        ! flags: Bit0 (reset) = 1, Bit1 (loop) = 0 -> B01 = D1
-        flags = 1
+        ! = 010d, Bit0: set mass, Bit1: reset, Bit2: loop
+        flags = 2
         
         ! helicities, crossing, symmetry factor
         ! unpolarized fermion: B01010  FC8Guid.pdf p.49
@@ -357,6 +361,10 @@ c############### subroutine getRealAmps ################################
           if(isodd(abs(f1)) .and. isodd(abs(f2))) then
             if(f1.lt.0 .and. f2.lt.0) then
               call qdbarqdbar_nInJqdbarqdbar_squaredME(fc_result,helicities,flags)
+#ifdef DEBUGQ
+              print*,fc_result
+              stop
+#endif
               goto 20
             elseif(f1.gt.0 .and. f2.lt.0 .and. isodd(abs(f5)) .and. f5.gt.0) then  
               call qdqdbar_nInJqdqdbar_squaredME(fc_result,helicities,flags)
@@ -530,6 +538,11 @@ c############### subroutine getRealAmps ################################
  20     continue
  
         amp = fc_result(1)/symfac
+
+#ifdef DEBUGQ
+        print*,amp
+        stop
+#endif
       end
 c############### subroutine getRealAmps ################################
 
@@ -558,8 +571,8 @@ c############### subroutine getRealOSAmps ##############################
         flavs(:) = flav(:)
         ps(:,:) = p(:,:)
         ampos = 0D0
-        ! flags: Bit0 (reset) = 1, Bit1 (loop) = 0 -> B01 = D1
-        flags = 1
+        ! = 010d, Bit0: set mass, Bit1: reset, Bit2: loop
+        flags = 2
         
         ! helicities, crossing, symmetry factor
         ! unpolarized fermion: B01010  FC8Guid.pdf p.49

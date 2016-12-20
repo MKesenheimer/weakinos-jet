@@ -19,7 +19,6 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
 #include "nlegborn.h"
 #include "looptools.h"
 #include "Flags.h"
-#include "decl.h"
 #include "osres.h"
         double precision p(0:3,nlegreal),p_os(0:3,nlegreal)
         integer rflav(nlegreal)

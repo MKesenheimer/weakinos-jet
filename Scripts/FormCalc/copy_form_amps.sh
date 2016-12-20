@@ -46,31 +46,32 @@ WORKINGDIR=${PWD}
 #                    as proc_nInJjj_os, but without channel identifiers)
 
 # the name of the target process directory
-PROCDIR="neuIneuJ+jet/FormCalc_Virtuals"
+PROCDIR="neuIneuJ+jet/FormCalc_Reals"
 
 # where to copy the amplitudes to
 DEST=${PWD}/../../${PROCDIR}
 
 # number of particles (incoming + outgoing)
-NPART=5
+NPART=6
 
 # process list file
-PROCF="./proc_nInJj_test"
+#PROCF="./proc_nInJj
 #PROCF="./proc_nInJjj_nr"
-#PROCF="./proc_nInJjj_os_test"
-#PROCF="./proc_nInJjj_reg_test"
+#PROCF="./proc_nInJjj_os"
+PROCF="./proc_nInJjj_reg"
 
 # the name of Mathematica Scripts
-MSCRIPT="./nInJj_virt.m"
+#MSCRIPT="./nInJj.m"
+#MSCRIPT="./nInJj_virt.m"
 #MSCRIPT="./nInJjj.m"
 #MSCRIPT="./nInJjj_os.m"
-#MSCRIPT=""
+MSCRIPT=""
 
 # the type of the amplitudes (born, virt, real, realOS)
 #TYPE="born"
-TYPE="virt"
+#TYPE="virt"
 #TYPE="realOS"
-#TYPE="real"
+TYPE="real"
 
 # the number of subchannels of realOS amplitudes (f.e. ll, lr, rl, rr)
 NSQUARKSUBCHANNELS=4
@@ -129,6 +130,7 @@ function pdg2names() {
 function rename() {
     $SED -i -e "s/\t/        /g" $1
     $SED -i -e "s/vars.h/${2}vars.h/g" $1
+    $SED -i -e "s/specs.h/${2}specs.h/g" $1
     $SED -i -e "s/${TYPE}/${2}${TYPE}/g" $1
     $SED -i -e "s/vert/${2}vert/g" $1
     $SED -i -e "s/self/${2}self/g" $1
@@ -160,13 +162,21 @@ function rename() {
     $SED -i -e "s/\<Cha4\>/Cha(4)/g" $1
     $SED -i -e "s/\<Cha5\>/Cha(5)/g" $1
     $SED -i -e "s/\<Cha6\>/Cha(6)/g" $1
-    # jede Zeile löschen, die #include "inline.h" enthält
-    $SED -i -e '/^#include "inline.h"/d' $1
+    # ändere die Namen der globalen Include Dateien
+    #$SED -i -e '/^#include "inline.h"/d' $1
+    $SED -i -e "s/const.h/${TYPE}_const.h/g" $1
+    $SED -i -e "s/contains.h/${TYPE}_contains.h/g" $1
+    $SED -i -e "s/decl.h/${TYPE}_decl.h/g" $1
+    $SED -i -e "s/inline.h/${TYPE}_inline.h/g" $1
+    $SED -i -e "s/types.h/${TYPE}_types.h/g" $1
+    $SED -i -e "s/user.h/${TYPE}_user.h/g" $1
+    $SED -i -e "s/util.h/${TYPE}_util.h/g" $1
 }
 
 # rename variables in include files
 # $1: filename
 function rename2() {
+        $SED -i -e "s/decl.h/${TYPE}_decl.h/g" $1
         $SED -i -e "s/\t/        /g" $1
         $SED -i -e "s/formfactors/${PRE2}_formfactors/g" $1
         # replace the indices \<Neu3\>, Neu4, Cha3, Cha4, ... with constants
@@ -287,14 +297,16 @@ for i in `seq 0 1 $((NPROC-1))`; do
         #echo "cleaning old files..."
         #echo $(ls ${DEST}/squaredME/${PRE2}*.F)
         #echo $(ls ${DEST}/include/${PRE2}_vars.h)
+        #echo $(ls ${DEST}/include/${PRE2}_specs.h)
         #rm ${DEST}/squaredME/${PRE2}*.F
         #rm ${DEST}/include/${PRE2}_vars.h
+        #rm ${DEST}/include/${PRE2}_specs.h
         
         echo "copying new files..."
         mkdir -p ${DEST}/${PRE2}_squaredME/
         cp ${WORKINGDIR}/${PRE1}/squaredme/*.F ${DEST}/${PRE2}_squaredME/
         cp ${WORKINGDIR}/${PRE1}/squaredme/vars.h ${DEST}/${PRE2}_squaredME/${PRE2}_vars.h
-        
+        cp ${WORKINGDIR}/${PRE1}/squaredme/specs.h ${DEST}/${PRE2}_squaredME/${PRE2}_specs.h
         
         echo "renaming files..."
         echo "cd ${DEST}/${PRE2}_squaredME"
@@ -322,6 +334,7 @@ for i in `seq 0 1 $((NPROC-1))`; do
             fi
         done
         rename2 ${PRE2}_vars.h
+        rename ${PRE2}_specs.h # don't change Gen1 to 3 but to Gen(1)
         # -> modify this if needed.
         # if the channel identifiers contain the open squark indice "Sq1"
         # rename Sfe7 with unassigned variable name
@@ -335,10 +348,38 @@ for i in `seq 0 1 $((NPROC-1))`; do
             $SED -i -e "s/\<Sfe8\>/2/g" ${PRE2}_vars.h
         fi
         cp ${DEST}/${PRE2}_squaredME/*.F ${DEST}/squaredME/
-        cp ${DEST}/${PRE2}_squaredME/${PRE2}_vars.h ${DEST}/include
-        rm -rf ${DEST}/${PRE2}_squaredME
+        cp ${DEST}/${PRE2}_squaredME/${PRE2}_vars.h ${DEST}/include/
+        cp ${DEST}/${PRE2}_squaredME/${PRE2}_specs.h ${DEST}/include/
+        rm -rf ${DEST}/${PRE2}_squaredME/
     done
 done
+
+
+# copying global include files
+echo "copying global header files..."
+mkdir -p ${DEST}/temp/
+# use last process
+cp ${WORKINGDIR}/${PRE1}/F/const.h ${DEST}/temp/${TYPE}_const.h
+cp ${WORKINGDIR}/${PRE1}/F/contains.h ${DEST}/temp/${TYPE}_contains.h
+cp ${WORKINGDIR}/${PRE1}/F/decl.h ${DEST}/temp/${TYPE}_decl.h
+cp ${WORKINGDIR}/${PRE1}/F/inline.h ${DEST}/temp/${TYPE}_inline.h
+cp ${WORKINGDIR}/${PRE1}/F/types.h ${DEST}/temp/${TYPE}_types.h
+cp ${WORKINGDIR}/${PRE1}/F/user.h ${DEST}/temp/${TYPE}_user.h
+cp ${WORKINGDIR}/${PRE1}/F/util.h ${DEST}/temp/${TYPE}_util.h
+# modify some of the copied files
+cd ${DEST}/temp/
+rename ${TYPE}_decl.h ""
+$SED -i -e '/^#include "distrib.h"/d' ${TYPE}_decl.h
+$SED -i -e '/^#include "extra.h"/d' ${TYPE}_decl.h
+if [[ $TYPE == "real" ]] || [[ $TYPE == "realOS" ]]; then
+    $SED -i -e '/^#include "RenConst.h"/d' ${TYPE}_decl.h
+    $SED -i -e '/^#include "looptools.h"/d' ${TYPE}_decl.h
+fi
+$SED -i -e 's/#include "model_mssm.h"/#include "model_mssm.h"\n#include "model_sm.h"\n#include "osres.h"\n#include "indices.h"/g' ${TYPE}_user.h
+$SED -i -e 's/Sq(z_)/!Sq(z_)/g' ${TYPE}_inline.h
+cp ${DEST}/temp/*.h ${DEST}/global/
+rm -rf ${DEST}/temp/
+
 
 # on-shell subroutines:
 # -> modify this if needed.

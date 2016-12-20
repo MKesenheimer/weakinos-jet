@@ -116,31 +116,29 @@ $(shell echo "      end" >> ../version.f)
 # or -ffixed-line-length-none options
 CPP = -cpp
 
-## For debugging uncomment the following
-#DEBUG = -ggdb -pg -D DEBUG
-## more verbose debugging
-DEBUG = -ggdb -pg -D DEBUG -D DEBUGV
-## If you wish to show all possible debug output
-#DEBUG = -ggdb -pg -D DEBUG -D DEBUGV -D DEBUGQ -D CHECK
+## For debugging uncomment the following, choose a number between 0 and 
+# 4 to choose the level of verbosity (higher means more output).
+LEVEL = 0
+DEBUG = -ggdb -pg -DDEBUG=$(LEVEL)
 
 ## More debugging flags
-# Check UV finiteness in FormCalc Virtuals: -D CHECKUV
+# Check UV finiteness in FormCalc Virtuals: -DCHECKUV
 # Check if MadGraph and FormCalc born amplitudes are the same during 
-# calculation and abort if they are not: -D CHECK_FORM_MAD
+# calculation and abort if they are not: -DCHECK_FORM_MAD
 # Note: Use this only for testing born amplitudes, not for the final 
 # program and not while checking real amplitudes!
-#USRFLAGS += -D CHECK_FORM_MAD
+#USRFLAGS += -DCHECK_FORM_MAD
 
 ## Additional and mandatory flags
-# Use MadGraph Borns (default): -D MAD_BORN 
-# Use FormCalc Borns: -D FORM_BORN
-#USRFLAGS += -D MAD_BORN
-USRFLAGS += -D FORM_BORN
+# Use MadGraph Borns (default): -DMAD_BORN 
+# Use FormCalc Borns: -DFORM_BORN
+#USRFLAGS += -DMAD_BORN
+USRFLAGS += -DFORM_BORN
 
 ## Treatment of quark masses and squark widths
 # The current version uses vanishing masses for incoming quarks.
 # if you wish to use finite bottom mass, comment the following line.
-USRFLAGS += -D NEGLECTBMASS
+USRFLAGS += -DNEGLECTBMASS
 
 ## Subtraction schemes
 # There are divergences originating from on-shell produced squark lines
@@ -150,20 +148,20 @@ USRFLAGS += -D NEGLECTBMASS
 # contributions have to be removed in a consistent way.
 # There exist several methods to cope with them, the most relevant 
 # being the following:
-# - Diagram Removal type I, implemented with preprocessor flag -D DR_I
-# - Diagram Removal type II, implemented with preprocessor flag -D DR_II
-# - Diagram Subtraction, implemented with preprocessor flag -D DSUB_I,
+# - Diagram Removal type I, implemented with preprocessor flag -DDR_I
+# - Diagram Removal type II, implemented with preprocessor flag -DDR_II
+# - Diagram Subtraction, implemented with preprocessor flag -DDSUB_I,
 #   no correction of the jacobian, which is in principal not ok, but 
 #   could be used for testing the convergence.
-# - Diagram Subtraction with corrected jacobian, flag -D DSUB_II.
+# - Diagram Subtraction with corrected jacobian, flag -DDSUB_II.
 #   With this flag defined, the real amplitude is split into two parts.
 #   In Reals.f the matrix element |M_NR|**2 + 2 M_R* M_NR is calculated,
 #   in Reals_osres.f the remaining terms and the on-shell counter terms
 #   are added: |M_R|**2 - BW*corrfac*|M_R^OS|**2. The latter gets 
 #   integrated seperately in sigosres.f and is included at a later point
 #   to the main result.
-#USRFLAGS += -D DSUB_II_TEST
-USRFLAGS += -D DSUB_II
+#USRFLAGS += -DDSUB_II_TEST
+USRFLAGS += -DDSUB_II
 
 ########################################################################
 #           -*- no editing is required below this line -*-             #
@@ -172,7 +170,7 @@ USRFLAGS += -D DSUB_II
 ########################################################################
 ## Runtime flags which should not be changed (don't touch this unless
 ## you know what you do!) 
-CHANNEL += -D NINJ_JET
+CHANNEL += -DNINJ_JET
 
 ########################################################################
 ## Paths
@@ -198,6 +196,8 @@ PY8INCLUDE  = $(TOOLS)/pythia8215/include
 LTINCLUDE   = $(TOOLS)/LoopTools-2.12/src/include
 SLHAINCLUDE = $(TOOLS)/SLHALib-2.2/src
 FRINCLUDE   = $(FORMREALS)/include
+FRGINCLUDE  = $(FORMREALS)/global
+FVGINCLUDE  = $(FORMVIRTS)/global
 
 ########################################################################
 ## search for the files and set paths
@@ -371,8 +371,8 @@ LIBS += -lz
 
 ALL_FCFLAGS   = $(REC_FCFLAGS) $(OPT) $(WARN) $(CPP) $(DEBUG) $(USRFLAGS) $(CHANNEL)
 ALL_FCFLAGS  += -I$(UINCLUDE) -I$(PINCLUDE) -I$(LTINCLUDE) -I$(MDINCLUDE)
-ALL_FCFLAGS  += -I$(WORKINGDIR) -I$(VINCLUDE) -I$(SLHAINCLUDE)
-ALL_FCFLAGS  += -I$(SINCLUDE) -I$(FRINCLUDE)
+ALL_FCFLAGS  += -I$(SINCLUDE) -I$(WORKINGDIR) -I$(VINCLUDE) -I$(SLHAINCLUDE)
+ALL_FCFLAGS  += -I$(FRINCLUDE) -I$(FRGINCLUDE) -I$(FVGINCLUDE)
 
 ALL_CFLAGS    = $(REC_CFLAGS) $(OPT)
 ALL_CFLAGS   += -I$(LTINCLUDE)
@@ -381,10 +381,11 @@ ALL_CXXFLAGS  = $(REC_CXXFLAGS) $(OPT)
 
 LINKER = $(CPPFLAGS) $(LIBS) $(LDFLAGS)
 
-HEADERS  = $(wildcard *.h $(UINCLUDE)/*.h  $(PINCLUDE)/*.h $(VINCLUDE)/*.h)
+HEADERS  = $(wildcard *.h $(UINCLUDE)/*.h  $(PINCLUDE)/*.h)
 HEADERS += $(wildcard *.h $(LTINCLUDE)/*.h $(SLHAINCLUDE)/*.h)
 HEADERS += $(wildcard *.h $(MDINCLUDE)/*.h $(SINCLUDE)/*.h)
-HEADERS += $(wildcard *.h $(FRINCLUDE)/*.h)
+HEADERS += $(wildcard *.h $(VINCLUDE)/*.h $(FVGINCLUDE)/*.h)
+HEADERS += $(wildcard *.h $(FRINCLUDE)/*.h $(FRGINCLUDE)/*.h)
 HEADERS += $(wildcard *.inc $(MDINCLUDE)/*.inc $(UINCLUDE)/*.inc)
      
 ########################################################################

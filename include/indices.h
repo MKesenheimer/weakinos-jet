@@ -1,8 +1,5 @@
 c############### indices.h #############################################
-c last modified by MK, date 18.07.2016
-#ifndef INDICES_H
-#define INDICES_H
-
+c last modified by MK, date 19.12.2016
 #define EXTLEGS 6
 
 c process definitions
@@ -11,5 +8,4 @@ c process definitions
         
         integer Sq1, Sq2
         common/cindices/ Sq1, Sq2
-#endif
 c############### end indices.h #########################################
