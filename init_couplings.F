@@ -10,7 +10,6 @@ c requires encoded process ID in lprup(1)
 #include "PhysPars.h"
 #include "LesHouches.h"
 #include "pwhg_st.h"
-#include "pwhg_math.h"
 #include "nlegborn.h"
 #include "osres.h"
         double precision powheginput
@@ -220,11 +219,17 @@ c requires encoded process ID in lprup(1)
         endif
 
         ! init LoopTools
-        print*, "===================================================="
-        print*, "             init LoopTools                         "
-        call ltini
+        !print*, "===================================================="
+        !print*, "             init LoopTools                         "
+        !call ltini
         !call setversionkey(0)
-        print*
+        !print*
+        
+        ! init COLLIER
+        print*, "===================================================="
+        print*, "             init Collier                           "
+        print*, "===================================================="
+        call init_collier(5,5)
       end
 c############### end subroutine init_couplings #########################
 
@@ -259,26 +264,25 @@ c set the madgraph and formcalc couplings event by event
         implicit none
 #include "PhysPars.h"
 #include "pwhg_st.h"
-#include "pwhg_math.h"
         ! MadGraph
         ! QCD coupling constant
         alphaS = st_alpha
-        G      = dsqrt(alphaS*4d0*pi)
+        G      = dsqrt(alphaS*4d0*m_pi)
         GG(1)  = -G
         GG(2)  = -G
         ! e.m. coupling
         alpha  = par_alpha
-        Gal(1) = dcmplx(dsqrt(alpha*4d0*pi))
-        Gal(2) = dcmplx(dsqrt(alpha*4d0*pi))
+        Gal(1) = dcmplx(dsqrt(alpha*4d0*m_pi))
+        Gal(2) = dcmplx(dsqrt(alpha*4d0*m_pi))
         ! FormCalc
         ! QCD coupling
         AlfaS  = alphaS
         AlfaS2 = AlfaS**2
-        GS = dsqrt(AlfaS*4d0*pi)
+        GS = dsqrt(AlfaS*4d0*m_pi)
         ! e.m. coupling
         Alfa = par_alpha
         Alfa2   = Alfa**2
-        EL = dsqrt(Alfa*4d0*pi)
+        EL = dsqrt(Alfa*4d0*m_pi)
 
         ! set the MadGraph SUSY-QCD couplings
         call INIT_SUSY_QCD(GS)
@@ -308,7 +312,6 @@ c sets the PhysPars.h parameters
       subroutine set_phys_params
         implicit none
 #include "PhysPars.h"
-#include "pwhg_math.h"
 #include "LesHouches.h"
         double precision powheginput
         external powheginput
@@ -377,7 +380,7 @@ c sets the PhysPars.h parameters
         par_alpha   = par_alphaMZ
 #else
         sinW        = dsqrt(1d0-par_Wmass**2/par_Zmass**2)
-        par_alpha   = dsqrt(2d0)*par_Wmass**2*sinW**2*par_gf/pi
+        par_alpha   = dsqrt(2d0)*par_Wmass**2*sinW**2*par_gf/m_pi
 #endif
         !print*,1/par_alpha
         !stop
@@ -586,7 +589,6 @@ c sets the FormCalc parameters
       subroutine set_formcalc_params
         implicit none
 #include "PhysPars.h"
-#include "pwhg_math.h"
         double precision powheginput, kronecker
         external powheginput, kronecker
         integer i,j,k,l ! loops
@@ -747,9 +749,7 @@ c MadGraphs couplings.f as well.
         SW2 = 1 - CW2
         SW  = dsqrt(SW2)
         
-        ! sin(beta), cos(beta), tan(beta)
-        ! note: the matrix elements do not depend on TB
-        !TB = HMix_TB
+        ! Higgs parameters 
         TB = MinPar_TB
         CB = dabs(1.D0/dsqrt(1+TB**2))
         SB = dabs(TB*CB)
@@ -759,11 +759,35 @@ c MadGraphs couplings.f as well.
         S2B = 2*TB*CB2
         C2B = (CB - SB)*(CB + SB)
         
+        TA = 0.1D0 !MinPar_TA, TODO!
+        CA = dabs(1.D0/dsqrt(1+TA**2))
+        SA = dabs(TA*CA)
+        SA2 = SA**2
+        CA2 = CA**2
+        TA2 = TA**2
+        S2A = 2*TA*CA2
+        C2A = (CA - SA)*(CA + SA)
+        
+        SAB = SA*CB + CA*SB
+        CAB = CA*CB - SA*SB
+        SBA = SB*CA - CB*SA
+        SBA2 = SBA**2
+        CBA = CB*CA + SB*SA
+        CBA2 = CBA**2
+        
+        Mh0 = Mass_Mh0
+        MHH = Mass_MHH
+        MA0 = Mass_MA0
+        MHp = Mass_MHp
+        Mh02 = Mh0**2
+        MHH2 = MHH**2 
+        MA02 = MA0**2
+        MHp2 = MHp**2
+        
         ! Gaugino mass parameter
         Mino3 = dcmplx(Mgl)
         
         ! trilinear couplings
-        ! note: the matrix elements do not depend on Af
         do i=2,4 ! type 
           do j=1,3 ! generation
             do k=1,3 ! generation
@@ -773,7 +797,6 @@ c MadGraphs couplings.f as well.
         enddo
         
         ! mass term mixing the 2 Higgs doublets
-        ! note: the matrix elements do not depend on MUE
         MUE  = dcmplx(HMix_MUE)
 
         ! couplings
@@ -784,8 +807,8 @@ c MadGraphs couplings.f as well.
         AlfaS2  = AlfaS**2
         AlfaMZ  = par_alphaMZ
         AlfaSMZ = SMInputs_AlfasMZ
-        EL = dsqrt(4*pi*Alfa)
-        GS = dsqrt(4*pi*AlfaS)
+        EL = dsqrt(4*m_pi*Alfa)
+        GS = dsqrt(4*m_pi*AlfaS)
       end
 c############### end subroutine set_formcalc_params ####################
 
@@ -804,12 +827,11 @@ c ddbar_SquaredME.F and uubar_SquaredME.F.
         implicit none
 #include "PhysPars.h"
 #include "pwhg_st.h"
-#include "pwhg_math.h"
 #include "susy_restore.h"
         ! the counter term for quark-squark-gluino is not needed here (TODO: check!)
         dZgs1y = 0 ! gs*Alfas/(3D0*Pi)
         ! counter term for quark-squark-neutralino yukawa coupling
-        dZe1y  = -el*Alfas/(6D0*Pi)
+        dZe1y  = -el*Alfas/(6D0*m_pi)
         
 #ifdef CHECKUV
         dZgs1y = 0
@@ -822,7 +844,7 @@ c ddbar_SquaredME.F and uubar_SquaredME.F.
         print*,"st_alpha", st_alpha
         print*,"AlfaS", AlfaS
         print*,"Alfa",Alfa
-        print*,"EL**2/4Pi",EL**2/(4*Pi)
+        print*,"EL**2/4Pi",EL**2/(4*m_i)
 #endif
       end
 c############### end init_susy_restore subroutine ######################

@@ -1,6 +1,14 @@
 #!/bin/bash
 WORKINGDIR=${PWD}
 
+# Disclaimer: This script works for neutralino-/chargino-pair + jet 
+# production.
+# Even though this script is written as common as possible
+# does not mean, that this script works for every arbitrary process.
+# Keep that in mind when using this script.
+# Although the main structur should be the same for every process, so it
+# is possible to adapt it to any process.
+
 ########################################################################
 #                       -*-  Preferences -*-                           #
 ########################################################################
@@ -46,32 +54,32 @@ WORKINGDIR=${PWD}
 #                    as proc_nInJjj_os, but without channel identifiers)
 
 # the name of the target process directory
-PROCDIR="neuIneuJ+jet/FormCalc_Reals"
+PROCDIR="neuIneuJ+jet/FormCalc_Virtuals"
 
 # where to copy the amplitudes to
 DEST=${PWD}/../../${PROCDIR}
 
 # number of particles (incoming + outgoing)
-NPART=6
+NPART=5
 
 # process list file
-#PROCF="./proc_nInJj
+PROCF="./proc_nInJj_test"
 #PROCF="./proc_nInJjj_nr"
 #PROCF="./proc_nInJjj_os"
-PROCF="./proc_nInJjj_reg"
+#PROCF="./proc_nInJjj_reg"
 
 # the name of Mathematica Scripts
 #MSCRIPT="./nInJj.m"
-#MSCRIPT="./nInJj_virt.m"
+MSCRIPT="./nInJj_virt.m"
 #MSCRIPT="./nInJjj.m"
 #MSCRIPT="./nInJjj_os.m"
-MSCRIPT=""
+#MSCRIPT=""
 
 # the type of the amplitudes (born, virt, real, realOS)
 #TYPE="born"
-#TYPE="virt"
+TYPE="virt"
 #TYPE="realOS"
-TYPE="real"
+#TYPE="real"
 
 # the number of subchannels of realOS amplitudes (f.e. ll, lr, rl, rr)
 NSQUARKSUBCHANNELS=4
@@ -144,24 +152,11 @@ function rename() {
     $SED -i -e "s/abbr1a/${2}abbr1a/g" $1    
     $SED -i -e 's/#ifdef DEBUG/#ifdef DEBUGQ/g' $1
     # handling of general process indices
-    $SED -i -e "s/\<Gen1\>/Gen(1)/g" $1
-    $SED -i -e "s/\<Gen2\>/Gen(2)/g" $1
-    $SED -i -e "s/\<Gen3\>/Gen(3)/g" $1
-    $SED -i -e "s/\<Gen4\>/Gen(4)/g" $1
-    $SED -i -e "s/\<Gen5\>/Gen(5)/g" $1
-    $SED -i -e "s/\<Gen6\>/Gen(6)/g" $1
-    $SED -i -e "s/\<Neu1\>/Neu(1)/g" $1
-    $SED -i -e "s/\<Neu2\>/Neu(2)/g" $1
-    $SED -i -e "s/\<Neu3\>/Neu(3)/g" $1
-    $SED -i -e "s/\<Neu4\>/Neu(4)/g" $1
-    $SED -i -e "s/\<Neu5\>/Neu(5)/g" $1
-    $SED -i -e "s/\<Neu6\>/Neu(6)/g" $1
-    $SED -i -e "s/\<Cha1\>/Cha(1)/g" $1
-    $SED -i -e "s/\<Cha2\>/Cha(2)/g" $1
-    $SED -i -e "s/\<Cha3\>/Cha(3)/g" $1
-    $SED -i -e "s/\<Cha4\>/Cha(4)/g" $1
-    $SED -i -e "s/\<Cha5\>/Cha(5)/g" $1
-    $SED -i -e "s/\<Cha6\>/Cha(6)/g" $1
+    for i in `seq 1 ${NPART}`; do
+      $SED -i -e "s/\<Gen${i}\>/Gen(${i})/g" $1
+      $SED -i -e "s/\<Neu${i}\>/Neu(${i})/g" $1
+      $SED -i -e "s/\<Cha${i}\>/Cha(${i})/g" $1
+    done
     # ändere die Namen der globalen Include Dateien
     #$SED -i -e '/^#include "inline.h"/d' $1
     $SED -i -e "s/const.h/${TYPE}_const.h/g" $1
@@ -181,24 +176,11 @@ function rename2() {
         $SED -i -e "s/formfactors/${PRE2}_formfactors/g" $1
         # replace the indices \<Neu3\>, Neu4, Cha3, Cha4, ... with constants
         # max generation
-        $SED -i -e "s/\<Gen1\>/3/g" $1
-        $SED -i -e "s/\<Gen2\>/3/g" $1
-        $SED -i -e "s/\<Gen3\>/3/g" $1
-        $SED -i -e "s/\<Gen4\>/3/g" $1
-        $SED -i -e "s/\<Gen5\>/3/g" $1
-        $SED -i -e "s/\<Gen6\>/3/g" $1
-        $SED -i -e "s/\<Neu1\>/4/g" $1
-        $SED -i -e "s/\<Neu2\>/4/g" $1
-        $SED -i -e "s/\<Neu3\>/4/g" $1
-        $SED -i -e "s/\<Neu4\>/4/g" $1
-        $SED -i -e "s/\<Neu5\>/4/g" $1
-        $SED -i -e "s/\<Neu6\>/4/g" $1
-        $SED -i -e "s/\<Cha1\>/2/g" $1
-        $SED -i -e "s/\<Cha2\>/2/g" $1
-        $SED -i -e "s/\<Cha3\>/2/g" $1
-        $SED -i -e "s/\<Cha4\>/2/g" $1
-        $SED -i -e "s/\<Cha5\>/2/g" $1
-        $SED -i -e "s/\<Cha6\>/2/g" $1
+        for i in `seq 1 ${NPART}`; do
+          $SED -i -e "s/\<Gen${i}\>/3/g" $1
+          $SED -i -e "s/\<Neu${i}\>/4/g" $1
+          $SED -i -e "s/\<Cha${i}\>/2/g" $1
+        done
 }
 
 # read in the process list and ignore what comes after #
@@ -375,7 +357,7 @@ if [[ $TYPE == "real" ]] || [[ $TYPE == "realOS" ]]; then
     $SED -i -e '/^#include "RenConst.h"/d' ${TYPE}_decl.h
     $SED -i -e '/^#include "looptools.h"/d' ${TYPE}_decl.h
 fi
-$SED -i -e 's/#include "model_mssm.h"/#include "model_mssm.h"\n#include "model_sm.h"\n#include "osres.h"\n#include "indices.h"/g' ${TYPE}_user.h
+$SED -i -e 's/#include "model_mssm.h"/#include "model_mssm.h"\n#include "model_sm.h"\n#include "osres.h"\n#include "indices.h"\n#include "susy_restore.h"/g' ${TYPE}_user.h
 $SED -i -e 's/Sq(z_)/!Sq(z_)/g' ${TYPE}_inline.h
 cp ${DEST}/temp/*.h ${DEST}/global/
 rm -rf ${DEST}/temp/

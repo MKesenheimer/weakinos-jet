@@ -4,10 +4,7 @@ c prints all model paramters from madgraph and formcalc
 c############### subroutine printFormcalcModelParameters ###############
 
       subroutine printFormcalcModelParameters
-
-#include "types.h"
 #include "PhysPars.h"
-
         print*,"== SM Parameters == "
         print*
         print*,"CKM matrix"
@@ -169,10 +166,7 @@ c############### end subroutine printFormcalcModelParameters ###########
 c############### subroutine printMadgraphModelParameters ###############
 
       subroutine printMadgraphModelParameters
-
-#include "types.h"
 #include "PhysPars.h"
-
         print*,"== SM Parameters == "
         print*
         print*,"CKM matrix"

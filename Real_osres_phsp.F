@@ -41,9 +41,6 @@ c this subroutine uses subroutines defined in phi1_2.f (with boosts).
         double precision vec(3),beta
         ! check 4-momentum conservation
         logical lresult
-        ! constants
-        double precision m_pi
-        parameter (m_pi = 4.D0*datan(1.D0))
         
         ! check the channel identifier
         if( ichan.gt.nosres .or. ichan.lt.0) then

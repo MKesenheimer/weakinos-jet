@@ -1,0 +1,70 @@
+                                                            
+         *******************************************        
+         *              C O L L I E R              *        
+         *                                         *        
+         *        Complex One-Loop Library         *        
+         *      In Extended Regularizations        *        
+         *                                         *        
+         *    by A.Denner, S.Dittmaier, L.Hofer    *        
+         *                                         *        
+         *               version 1.0               *        
+         *                                         *        
+         *******************************************        
+                                                            
+                                                           
+ ***********************************************************
+                                                            
+        file containing the info output of COLLIER          
+                created  21/12/2016  15:18
+                                                            
+ ***********************************************************
+                                                            
+                                                           
+ ***********************************************************
+   Default initialization of COLLIER:                     
+     COLLIER mode: mode_cll =                    1
+       -> use COLI implementation
+ -----------------------------------------------------------
+     internal parameters:                                   
+     maximal degree:     Nmax         =          6
+     UV scale:           muUV2        =  1.0000000000E+00
+     IR scale:           muIR2        =  1.0000000000E+00
+     UV pole:            deltaUV      =  0.0000000000E+00
+     single IR pole:     deltaIR1     =  0.0000000000E+00
+     double IR pole:     deltaIR2     =  0.0000000000E+00
+     target precision:   reqacc_cll   =  1.0000000000E-08
+     critical precision: critacc_cll  =  1.0000000000E-01
+     check precision:    checkacc_cll =  1.0000000000E-02
+     est. CPU precision: dprec_cll    =  4.4408920985E-16
+     maximal rank of Bs: ritmaxB      =         18
+     maximal rank of Cs: ritmaxC      =         16
+     maximal rank of Ds: ritmaxD      =         14
+     stop forced for ErrorStop_cll   <=         -8
+ -----------------------------------------------------------
+     list of infinitesimal masses cleared
+     IR rational terms switched on
+     UV terms for tensors switched on
+     direct tensor reduction for   N >=          6
+ -----------------------------------------------------------
+     cache system switched on
+     initialized caches: ncache_max   =          1
+       cache no. 1: only internal calls cached
+                                                            
+ ***********************************************************
+                                                            
+
+
+
+ ***********************************************************
+ Info-output NO.           1
+ in routine: InitCacheSystem_cll
+ cache system initialized
+ COLLIER-Cache:  1 caches initialized at level  6
+
+
+
+ ***********************************************************
+ Info-output NO.           2
+ in routine: SetMode_cll
+ mode_cll set to
+  1 --> use COLI implementation

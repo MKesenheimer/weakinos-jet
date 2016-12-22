@@ -16,7 +16,6 @@ c modifies the jacobian.
 #include "PhysPars.h"
 #include "nlegborn.h"
 #include "pwhg_flst.h"
-#include "pwhg_math.h"
 #include "pwhg_st.h"
 #include "Flags.h"
 #include "osres.h"

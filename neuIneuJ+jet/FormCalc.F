@@ -143,25 +143,45 @@ c############### subroutine getVirtAmps ################################
         integer flav(nlegborn)
         double precision amps(2)
         integer flags
+#ifdef DEBUG
+        integer getepsi
+        double complex B0i, m1b, m2b, pb, res
+        external B0i, getepsi
+#endif
         if(flg_fakevirtuals) then
           ! = 010d, Bit0: set mass, Bit1: reset, Bit2: loop
           flags = 2
         else
-          ! = 011d, Bit0: set mass, Bit1: reset, Bit2: loop
-          flags = 3
+          ! = 110d, Bit0: set mass, Bit1: reset, Bit2: loop
+          flags = 6
           call calcRenConst
         endif
-        call ltini
-        call setlambda(0d0) ! Only finite part
-        call setuvdiv(0d0)  ! no 1/eps_UV terms
-        call setdelta(0d0)  ! set divergences to zero
-        call setmudim(st_muren2) ! renormalization scale
+        !call ltini
+        !call setlambda(0d0) ! Only finite part
+        !call setuvdiv(0d0)  ! no 1/eps_UV terms
+        !call setdelta(0d0)  ! set divergences to zero
+        !call setmudim(st_muren2) ! renormalization scale
+        call setparam_collier(0d0,st_muren2,0d0) ! delta_uv,mu2,lambda
 c#define CHECKUV
 #ifdef CHECKUV
         ! test for finiteness
         ! print*, "checking for UV finiteness"
-        call setuvdiv(1d0)
-        call setDelta(1D7)    ! Test UV finiteness
+        !call setuvdiv(1d0)
+        !call setDelta(1D7)    ! Test UV finiteness
+#endif
+
+#ifdef DEBUG
+        call clearcache
+        res = getepsi()
+        print*,res
+        pb = (1D0,0D0)
+        m1b = (2D0,1D0)
+        m2b = (3D0,0D0)
+        print*,"calling B0i..."
+        res = B0i(0,pb,m1b,m2b)
+        !call Bput(res, pb, m1b, m2b)
+        print*,res
+        stop
 #endif
         call getAmps(p,flav,flags,amps(:))
       end
@@ -267,11 +287,6 @@ c############### subroutine getAmps ####################################
  
         amp(1) = fc_result(1)/symfac
         amp(2) = fc_result(2)/symfac
-
-#ifdef DEBUGQ
-        print*,amp
-        stop
-#endif
       end
 c############### subroutine getAmps ####################################
 

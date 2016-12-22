@@ -47,6 +47,13 @@ ifeq ($(UNAME), Darwin)
   #Mac OSX
   REC_CFLAGS   += -stdlib=libstdc++ -mmacosx-version-min=10.6 -Qunused-arguments
   REC_CXXFLAGS += -stdlib=libstdc++ -mmacosx-version-min=10.6 -Qunused-arguments
+  #Collier modules folder
+  COLLIERMOD = modules/MacOSX_$(FC)
+endif
+ifeq ($(UNAME), Linux)
+  #Linux
+  #Collier modules folder
+  COLLIERMOD = modules/Linux_$(FC)
 endif
 
 ## warning for type-conversions -> basically useless, as those occur in
@@ -70,6 +77,8 @@ LT     = $(TOOLS)/LoopTools-2.12
 SLHA   = $(TOOLS)/SLHALib-2.2
 DHELAS = $(TOOLS)/DHELAS
 PYTHIA = $(TOOLS)/pythia8215
+COLLIER = $(TOOLS)/COLLIER-1.1
+COLLIERINTERFACE = $(TOOLS)/collier
 
 ALL_FCFLAGS  = $(REC_FCFLAGS) $(OPT) $(WARN)
 
@@ -88,6 +97,11 @@ libSLHA.a:
 	
 libpythia.a:
 	cd $(PYTHIA) && make CXX="$(CXX)" CXXFLAGS="$(REC_CXXFLAGS)" && make install
+
+libcollier.a:
+	cd $(COLLIER)/build && make
+	mkdir -p $(COLLIERINTERFACE)/$(COLLIERMOD)
+	cp $(COLLIER)/modules/*.mod $(COLLIERINTERFACE)/$(COLLIERMOD)
 	
 pastegnudata:
 	cd ./plot-aux && $(FC) pastegnudata.f -o $@
@@ -98,6 +112,7 @@ clean-libs:
 	cd $(DHELAS) && make clean
 	cd $(SLHA) && make clean
 	cd $(PYTHIA) && make distclean
+	cd $(COLLIER) && rm -rf build/*
 
 clean clean-all: clean-libs
 	cd neuIneuJ+jet && make clean-all

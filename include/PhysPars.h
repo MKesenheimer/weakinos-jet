@@ -12,10 +12,10 @@ c madgraph definitions
 
 c common definitions
 c SM parameters needed for neutralino pair production
-        double precision  par_alpha,par_alphaMZ,par_gf
-        double precision  par_Zmass,par_Wmass,par_Zwidth,par_Wwidth
-        double precision  par_Zmass2,par_Wmass2
-        double precision  par_MU,par_MD,par_MS,par_MC,par_MB,par_MT
+        double precision par_alpha,par_alphaMZ,par_gf
+        double precision par_Zmass,par_Wmass,par_Zwidth,par_Wwidth
+        double precision par_Zmass2,par_Wmass2
+        double precision par_MU,par_MD,par_MS,par_MC,par_MB,par_MT
         
         common/par_common/ 
      &        par_alpha,par_alphaMZ,par_gf,    ! fine structure and fermi constant
@@ -48,6 +48,9 @@ c MSSM parameters in SLHALib
 c complex unit
         double complex ii
         parameter (ii = (0D0,1D0))
+c pi
+        double precision m_pi
+        parameter (m_pi = 4.D0*datan(1.D0))
 
 c additional parameters
         double precision gcut

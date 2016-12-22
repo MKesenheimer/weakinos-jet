@@ -191,13 +191,25 @@ UINCLUDE    = $(WORKINGDIR)/include
 SINCLUDE    = $(SUBWORKINGDIR)/include
 PINCLUDE    = $(PWHGDIR)/include
 VINCLUDE    = $(FORMVIRTS)/include
+RENINCLUDE  = $(FORMVIRTS)/RenConst
 MDINCLUDE   = $(MADREALS)/include
 PY8INCLUDE  = $(TOOLS)/pythia8215/include
-LTINCLUDE   = $(TOOLS)/LoopTools-2.12/src/include
+#LTINCLUDE   = $(TOOLS)/LoopTools-2.12/src/include
 SLHAINCLUDE = $(TOOLS)/SLHALib-2.2/src
 FRINCLUDE   = $(FORMREALS)/include
 FRGINCLUDE  = $(FORMREALS)/global
 FVGINCLUDE  = $(FORMVIRTS)/global
+CINCLUDE    = $(TOOLS)/collier/include
+
+# modules
+ifeq ($(UNAME), Darwin)
+  #Mac OSX
+  CMODULES = $(TOOLS)/collier/modules/MacOSX_$(FC)
+endif
+ifeq ($(UNAME), Linux)
+  #Linux
+  CMODULES = $(TOOLS)/collier/modules/Linux_$(FC)
+endif
 
 ########################################################################
 ## search for the files and set paths
@@ -205,6 +217,7 @@ FVGINCLUDE  = $(FORMVIRTS)/global
 vpath %.F $(WORKINGDIR)
 vpath %.F $(TOOLS)/FormCalcTools
 vpath %.F $(FORMVIRTS)/squaredME
+vpath %.F $(FORMVIRTS)/RenConst
 vpath %.F $(FORMREALS)/squaredME
 vpath %.F $(TOOLS)/DHELAS
 vpath %.f $(WORKINGDIR)
@@ -218,6 +231,7 @@ vpath %.f $(TOOLS)/functions
 vpath %.cc $(TOOLS)/fastjet
 vpath %.cc $(TOOLS)/pythiafortran
 vpath %.cc $(TOOLS)/pythia8215
+vpath %.F90 $(TOOLS)/collier
 vpath %.o $(SUBWORKINGDIR)/build
 
 ########################################################################
@@ -274,7 +288,7 @@ USER = Born.o Born_phsp.o Reals.o Virtuals.o 	\
        set_channel.o Histogram.o
 
 ### Functions in Tools/functions/
-FUNC = funcprocess.o Print.o funcbasic.o off_to_on.o
+FUNC = funcprocess.o Print.o funcbasic.o off_to_on.o lt_collier_interface_complex.o
 
 ### MadGraph mandatory files
 MADGRAPH = couplings.o hardstop.o printout.o read_slha.o \
@@ -333,6 +347,7 @@ endif
 ### Virtual Amplitudes in Formcalc_Virtuals/ ###
 VIRTUALS_F := $(wildcard $(FORMVIRTS)/squaredME/*.F)
 VIRTUALS := $(notdir $(VIRTUALS_F:.F=.o))
+VIRTUALS += RenConst.o RenConst1.o RenConst2.o
 
 ### FormCalc Real Amplitudes ###
 REALS_F := $(wildcard $(FORMREALS)/squaredME/*.F)
@@ -355,10 +370,14 @@ SOURCESPYTHIA = $(PYTHIA) $(PWHGANALYSIS) $(MADGRAPH)
 LIBS += $(TOOLS)/libSLHA.a
 
 ### LoopTools in Tools/Looptools-2.12 ###
-LIBS += $(TOOLS)/libooptools.a
+# is not used anymore
+#LIBS += $(TOOLS)/libooptools.a
 
 ### DHELAS in Tools/DHELAS ###
 LIBS += $(TOOLS)/libdhelas3.a
+
+### COLLIER in Tools/COLLIER ###
+LIBS += $(TOOLS)/libcollier.a
 
 ### Libraries for linking c++ code
 LIBS += -ldl -lstdc++
@@ -370,24 +389,31 @@ LIBS += -lz
 ## combine all flags, libraries and includes
 
 ALL_FCFLAGS   = $(REC_FCFLAGS) $(OPT) $(WARN) $(CPP) $(DEBUG) $(USRFLAGS) $(CHANNEL)
-ALL_FCFLAGS  += -I$(UINCLUDE) -I$(PINCLUDE) -I$(LTINCLUDE) -I$(MDINCLUDE)
+# -I$(LTINCLUDE)
+ALL_FCFLAGS  += -I$(UINCLUDE) -I$(PINCLUDE) -I$(MDINCLUDE)
 ALL_FCFLAGS  += -I$(SINCLUDE) -I$(WORKINGDIR) -I$(VINCLUDE) -I$(SLHAINCLUDE)
-ALL_FCFLAGS  += -I$(FRINCLUDE) -I$(FRGINCLUDE) -I$(FVGINCLUDE)
+ALL_FCFLAGS  += -I$(FRINCLUDE) -I$(FRGINCLUDE) -I$(FVGINCLUDE) -I$(RENINCLUDE)
+ALL_FCFLAGS  += -I$(CINCLUDE)
+
+ALL_FCFLAGS  += -J$(CMODULES)
 
 ALL_CFLAGS    = $(REC_CFLAGS) $(OPT)
-ALL_CFLAGS   += -I$(LTINCLUDE)
+#ALL_CFLAGS   += -I$(LTINCLUDE)
 
 ALL_CXXFLAGS  = $(REC_CXXFLAGS) $(OPT)
 
 LINKER = $(CPPFLAGS) $(LIBS) $(LDFLAGS)
 
+# $(LTINCLUDE)/*.h
 HEADERS  = $(wildcard *.h $(UINCLUDE)/*.h  $(PINCLUDE)/*.h)
-HEADERS += $(wildcard *.h $(LTINCLUDE)/*.h $(SLHAINCLUDE)/*.h)
+HEADERS += $(wildcard *.h $(SLHAINCLUDE)/*.h)
 HEADERS += $(wildcard *.h $(MDINCLUDE)/*.h $(SINCLUDE)/*.h)
 HEADERS += $(wildcard *.h $(VINCLUDE)/*.h $(FVGINCLUDE)/*.h)
 HEADERS += $(wildcard *.h $(FRINCLUDE)/*.h $(FRGINCLUDE)/*.h)
+HEADERS += $(wildcard *.h $(RENINCLUDE)/*.h $(CINCLUDE)/*.h)
 HEADERS += $(wildcard *.inc $(MDINCLUDE)/*.inc $(UINCLUDE)/*.inc)
-     
+HEADERS += $(wildcard *.mod $(CMODULES)/*.mod)
+
 ########################################################################
 ## Rules, generate objects
 
@@ -396,6 +422,10 @@ HEADERS += $(wildcard *.inc $(MDINCLUDE)/*.inc $(UINCLUDE)/*.inc)
 	@$(FC) $(ALL_FCFLAGS) -c -o build/$@ $<
 
 %.o: %.F $(HEADERS)
+	@echo "Compiling:" $<
+	@$(FC) $(ALL_FCFLAGS) -c -o build/$@ $<
+
+%.o: %.F90 $(HEADERS)
 	@echo "Compiling:" $<
 	@$(FC) $(ALL_FCFLAGS) -c -o build/$@ $<
 
@@ -416,11 +446,11 @@ fastjetfortran.o: fastjetfortran.cc
 ## type make -j4 [rule] to speed up the compilation
 
 formcalc_reals.a: $(REALS)
-	ar cr $@ $(patsubst %,build/%,$(REALS))
+	ar cru $@ $(patsubst %,build/%,$(REALS))
 	mv $@ $(FORMREALS)
     
 formcalc_virtuals.a: $(VIRTUALS)
-	ar cr $@ $(patsubst %,build/%,$(VIRTUALS))
+	ar cru $@ $(patsubst %,build/%,$(VIRTUALS))
 	mv $@ $(FORMVIRTS)
 
 libs: formcalc_reals.a formcalc_virtuals.a

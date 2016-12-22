@@ -109,7 +109,7 @@ CT2Exp	ComplexType para(*)
 	IndexEps(a_, b_, c_) =
      &    IndexSign(a_ - b_)*IndexSign(c_ - b_)*IndexSign(a_ - c_)
 
-	!Sq(z_) = Re(z_*Conjugate(z_))
+	Sq(z_) = Re(z_*Conjugate(z_))
 
 	SqDiff(ma_, mb_) = (ma_ - mb_)*(ma_ + mb_)
 	ThreeMom(sqrtS_, ma_, mb_) = sqrt(SqDiff(

@@ -7,7 +7,6 @@ c book all histograms, will be filled later
       subroutine init_hist
         implicit none
 #include "LesHouches.h"
-#include "pwhg_math.h"
 #include "PhysPars.h"
         ! tell this analysis file which program is running it
         character*6 WHCPRG
@@ -88,8 +87,8 @@ c book all histograms, will be filled later
         mdm = 0D0
         mdp = mdm + 200D0
         ! dPhi(decI+decJ), binwidth = 2pi/40 ~ 0.15708
-        phim = -pi
-        phip = pi
+        phim = -m_pi
+        phip = m_pi
 
         ! book all possible histograms although we don't need
         ! all of them for every process

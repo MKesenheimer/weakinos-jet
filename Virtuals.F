@@ -14,7 +14,6 @@ c A factor (4 Pi)^ep/Gamma(1-ep) with ep=(4-d)/2 is implied.
         implicit none
 #include "PhysPars.h"
 #include "pwhg_st.h"
-#include "pwhg_math.h"
 #include "nlegborn.h"
 c#include "looptools.h"
 c#include "decl.h"
@@ -29,13 +28,6 @@ c#include "decl.h"
         logical verbose
         logical init_virtual
         data init_virtual/.true./
-#ifdef DEBUGQ
-#define DEBUG1
-        ! debugging
-        integer counter
-        data counter/0/
-        save counter
-#endif
 
         if (init_virtual) then
           print*
@@ -60,7 +52,7 @@ c#include "decl.h"
           ! = 2 x Re[M_tree* x M_1-loop], FC8Guid.pdf p.48
           ! need to extract a factor N=(4Pi)^eps/Ga(1-eps)
           ! -> LoopTools does already extract this factor
-          virt = amps(2)/(st_alpha/(2d0*pi)) 
+          virt = amps(2)/(st_alpha/(2d0*m_pi)) 
         endif
         
         ! Print informations
@@ -74,19 +66,8 @@ c#include "decl.h"
         endif
 
         if(isnan(virt)) then
-          !print*,"got strange value for virtual amplitude...", virtual
+          print*,"got strange value for virtual amplitude...", virt
           virt = 0D0
         endif
-        
-#ifdef DEBUG1
-        if(counter < 5) then
-          print*, "process: ", vflav
-          print*, "s  = ", momsum2sq(p(0:3,1), p(0:3,2))
-          print*, "t  = ", momsum2sq(p(0:3,1),-p(0:3,3))
-          print*, "u  = ", momsum2sq(p(0:3,2),-p(0:3,3))
-          print*, "virt = ", virt
-          counter = counter + 1
-        endif
-#endif
       end
 c############### end subroutine setvirtual #############################

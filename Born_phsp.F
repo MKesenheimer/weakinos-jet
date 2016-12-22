@@ -14,7 +14,6 @@ c and the Jacobi factor for the phase space volume
 #include "PhysPars.h"
 #include "nlegborn.h"
 #include "pwhg_kn.h"
-#include "pwhg_math.h"
         ! input:
         double precision xborn(ndiminteg-3)
         ! output, local variables:
@@ -114,7 +113,7 @@ c and the Jacobi factor for the phase space volume
         endif
 
         ! physical phase space jacobian ((2*Pi)**(3n-4), n=3)
-        kn_jacborn = kn_jacborn/(2D0*pi)**5
+        kn_jacborn = kn_jacborn/(2D0*m_pi)**5
 
         ! Boost to the LAB frame, starting at vector 3:
         beta = (kn_xb1-kn_xb2)/(kn_xb1+kn_xb2)

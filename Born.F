@@ -11,7 +11,6 @@ c parton parton -> weakino weakino
       subroutine setborn(p,bflav,born,bornjk,bmunu)
         implicit none
 #include "PhysPars.h"
-#include "pwhg_math.h"
 #include "nlegborn.h"
 #include "pwhg_kn.h"
         double precision p(0:3,nlegborn), bornjk(nlegborn,nlegborn)

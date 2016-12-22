@@ -19,7 +19,7 @@ ClearProcess[]
 time1 = SessionTime[]
 
 
-(*You can now load the script with the command $ MathKernel -script nInJj-qq-nlo.m "d" "dbar" "n1" "n2" "g"*)
+(*You can now load the script with the command $ MathKernel -script nInJj_virt.m "qd" "qdbar" "nI" "nJ" "g"*)
 Print[$CommandLine]
 If[$CommandLine[[2]] === "-script",
 	(p[1] = ToString[$CommandLine[[4]]];
@@ -28,8 +28,8 @@ If[$CommandLine[[2]] === "-script",
 	 p[4] = ToString[$CommandLine[[7]]];
 	 p[5] = ToString[$CommandLine[[8]]];),
 	(*Else*)
-	(p[1] = "dbar";
-	 p[2] = "d";
+	(p[1] = "qd";
+	 p[2] = "qdbar";
 	 p[3] = "nI";
 	 p[4] = "nJ";
 	 p[5] = "g";)
@@ -251,8 +251,6 @@ insrew = DiagramSelect[ins, If[Length[LoopFields[##]]==3, FreeQ[LoopFields[##], 
 
 ins = DiagramComplement[ins,insrg,insrew];
 
-(*ins = DiagramDelete[ins,1..8,17..32,49..52,57..60,65..72,165..180,185..200];*)
-
 (*ins = DiagramExtract[ins,133..146];
 (*ins = Reap[DiagramSelect[ins,FreeQ[Sow[FieldPoints[##]],FieldPoint[_][V[2],V[5,_],S[13,_],-S[13,_]]] &]]; (*Diagram does not contain 3-gluon coupling*)
 Export["./test.wdx",ins[[2]],"WDX"];*)*)
@@ -288,10 +286,11 @@ ins = DiagramSelect[ins, If[(MemberQ[FieldPoints[##],FieldPoint[_][F[3|4, _], -F
 
 DoPaint[ins, "box"];
 
-(*box = CalcFeynAmp[CreateFeynAmp[ins]];
-box = box/.{Den[x_,y_]:>Den[x/.complexified,y/.widths]};
-box = box//.{Alfa2->0};*)
+box = CalcFeynAmp[CreateFeynAmp[ins]];
+box = box/.{Den[x_,y_]:>Den[x,y/.widths]};
+box = box//.{Alfa2->0};
 
+(*
 insbox1 = DiagramExtract[ins,1..20];
 insbox2 = DiagramExtract[ins,21..40];
 insbox3 = DiagramExtract[ins,41..60];
@@ -312,6 +311,7 @@ box3 = box3//.{Alfa2->0}
 box4 = CalcFeynAmp[CreateFeynAmp[insbox4]];
 box4 = box4/.{Den[x_,y_]:>Den[x,y/.widths]};
 box4 = box4//.{Alfa2->0}
+*)
 
 
 Print["Pentagons"]
@@ -329,17 +329,36 @@ pent = pent//.{Alfa2->0};
 
 
 (* Write files *)
-amps = {born,self,vert,box1,box2,box3,box4,pent};
-{born,self,vert,box1,box2,box3,box4,pent} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
+amps = {born,self,vert,box,pent};
+{born,self,vert,box,pent} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
 
 col = ColourME[All,born];
 
-abbr = OptimizeAbbr[Abbr[]];
-subexpr = OptimizeAbbr[Subexpr[]]//.{Alfa2->0};
+abbr = OptimizeAbbr[Abbr[]]
+subexpr = OptimizeAbbr[Subexpr[]]
+
+(*fortran can't handle arrays with dimensionality greater than 7*)
+(*apply back the subexpressions with number of arguments greater than 6*)
+subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
+       {i,1,Length[subexpr]}]/.Null->Sequence[];
+born = born//.subexpr6;
+self = self//.subexpr6;
+vert = vert//.subexpr6;
+box  = box//.subexpr6;
+pent = pent//.subexpr6;
+abbr = abbr//.subexpr6;
+
+(*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
+subexpr = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
+       {i,1,Length[subexpr]}]/.Null->Sequence[];
+subexpr = subexpr//.subexpr6;
 
 dir = SetupCodeDir[name <> "_virt", Drivers -> name <> "_drivers"];
-WriteSquaredME[born, {self,vert,box1,box2,box3,box4,pent}, col, abbr, subexpr, dir];
+WriteSquaredME[born, {self,vert,box,pent}, col, abbr, subexpr, dir];
 
+
+(*Calculate RenConsts (do this only if needed)*)
+(*
 InsertFieldsHook[tops_,f1_->f2_]:=InsertFields[tops,f1->f2,ExcludeFieldPoints -> {
 	FieldPoint[_][S[n_/;n<=6], _, _],(*Exclude Higgs*)
 	FieldPoint[_][S[n_/;n<=6], _, _, _],
@@ -349,6 +368,7 @@ InsertFieldsHook[tops_,f1_->f2_]:=InsertFields[tops,f1->f2,ExcludeFieldPoints ->
 	FieldPoint[_][F[11|12], _, _, _]}];
 
 WriteRenConst[amps,dir];
+*)
 
 
 Print["time used: ", SessionTime[] - time1]

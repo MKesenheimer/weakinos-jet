@@ -15,9 +15,7 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         implicit none
 #include "PhysPars.h"
 #include "pwhg_st.h"
-#include "pwhg_math.h"
 #include "nlegborn.h"
-#include "looptools.h"
 #include "Flags.h"
 #include "osres.h"
         double precision p(0:3,nlegreal),p_os(0:3,nlegreal)
@@ -133,7 +131,7 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         endif  
 #endif
         ! Cancel as/(2pi) associated with amp2. It will be put back by real_ampsq
-        ampreal = amp/(st_alpha/(2d0*pi))
+        ampreal = amp/(st_alpha/(2d0*m_pi))
         
         ! Print informations
         if(verbose) then

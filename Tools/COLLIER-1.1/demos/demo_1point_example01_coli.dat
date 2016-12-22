@@ -1,0 +1,42 @@
+ Result for 1-point function, example 1  1
+
+                                    
+                -------             
+               /       \            
+              /         \           
+    0d0  -----        0 |  m02 
+              \         /           
+               \       /            
+                -------             
+                                    
+
+ Input:
+  m02     =  4.0000000000000000E+02 + i* 0.0000000000000000E+00
+  muUV2   =  1.0000000000000000E+00
+  deltaUV =  0.0000000000000000E+00
+
+ Conventions:
+
+         (2*pi*mu)^(4-D)                     
+  A0 =   ---------------  \int d^D q f(q)
+             i*pi^2                          
+
+     =  A0_fin(muUV2) + a_UV*DeltaUV  
+
+  where
+
+              c(epsUV) 
+   DeltaUV =  -------- 
+               epsUV   
+
+   c(eps) = (4*pi)^eps\Gamma(1+eps),  D = 4 -2*eps 
+
+  you can freely choose the regularization parameters
+    of UV origin: muUV2 = mu^2, DeltaUV 
+
+  note:
+   - we effectively factor out a factor c(eps) 
+   - by default DeltaUV = 0 
+
+ Results:
+  A0 = -1.9965858188431928E+03 + i* 0.0000000000000000E+00

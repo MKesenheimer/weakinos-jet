@@ -16,7 +16,7 @@
 * declarations for every subroutine
 
 #include "born_const.h"
-#include "looptools.h"
+#include "lt_collier1.h"
 
 #endif
 

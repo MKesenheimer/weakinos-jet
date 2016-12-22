@@ -26,7 +26,6 @@ c                   (this function does not support an avatar function)
 #include "pwhg_rad.h"
 #include "pwhg_flg.h"
 #include "pwhg_math.h"
-#include "PhysPars.h"
 c keep this order
 #include "osres.h"
 #include "pwhg_flst_add.h"
