@@ -144,9 +144,11 @@ c############### subroutine getVirtAmps ################################
         double precision amps(2)
         integer flags
 #ifdef DEBUG
-        integer getepsi
-        double complex B0i, m1b, m2b, pb, res
-        external B0i, getepsi
+#include "lt_types.h"
+#include "lt_collier.h"
+        integer i
+        double complex p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15
+        ComplexType Atab(Naa), Btab(Nbb), Ctab(Ncc), Dtab(Ndd), Etab(Nee)
 #endif
         if(flg_fakevirtuals) then
           ! = 010d, Bit0: set mass, Bit1: reset, Bit2: loop
@@ -156,31 +158,79 @@ c############### subroutine getVirtAmps ################################
           flags = 6
           call calcRenConst
         endif
+        
         !call ltini
-        !call setlambda(0d0) ! Only finite part
-        !call setuvdiv(0d0)  ! no 1/eps_UV terms
-        !call setdelta(0d0)  ! set divergences to zero
-        !call setmudim(st_muren2) ! renormalization scale
-        call setparam_collier(0d0,st_muren2,0d0) ! delta_uv,mu2,lambda
+        call setlambda(0d0) ! Only finite part
+        call setuvdiv(0d0)  ! no 1/eps_UV terms
+        call setdelta(0d0)  ! set divergences to zero
+        call setmudim(st_muren2) ! renormalization scale
+        !call setparam_collier(0d0,st_muren2,0d0) ! delta_uv,mu2,lambda
+
+        call clearcache
+
 c#define CHECKUV
 #ifdef CHECKUV
         ! test for finiteness
-        ! print*, "checking for UV finiteness"
-        !call setuvdiv(1d0)
-        !call setDelta(1D7)    ! Test UV finiteness
+        print*, "checking for UV finiteness"
+        call setuvdiv(1d0)
+        call setDelta(1D7)    ! Test UV finiteness
 #endif
 
-#ifdef DEBUG
+#ifdef DEBUGQ
+        call setparam_collier(0d0,100D0,0d0)
         call clearcache
-        res = getepsi()
-        print*,res
-        pb = (1D0,0D0)
-        m1b = (2D0,1D0)
-        m2b = (3D0,0D0)
+        
+        p1 = (1D0,0D0)
+        p2 = (2D0,0D0)
+        p3 = (3D0,0D0)
+        p4 = (4D0,0D0)
+        p5 = (5D0,0D0)
+        p6 = (6D0,0D0)
+        p7 = (7D0,0D0)
+        p8 = (8D0,0D0)
+        p9 = (9D0,0D0)
+        p10 = (10D0,0D0)
+        p11 = (11D0,0D0)
+        p12 = (12D0,0D0)
+        p13 = (13D0,0D0)
+        p14 = (14D0,0D0)
+        p15 = (15D0,0D0)
+        
+        print*,"calling A0i..."
+        call Aput(Atab,p1)
+        do i=1,Naa
+          print*,Atab(i)
+        enddo
+        print*
+        
         print*,"calling B0i..."
-        res = B0i(0,pb,m1b,m2b)
-        !call Bput(res, pb, m1b, m2b)
-        print*,res
+        call Bput(Btab,p1,p2,p3)
+        do i=1,Nbb
+          print*,Btab(i)
+        enddo
+        print*
+        
+        print*,"calling C0i..."
+        call Cput(Ctab,p1,p2,-p3,p4,p5,p6)
+        do i=1,Ncc
+          print*,Ctab(i)
+        enddo
+        print*
+        
+        print*,"calling D0i..."
+        call Dput(Dtab,p1,p2,p3,p4,-p5,-p6,p7,p8,p9,p10)
+        do i=1,Ndd
+          print*,Dtab(i)
+        enddo
+        print*
+        
+        print*,"calling E0i..."
+        call Eput(Etab,p1,p2,p3,p4,p5,-p6,-p7,-p8,-p9,-p10,p11,p12,p13,p14,p15)
+        do i=1,Nee
+          print*,Etab(i)
+        enddo
+        print*
+        
         stop
 #endif
         call getAmps(p,flav,flags,amps(:))
@@ -249,7 +299,9 @@ c############### subroutine getAmps ####################################
         
         ! set the formCalc vectors
         call formCalcVecSet(nlegborn,ps,flavs)
-        
+
+#define MATRIXELEMENT
+#ifdef MATRIXELEMENT
         ! F g -> F F F
         if((f1.eq.0 .or. f2.eq.0).and.(flav(5).ne.0)) then
           if((f1.gt.0 .and. isodd(f1)) .or. (f2.gt.0 .and. isodd(f2))) then
@@ -284,7 +336,8 @@ c############### subroutine getAmps ####################################
         print*, "flav = ", flav
         stop
  20     continue
- 
+#endif
+
         amp(1) = fc_result(1)/symfac
         amp(2) = fc_result(2)/symfac
       end
@@ -370,7 +423,9 @@ c############### subroutine getRealAmps ################################
         
         ! set the formCalc vectors
         call formCalcVecSet(nlegreal,ps,flavs)
-        
+
+#define MATRIXELEMENT
+#ifdef MATRIXELEMENT
         ! F F -> F F F F
         if(f1.ne.0 .and. f2.ne.0 .and. f5.ne.0 .and. f6.ne.0) then
           if(isodd(abs(f1)) .and. isodd(abs(f2))) then
@@ -551,6 +606,7 @@ c############### subroutine getRealAmps ################################
         print*, "flav = ", flav
         stop
  20     continue
+#endif
  
         amp = fc_result(1)/symfac
 
@@ -646,7 +702,9 @@ c############### subroutine getRealOSAmps ##############################
         ! set the channel informations, in particular the sfermion indices
         ! which are needed by the realOS routines
         call set_channel(flav,ichan)
-        
+      
+#define MATRIXELEMENT
+#ifdef MATRIXELEMENT
         ! F F -> F F F F
         if(f1.ne.0 .and. f2.ne.0 .and. f5.ne.0 .and. f6.ne.0) then
           if(isodd(abs(f1)) .and. isodd(abs(f2))) then
@@ -789,6 +847,7 @@ c############### subroutine getRealOSAmps ##############################
         print*, "flav = ", flav
         stop
  20     continue
+#endif
 
         ampos = fc_result(1)/symfac
       end

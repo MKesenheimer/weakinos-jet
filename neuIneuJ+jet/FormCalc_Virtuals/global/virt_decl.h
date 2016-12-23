@@ -16,7 +16,7 @@
 * declarations for every subroutine
 
 #include "virt_const.h"
-#include "lt_collier1.h"
+#include "lt_collier.h"
 
 #endif
 

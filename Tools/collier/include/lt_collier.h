@@ -229,29 +229,15 @@ modified for interface with Collier
 #define RealType double precision
 #endif
 
-!#define Aval(id,p) cache(p+id,1)
-!#define AvalC(id,p) cache(p+id,2)
-!#define Bval(id,p) cache(p+id,3)
-!#define BvalC(id,p) cache(p+id,4)
-!#define Cval(id,p) cache(p+id,5)
-!#define CvalC(id,p) cache(p+id,6)
-!#define Dval(id,p) cache(p+id,7)
-!#define DvalC(id,p) cache(p+id,8)
-!#define Eval(id,p) cache(p+id,9)
-!#define EvalC(id,p) cache(p+id,10)
+      RealType getlambda
+      integer getepsi
 
-!#define Ccache 0
-!#define Dcache 0
+      external getlambda
+      external getepsi
+
+      ComplexType A0i, B0i, C0i, D0i, E0i
+      ComplexType A0
+      external A0i, B0i, C0i, D0i, E0i
+      external A0
 
 #endif
-
-	RealType getlambda
-	integer getepsi
-
-	external getlambda
-	external getepsi
-
-     	ComplexType A0i, B0i, C0i, D0i, E0i
-        ComplexType A0
-	external A0i, B0i, C0i, D0i, E0i
-        external A0

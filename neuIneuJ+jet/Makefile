@@ -486,7 +486,7 @@ clean-results:
 	-type f -exec rm -f {} +
     
 clean-libs:
-	rm $(FORMREALS)/formcalc_reals.a $(FORMVIRTS)/formcalc_virtuals.a
+	rm -f $(FORMREALS)/formcalc_reals.a $(FORMVIRTS)/formcalc_virtuals.a
 
 clean-all: clean clean-results clean-libs
 

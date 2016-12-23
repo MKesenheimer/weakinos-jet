@@ -358,7 +358,7 @@ if [[ $TYPE == "real" ]] || [[ $TYPE == "realOS" ]]; then
     $SED -i -e '/^#include "looptools.h"/d' ${TYPE}_decl.h
 fi
 $SED -i -e 's/#include "model_mssm.h"/#include "model_mssm.h"\n#include "model_sm.h"\n#include "osres.h"\n#include "indices.h"\n#include "susy_restore.h"/g' ${TYPE}_user.h
-$SED -i -e 's/Sq(z_)/!Sq(z_)/g' ${TYPE}_inline.h
+#$SED -i -e 's/Sq(z_)/!Sq(z_)/g' ${TYPE}_inline.h
 cp ${DEST}/temp/*.h ${DEST}/global/
 rm -rf ${DEST}/temp/
 

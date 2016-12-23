@@ -107,7 +107,7 @@ pastegnudata:
 	cd ./plot-aux && $(FC) pastegnudata.f -o $@
 
 clean-libs:
-	cd $(TOOLS) && rm -f *.a
+	rm -f $(TOOLS)/*.a
 	cd $(LT) && make clean
 	cd $(DHELAS) && make clean
 	cd $(SLHA) && make clean
@@ -118,7 +118,7 @@ clean clean-all: clean-libs
 	cd neuIneuJ+jet && make clean-all
 	#cd neuIchaJ+jet && make clean-all
 	#cd chaIchaJ+jet && make clean-all
-	rm ./plot-aux/pastegnudata
+	rm -f ./plot-aux/pastegnudata
 
 print-info:
 	$(info )

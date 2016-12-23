@@ -88,7 +88,7 @@ c requires encoded process ID in lprup(1)
         if(verbose) then
           print*
           print*, "===================================================="
-          print*, "             set POWHEG parameters                  "
+          print*, "               set POWHEG parameters                "
           print*, "===================================================="
           print*
           print*, "Z mass          = ",par_Zmass
@@ -106,14 +106,14 @@ c requires encoded process ID in lprup(1)
 #ifdef DEBUGQ
           print*
           print*, "===================================================="
-          print*, "             set FormCalc parameters                "
+          print*, "               set FormCalc parameters              "
           print*, "===================================================="
           print*
           call printFormcalcModelParameters
           print*
           print*
           print*, "===================================================="
-          print*, "             set MadGraph parameters                "
+          print*, "               set MadGraph parameters              "
           print*, "===================================================="
           print*
           call printMadgraphModelParameters
@@ -227,9 +227,9 @@ c requires encoded process ID in lprup(1)
         
         ! init COLLIER
         print*, "===================================================="
-        print*, "             init Collier                           "
+        print*, "                   init Collier                     "
         print*, "===================================================="
-        call init_collier(5,5)
+        call init_collier(6,6)
       end
 c############### end subroutine init_couplings #########################
 
