@@ -777,7 +777,7 @@ end subroutine clearcache
 subroutine markcache
   use COLLIER
   implicit none
-  !call SwitchOffCacheSystem_cll
+  call SwitchOffCacheSystem_cll ! check (this generates huge output)
 end subroutine markcache
 
 ! ----------------------------------------------------------------------
@@ -785,7 +785,7 @@ end subroutine markcache
 subroutine restorecache
   use COLLIER
   implicit none
-  !call SwitchOnCacheSystem_cll
+  call SwitchOnCacheSystem_cll ! check (this generates huge output)
 end subroutine restorecache
 
 ! ----------------------------------------------------------------------
