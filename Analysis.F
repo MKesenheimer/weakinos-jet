@@ -50,10 +50,10 @@ c book all histograms, will be filled later
         ! for which particles do we want to calculate correlations?
         ! corI and corJ is saved in the common block icorr
         if(powheginput("#corI").gt.0) then
-          corI = powheginput("corI")
+          corI = int(powheginput("corI"))
         endif
         if(powheginput("#corJ").gt.0) then
-          corJ = powheginput("corJ")
+          corJ = int(powheginput("corJ"))
         endif
           
         ! number of bins

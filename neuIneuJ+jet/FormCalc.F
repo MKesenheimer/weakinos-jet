@@ -16,8 +16,8 @@ c calculate unit vectors and set the vectors for FormCalc
         double precision ex, ey, ez, pNorm
         integer i
         ! function to calculate the squared momentum sum
-        double precision momsum3sq, momsum2sq, dotp
-        external momsum2sq, momsum3sq, dtop
+        double precision momsum3sq, momsum2sq
+        external momsum2sq, momsum3sq
         ! load process dependent masses
         call set_process(nlegs,flav(1:nlegs),mass(1:nlegs))
         do i=1,nlegs
@@ -61,7 +61,7 @@ c############### subroutine getBornAmps ################################
         integer flav(nlegborn)
         double precision amp(2),born,bornjk(nlegborn,nlegborn)
         double precision bmunu(0:3,0:3,nlegborn)
-#ifdef DEBUG
+#ifdef DEBUGQ
         double precision bmunu1(0:3,0:3,nlegborn)
         double precision b
 #endif
@@ -80,7 +80,7 @@ c############### subroutine getBornAmps ################################
         call sborn_proc(p,flav,born,bornjk,bmunu)
         
 #ifdef DEBUGQ
-        if(flav(1).eq.-2 .and. flav(2).eq.2 .and. flav(5).eq.0) then
+        if(flav(1).eq.-2.and.flav(2).eq.2.and.flav(5).eq.0) then
           call bornmunu_ubaru_n1n2g(p,bmunu1)
           call born_ubaru_n1n2g(p,b)
           print*,born,b,born/b
@@ -106,7 +106,7 @@ c############### subroutine getBornAmps ################################
         
         ! fill the color and spin correlated amplitudes
         ! F F -> F F g
-        if(flav(1).ne.0 .and. flav(2).ne.0) then
+        if(flav(1).ne.0.and.flav(2).ne.0) then
           bornjk(1,2) = fqq*born
           bornjk(2,1) = bornjk(1,2)
           bornjk(1,5) = fqg*born
@@ -114,7 +114,7 @@ c############### subroutine getBornAmps ################################
           bornjk(2,5) = fqg*born
           bornjk(5,2) = bornjk(2,5)
         ! g F -> F F F
-        elseif(flav(1).eq.0 .and. flav(2).ne.0) then
+        elseif(flav(1).eq.0.and.flav(2).ne.0) then
           bornjk(1,2) = fqg*born
           bornjk(2,1) = bornjk(1,2)
           bornjk(1,5) = fqg*born
@@ -122,7 +122,7 @@ c############### subroutine getBornAmps ################################
           bornjk(2,5) = fqq*born
           bornjk(5,2) = bornjk(2,5)
         ! F g -> F F F  
-        elseif(flav(1).ne.0 .and. flav(2).eq.0) then
+        elseif(flav(1).ne.0.and.flav(2).eq.0) then
           bornjk(1,2) = fqg*born
           bornjk(2,1) = bornjk(1,2)
           bornjk(1,5) = fqq*born
@@ -143,13 +143,6 @@ c############### subroutine getVirtAmps ################################
         integer flav(nlegborn)
         double precision amps(2)
         integer flags
-#ifdef DEBUG
-#include "lt_types.h"
-#include "lt_collier.h"
-        integer i
-        double complex p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15
-        ComplexType Atab(Naa), Btab(Nbb), Ctab(Ncc), Dtab(Ndd), Etab(Nee)
-#endif
         if(flg_fakevirtuals) then
           ! = 010d, Bit0: set mass, Bit1: reset, Bit2: loop
           flags = 2
@@ -165,7 +158,7 @@ c############### subroutine getVirtAmps ################################
         call setdelta(0d0)  ! set divergences to zero
         call setmudim(st_muren2) ! renormalization scale
         !call setparam_collier(0d0,st_muren2,0d0) ! delta_uv,mu2,lambda
-
+        
         call clearcache
 
 c#define CHECKUV
@@ -176,64 +169,12 @@ c#define CHECKUV
         call setDelta(1D7)    ! Test UV finiteness
 #endif
 
-#ifdef DEBUGQ
-        call setparam_collier(0d0,100D0,0d0)
-        call clearcache
-        
-        p1 = (1D0,0D0)
-        p2 = (2D0,0D0)
-        p3 = (3D0,0D0)
-        p4 = (4D0,0D0)
-        p5 = (5D0,0D0)
-        p6 = (6D0,0D0)
-        p7 = (7D0,0D0)
-        p8 = (8D0,0D0)
-        p9 = (9D0,0D0)
-        p10 = (10D0,0D0)
-        p11 = (11D0,0D0)
-        p12 = (12D0,0D0)
-        p13 = (13D0,0D0)
-        p14 = (14D0,0D0)
-        p15 = (15D0,0D0)
-        
-        print*,"calling A0i..."
-        call Aput(Atab,p1)
-        do i=1,Naa
-          print*,Atab(i)
-        enddo
-        print*
-        
-        print*,"calling B0i..."
-        call Bput(Btab,p1,p2,p3)
-        do i=1,Nbb
-          print*,Btab(i)
-        enddo
-        print*
-        
-        print*,"calling C0i..."
-        call Cput(Ctab,p1,p2,-p3,p4,p5,p6)
-        do i=1,Ncc
-          print*,Ctab(i)
-        enddo
-        print*
-        
-        print*,"calling D0i..."
-        call Dput(Dtab,p1,p2,p3,p4,-p5,-p6,p7,p8,p9,p10)
-        do i=1,Ndd
-          print*,Dtab(i)
-        enddo
-        print*
-        
-        print*,"calling E0i..."
-        call Eput(Etab,p1,p2,p3,p4,p5,-p6,-p7,-p8,-p9,-p10,p11,p12,p13,p14,p15)
-        do i=1,Nee
-          print*,Etab(i)
-        enddo
-        print*
-        
-        stop
-#endif
         call getAmps(p,flav,flags,amps(:))
+        
+#ifdef DEBUGQ
+        !print*,st_muren2
+        print*,"amps",amps
+#endif
       end
 c############### end subroutine getVirtAmps ############################
 
@@ -262,9 +203,9 @@ c############### subroutine getAmps ####################################
         
         ! crossing (FormCalc provides only amplitudes for qqbar 
         ! and not for qbarq)
-        if(.not.((f1.gt.0 .and. f2.lt.0) .or.
-     &     (f1.lt.0 .and. f2.eq.0) .or.
-     &     (f1.gt.0 .and. f2.eq.0))) then
+        if(.not.((f1.gt.0.and.f2.lt.0) .or.
+     &     (f1.lt.0.and.f2.eq.0) .or.
+     &     (f1.gt.0.and.f2.eq.0))) then
           call crossing(nlegreal,ps,flavs,1,2)
         endif
 
@@ -304,16 +245,16 @@ c############### subroutine getAmps ####################################
 #ifdef MATRIXELEMENT
         ! F g -> F F F
         if((f1.eq.0 .or. f2.eq.0).and.(flav(5).ne.0)) then
-          if((f1.gt.0 .and. isodd(f1)) .or. (f2.gt.0 .and. isodd(f2))) then
+          if((f1.gt.0.and.isodd(f1)) .or. (f2.gt.0.and.isodd(f2))) then
             call qdg_nInJqd_squaredME(fc_result,helicities,flags)
             goto 20
-          elseif((f1.gt.0 .and. iseven(f1)) .or. (f2.gt.0 .and. iseven(f2))) then
+          elseif((f1.gt.0.and.iseven(f1)) .or. (f2.gt.0.and.iseven(f2))) then
             call qug_nInJqu_squaredME(fc_result,helicities,flags)
             goto 20
-          elseif((f1.lt.0 .and. isodd(f1)) .or. (f2.lt.0 .and. isodd(f2))) then
+          elseif((f1.lt.0.and.isodd(f1)) .or. (f2.lt.0.and.isodd(f2))) then
             call qdbarg_nInJqdbar_squaredME(fc_result,helicities,flags)
             goto 20
-          elseif((f1.lt.0 .and. iseven(f1)) .or. (f2.lt.0 .and. iseven(f2))) then
+          elseif((f1.lt.0.and.iseven(f1)) .or. (f2.lt.0.and.iseven(f2))) then
             call qubarg_nInJqubar_squaredME(fc_result,helicities,flags)
             goto 20
           else
@@ -321,10 +262,10 @@ c############### subroutine getAmps ####################################
           endif
         ! F F -> F F g
         else
-          if(isodd(abs(f1)) .and. isodd(abs(f2))) then
+          if(isodd(abs(f1)).and.isodd(abs(f2))) then
             call qdqdbar_nInJg_squaredME(fc_result,helicities,flags)
             goto 20
-          elseif(iseven(abs(f1)) .and. iseven(abs(f2))) then
+          elseif(iseven(abs(f1)).and.iseven(abs(f2))) then
             call ququbar_nInJg_squaredME(fc_result,helicities,flags)
             goto 20
           else
@@ -372,36 +313,36 @@ c############### subroutine getRealAmps ################################
         ! unpolarized fermion: B01010  FC8Guid.pdf p.49
         ! unpolarized gluon: B01110
         ! F F -> F F F F
-        if(f1.ne.0 .and. f2.ne.0 .and. f5.ne.0 .and. f6.ne.0) then
+        if(f1.ne.0.and.f2.ne.0.and.f5.ne.0.and.f6.ne.0) then
           symfac = 36d0
           helicities = 346368330
         ! g F -> F F F g
-        elseif(f1.eq.0 .and. f2.ne.0 .and. f5.ne.0 .and. f6.eq.0) then
+        elseif(f1.eq.0.and.f2.ne.0.and.f5.ne.0.and.f6.eq.0) then
           symfac = 96d0
           helicities = 480586062
         ! F g -> F F F g
-        elseif(f1.ne.0 .and. f2.eq.0 .and. f5.ne.0 .and. f6.eq.0) then
+        elseif(f1.ne.0.and.f2.eq.0.and.f5.ne.0.and.f6.eq.0) then
           call crossing(nlegreal,ps,flavs,1,2)
           symfac = 96d0
           helicities = 480586062
         ! g F -> F F g F
-        elseif(f1.eq.0 .and. f2.ne.0 .and. f5.eq.0 .and. f6.ne.0) then
+        elseif(f1.eq.0.and.f2.ne.0.and.f5.eq.0.and.f6.ne.0) then
           call crossing(nlegreal,ps,flavs,5,6)
           symfac = 96d0
           helicities = 480586062 ! with crossing 
           !helicities = 480586186 ! no crossing
         ! F g -> F F g F
-        elseif(f1.ne.0 .and. f2.eq.0 .and. f5.eq.0 .and. f6.ne.0) then
+        elseif(f1.ne.0.and.f2.eq.0.and.f5.eq.0.and.f6.ne.0) then
           call crossing(nlegreal,ps,flavs,1,2)
           call crossing(nlegreal,ps,flavs,5,6)
           symfac = 96d0
           helicities = 480586062
         ! F F -> F F g g
-        elseif(f1.ne.0 .and. f2.ne.0 .and. f5.eq.0 .and. f6.eq.0) then
+        elseif(f1.ne.0.and.f2.ne.0.and.f5.eq.0.and.f6.eq.0) then
           symfac = 36d0
           helicities = 346368462
         ! g g -> F F F F
-        elseif(f1.eq.0 .and. f2.eq.0 .and. f5.ne.0 .and. f6.ne.0) then
+        elseif(f1.eq.0.and.f2.eq.0.and.f5.ne.0.and.f6.ne.0) then
           symfac = 256d0
           helicities = 484780362
           if(f5.lt.0) then
@@ -427,124 +368,124 @@ c############### subroutine getRealAmps ################################
 #define MATRIXELEMENT
 #ifdef MATRIXELEMENT
         ! F F -> F F F F
-        if(f1.ne.0 .and. f2.ne.0 .and. f5.ne.0 .and. f6.ne.0) then
-          if(isodd(abs(f1)) .and. isodd(abs(f2))) then
-            if(f1.lt.0 .and. f2.lt.0) then
+        if(f1.ne.0.and.f2.ne.0.and.f5.ne.0.and.f6.ne.0) then
+          if(isodd(abs(f1)).and.isodd(abs(f2))) then
+            if(f1.lt.0.and.f2.lt.0) then
               call qdbarqdbar_nInJqdbarqdbar_squaredME(fc_result,helicities,flags)
 #ifdef DEBUGQ
               print*,fc_result
               stop
 #endif
               goto 20
-            elseif(f1.gt.0 .and. f2.lt.0 .and. isodd(abs(f5)) .and. f5.gt.0) then  
+            elseif(f1.gt.0.and.f2.lt.0.and.isodd(abs(f5)).and.f5.gt.0) then  
               call qdqdbar_nInJqdqdbar_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.lt.0 .and. iseven(abs(f5)) .and. f5.gt.0) then  
+            elseif(f1.gt.0.and.f2.lt.0.and.iseven(abs(f5)).and.f5.gt.0) then  
               call qdqdbar_nInJququbar_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.lt.0 .and. isodd(abs(f5)) .and. f5.lt.0) then  
+            elseif(f1.gt.0.and.f2.lt.0.and.isodd(abs(f5)).and.f5.lt.0) then  
               call qdqdbar_nInJqdbarqd_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.gt.0 .and. isodd(abs(f5)) .and. f5.lt.0) then  
+            elseif(f1.lt.0.and.f2.gt.0.and.isodd(abs(f5)).and.f5.lt.0) then  
               call qdbarqd_nInJqdbarqd_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.gt.0 .and. isodd(abs(f5)) .and. f5.gt.0) then     
+            elseif(f1.lt.0.and.f2.gt.0.and.isodd(abs(f5)).and.f5.gt.0) then     
               call qdbarqd_nInJqdqdbar_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.gt.0 .and. iseven(abs(f5)) .and. f5.gt.0) then    
+            elseif(f1.lt.0.and.f2.gt.0.and.iseven(abs(f5)).and.f5.gt.0) then    
               call qdbarqd_nInJququbar_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.gt.0) then
+            elseif(f1.gt.0.and.f2.gt.0) then
               call qdqd_nInJqdqd_squaredME(fc_result,helicities,flags)
               goto 20
             else
               goto 21
             endif
-          elseif(iseven(abs(f1)) .and. iseven(abs(f2))) then
-            if(f1.lt.0 .and. f2.lt.0) then
+          elseif(iseven(abs(f1)).and.iseven(abs(f2))) then
+            if(f1.lt.0.and.f2.lt.0) then
               call qubarqubar_nInJqubarqubar_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.lt.0 .and. iseven(abs(f5)) .and. f5.gt.0) then
+            elseif(f1.gt.0.and.f2.lt.0.and.iseven(abs(f5)).and.f5.gt.0) then
               call ququbar_nInJququbar_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.lt.0 .and. isodd(abs(f5)) .and. f5.gt.0) then
+            elseif(f1.gt.0.and.f2.lt.0.and.isodd(abs(f5)).and.f5.gt.0) then
               call ququbar_nInJqdqdbar_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.lt.0 .and. iseven(abs(f5)) .and. f5.lt.0) then  
+            elseif(f1.gt.0.and.f2.lt.0.and.iseven(abs(f5)).and.f5.lt.0) then  
               call ququbar_nInJqubarqu_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.gt.0 .and. iseven(abs(f5)) .and. f5.gt.0) then  
+            elseif(f1.lt.0.and.f2.gt.0.and.iseven(abs(f5)).and.f5.gt.0) then  
               call qubarqu_nInJququbar_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.gt.0 .and. isodd(abs(f5)) .and. f5.gt.0) then  
+            elseif(f1.lt.0.and.f2.gt.0.and.isodd(abs(f5)).and.f5.gt.0) then  
               call qubarqu_nInJqdqdbar_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.gt.0 .and. iseven(abs(f5)) .and. f5.lt.0) then  
+            elseif(f1.lt.0.and.f2.gt.0.and.iseven(abs(f5)).and.f5.lt.0) then  
               call qubarqu_nInJqubarqu_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.gt.0) then
+            elseif(f1.gt.0.and.f2.gt.0) then
               call ququ_nInJququ_squaredME(fc_result,helicities,flags)
               goto 20
             else
               goto 21
             endif
-          elseif(isodd(abs(f1)) .and. iseven(abs(f2))) then
-            if(f1.lt.0 .and. f2.lt.0 .and. iseven(abs(f5))) then
+          elseif(isodd(abs(f1)).and.iseven(abs(f2))) then
+            if(f1.lt.0.and.f2.lt.0.and.iseven(abs(f5))) then
               call qdbarqubar_nInJqubarqdbar_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.lt.0 .and. isodd(abs(f5))) then
+            elseif(f1.lt.0.and.f2.lt.0.and.isodd(abs(f5))) then
               call qdbarqubar_nInJqdbarqubar_squaredME(fc_result,helicities,flags)
               goto 20  
-            elseif(f1.lt.0 .and. f2.lt.0 .and. isodd(abs(f5)) .and. f5.lt.0) then
+            elseif(f1.lt.0.and.f2.lt.0.and.isodd(abs(f5)).and.f5.lt.0) then
               call qdbarqubar_nInJqdbarqubar_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.gt.0 .and. iseven(abs(f5)) .and. f5.gt.0) then
+            elseif(f1.lt.0.and.f2.gt.0.and.iseven(abs(f5)).and.f5.gt.0) then
               call qdbarqu_nInJquqdbar_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.gt.0 .and. isodd(abs(f5)) .and. f5.lt.0) then   
+            elseif(f1.lt.0.and.f2.gt.0.and.isodd(abs(f5)).and.f5.lt.0) then   
               call qdbarqu_nInJqdbarqu_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.lt.0 .and. isodd(abs(f5)) .and. f5.gt.0) then
+            elseif(f1.gt.0.and.f2.lt.0.and.isodd(abs(f5)).and.f5.gt.0) then
               call qdqubar_nInJqdqubar_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.lt.0 .and. iseven(abs(f5)) .and. f5.lt.0) then   
+            elseif(f1.gt.0.and.f2.lt.0.and.iseven(abs(f5)).and.f5.lt.0) then   
               call qdqubar_nInJqubarqd_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.gt.0 .and. isodd(abs(f5)) .and. f5.gt.0) then   
+            elseif(f1.gt.0.and.f2.gt.0.and.isodd(abs(f5)).and.f5.gt.0) then   
               call qdqu_nInJqdqu_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.gt.0 .and. iseven(abs(f5)) .and. f5.gt.0) then  
+            elseif(f1.gt.0.and.f2.gt.0.and.iseven(abs(f5)).and.f5.gt.0) then  
               call qdqu_nInJquqd_squaredME(fc_result,helicities,flags)
               goto 20
             else
               goto 21
             endif
-          elseif(iseven(abs(f1)) .and. isodd(abs(f2))) then
-            if(f1.lt.0 .and. f2.lt.0 .and. iseven(abs(f5))) then
+          elseif(iseven(abs(f1)).and.isodd(abs(f2))) then
+            if(f1.lt.0.and.f2.lt.0.and.iseven(abs(f5))) then
               call qubarqdbar_nInJqubarqdbar_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.lt.0 .and. isodd(abs(f5))) then
+            elseif(f1.lt.0.and.f2.lt.0.and.isodd(abs(f5))) then
               call qubarqdbar_nInJqdbarqubar_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.lt.0 .and. isodd(abs(f5)) .and. f5.lt.0) then  
+            elseif(f1.lt.0.and.f2.lt.0.and.isodd(abs(f5)).and.f5.lt.0) then  
               call qubarqdbar_nInJqdbarqubar_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.gt.0 .and. iseven(abs(f5)) .and. f5.lt.0) then  
+            elseif(f1.lt.0.and.f2.gt.0.and.iseven(abs(f5)).and.f5.lt.0) then  
               call qubarqd_nInJqubarqd_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.gt.0 .and. isodd(abs(f5)) .and. f5.gt.0) then   
+            elseif(f1.lt.0.and.f2.gt.0.and.isodd(abs(f5)).and.f5.gt.0) then   
               call qubarqd_nInJqdqubar_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.lt.0 .and. iseven(abs(f5)) .and. f5.gt.0) then  
+            elseif(f1.gt.0.and.f2.lt.0.and.iseven(abs(f5)).and.f5.gt.0) then  
               call quqdbar_nInJquqdbar_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.lt.0 .and. isodd(abs(f5)) .and. f5.lt.0) then  
+            elseif(f1.gt.0.and.f2.lt.0.and.isodd(abs(f5)).and.f5.lt.0) then  
               call quqdbar_nInJqdbarqu_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.gt.0 .and. isodd(abs(f5)) .and. f5.gt.0) then  
+            elseif(f1.gt.0.and.f2.gt.0.and.isodd(abs(f5)).and.f5.gt.0) then  
               call quqd_nInJqdqu_squaredME(fc_result,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.gt.0 .and. iseven(abs(f5)) .and. f5.gt.0) then  
+            elseif(f1.gt.0.and.f2.gt.0.and.iseven(abs(f5)).and.f5.gt.0) then  
               call quqd_nInJquqd_squaredME(fc_result,helicities,flags)
               goto 20
             else
@@ -554,45 +495,45 @@ c############### subroutine getRealAmps ################################
             goto 21
           endif
         ! g F -> F F F g
-        elseif(f1.eq.0 .and. f2.ne.0 .and. f5.ne.0 .and. f6.eq.0) then
-          if(iseven(abs(f2)) .and. f2.gt.0) then
+        elseif(f1.eq.0.and.f2.ne.0.and.f5.ne.0.and.f6.eq.0) then
+          if(iseven(abs(f2)).and.f2.gt.0) then
             call gqu_nInJqug_squaredME(fc_result,helicities,flags)
             goto 20
-          elseif(iseven(abs(f2)) .and. f2.lt.0) then
+          elseif(iseven(abs(f2)).and.f2.lt.0) then
             call gqubar_nInJqubarg_squaredME(fc_result,helicities,flags)
             goto 20
-          elseif(isodd(abs(f2)) .and. f2.gt.0) then
+          elseif(isodd(abs(f2)).and.f2.gt.0) then
             call gqd_nInJqdg_squaredME(fc_result,helicities,flags)
             goto 20
-          elseif(isodd(abs(f2)) .and. f2.lt.0) then
+          elseif(isodd(abs(f2)).and.f2.lt.0) then
             call gqdbar_nInJqdbarg_squaredME(fc_result,helicities,flags)
             goto 20
           else
             goto 21
           endif
         ! F F -> F F g g
-        elseif(f1.ne.0 .and. f2.ne.0 .and. f5.eq.0 .and. f6.eq.0) then
-          if(isodd(abs(f1)) .and. f1.gt.0) then
+        elseif(f1.ne.0.and.f2.ne.0.and.f5.eq.0.and.f6.eq.0) then
+          if(isodd(abs(f1)).and.f1.gt.0) then
             call qdqdbar_nInJgg_squaredME(fc_result,helicities,flags)
             goto 20
-          elseif(isodd(abs(f1)) .and. f1.lt.0) then
+          elseif(isodd(abs(f1)).and.f1.lt.0) then
             call qdbarqd_nInJgg_squaredME(fc_result,helicities,flags)
             goto 20
-          elseif(iseven(abs(f1)) .and. f1.gt.0) then
+          elseif(iseven(abs(f1)).and.f1.gt.0) then
             call ququbar_nInJgg_squaredME(fc_result,helicities,flags)
             goto 20
-          elseif(iseven(abs(f1)) .and. f1.lt.0) then
+          elseif(iseven(abs(f1)).and.f1.lt.0) then
             call qubarqu_nInJgg_squaredME(fc_result,helicities,flags)
             goto 20  
           else
             goto 21
           endif
         ! g g -> F F F F
-        elseif(f1.eq.0 .and. f2.eq.0 .and. f5.ne.0 .and. f6.ne.0) then
-          if(isodd(abs(f5)) .and. f5.gt.0) then
+        elseif(f1.eq.0.and.f2.eq.0.and.f5.ne.0.and.f6.ne.0) then
+          if(isodd(abs(f5)).and.f5.gt.0) then
             call gg_nInJqdqdbar_squaredME(fc_result,helicities,flags)
             goto 20
-          elseif(iseven(abs(f5)) .and. f5.gt.0) then
+          elseif(iseven(abs(f5)).and.f5.gt.0) then
             call gg_nInJququbar_squaredME(fc_result,helicities,flags)
             goto 20  
           else
@@ -649,35 +590,35 @@ c############### subroutine getRealOSAmps ##############################
         ! unpolarized fermion: B01010  FC8Guid.pdf p.49
         ! unpolarized gluon: B01110
         ! F F -> F F F F
-        if(f1.ne.0 .and. f2.ne.0 .and. f5.ne.0 .and. f6.ne.0) then
+        if(f1.ne.0.and.f2.ne.0.and.f5.ne.0.and.f6.ne.0) then
           symfac = 36d0
           helicities = 346368330
         ! g F -> F F F g
-        elseif(f1.eq.0 .and. f2.ne.0 .and. f5.ne.0 .and. f6.eq.0) then
+        elseif(f1.eq.0.and.f2.ne.0.and.f5.ne.0.and.f6.eq.0) then
           symfac = 96d0
           helicities = 480586062
         ! F g -> F F F g
-        elseif(f1.ne.0 .and. f2.eq.0 .and. f5.ne.0 .and. f6.eq.0) then
+        elseif(f1.ne.0.and.f2.eq.0.and.f5.ne.0.and.f6.eq.0) then
           call crossing(nlegreal,ps,flavs,1,2)
           symfac = 96d0
           helicities = 480586062
         ! g F -> F F g F
-        elseif(f1.eq.0 .and. f2.ne.0 .and. f5.eq.0 .and. f6.ne.0) then
+        elseif(f1.eq.0.and.f2.ne.0.and.f5.eq.0.and.f6.ne.0) then
           call crossing(nlegreal,ps,flavs,5,6)
           symfac = 96d0
           helicities = 480586062
         ! F g -> F F g F
-        elseif(f1.ne.0 .and. f2.eq.0 .and. f5.eq.0 .and. f6.ne.0) then
+        elseif(f1.ne.0.and.f2.eq.0.and.f5.eq.0.and.f6.ne.0) then
           call crossing(nlegreal,ps,flavs,1,2)
           call crossing(nlegreal,ps,flavs,5,6)
           symfac = 96d0
           helicities = 480586062
         ! F F -> F F g g
-        elseif(f1.ne.0 .and. f2.ne.0 .and. f5.eq.0 .and. f6.eq.0) then
+        elseif(f1.ne.0.and.f2.ne.0.and.f5.eq.0.and.f6.eq.0) then
           symfac = 36d0
           helicities = 346368462
         ! g g -> F F F F
-        elseif(f1.eq.0 .and. f2.eq.0 .and. f5.ne.0 .and. f6.ne.0) then
+        elseif(f1.eq.0.and.f2.eq.0.and.f5.ne.0.and.f6.ne.0) then
           symfac = 256d0
           helicities = 484780362
           if(f5.lt.0) then
@@ -706,120 +647,120 @@ c############### subroutine getRealOSAmps ##############################
 #define MATRIXELEMENT
 #ifdef MATRIXELEMENT
         ! F F -> F F F F
-        if(f1.ne.0 .and. f2.ne.0 .and. f5.ne.0 .and. f6.ne.0) then
-          if(isodd(abs(f1)) .and. isodd(abs(f2))) then
-            if(f1.lt.0 .and. f2.lt.0) then
+        if(f1.ne.0.and.f2.ne.0.and.f5.ne.0.and.f6.ne.0) then
+          if(isodd(abs(f1)).and.isodd(abs(f2))) then
+            if(f1.lt.0.and.f2.lt.0) then
               call qdbarqdbar_nInJqdbarqdbar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.lt.0 .and. isodd(abs(f5)) .and. f5.gt.0) then  
+            elseif(f1.gt.0.and.f2.lt.0.and.isodd(abs(f5)).and.f5.gt.0) then  
               call qdqdbar_nInJqdqdbar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.lt.0 .and. iseven(abs(f5)) .and. f5.gt.0) then  
+            elseif(f1.gt.0.and.f2.lt.0.and.iseven(abs(f5)).and.f5.gt.0) then  
               call qdqdbar_nInJququbar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.lt.0 .and. isodd(abs(f5)) .and. f5.lt.0) then  
+            elseif(f1.gt.0.and.f2.lt.0.and.isodd(abs(f5)).and.f5.lt.0) then  
               call qdqdbar_nInJqdbarqd_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.gt.0 .and. isodd(abs(f5)) .and. f5.lt.0) then  
+            elseif(f1.lt.0.and.f2.gt.0.and.isodd(abs(f5)).and.f5.lt.0) then  
               call qdbarqd_nInJqdbarqd_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.gt.0 .and. isodd(abs(f5)) .and. f5.gt.0) then     
+            elseif(f1.lt.0.and.f2.gt.0.and.isodd(abs(f5)).and.f5.gt.0) then     
               call qdbarqd_nInJqdqdbar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.gt.0 .and. iseven(abs(f5)) .and. f5.gt.0) then    
+            elseif(f1.lt.0.and.f2.gt.0.and.iseven(abs(f5)).and.f5.gt.0) then    
               call qdbarqd_nInJququbar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.gt.0) then
+            elseif(f1.gt.0.and.f2.gt.0) then
               call qdqd_nInJqdqd_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
             else
               goto 21
             endif
-          elseif(iseven(abs(f1)) .and. iseven(abs(f2))) then
-            if(f1.lt.0 .and. f2.lt.0) then
+          elseif(iseven(abs(f1)).and.iseven(abs(f2))) then
+            if(f1.lt.0.and.f2.lt.0) then
               call qubarqubar_nInJqubarqubar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.lt.0 .and. iseven(abs(f5)) .and. f5.gt.0) then
+            elseif(f1.gt.0.and.f2.lt.0.and.iseven(abs(f5)).and.f5.gt.0) then
               call ququbar_nInJququbar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.lt.0 .and. isodd(abs(f5)) .and. f5.gt.0) then
+            elseif(f1.gt.0.and.f2.lt.0.and.isodd(abs(f5)).and.f5.gt.0) then
               call ququbar_nInJqdqdbar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.lt.0 .and. iseven(abs(f5)) .and. f5.lt.0) then  
+            elseif(f1.gt.0.and.f2.lt.0.and.iseven(abs(f5)).and.f5.lt.0) then  
               call ququbar_nInJqubarqu_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.gt.0 .and. iseven(abs(f5)) .and. f5.gt.0) then  
+            elseif(f1.lt.0.and.f2.gt.0.and.iseven(abs(f5)).and.f5.gt.0) then  
               call qubarqu_nInJququbar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.gt.0 .and. isodd(abs(f5)) .and. f5.gt.0) then  
+            elseif(f1.lt.0.and.f2.gt.0.and.isodd(abs(f5)).and.f5.gt.0) then  
               call qubarqu_nInJqdqdbar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.gt.0 .and. iseven(abs(f5)) .and. f5.lt.0) then  
+            elseif(f1.lt.0.and.f2.gt.0.and.iseven(abs(f5)).and.f5.lt.0) then  
               call qubarqu_nInJqubarqu_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.gt.0) then
+            elseif(f1.gt.0.and.f2.gt.0) then
               call ququ_nInJququ_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
             else
               goto 21
             endif
-          elseif(isodd(abs(f1)) .and. iseven(abs(f2))) then
-            if(f1.lt.0 .and. f2.lt.0 .and. iseven(abs(f5))) then
+          elseif(isodd(abs(f1)).and.iseven(abs(f2))) then
+            if(f1.lt.0.and.f2.lt.0.and.iseven(abs(f5))) then
               call qdbarqubar_nInJqubarqdbar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.lt.0 .and. isodd(abs(f5))) then
+            elseif(f1.lt.0.and.f2.lt.0.and.isodd(abs(f5))) then
               call qdbarqubar_nInJqdbarqubar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20  
-            elseif(f1.lt.0 .and. f2.lt.0 .and. isodd(abs(f5)) .and. f5.lt.0) then
+            elseif(f1.lt.0.and.f2.lt.0.and.isodd(abs(f5)).and.f5.lt.0) then
               call qdbarqubar_nInJqdbarqubar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.gt.0 .and. iseven(abs(f5)) .and. f5.gt.0) then
+            elseif(f1.lt.0.and.f2.gt.0.and.iseven(abs(f5)).and.f5.gt.0) then
               call qdbarqu_nInJquqdbar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.gt.0 .and. isodd(abs(f5)) .and. f5.lt.0) then   
+            elseif(f1.lt.0.and.f2.gt.0.and.isodd(abs(f5)).and.f5.lt.0) then   
               call qdbarqu_nInJqdbarqu_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.lt.0 .and. isodd(abs(f5)) .and. f5.gt.0) then
+            elseif(f1.gt.0.and.f2.lt.0.and.isodd(abs(f5)).and.f5.gt.0) then
               call qdqubar_nInJqdqubar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.lt.0 .and. iseven(abs(f5)) .and. f5.lt.0) then   
+            elseif(f1.gt.0.and.f2.lt.0.and.iseven(abs(f5)).and.f5.lt.0) then   
               call qdqubar_nInJqubarqd_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.gt.0 .and. isodd(abs(f5)) .and. f5.gt.0) then   
+            elseif(f1.gt.0.and.f2.gt.0.and.isodd(abs(f5)).and.f5.gt.0) then   
               call qdqu_nInJqdqu_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.gt.0 .and. iseven(abs(f5)) .and. f5.gt.0) then  
+            elseif(f1.gt.0.and.f2.gt.0.and.iseven(abs(f5)).and.f5.gt.0) then  
               call qdqu_nInJquqd_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
             else
               goto 21
             endif
-          elseif(iseven(abs(f1)) .and. isodd(abs(f2))) then
-            if(f1.lt.0 .and. f2.lt.0 .and. iseven(abs(f5))) then
+          elseif(iseven(abs(f1)).and.isodd(abs(f2))) then
+            if(f1.lt.0.and.f2.lt.0.and.iseven(abs(f5))) then
               call qubarqdbar_nInJqubarqdbar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.lt.0 .and. isodd(abs(f5))) then
+            elseif(f1.lt.0.and.f2.lt.0.and.isodd(abs(f5))) then
               call qubarqdbar_nInJqdbarqubar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.lt.0 .and. isodd(abs(f5)) .and. f5.lt.0) then  
+            elseif(f1.lt.0.and.f2.lt.0.and.isodd(abs(f5)).and.f5.lt.0) then  
               call qubarqdbar_nInJqdbarqubar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.gt.0 .and. iseven(abs(f5)) .and. f5.lt.0) then  
+            elseif(f1.lt.0.and.f2.gt.0.and.iseven(abs(f5)).and.f5.lt.0) then  
               call qubarqd_nInJqubarqd_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.lt.0 .and. f2.gt.0 .and. isodd(abs(f5)) .and. f5.gt.0) then   
+            elseif(f1.lt.0.and.f2.gt.0.and.isodd(abs(f5)).and.f5.gt.0) then   
               call qubarqd_nInJqdqubar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.lt.0 .and. iseven(abs(f5)) .and. f5.gt.0) then  
+            elseif(f1.gt.0.and.f2.lt.0.and.iseven(abs(f5)).and.f5.gt.0) then  
               call quqdbar_nInJquqdbar_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.lt.0 .and. isodd(abs(f5)) .and. f5.lt.0) then  
+            elseif(f1.gt.0.and.f2.lt.0.and.isodd(abs(f5)).and.f5.lt.0) then  
               call quqdbar_nInJqdbarqu_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.gt.0 .and. isodd(abs(f5)) .and. f5.gt.0) then  
+            elseif(f1.gt.0.and.f2.gt.0.and.isodd(abs(f5)).and.f5.gt.0) then  
               call quqd_nInJqdqu_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
-            elseif(f1.gt.0 .and. f2.gt.0 .and. iseven(abs(f5)) .and. f5.gt.0) then  
+            elseif(f1.gt.0.and.f2.gt.0.and.iseven(abs(f5)).and.f5.gt.0) then  
               call quqd_nInJquqd_realOS_squaredME(fc_result,ichan,helicities,flags)
               goto 20
             else
@@ -829,11 +770,11 @@ c############### subroutine getRealOSAmps ##############################
             goto 21
           endif
         ! g g -> F F F F
-        elseif(f1.eq.0 .and. f2.eq.0 .and. f5.ne.0 .and. f6.ne.0) then
-          if(isodd(abs(f5)) .and. f5.gt.0) then
+        elseif(f1.eq.0.and.f2.eq.0.and.f5.ne.0.and.f6.ne.0) then
+          if(isodd(abs(f5)).and.f5.gt.0) then
             call gg_nInJqdqdbar_realOS_squaredME(fc_result,ichan,helicities,flags)
             goto 20
-          elseif(iseven(abs(f5)) .and. f5.gt.0) then
+          elseif(iseven(abs(f5)).and.f5.gt.0) then
             call gg_nInJququbar_realOS_squaredME(fc_result,ichan,helicities,flags)
             goto 20  
           else

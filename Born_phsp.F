@@ -28,13 +28,11 @@ c and the Jacobi factor for the phase space volume
         logical lresult
         ! phase space borders
         double precision sijmin
-        ! mandelstams
-        double precision s
         ! function to calculate the squared momentum sum
         double precision dotp, momsq, momsum3sq, momsum2sq
         external dotp, momsq, momsum2sq, momsum3sq
         ! pseudorapidity and pt
-        double precision etajet, ptjet
+        double precision ptjet
 
         ! final state arrangement
         ! (the order how the phase space is generated)

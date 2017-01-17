@@ -20,7 +20,6 @@ c ! MK: added
 #include "Flags.h"
 #include "pwhg_flst_add.h"
 #include "pwhg_rad_add.h"
-      integer maxev
       integer k
       integer gen_seed,gen_n1,gen_n2
       common/cgenrand/gen_seed,gen_n1,gen_n2
@@ -537,8 +536,7 @@ c check that the string fits
       include 'pwhg_lhrwgt.h'
       integer iunin,iunout
       character * (400) string,string0
-      integer j,k,iret
-      logical written,in_group
+      integer j,iret
       do j=1,1000000
          call pwhg_io_read(iunin,string0,iret)
          if(iret /= 0) goto 999
@@ -703,7 +701,7 @@ c
       real * 8 mu2
       integer fl1b,fl2b,fl1r,fl2r
       real * 8 pdf(-pdf_nparton:pdf_nparton)
-      real * 8 lumorig,lum,as,asorig,exponent,exponentorig,
+      real * 8 as,asorig,exponent,exponentorig,
      1         lumbornorig,lumborn,lumreal,lumrealorig,q2l,
      2         save_st_lambda5MSB,save_st_mufact2,x1r,x2r,fact
       real * 8 powheginput,dotp
@@ -721,8 +719,7 @@ c These variables are the only ones accessed by the contained subroutines
       integer ngauss
       parameter (ngauss=16)
       double precision xgauss(ngauss),wgauss(ngauss)
-      double precision shat,z,em,kmom,aslim,ycmmin,ycmmax,
-     1  alphads
+      double precision shat,z,em,kmom,aslim,ycmmin,ycmmax
 
       double precision lam5,q2low,q2high
 c end variables accessed by the contained subroutines
@@ -1046,10 +1043,8 @@ c we divide by two simply because we multiply by 2 in the main program
       include 'pwhg_math.h'
       include 'pwhg_st.h'
       include 'pwhg_rad.h'
-      double precision x
-      double precision dgauss      
+      double precision x    
       real * 8 as,lqlow,l,q2
-      integer nf
       lqlow = log(q2high/q2low)
       l = x*lqlow
       q2 = q2low*exp(l)
@@ -1097,9 +1092,7 @@ c lqlow is the jacobian
       include 'pwhg_kn.h'
       include 'pwhg_st.h'
       include 'pwhg_pdf.h'
-      real * 8 pdf1(-pdf_nparton:pdf_nparton),
-     1         pdf2(-pdf_nparton:pdf_nparton)
-      double precision deltasud,tau0,tau1,eta,pm(0:3)
+      double precision tau0,tau1,eta,pm(0:3)
       real * 8 dotp
       logical ini
       data ini/.true./
@@ -1169,7 +1162,7 @@ c      call plotdeltasud
       include 'pwhg_rad.h'
       double precision, intent(in) :: ycm,tau
       double precision res
-      double precision kt2,xjac,x1,x2,taub,gg,gq,qg,att,auu,
+      double precision kt2,xjac,x1,x2,gg,gq,qg,att,auu,
      1     kl,alphas,x,x1b,x2b,k0
       include 'pwhg_pdf.h'
 c sing1 and sing2 will stand for the singlet on the 1 and 2 incoming particles

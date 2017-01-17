@@ -32,7 +32,6 @@ c keep this order
 #include "pwhg_rad_add.h"
         integer sigosres,imode
         double precision retval,retval0,xx(ndiminteg),ww1
-        double precision yy(ndiminteg)
         integer ifirst,ichan,idi
         integer lset
         double precision xjac
@@ -159,7 +158,6 @@ c keep this order
 #include "pwhg_rad_add.h"
         double precision xjac,r0
         integer lset
-        integer j
         double precision pdf1(-pdf_nparton:pdf_nparton)
         double precision pdf2(-pdf_nparton:pdf_nparton)
         integer ichan

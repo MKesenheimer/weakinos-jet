@@ -51,7 +51,7 @@ c     Print out svn information, if any
       else
          testplots=.false.
       endif
-      nev=powheginput('numevts')
+      nev=int(powheginput('numevts'))
 
 c whether to save btilde calls to set up upper bounding envelope
       if(powheginput('#storemintupb').eq.1d0) then
@@ -86,7 +86,7 @@ c integer at line j is used to initialize the random
 c sequence for the generation of the event.
 c The event file is called 'pwgprefix'events-'j'.lhe
       
-      par_maxseeds=powheginput("#maxseeds")
+      par_maxseeds=int(powheginput("#maxseeds"))
       if(par_maxseeds < 0) then
          par_maxseeds = 200
       endif
@@ -195,9 +195,9 @@ c     let the analysis subroutine know that it is run by this program
 c if we are using manyseeds, and iseed is given, it means that we want
 c to examine that event in particular
       if(rnd_cwhichseed.ne.'none') then
-         iseed=powheginput('#iseed')
-         n1=powheginput('#rand1')
-         n2=powheginput('#rand2')
+         iseed=int(powheginput('#iseed'))
+         n1=int(powheginput('#rand1'))
+         n2=int(powheginput('#rand2'))
          if(iseed.ge.0.and.n1.ge.0.and.n2.ge.0)
      1        call setrandom(iseed,n1,n2)
       endif
@@ -271,7 +271,7 @@ c allocate a weight array of the appropriate size
          write(*,*) ' irrespective of the testplot flag setting.'
       endif
       if(flg_rwl) then
-         num_stored_evt = powheginput("#rwl_group_events")
+         num_stored_evt = int(powheginput("#rwl_group_events"))
          if(num_stored_evt < 0) num_stored_evt = 1000
          count_stored_evt = 0
          allocate(weights(num_weights,num_stored_evt))
@@ -345,7 +345,7 @@ c     point to reach faster subsequent random number.
 c copy stored event to LH common block
                call rwl_handle_lhe('get',count_stored_evt,k_stored_evt)
 c     Write event and weights
-               rwl_weights(:) = weights(:,k_stored_evt)
+               rwl_weights(:) = int(weights(:,k_stored_evt))
                call lhefwritev(iunout)
 c               write(iunout,*) '# new weight ',weights(:,k_stored_evt)
                call dotestplots

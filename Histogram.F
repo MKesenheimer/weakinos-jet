@@ -15,7 +15,7 @@ c############### generate histograms ###################################
         integer k,nbins
         double precision xm,xp
         double precision xval,weight
-        integer st,ind,iun,ncalls(nhistsmax)
+        integer ind,iun,ncalls(nhistsmax)
         integer hits(nhistsmax,0:nbinsmax)
         double precision x(nhistsmax,0:nbinsmax)
         double precision ysum(nhistsmax,0:nbinsmax)

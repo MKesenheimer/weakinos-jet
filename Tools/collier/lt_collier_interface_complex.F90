@@ -245,7 +245,7 @@ subroutine Cput(Ctab,p10,p21,p20,m02,m12,m22)
   ! parameters
   integer, parameter :: rank = 4
   RealType, parameter :: pi = 4.d0*atan(1.d0)
-
+  
   ! character*10 coeffname(Ncc)
   !
   ! data (coeffname(i), i = 1, Ncc) /
@@ -271,7 +271,7 @@ subroutine Cput(Ctab,p10,p21,p20,m02,m12,m22)
   ! &    'cc1122', 'cc1122:1', 'cc1122:2',
   ! &    'cc1222', 'cc1222:1', 'cc1222:2',
   ! &    'cc2222', 'cc2222:1', 'cc2222:2' /
-
+  
   call GetDeltaIR_cll(DeltaIR1s,DeltaIR2s)
 
   allocate(Ccoeff(GetNc_cll(3,rank)))
@@ -284,7 +284,12 @@ subroutine Cput(Ctab,p10,p21,p20,m02,m12,m22)
   call SetDeltaIR_cll(DeltaIR1,DeltaIR2)
 
   call C_cll(Ccoeff,Ccoeffuv,p10,p21,p20,m02,m12,m22,rank,Cerr)
-
+  !call C_cll(Ccoeff,Ccoeffuv,p20,p21,p10,m02,m22,m12,rank,Cerr) ! symmetry
+  !call C_cll(Ccoeff,Ccoeffuv,p10,p20,p21,m12,m02,m22,rank,Cerr) ! symmetry
+  !call C_cll(Ccoeff,Ccoeffuv,p21,p20,p10,m12,m22,m02,rank,Cerr) ! symmetry
+  !call C_cll(Ccoeff,Ccoeffuv,p20,p10,p21,m22,m02,m12,rank,Cerr) ! symmetry
+  !call C_cll(Ccoeff,Ccoeffuv,p21,p10,p20,m22,m12,m02,rank,Cerr) ! symmetry
+  
   do i = 1,(Ncc/3)
      j = 1+3*(i-1)
      Ctab(j) = Ccoeff(i)     
@@ -424,7 +429,7 @@ subroutine Dput(Dtab,p10,p21,p32,p30,p20,p31,m02,m12,m22,m32)
   ! &    'dd22333', 'dd22333:1', 'dd22333:2',
   ! &    'dd23333', 'dd23333:1', 'dd23333:2',
   ! &    'dd33333', 'dd33333:1', 'dd33333:2' /
-
+  
   call GetDeltaIR_cll(DeltaIR1s,DeltaIR2s)
 
   allocate(Dcoeff(GetNc_cll(4,rank)))

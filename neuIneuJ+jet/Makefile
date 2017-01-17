@@ -22,6 +22,11 @@ CC  = gcc
 FCFLAGS  = -pg
 CXXFLAGS = -g
 CFLAGS   = -pg
+
+# warnings, no -Wtabs, -Wunused
+WARNINGS  = -Waliasing -Wampersand -Wconversion -Wsurprising -Wc-binding-type
+WARNINGS += -Wintrinsics-std -Wintrinsic-shadow -Wline-truncation -Wtarget-lifetime
+WARNINGS += -Wreal-q-constant
   
 # recommended compiler flags
 ifeq ($(FC), ifort)
@@ -32,7 +37,7 @@ else ifeq ($(FC), gfortran)
   LDFLAGS  = -ff2c -pg
   REC_FCFLAGS   = -fno-automatic -fno-range-check
   REC_FCFLAGS  += -ffixed-line-length-none -lgfortran -DU77EXT=0 -DQuad=0
-  REC_FCFLAGS  += -ff2c -fno-second-underscore
+  REC_FCFLAGS  += -ff2c -fno-second-underscore $(WARNINGS)
   REC_FCFLAGS  += $(FCFLAGS)
   #$(error $(REC_FCFLAGS))
 endif

@@ -22,8 +22,6 @@ c#include "decl.h"
         integer vflav(nlegborn)
         double precision virt, amps(2)
         double precision momsum2sq
-        ! check 4-momentum conservation
-        logical lresult
         ! status
         logical verbose
         logical init_virtual

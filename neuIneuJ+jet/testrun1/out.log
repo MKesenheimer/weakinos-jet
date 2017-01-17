@@ -1,0 +1,302 @@
+==== LHAPDF6 USING DEFAULT-TYPE LHAGLUE INTERFACE ====
+LHAPDF 6.1.5 loading /home/hepuser/kesenheimer/local/share/LHAPDF/cteq6l1/cteq6l1_0000.dat
+cteq6l1 PDF set, member #0, version 4; LHAPDF ID = 10042
+==== LHAPDF6 USING DEFAULT-TYPE LHAGLUE INTERFACE ====
+LHAPDF 6.1.5 loading /home/hepuser/kesenheimer/local/share/LHAPDF/cteq6l1/cteq6l1_0000.dat
+cteq6l1 PDF set, member #0, version 4; LHAPDF ID = 10042
+  found input file powheg.input
+  opened powheg.input
+  powheginput keyword compress_lhe         set to    1.0000000000000000     
+  powheginput keyword compress_upb         absent; set to   -1000000.0000000000     
+  powheginput keyword testplots            absent; set to   -1000000.0000000000     
+  powheginput keyword numevts              set to    0.0000000000000000     
+  powheginput keyword storemintupb         absent; set to   -1000000.0000000000     
+  powheginput keyword fastbtlbound         absent; set to   -1000000.0000000000     
+  powheginput keyword maxseeds             absent; set to   -1000000.0000000000     
+  powheginput keyword manyseeds            absent; set to   -1000000.0000000000     
+  powheginput keyword rwl_add              absent; set to   -1000000.0000000000     
+  powheginput keyword rwl_format_rwgt      absent; set to   -1000000.0000000000     
+  powheginput keyword flg_debug            absent; set to   -1000000.0000000000     
+  powheginput keyword withnegweights       absent; set to   -1000000.0000000000     
+  powheginput keyword bornsuppfact         absent; set to   -1000000.0000000000     
+  powheginput keyword ptsupp               absent; set to   -1000000.0000000000     
+  powheginput keyword doublefsr            absent; set to   -1000000.0000000000     
+  powheginput keyword smartsig             absent; set to   -1000000.0000000000     
+  powheginput keyword withsubtr            absent; set to   -1000000.0000000000     
+  powheginput keyword hfact                absent; set to   -1000000.0000000000     
+  powheginput keyword withdamp             absent; set to   -1000000.0000000000     
+  powheginput keyword bornzerodamp         absent; set to   -1000000.0000000000     
+  powheginput keyword hdamp                absent; set to   -1000000.0000000000     
+  powheginput keyword bornonly             absent; set to   -1000000.0000000000     
+  powheginput keyword LOevents             absent; set to   -1000000.0000000000     
+  powheginput keyword novirtual            absent; set to   -1000000.0000000000     
+  powheginput keyword iseed                set to    5002.0000000000000     
+  powheginput keyword rand1                absent; set to   -1000000.0000000000     
+  powheginput keyword rand2                absent; set to   -1000000.0000000000     
+  powheginput keyword iupperisr            absent; set to   -1000000.0000000000     
+  powheginput keyword iupperfsr            absent; set to   -1000000.0000000000     
+  powheginput keyword pdfreweight          absent; set to   -1000000.0000000000     
+  powheginput keyword storeinfo_rwgt       absent; set to   -1000000.0000000000     
+  powheginput keyword compute_rwgt         absent; set to   -1000000.0000000000     
+  powheginput keyword minlo                absent; set to   -1000000.0000000000     
+  powheginput keyword ubexcess_correct     absent; set to   -1000000.0000000000     
+ RM48 INITIALIZED:      5002           0         0
+  powheginput keyword par_diexp            absent; set to   -1000000.0000000000     
+  powheginput keyword par_dijexp           absent; set to   -1000000.0000000000     
+  powheginput keyword par_2gsupp           absent; set to   -1000000.0000000000     
+  powheginput keyword ih1                  set to    1.0000000000000000     
+  powheginput keyword ih2                  set to    1.0000000000000000     
+  powheginput keyword lhans1               set to    10042.000000000000     
+  powheginput keyword lhans2               set to    10042.000000000000     
+  check: alpha_s(Mz)=  0.12978310000000001     
+  alpha_s order (0,1,2):            0
+  Lambda 5 is   0.41210038153215706     
+  LHA value is   0.19200000000000000     
+  powheginput keyword ebeam1               set to    7000.0000000000000     
+  powheginput keyword ebeam2               set to    7000.0000000000000     
+  powheginput keyword bornktmin            absent; set to   -1000000.0000000000     
+  powheginput keyword ptsqmin              absent; set to   -1000000.0000000000     
+  powheginput keyword charmthr             absent; set to   -1000000.0000000000     
+  powheginput keyword bottomthr            absent; set to   -1000000.0000000000     
+  powheginput keyword renscfact            set to    1.0000000000000000     
+  powheginput keyword facscfact            set to    1.0000000000000000     
+  powheginput keyword evenmaxrat           absent; set to   -1000000.0000000000     
+  powheginput keyword incomingflavors      set to    2.0000000000000000     
+  powheginput keyword fakevirtuals         absent; set to   -1000000.0000000000     
+  powheginput keyword fin1                 set to    1000022.0000000000     
+  powheginput keyword fin2                 set to    1000023.0000000000     
+
+ ====================================================
+      neutralino/chargino pair + jet production      
+         git version 83015e0
+         final states:      1000022     1000023
+
+              q                         n1           
+               \                       /             
+                \                     /              
+                 \                   /               
+                  \       Z/W       /                
+                   ~~~~~~~~~~~~~~~~~                 
+                  /                 \                
+                 /                   \               
+                /                     \              
+               /                       \             
+              q*                        n2           
+                                                     
+ ====================================================
+
+  number of incoming flavors:            2
+  encoded final states to process ID:       123122
+  born processes           1
+           1          -1     1000022     1000023           0
+  real processes           1
+           1          -1     1000022     1000023           0           0
+  on-shell resonant real processes           0
+ extracted from process ID:       123122
+ the final state pair:      1000022 ,      1000023
+ note: Using generation cut of   10.000000000000000      GeV for jets in Phasespace
+  powheginput keyword SLHA                 set to "input_orig.slha"
+ note: ignoring alpha_s value given in SLHA file
+ note (PhysPars): neglecting b-quark mass
+ warning: FormCalc does not use squark-widths.
+ extracted from process ID:       123122
+ the final state pair:      1000022 ,      1000023
+  powheginput keyword SLHA                 set to "input_orig.slha"
+ read model file input_orig.slha                                                                           
+ Note (MadGraph): neglecting bottom quark mass
+  READ_LES_HOUCHES: done, all inputs read 
+ checking for parameters in powheg.input
+ (if given, they override SLHA SM parameters)
+  powheginput keyword inv_alpha            absent; set to   -1000000.0000000000     
+  powheginput keyword Zmass                absent; set to   -1000000.0000000000     
+  powheginput keyword Wmass                absent; set to   -1000000.0000000000     
+  powheginput keyword Zwidth               absent; set to   -1000000.0000000000     
+  powheginput keyword Wwidth               absent; set to   -1000000.0000000000     
+ note (FormCalc): no CKM mixing
+  powheginput keyword ewi1                 set to    0.0000000000000000     
+  powheginput keyword ewi2                 set to    0.0000000000000000     
+
+ ====================================================
+                set POWHEG parameters                
+ ====================================================
+
+ Z mass          =    91.187600000000003     
+ W mass          =    79.829013099999997     
+ Z width         =    2.4114331600000001     
+ W width         =    2.0028219599999999     
+ 1/alpha         =    127.93400000000000     
+
+ final state masses =    96.688068599999994     
+                         181.08815700000000     
+                         0.0000000000000000     
+
+ OS regulator WREG1, WREG2 =    0.0000000000000000        0.0000000000000000     
+
+ ====================================================
+                    init Collier                     
+ ====================================================
+                                                        
+     *******************************************        
+     *              C O L L I E R              *        
+     *                                         *        
+     *        Complex One-Loop Library         *        
+     *      In Extended Regularizations        *        
+     *                                         *        
+     *    by A.Denner, S.Dittmaier, L.Hofer    *        
+     *                                         *        
+     *               version 1.0               *        
+     *                                         *        
+     *******************************************        
+                                                        
+                                                           
+ ***********************************************************
+                                                            
+   COLLIER: information on settings and internal parameters 
+     is written to the file collier/InfOut.cll
+                                                            
+ ***********************************************************
+                                                            
+  **** Minimum maxalr allowed:            3  *********
+  **** Number of born graphs:             1
+  **** Number of real graphs:             1
+  **** Number of regular regions:           0
+  powheginput keyword softtest             set to    1.0000000000000000     
+  powheginput keyword colltest             set to    1.0000000000000000     
+  powheginput keyword runningscale         set to    0.0000000000000000     
+
+ ====================================================
+ Factorization and renormalization scales:
+ using fixed scale and
+ sum of neutralino masses for muref
+ muref =    277.77622559999998     
+ muren = muref *    1.0000000000000000     
+ mufac = muref *    1.0000000000000000     
+ ====================================================
+
+ === Init born... ===
+ process:            1          -1     1000022     1000023           0
+ s  =    4786669.6486060014     
+ t  =   -1431720.6938149498     
+ u  =   -1737039.4661493949     
+ born (formcalc) =    2.9879357048056540E-009
+
+ RM48 INITIALIZED:      5002           6         0
+ RM48IN SKIPPING OVER               6
+
+ === Init reals... ===
+ process:            1          -1     1000022     1000023           0           0
+ s  =    18422688.822317373     
+ t  =   -4127635.2272535325     
+ u  =   -1455237.6921091392     
+ real =    1.5088644899074188E-012
+
+ RM48 INITIALIZED:      5002           9         0
+ RM48IN SKIPPING OVER               9
+ Writing realequiv file...
+ Done
+ RM48 INITIALIZED:      5002           9         0
+ RM48IN SKIPPING OVER               9
+ Writing realequivregions file...
+ Done
+  powheginput keyword olddij               absent; set to   -1000000.0000000000     
+  powheginput keyword charmthrpdf          absent; set to   -1000000.0000000000     
+  powheginput keyword bottomthrpdf         absent; set to   -1000000.0000000000     
+ RM48 INITIALIZED:      5002           0         0
+ Writing bornequiv file...
+ Done
+  POWHEG:  
+  Check of soft/collinear limits performed
+  Results in file pwhg_checklimits
+  powheginput keyword parallelstage        absent; set to   -1000000.0000000000     
+  powheginput keyword use-old-grid         set to    0.0000000000000000     
+
+  POWHEG: initialization
+  Computing the integral of the absolute value
+  of the cross section to set up the adaptive grid
+  powheginput keyword ncall1               set to    20000.000000000000     
+  powheginput keyword ncall1rm             absent; set to   -1000000.0000000000     
+  powheginput keyword ncall1osres          set to    50000.000000000000     
+  powheginput keyword itmx1                set to    4.0000000000000000     
+  powheginput keyword itmx1rm              absent; set to   -1000000.0000000000     
+  powheginput keyword itmx1osres           set to    6.0000000000000000     
+  result +- errtot (picobarn) for each iteration
+  powheginput keyword fixedgrid            absent; set to   -1000000.0000000000     
+  powheginput keyword btildeborn           absent; set to   -1000000.0000000000     
+  powheginput keyword btildevirt           absent; set to   -1000000.0000000000     
+  powheginput keyword btildecoll           absent; set to   -1000000.0000000000     
+  powheginput keyword btildereal           absent; set to   -1000000.0000000000     
+
+ === Init virtual... ===
+ process:            1          -1     1000022     1000023           0
+ s  =    5450231.4276542431     
+ t  =   -1892859.3904583408     
+ u  =   -2962354.6538447556     
+ 2*Born*Virtual =   -1.7906808807684714E-008
+
+ RM48 INITIALIZED:      5002          18         0
+ RM48IN SKIPPING OVER              18
+ Writing virtequiv file...
+ Done
+  powheginput keyword btlscalereal         absent; set to   -1000000.0000000000     
+  powheginput keyword btlscalect           absent; set to   -1000000.0000000000     
+ got strange value for virtual amplitude...                       NaN
+ got strange value for virtual amplitude...                       NaN
+ got strange value for virtual amplitude...                       NaN
+ got strange value for virtual amplitude...                       NaN
+   3.7917281685492181E-004   2.7530375207539255E-005
+ got strange value for virtual amplitude...                       NaN
+   4.7961330196145729E-004   1.8507373906117843E-005
+ got strange value for virtual amplitude...                       NaN
+   4.9457995000028393E-004   1.1265950757983369E-005
+   4.9187470793343594E-004   1.0497061189580310E-005
+   0.0000000000000000        0.0000000000000000     
+   0.0000000000000000        0.0000000000000000     
+   0.0000000000000000        0.0000000000000000     
+   0.0000000000000000        0.0000000000000000     
+   0.0000000000000000        0.0000000000000000     
+   0.0000000000000000        0.0000000000000000     
+  Importance sampling x grids generated and stored
+  powheginput keyword foldcsi              set to    2.0000000000000000     
+  powheginput keyword foldy                set to    2.0000000000000000     
+  powheginput keyword foldphi              set to    2.0000000000000000     
+  POWHEG: Computing pos.+|neg.|  weight contribution to inclusive cross section
+  powheginput keyword ncall2               set to    20000.000000000000     
+  powheginput keyword itmx2                set to    4.0000000000000000     
+  powheginput keyword ncall2rm             absent; set to   -1000000.0000000000     
+  powheginput keyword itmx2rm              absent; set to   -1000000.0000000000     
+  powheginput keyword ncall2osres          set to    50000.000000000000     
+  powheginput keyword itmx2osres           set to    8.0000000000000000     
+  powheginput keyword stage2init           absent; set to   -1000000.0000000000     
+   3.4165872228003797E-004   4.9983003362932365E-006
+ got strange value for virtual amplitude...                       NaN
+   3.3716742420842688E-004   5.1090851671741085E-006
+   3.3599676671075280E-004   4.6966444064924120E-006
+   3.3465197238093087E-004   5.0651497634153276E-006
+ tot:   3.1913318493083500E-004 +-   2.5149016702331748E-006
+ abs:   3.3736872139503979E-004 +-   2.4849717514081107E-006
+ pos:   3.2825095316293745E-004 +-   2.3711181176466707E-006
+ neg:   9.1177682321021879E-006 +-   7.9227923126045349E-007
+  powheginput keyword ubsigmadetails       absent; set to   -1000000.0000000000     
+ btilde pos.   weights:   3.2825095316293745E-004  +-   2.3711181176466707E-006
+ btilde |neg.| weights:   9.1177682321021879E-006  +-   7.9227923126045349E-007
+ btilde total (pos.-|neg.|):   3.1913318493083500E-004  +-   2.5149016702331748E-006
+  POWHEG: Computing 
+ remaining terms from on-shell R, incl. on-shell-subtraction
+   0.0000000000000000        0.0000000000000000     
+   0.0000000000000000        0.0000000000000000     
+   0.0000000000000000        0.0000000000000000     
+   0.0000000000000000        0.0000000000000000     
+   0.0000000000000000        0.0000000000000000     
+   0.0000000000000000        0.0000000000000000     
+   0.0000000000000000        0.0000000000000000     
+   0.0000000000000000        0.0000000000000000     
+ real_osres pos.   weights:   0.0000000000000000       +-   0.0000000000000000     
+ real_osres |neg.| weights:   0.0000000000000000       +-   0.0000000000000000     
+ real_osres total (pos.-|neg.|):   0.0000000000000000       +-   0.0000000000000000     
+  total (btilde+remnants+regulars+osresR) cross section in pb   3.1913318493083500E-004 +-   2.5149016702331748E-006
+  negative weight fraction:   2.7026122025775486E-002
+  powheginput keyword nubound              set to    0.0000000000000000     
+  powheginput keyword iymax                set to    1.0000000000000000     
+  powheginput keyword icsimax              set to    1.0000000000000000     
+  powheginput keyword xupbound             set to    2.0000000000000000     
+  ubound set =0, cannot proceed

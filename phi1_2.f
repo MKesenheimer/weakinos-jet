@@ -64,7 +64,6 @@ c psgen=3:     flat in tan tau with arbitrary exponent
         double precision sbeams,minmass,xx(2)
         ! output, local variables:
         double precision taumin,taumax,tau,y,x1,x2,s,jac,tmp
-        double precision tanmax,tanmin
         integer psgen
         ! choose the exponent for logarithmic sampling
         double precision xexp

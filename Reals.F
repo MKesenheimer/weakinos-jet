@@ -18,7 +18,7 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
 #include "nlegborn.h"
 #include "Flags.h"
 #include "osres.h"
-        double precision p(0:3,nlegreal),p_os(0:3,nlegreal)
+        double precision p(0:3,nlegreal)
         integer rflav(nlegreal)
         double precision amp, ampreal, ampos
         ! status
@@ -27,15 +27,7 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         data init_reals/.true./        
         ! kinematics
         double precision s12, sij, skl
-        ! mass at resonance, mass of particle i,j,k,l
-        double precision mij, mkl, mi, mj, mk, ml
-        ! the width of the resonances
-        double precision wij, wkl
-        integer ichan,i,j,k,l
-        ! breit-wigner ratios
-        double precision bwratio
-        ! local variables
-        double precision ampCT
+        integer ichan
         ! jacobian for the on-shell terms
         double precision corrfac
         external corrfac
@@ -155,10 +147,10 @@ c Wrapper subroutine to call the MadGraph code to associate
 c a (leading) color structure to an event.
       subroutine realcolour_lh
         implicit none
-#include "nlegborn.h"
-#include "LesHouches.h"
-        integer rflav(nlegreal),color(2,nlegreal)
-        integer i,j
+c#include "nlegborn.h"
+c#include "LesHouches.h"
+c        integer rflav(nlegreal),color(2,nlegreal)
+c        integer i,j
 c        do i=1,nlegreal
 c          rflav(i)=idup(i)
 c          if (rflav(i).eq.21) rflav(i)=0

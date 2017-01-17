@@ -15,11 +15,7 @@ c parton parton -> weakino weakino
 #include "pwhg_kn.h"
         double precision p(0:3,nlegborn), bornjk(nlegborn,nlegborn)
         integer bflav(nlegborn)
-        double precision bmunu(0:3,0:3,nlegborn), born, colcf
-        ! indices
-        integer i,j,k,nmu,nnu
-        ! check 4-momentum conservation
-        logical lresult
+        double precision bmunu(0:3,0:3,nlegborn), born
         ! function to calculate the squared momentum sum
         double precision dotp, momsq, momsum3sq, momsum2sq
         external dotp, momsq, momsum2sq, momsum3sq
@@ -29,7 +25,8 @@ c parton parton -> weakino weakino
         logical verbose
         logical init_born
         data init_born/.true./
-#ifdef DEBUG
+#ifdef DEBUGQ
+        integer i
         double precision s35, s45
 #endif
 
@@ -59,8 +56,8 @@ c ---------------------------- Formcalc Born ---------------------------
 #ifdef DEBUGQ
           print*
           print*, "process: ", bflav
-          do j=1,nlegborn
-            print*, "bornjk = ", bornjk(j,:)/fborn
+          do i=1,nlegborn
+            print*, "bornjk = ", bornjk(i,:)/fborn
           enddo
           !stop
 #endif

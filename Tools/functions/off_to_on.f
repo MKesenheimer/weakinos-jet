@@ -473,7 +473,6 @@ c The direction of particle i is kept.
         implicit none
         double precision beta,vec(3),pi(0:3),pj(0:3),mi,mj,s
         double precision piR(0:3),pjR(0:3)
-        integer i,j
         ! local variables
         double precision pij(0:3),CosQ,phi,norm,pxy,sqrts
         ! sumation index

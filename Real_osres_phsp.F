@@ -22,10 +22,6 @@ c this subroutine uses subroutines defined in phi1_2.f (with boosts).
         !include integration over sij -> 6 integration-variables
         double precision xx(ndiminteg)
         integer ichan, flav(nlegreal)
-        ! x1-x2 phase space
-        integer psgen
-        double precision tau,taumin,taumax
-        double precision y,tmp
         ! mandelstams
         double precision s12
         double precision sijkmin, sijmin, sijmax, sklmin

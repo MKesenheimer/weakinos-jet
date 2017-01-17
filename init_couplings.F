@@ -322,9 +322,12 @@ c sets the PhysPars.h parameters
         integer error
         character*100 slhafilename
         ! final state IDs
-        integer id_fin1, id_fin2, id_fin3
+        integer id_fin1, id_fin2
+#define SLHA_ALPHA
+#ifndef SLHA_ALPHA
         ! weinberg angle
         double precision sinW
+#endif
         
         par_alpha    = invalid
         par_Zmass    = invalid
@@ -351,31 +354,12 @@ c sets the PhysPars.h parameters
         ! read all particle widths from SLHA-file
         nchannels = SLHADecayTable(slhadata, 0, width, partid, 7, 1024)
 
-#ifdef DEBUGQ
-        do channel = 1, nchannels
-          nparticles = partid(0,channel)
-          if(nparticles .eq. 1) then
-            print*,"==> total width(",partid(1,channel),") = "
-     &            ,width(channel)
-          else
-            print*, "--> partial width(",partid(1,channel),"to"
-            do particle = 2, nparticles
-              print*,partid(particle,channel)
-            enddo
-            print*, "            ) = ", width(channel)
-          endif
-          print*
-        enddo
-        !stop
-#endif
-
         ! SM parameters from SLHA-file
         print*, "note: ignoring alpha_s value given in SLHA file"
         par_Zmass   = dreal(SMInputs_MZ)
         par_Wmass   = dreal(Mass_MW)
         par_gf      = dreal(SMInputs_GF)
         par_alphaMZ = 1d0/dreal(SMInputs_invAlfaMZ)
-#define SLHA_ALPHA
 #ifdef SLHA_ALPHA
         par_alpha   = par_alphaMZ
 #else
@@ -750,7 +734,7 @@ c MadGraphs couplings.f as well.
         SW  = dsqrt(SW2)
         
         ! Higgs parameters 
-        TB = MinPar_TB
+        TB = dble(MinPar_TB)
         CB = dabs(1.D0/dsqrt(1+TB**2))
         SB = dabs(TB*CB)
         SB2 = SB**2
@@ -775,10 +759,10 @@ c MadGraphs couplings.f as well.
         CBA = CB*CA + SB*SA
         CBA2 = CBA**2
         
-        Mh0 = Mass_Mh0
-        MHH = Mass_MHH
-        MA0 = Mass_MA0
-        MHp = Mass_MHp
+        Mh0 = dble(Mass_Mh0)
+        MHH = dble(Mass_MHH)
+        MA0 = dble(Mass_MA0)
+        MHp = dble(Mass_MHp)
         Mh02 = Mh0**2
         MHH2 = MHH**2 
         MA02 = MA0**2
@@ -803,10 +787,10 @@ c MadGraphs couplings.f as well.
         ! set Formcalc couplings equal to the ones provided by POWHEG
         Alfa    = par_alpha
         Alfa2   = Alfa**2
-        AlfaS   = SMInputs_AlfasMZ ! dummy value, gets overwritten by set_ebe_couplings
+        AlfaS   = dble(SMInputs_AlfasMZ) ! dummy value, gets overwritten by set_ebe_couplings
         AlfaS2  = AlfaS**2
         AlfaMZ  = par_alphaMZ
-        AlfaSMZ = SMInputs_AlfasMZ
+        AlfaSMZ = dble(SMInputs_AlfasMZ)
         EL = dsqrt(4*m_pi*Alfa)
         GS = dsqrt(4*m_pi*AlfaS)
       end

@@ -161,22 +161,13 @@ Print["Counter Terms"]
 top = CreateCTTopologies[1, 2 -> 3, ExcludeTopologies -> {TadpoleCTs, WFCorrectionCTs}]; (*Exclude Tadpole- and Self-Energy CT on external legs*)
 ins = InsertFields[top, process];
 
-(*All Counter Terms*)
-DoPaint[ins, "counterAll"];
-counterAll = CreateFeynAmp[ins];
-
-(*ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_,_,V[1|3]]]) &]; (*Diagram does not contain W/gam*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_,_,S[1|2|3|4|5|6]]]) &]; (*Diagram does not contain Goldstone/Higgs*)*)
-
 (*Self Energy Counter Terms*)
 insSelf = DiagramSelect[ins,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_, _]]) &];
-(*insSelf = DiagramDelete[insSelf, 14, 16];(*Delete CT for EW Corrections*)*)
 DoPaint[insSelf, "counterSelf"];
 counterSelf = CreateFeynAmp[insSelf];
 
 (*Vertex Correction Counter Terms*)
 insVert = DiagramSelect[ins,FieldMemberQ[FieldPoints[##],FieldPoint[1][_, _, _]] &];
-(*insVert = DiagramDelete[insVert, 7, 8];(*Delete CT for EW Corrections*)*)
 DoPaint[insVert, "counterVert"];
 counterVert = CreateFeynAmp[insVert];
 
@@ -186,36 +177,38 @@ Print["Self Energies"]
 top = CreateTopologies[1, 2 -> 3, SelfEnergiesOnly];
 ins = InsertFields[top, process];
 
-ins = DiagramSelect[ins,(FieldMemberQ[LoopFields[##],F[15,{_}]] || FieldMemberQ[LoopFields[##], S[13,{_,_,_}]] || 
-		FieldMemberQ[LoopFields[##], S[14,{_,_,_}]] || FieldMemberQ[LoopFields[##], V[5,{_}]]) &]; (*Diagram contains g, sg, sq*)
+ins = DiagramSelect[ins,(FieldMemberQ[LoopFields[##], _. F[15,_]] || FieldMemberQ[LoopFields[##], _. S[13|14,_]] || FieldMemberQ[LoopFields[##], V[5,_]]) &]; (*Loop contains g, sguark, q, gluino*)
+ins = DiagramSelect[ins,(FreeQ[LoopFields[##], V[1|2|3]] && FreeQ[LoopFields[##], S[n_/;n<=6]]) &]; (*Loop does not contain Z, W, gam, Higgs/Goldstone*)
+(*delete diagrams with two ew particles that couple to the loop*)
+insDel = DiagramSelect[ins,(FieldMemberQ[LoopFields[##],_. S[13|14,_]])& ]; (*only squark loops*)
+insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],V[1|2|3|5,___]]])& ]; (*vector couples to the loop*)
+insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. F[11|12,_],_. F[11|12,_],V[1|2|3]]] || FieldMemberQ[FieldPoints[##],FieldPoint[_][_. F[11|12,_],_. F[11|12,_],S[n_/;n<=6]]])& ]; (*ew vector couples to the weakino*)
 
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][V[1],_,_]]) &]; (*Diagram does not contain gam*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_,V[1],_]]) &]; (*Diagram does not contain gam*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_,_,V[1]]]) &]; (*Diagram does not contain gam*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][V[3],_,_]]) &]; (*Diagram does not contain W*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_,V[3],_]]) &]; (*Diagram does not contain W*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_,_,V[3]]]) &]; (*Diagram does not contain W*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][S[n_/;n<=6],_,_]]) &]; (*Diagram does not contain Higgs/Goldstone*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_,S[n_/;n<=6],_]]) &]; (*Diagram does not contain Higgs/Goldstone*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_,_,S[n_/;n<=6]]]) &]; (*Diagram does not contain Higgs/Goldstone*)
-(*ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_,_,V[2]]]) &]; (*Diagram does not contain Z*)*)
+ins = DiagramComplement[ins,insDel];
 
-ins = DiagramSelect[ins,FreeQ[LoopFields[##], U[_]] &]; (*Loop does not contain a ghost*)
-(*ins = DiagramSelect[ins,FreeQ[LoopFields[##], V[1|2|3]] &]; (*Loop does not contain W/Z/gam*)*)
-(*ins = DiagramSelect[ins,FreeQ[LoopFields[##], S[1|2|3|4|5|6]] &]; (*Loop does not contain a Higgs/Goldstone*)*)
-
-ins = DiagramSelect[ins,FreeQ[FieldPoints[##],FieldPoint[_][V[5,_],V[5,_],V[5,_]]] &]; (*Diagram does not contain 3-gluon coupling*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][-S[13|14,_],S[13|14,_],V[2]]]) &]; (*Diagram does not contain Z-squark-squark coupling*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][S[13|14,_],-S[13|14,_],V[2]]]) &]; (*Diagram does not contain Z-squark-squark coupling*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][-S[13|14,_],S[13|14,_],V[2],V[2]]]) &]; (*Diagram does not contain Z-Z-squark-squark coupling*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][S[13|14,_],-S[13|14,_],V[2],V[2]]]) &]; (*Diagram does not contain Z-Z-squark-squark coupling*)
-ins = DiagramSelect[ins,FreeQ[FieldPoints[##],FieldPoint[_][-S[13|14,_],S[13|14,_],V[2],V[5,_]]] &]; (*Diagram does not contain 3-gluon coupling*)
+ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],V[1|2|3],V[1|2|3|5,___]]]) &]; (*Diagram does not contain V-V-squark-squark coupling*)
 
 DoPaint[ins, "self"];
 
 self = CalcFeynAmp[CreateFeynAmp[ins], counterSelf];
 self = self/.{Den[x_,y_]:>Den[x,y/.widths]};
+self = self/.{A0i[aai_,m1_]:>A0i[aai,m1/.widths]};
+self = self/.{B0i[bbi_,p1_,m1_,m2_]:>B0i[bbi,p1,m1/.widths,m2/.widths]};
+self = self/.{C0i[cci_,p1_,p2_,p3_,m1_,m2_,m3_]:>C0i[cci,p1,p2,p3,m1/.widths,m2/.widths,m3/.widths]};
+self = self/.{D0i[ddi_,p1_,p2_,p3_,p4_,p5_,p6_,m1_,m2_,m3_,m4_]:>D0i[ddi,p1,p2,p3,p4,p5,p6,m1/.widths,m2/.widths,m3/.widths,m4/.widths]};
+self = self/.{E0i[eei_,p1_,p2_,p3_,p4_,p5_,p6_,p7_,p8_,p9_,p10_,m1_,m2_,m3_,m4_,m5_]:>E0i[eei,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,m1/.widths,m2/.widths,m3/.widths,m4/.widths,m5/.widths]};
+(*cast real arguments into complex arguments*)
+$Assumptions=_\[Element]Reals;
+self = self/.{A0i[aai_,m1_]:>A0i[aai,Cmplx[m1]]};
+self = self/.{B0i[bbi_,p1_,m1_,m2_]:>B0i[bbi,Cmplx[p1],Cmplx[m1],Cmplx[m2]]};
+self = self/.{C0i[cci_,p1_,p2_,p3_,m1_,m2_,m3_]:>C0i[cci,Cmplx[p1],Cmplx[p2],Cmplx[p3],Cmplx[m1],Cmplx[m2],Cmplx[m3]]};
+self = self/.{D0i[ddi_,p1_,p2_,p3_,p4_,p5_,p6_,m1_,m2_,m3_,m4_]:>D0i[ddi,Cmplx[p1],Cmplx[p2],Cmplx[p3],Cmplx[p4],Cmplx[p5],Cmplx[p6],Cmplx[m1],Cmplx[m2],Cmplx[m3],Cmplx[m4]]};
+self = self/.{E0i[eei_,p1_,p2_,p3_,p4_,p5_,p6_,p7_,p8_,p9_,p10_,m1_,m2_,m3_,m4_,m5_]:>E0i[eei,Cmplx[p1],Cmplx[p2],Cmplx[p3],Cmplx[p4],Cmplx[p5],Cmplx[p6],Cmplx[p7],Cmplx[p8],Cmplx[p9],Cmplx[p10],Cmplx[m1],Cmplx[m2],Cmplx[m3],Cmplx[m4],Cmplx[m5]]};
+$Assumptions=True;
 self = self//.{Alfa2->0};
+
+Print["self = "];
+Print[self];
 
 
 Print["Vertices"]
@@ -223,42 +216,42 @@ Print["Vertices"]
 top = CreateTopologies[1, 2 -> 3, TrianglesOnly];
 ins = InsertFields[top, process];
 
-(*All Vertices*)
-(*DoPaint[ins, "vertAll"];*)
+ins = DiagramSelect[ins,(FieldMemberQ[LoopFields[##], _. F[15,_]] || FieldMemberQ[LoopFields[##], _. S[13|14,_]] || FieldMemberQ[LoopFields[##], V[5,_]] || FieldMemberQ[LoopFields[##], _. F[3|4,_]]) &]; (*Loop contains g, sguark, q, gluino*)
+ins = DiagramSelect[ins,(FreeQ[LoopFields[##], V[1|2|3]] && FreeQ[LoopFields[##], S[n_/;n<=6]]) &]; (*Loop does not contain Z, W, gam, Higgs/Goldstone*)
 
-(*ins = DiagramSelect[ins,(MemberQ[LoopFields[##], V[5,{_}]] || MemberQ[LoopFields[##], F[15,{_}]]) &];(*Loop contains a g or sg*)*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][V[1],_,_]]) &]; (*Diagram does not contain gam*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_,V[1],_]]) &]; (*Diagram does not contain gam*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_,_,V[1]]]) &]; (*Diagram does not contain gam*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][V[3],_,_]]) &]; (*Diagram does not contain W*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_,V[3],_]]) &]; (*Diagram does not contain W*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_,_,V[3]]]) &]; (*Diagram does not contain W*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][-V[3],_,_]]) &]; (*Diagram does not contain W*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_,-V[3],_]]) &]; (*Diagram does not contain W*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_,_,-V[3]]]) &]; (*Diagram does not contain W*)
+(*delete diagrams with two ew particles that couple to the loop*)
+insDel = DiagramSelect[ins,(FieldMatchQ[LoopFields[##],{_. S[13|14,_],_. S[13|14,_],_. S[13|14,_]}] || FieldMatchQ[LoopFields[##],{_. F[3|4,_],_. F[3|4,_],_. F[3|4,_]}])&]; (*only squark or quark loops*)
+insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],V[1|2|3]]] || FieldMemberQ[FieldPoints[##],FieldPoint[_][_. F[3|4,_],_. F[3|4,_],V[1|2|3]]])& ]; (* ew vector couples to the loop*)
+insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. F[11|12,_],_. F[11|12,_],V[1|2|3]]] || FieldMemberQ[FieldPoints[##],FieldPoint[_][_. F[11|12,_],_. F[11|12,_],S[n_/;n<=6]]])& ]; (*ew vector couples to the weakinos*)
+insDel = DiagramSelect[insDel, NotSChannelQ[V[5,_]]]; (*no s-channel gluons in the diagrams that we want to delete*)
+ins = DiagramComplement[ins,insDel];
+ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],V[1|2|3],V[1|2|3|5,___]]]) &]; (*Diagram does not contain V-V-squark-squark coupling*)
 
-ins = DiagramSelect[ins,FreeQ[LoopFields[##], V[n_/;n<=3]] &]; (*Loop does not contain W/Z/gam*)
-ins = DiagramSelect[ins,FreeQ[LoopFields[##], S[n_/;n<=6]] &]; (*Loop does not contain a Higgs/Goldstone*)
-
-ins = DiagramSelect[ins,FreeQ[FieldPoints[##],FieldPoint[_][-S[13|14,_],S[13|14,_],V[2],V[5,_]]] &]; (*Diagram does not contain Z-gluon-squark-squark coupling*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][-S[13|14,_],S[13|14,_],V[2],V[2]]]) &]; (*Diagram does not contain Z-Z-squark-squark coupling*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][S[13|14,_],-S[13|14,_],V[2],V[2]]]) &]; (*Diagram does not contain Z-Z-squark-squark coupling*)
-
-insrg = DiagramSelect[ins, If[Length[LoopFields[##]]==3, ((MemberQ[#, Field[6] -> V[5,_]] ||\[NonBreakingSpace]MemberQ[#, Field[6] -> F[15,_]]) &&
-		MemberQ[FieldPoints[##],FieldPoint[_][V[5, _], V[5, _], V[5, _]]]) || MemberQ[#, Field[7] -> V[5,_]],False] &];(*Diagram with a zero color trace*)
-insrew = DiagramSelect[ins, If[Length[LoopFields[##]]==3, FreeQ[LoopFields[##], V[5, _]] && FreeQ[LoopFields[##], F[15, _]] &&
-	FreeQ[#, Field[6] -> V[5, _]] && (MemberQ[#, Field[6] -> V[2]] || MemberQ[#, Field[7] -> V[2]]),False] &];(*Diagram with a Z-q-q coupling and only EW correction*)
-
-ins = DiagramComplement[ins,insrg,insrew];
-
-(*ins = DiagramExtract[ins,133..146];
-(*ins = Reap[DiagramSelect[ins,FreeQ[Sow[FieldPoints[##]],FieldPoint[_][V[2],V[5,_],S[13,_],-S[13,_]]] &]]; (*Diagram does not contain 3-gluon coupling*)
-Export["./test.wdx",ins[[2]],"WDX"];*)*)
+(*delete diagrams with ew particle couplings in the loop and ew vector in propagator*)
+insDel = DiagramSelect[ins,(FieldMatchQ[LoopFields[##],{_. S[13|14,_],_. F[3|4,_],_. F[3|4,_]}] || FieldMatchQ[LoopFields[##],{_. F[3|4,_],_. S[13|14,_],_. S[13|14,_]}])&]; (*only squark or quark loops*)
+insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_,_,V[1|2|3|5,___]]])&]; (*diagram contains ew vector or has zero color trace*)
+ins = DiagramComplement[ins,insDel];
 DoPaint[ins, "vert"];
 
 vert = CalcFeynAmp[CreateFeynAmp[ins], counterVert];
 vert = vert/.{Den[x_,y_]:>Den[x,y/.widths]};
+vert = vert/.{A0i[aai_,m1_]:>A0i[aai,m1/.widths]};
+vert = vert/.{B0i[bbi_,p1_,m1_,m2_]:>B0i[bbi,p1,m1/.widths,m2/.widths]};
+vert = vert/.{C0i[cci_,p1_,p2_,p3_,m1_,m2_,m3_]:>C0i[cci,p1,p2,p3,m1/.widths,m2/.widths,m3/.widths]};
+vert = vert/.{D0i[ddi_,p1_,p2_,p3_,p4_,p5_,p6_,m1_,m2_,m3_,m4_]:>D0i[ddi,p1,p2,p3,p4,p5,p6,m1/.widths,m2/.widths,m3/.widths,m4/.widths]};
+vert = vert/.{E0i[eei_,p1_,p2_,p3_,p4_,p5_,p6_,p7_,p8_,p9_,p10_,m1_,m2_,m3_,m4_,m5_]:>E0i[eei,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,m1/.widths,m2/.widths,m3/.widths,m4/.widths,m5/.widths]};
+(*cast real arguments into complex arguments*)
+$Assumptions=_\[Element]Reals;
+vert = vert/.{A0i[aai_,m1_]:>A0i[aai,Cmplx[m1]]};
+vert = vert/.{B0i[bbi_,p1_,m1_,m2_]:>B0i[bbi,Cmplx[p1],Cmplx[m1],Cmplx[m2]]};
+vert = vert/.{C0i[cci_,p1_,p2_,p3_,m1_,m2_,m3_]:>C0i[cci,Cmplx[p1],Cmplx[p2],Cmplx[p3],Cmplx[m1],Cmplx[m2],Cmplx[m3]]};
+vert = vert/.{D0i[ddi_,p1_,p2_,p3_,p4_,p5_,p6_,m1_,m2_,m3_,m4_]:>D0i[ddi,Cmplx[p1],Cmplx[p2],Cmplx[p3],Cmplx[p4],Cmplx[p5],Cmplx[p6],Cmplx[m1],Cmplx[m2],Cmplx[m3],Cmplx[m4]]};
+vert = vert/.{E0i[eei_,p1_,p2_,p3_,p4_,p5_,p6_,p7_,p8_,p9_,p10_,m1_,m2_,m3_,m4_,m5_]:>E0i[eei,Cmplx[p1],Cmplx[p2],Cmplx[p3],Cmplx[p4],Cmplx[p5],Cmplx[p6],Cmplx[p7],Cmplx[p8],Cmplx[p9],Cmplx[p10],Cmplx[m1],Cmplx[m2],Cmplx[m3],Cmplx[m4],Cmplx[m5]]};
+$Assumptions=True;
 vert = vert//.{Alfa2->0};
+
+Print["vert = "];
+Print[vert];
 
 
 Print["Boxes"]
@@ -266,52 +259,40 @@ Print["Boxes"]
 top = CreateTopologies[1, 2 -> 3, BoxesOnly];
 ins = InsertFields[top, process];
 
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][V[1],_,_]]) &]; (*Diagram does not contain gam*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_,V[1],_]]) &]; (*Diagram does not contain gam*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_,_,V[1]]]) &]; (*Diagram does not contain gam*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][V[3],_,_]]) &]; (*Diagram does not contain W*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_,V[3],_]]) &]; (*Diagram does not contain W*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_,_,V[3]]]) &]; (*Diagram does not contain W*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][-V[3],_,_]]) &]; (*Diagram does not contain W*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_,-V[3],_]]) &]; (*Diagram does not contain W*)
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_,_,-V[3]]]) &]; (*Diagram does not contain W*)
+ins = DiagramSelect[ins,(FieldMemberQ[LoopFields[##], _. F[15,_]] || FieldMemberQ[LoopFields[##], _. S[13|14,_]] || FieldMemberQ[LoopFields[##], V[5,_]] || FieldMemberQ[LoopFields[##], _. F[3|4,_]]) &]; (*Loop contains g, sguark, q, gluino*)
+ins = DiagramSelect[ins,(FreeQ[LoopFields[##], V[1|2|3]] && FreeQ[LoopFields[##], S[n_/;n<=6]]) &]; (*Loop does not contain Z, W, gam, Higgs/Goldstone*)
 
-ins = DiagramSelect[ins,FreeQ[LoopFields[##], V[1|2|3]] &]; (*Loop does not contain W/Z/gam*)
+(*delete diagrams wich contains V-V-squark-squark coupling, but do not delete diagram with gluino squark squark loop*)
+insDel = DiagramSelect[ins,(Not[FieldMatchQ[LoopFields[##],{_. F[15,_],_. S[13|14,_],_. S[13|14,_]}]])&];
+insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],V[1|2|3],V[1|2|3|5,___]]]) &]; 
+ins = DiagramComplement[ins,insDel];
 
-(*ins = Reap[DiagramSelect[ins, Sow[(FreeQ[FieldPoints[##],FieldPoint[_][F[3|4, _], -F[3|4, _], V[2]]] && FreeQ[FieldPoints[##],FieldPoint[_][-F[3|4, _], F[3|4, _], V[2]]])
-		|| FreeQ[LoopFields[##], V[5, _]]] &]];
-Export["./test.wdx",ins[[2]],"WDX"];*)
-ins = DiagramSelect[ins, If[(MemberQ[FieldPoints[##],FieldPoint[_][F[3|4, _], -F[3|4, _], V[2]]] || MemberQ[FieldPoints[##],FieldPoint[_][-F[3|4, _], F[3|4, _], V[2]]]),
-  MemberQ[LoopFields[##], V[5, _]], True] &];(*remove EW diagrams with Z-q-q  couplings*)
-
+(*delete diagrams with s channel ew vector*)
+insDel = DiagramSelect[ins, SChannelQ[V[1|2|3]]];
+insDel = DiagramSelect[insDel,(FieldMatchQ[LoopFields[##],{_. S[13|14,_],_. F[3|4,_],_. F[3|4,_],_. F[3|4,_]}] || FieldMatchQ[LoopFields[##],{_. F[3|4,_],_. S[13|14,_],_. S[13|14,_],_. S[13|14,_]}] 
+                            || FieldMatchQ[LoopFields[##],{_. S[13|14,_],_. F[3|4,_],_. S[13|14,_],_. F[3|4,_]}] || FieldMatchQ[LoopFields[##],{_. F[3|4,_],_. S[13|14,_],_. F[3|4,_],_. S[13|14,_]}])&]; (*only squark or quark loops*)
+ins = DiagramComplement[ins,insDel];
 DoPaint[ins, "box"];
 
 box = CalcFeynAmp[CreateFeynAmp[ins]];
 box = box/.{Den[x_,y_]:>Den[x,y/.widths]};
+box = box/.{A0i[aai_,m1_]:>A0i[aai,m1/.widths]};
+box = box/.{B0i[bbi_,p1_,m1_,m2_]:>B0i[bbi,p1,m1/.widths,m2/.widths]};
+box = box/.{C0i[cci_,p1_,p2_,p3_,m1_,m2_,m3_]:>C0i[cci,p1,p2,p3,m1/.widths,m2/.widths,m3/.widths]};
+box = box/.{D0i[ddi_,p1_,p2_,p3_,p4_,p5_,p6_,m1_,m2_,m3_,m4_]:>D0i[ddi,p1,p2,p3,p4,p5,p6,m1/.widths,m2/.widths,m3/.widths,m4/.widths]};
+box = box/.{E0i[eei_,p1_,p2_,p3_,p4_,p5_,p6_,p7_,p8_,p9_,p10_,m1_,m2_,m3_,m4_,m5_]:>E0i[eei,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,m1/.widths,m2/.widths,m3/.widths,m4/.widths,m5/.widths]};
+(*cast real arguments into complex arguments*)
+$Assumptions=_\[Element]Reals;
+box = box/.{A0i[aai_,m1_]:>A0i[aai,Cmplx[m1]]};
+box = box/.{B0i[bbi_,p1_,m1_,m2_]:>B0i[bbi,Cmplx[p1],Cmplx[m1],Cmplx[m2]]};
+box = box/.{C0i[cci_,p1_,p2_,p3_,m1_,m2_,m3_]:>C0i[cci,Cmplx[p1],Cmplx[p2],Cmplx[p3],Cmplx[m1],Cmplx[m2],Cmplx[m3]]};
+box = box/.{D0i[ddi_,p1_,p2_,p3_,p4_,p5_,p6_,m1_,m2_,m3_,m4_]:>D0i[ddi,Cmplx[p1],Cmplx[p2],Cmplx[p3],Cmplx[p4],Cmplx[p5],Cmplx[p6],Cmplx[m1],Cmplx[m2],Cmplx[m3],Cmplx[m4]]};
+box = box/.{E0i[eei_,p1_,p2_,p3_,p4_,p5_,p6_,p7_,p8_,p9_,p10_,m1_,m2_,m3_,m4_,m5_]:>E0i[eei,Cmplx[p1],Cmplx[p2],Cmplx[p3],Cmplx[p4],Cmplx[p5],Cmplx[p6],Cmplx[p7],Cmplx[p8],Cmplx[p9],Cmplx[p10],Cmplx[m1],Cmplx[m2],Cmplx[m3],Cmplx[m4],Cmplx[m5]]};
+$Assumptions=True;
 box = box//.{Alfa2->0};
 
-(*
-insbox1 = DiagramExtract[ins,1..20];
-insbox2 = DiagramExtract[ins,21..40];
-insbox3 = DiagramExtract[ins,41..60];
-insbox4 = DiagramComplement[ins,insbox1,insbox2,insbox3];
-
-box1 = CalcFeynAmp[CreateFeynAmp[insbox1]];
-box1 = box1/.{Den[x_,y_]:>Den[x,y/.widths]};
-box1 = box1//.{Alfa2->0}
-
-box2 = CalcFeynAmp[CreateFeynAmp[insbox2]];
-box2 = box2/.{Den[x_,y_]:>Den[x,y/.widths]};
-box2 = box2//.{Alfa2->0}
-
-box3 = CalcFeynAmp[CreateFeynAmp[insbox3]];
-box3 = box3/.{Den[x_,y_]:>Den[x,y/.widths]};
-box3 = box3//.{Alfa2->0}
-
-box4 = CalcFeynAmp[CreateFeynAmp[insbox4]];
-box4 = box4/.{Den[x_,y_]:>Den[x,y/.widths]};
-box4 = box4//.{Alfa2->0}
-*)
+Print["box = "];
+Print[box];
 
 
 Print["Pentagons"]
@@ -319,13 +300,28 @@ Print["Pentagons"]
 top = CreateTopologies[1, 2 -> 3, PentagonsOnly];
 ins = InsertFields[top, process];
 
-ins = DiagramSelect[ins,(MemberQ[LoopFields[##], V[5,{_}]] || MemberQ[LoopFields[##], F[15,{_}]]) &];(*Loop contains a g or gluino*)
-
+ins = DiagramSelect[ins,(MemberQ[LoopFields[##], V[5,{_}]] || MemberQ[LoopFields[##], _. F[15,{_}]]) &];(*Loop contains a g or gluino*)
 DoPaint[ins, "pent"];
 
 pent = CalcFeynAmp[CreateFeynAmp[ins]];
 pent = pent/.{Den[x_,y_]:>Den[x,y/.widths]};
+pent = pent/.{A0i[aai_,m1_]:>A0i[aai,m1/.widths]};
+pent = pent/.{B0i[bbi_,p1_,m1_,m2_]:>B0i[bbi,p1,m1/.widths,m2/.widths]};
+pent = pent/.{C0i[cci_,p1_,p2_,p3_,m1_,m2_,m3_]:>C0i[cci,p1,p2,p3,m1/.widths,m2/.widths,m3/.widths]};
+pent = pent/.{D0i[ddi_,p1_,p2_,p3_,p4_,p5_,p6_,m1_,m2_,m3_,m4_]:>D0i[ddi,p1,p2,p3,p4,p5,p6,m1/.widths,m2/.widths,m3/.widths,m4/.widths]};
+pent = pent/.{E0i[eei_,p1_,p2_,p3_,p4_,p5_,p6_,p7_,p8_,p9_,p10_,m1_,m2_,m3_,m4_,m5_]:>E0i[eei,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,m1/.widths,m2/.widths,m3/.widths,m4/.widths,m5/.widths]};
+(*cast real arguments into complex arguments*)
+$Assumptions=_\[Element]Reals;
+pent = pent/.{A0i[aai_,m1_]:>A0i[aai,Cmplx[m1]]};
+pent = pent/.{B0i[bbi_,p1_,m1_,m2_]:>B0i[bbi,Cmplx[p1],Cmplx[m1],Cmplx[m2]]};
+pent = pent/.{C0i[cci_,p1_,p2_,p3_,m1_,m2_,m3_]:>C0i[cci,Cmplx[p1],Cmplx[p2],Cmplx[p3],Cmplx[m1],Cmplx[m2],Cmplx[m3]]};
+pent = pent/.{D0i[ddi_,p1_,p2_,p3_,p4_,p5_,p6_,m1_,m2_,m3_,m4_]:>D0i[ddi,Cmplx[p1],Cmplx[p2],Cmplx[p3],Cmplx[p4],Cmplx[p5],Cmplx[p6],Cmplx[m1],Cmplx[m2],Cmplx[m3],Cmplx[m4]]};
+pent = pent/.{E0i[eei_,p1_,p2_,p3_,p4_,p5_,p6_,p7_,p8_,p9_,p10_,m1_,m2_,m3_,m4_,m5_]:>E0i[eei,Cmplx[p1],Cmplx[p2],Cmplx[p3],Cmplx[p4],Cmplx[p5],Cmplx[p6],Cmplx[p7],Cmplx[p8],Cmplx[p9],Cmplx[p10],Cmplx[m1],Cmplx[m2],Cmplx[m3],Cmplx[m4],Cmplx[m5]]};
+$Assumptions=True;
 pent = pent//.{Alfa2->0};
+
+Print["pent = "];
+Print[pent];
 
 
 (* Write files *)
