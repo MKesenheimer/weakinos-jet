@@ -28,8 +28,8 @@ If[$CommandLine[[2]] === "-script",
 	 p[4] = ToString[$CommandLine[[7]]];
 	 p[5] = ToString[$CommandLine[[8]]];),
 	(*Else*)
-	(p[1] = "qd";
-	 p[2] = "qdbar";
+	(p[1] = "qu";
+	 p[2] = "qubar";
 	 p[3] = "nI";
 	 p[4] = "nJ";
 	 p[5] = "g";)
@@ -93,6 +93,8 @@ Neglect[MU] = Neglect[MU2] = 0;
 Neglect[MC] = Neglect[MC2] = 0;
 Neglect[MD] = Neglect[MD2] = 0;
 Neglect[MS] = Neglect[MS2] = 0;
+(*Neglect[MB] = Neglect[MB2] = 0;
+Neglect[MT] = Neglect[MT2] = 0;*)
 
 (*Diagonale CKM Matrix*)
 CKM = IndexDelta;
@@ -147,6 +149,9 @@ Print["Born"]
 
 tops = CreateTopologies[0, 2 -> 3];
 ins = InsertFields[tops, process];
+(*exclude fermion higgs couplings. top pdfs = 0 \[Rule] no external tops \[Rule] no internal tops \[Rule] no fermion higgs coupling*)
+(*TODO: check for chargino pair production and chargino neutralino production*)
+ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_. F[3|4,_], _. F[3|4,_], S[n_/;n<=6]]])& ];
 
 DoPaint[ins, "born"];
 
@@ -161,13 +166,16 @@ Print["Counter Terms"]
 top = CreateCTTopologies[1, 2 -> 3, ExcludeTopologies -> {TadpoleCTs, WFCorrectionCTs}]; (*Exclude Tadpole- and Self-Energy CT on external legs*)
 ins = InsertFields[top, process];
 
+(*exclude fermion higgs couplings*)
+ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_. F[3|4,_], _. F[3|4,_], S[n_/;n<=6]]])& ];
+
 (*Self Energy Counter Terms*)
-insSelf = DiagramSelect[ins,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_, _]]) &];
+insSelf = DiagramSelect[ins, (FieldMemberQ[FieldPoints[##],FieldPoint[_][_, _]]) &];
 DoPaint[insSelf, "counterSelf"];
 counterSelf = CreateFeynAmp[insSelf];
 
 (*Vertex Correction Counter Terms*)
-insVert = DiagramSelect[ins,FieldMemberQ[FieldPoints[##],FieldPoint[1][_, _, _]] &];
+insVert = DiagramSelect[ins, (FieldMemberQ[FieldPoints[##],FieldPoint[1][_, _, _]]) &];
 DoPaint[insVert, "counterVert"];
 counterVert = CreateFeynAmp[insVert];
 
@@ -177,13 +185,16 @@ Print["Self Energies"]
 top = CreateTopologies[1, 2 -> 3, SelfEnergiesOnly];
 ins = InsertFields[top, process];
 
+(*exclude fermion higgs couplings*)
+ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_. F[3|4,_], _. F[3|4,_], S[n_/;n<=6]]])& ];
+
 ins = DiagramSelect[ins,(FieldMemberQ[LoopFields[##], _. F[15,_]] || FieldMemberQ[LoopFields[##], _. S[13|14,_]] || FieldMemberQ[LoopFields[##], V[5,_]]) &]; (*Loop contains g, sguark, q, gluino*)
 ins = DiagramSelect[ins,(FreeQ[LoopFields[##], V[1|2|3]] && FreeQ[LoopFields[##], S[n_/;n<=6]]) &]; (*Loop does not contain Z, W, gam, Higgs/Goldstone*)
+
 (*delete diagrams with two ew particles that couple to the loop*)
 insDel = DiagramSelect[ins,(FieldMemberQ[LoopFields[##],_. S[13|14,_]])& ]; (*only squark loops*)
 insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],V[1|2|3|5,___]]])& ]; (*vector couples to the loop*)
 insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. F[11|12,_],_. F[11|12,_],V[1|2|3]]] || FieldMemberQ[FieldPoints[##],FieldPoint[_][_. F[11|12,_],_. F[11|12,_],S[n_/;n<=6]]])& ]; (*ew vector couples to the weakino*)
-
 ins = DiagramComplement[ins,insDel];
 
 ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],V[1|2|3],V[1|2|3|5,___]]]) &]; (*Diagram does not contain V-V-squark-squark coupling*)
@@ -225,12 +236,31 @@ insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. S[1
 insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. F[11|12,_],_. F[11|12,_],V[1|2|3]]] || FieldMemberQ[FieldPoints[##],FieldPoint[_][_. F[11|12,_],_. F[11|12,_],S[n_/;n<=6]]])& ]; (*ew vector couples to the weakinos*)
 insDel = DiagramSelect[insDel, NotSChannelQ[V[5,_]]]; (*no s-channel gluons in the diagrams that we want to delete*)
 ins = DiagramComplement[ins,insDel];
+
+(*same for ew scalars*)
+insDel = DiagramSelect[ins,(FieldMatchQ[LoopFields[##],{_. S[13|14,_],_. S[13|14,_],_. S[13|14,_]}] || FieldMatchQ[LoopFields[##],{_. F[3|4,_],_. F[3|4,_],_. F[3|4,_]}])&]; (*only squark or quark loops*)
+insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][S[n_/;n<=6],_. S[13|14,_],_. S[13|14,_]]] || FieldMemberQ[FieldPoints[##],FieldPoint[_][_. F[3|4,_],_. F[3|4,_],S[n_/;n<=6]]])& ]; (* ew vector couples to the loop*)
+insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. F[11|12,_],_. F[11|12,_],S[n_/;n<=6]]])& ]; (*ew vector couples to the weakinos*)
+insDel = DiagramSelect[insDel, NotSChannelQ[V[5,_]]]; (*no s-channel gluons in the diagrams that we want to delete*)
+ins = DiagramComplement[ins,insDel];
+
 ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],V[1|2|3],V[1|2|3|5,___]]]) &]; (*Diagram does not contain V-V-squark-squark coupling*)
+ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][S[1|2|3|4|5|6],S[1|2|3|4|5|6],_. S[13|14,_],_. S[13|14,_]]]) &]; (*Diagram does not contain higgs-higgs-squark-squark coupling*)
 
 (*delete diagrams with ew particle couplings in the loop and ew vector in propagator*)
 insDel = DiagramSelect[ins,(FieldMatchQ[LoopFields[##],{_. S[13|14,_],_. F[3|4,_],_. F[3|4,_]}] || FieldMatchQ[LoopFields[##],{_. F[3|4,_],_. S[13|14,_],_. S[13|14,_]}])&]; (*only squark or quark loops*)
 insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_,_,V[1|2|3|5,___]]])&]; (*diagram contains ew vector or has zero color trace*)
 ins = DiagramComplement[ins,insDel];
+
+(*delete higgs to external fermion coupling (no external tops)*)
+insDel = DiagramSelect[ins,(FieldMemberQ[FieldPoints[##],FieldPoint[_][S[n_/;n<=6],_,_]] || FieldMemberQ[FieldPoints[##],FieldPoint[_][_,_,S[n_/;n<=6]]])&];
+insDel = DiagramSelect[insDel,(Not[FieldMatchQ[LoopFields[##],{_. F[3|4,_],_. F[3|4,_],_. F[3|4,_]}]])&]; (*no pure quark loops*)
+insDel = DiagramSelect[insDel,(Not[FieldMatchQ[LoopFields[##],{_. S[13|14,_],_. S[13|14,_],_. S[13|14,_]}]])&]; (*no pure squark loops*)
+insDel = DiagramSelect[insDel,(Not[FieldMatchQ[LoopFields[##],{_. S[13|14,_],_. S[13|14,_]}]])&]; (*no pure squark loops*)
+insDel = DiagramSelect[insDel,(Not[FieldMatchQ[LoopFields[##],{_. F[15,_],_. S[13|14,_],_. S[13|14,_]}]])&]; (*no gluino squark squark loop*)
+
+ins = DiagramComplement[ins,insDel];
+
 DoPaint[ins, "vert"];
 
 vert = CalcFeynAmp[CreateFeynAmp[ins], counterVert];
@@ -259,12 +289,15 @@ Print["Boxes"]
 top = CreateTopologies[1, 2 -> 3, BoxesOnly];
 ins = InsertFields[top, process];
 
+(*exclude fermion higgs couplings*)
+ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_. F[3|4,_], _. F[3|4,_], S[n_/;n<=6]]])& ];
+
 ins = DiagramSelect[ins,(FieldMemberQ[LoopFields[##], _. F[15,_]] || FieldMemberQ[LoopFields[##], _. S[13|14,_]] || FieldMemberQ[LoopFields[##], V[5,_]] || FieldMemberQ[LoopFields[##], _. F[3|4,_]]) &]; (*Loop contains g, sguark, q, gluino*)
 ins = DiagramSelect[ins,(FreeQ[LoopFields[##], V[1|2|3]] && FreeQ[LoopFields[##], S[n_/;n<=6]]) &]; (*Loop does not contain Z, W, gam, Higgs/Goldstone*)
 
 (*delete diagrams wich contains V-V-squark-squark coupling, but do not delete diagram with gluino squark squark loop*)
 insDel = DiagramSelect[ins,(Not[FieldMatchQ[LoopFields[##],{_. F[15,_],_. S[13|14,_],_. S[13|14,_]}]])&];
-insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],V[1|2|3],V[1|2|3|5,___]]]) &]; 
+insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],V[1|2|3],V[1|2|3|5,___]]]) &];
 ins = DiagramComplement[ins,insDel];
 
 (*delete diagrams with s channel ew vector*)
@@ -272,6 +305,7 @@ insDel = DiagramSelect[ins, SChannelQ[V[1|2|3]]];
 insDel = DiagramSelect[insDel,(FieldMatchQ[LoopFields[##],{_. S[13|14,_],_. F[3|4,_],_. F[3|4,_],_. F[3|4,_]}] || FieldMatchQ[LoopFields[##],{_. F[3|4,_],_. S[13|14,_],_. S[13|14,_],_. S[13|14,_]}] 
                             || FieldMatchQ[LoopFields[##],{_. S[13|14,_],_. F[3|4,_],_. S[13|14,_],_. F[3|4,_]}] || FieldMatchQ[LoopFields[##],{_. F[3|4,_],_. S[13|14,_],_. F[3|4,_],_. S[13|14,_]}])&]; (*only squark or quark loops*)
 ins = DiagramComplement[ins,insDel];
+
 DoPaint[ins, "box"];
 
 box = CalcFeynAmp[CreateFeynAmp[ins]];
