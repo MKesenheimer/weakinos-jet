@@ -1,3 +1,3 @@
 #!/bin/bash
 
-rm -r ../../neuIneuJ+jet/FormCalc_Virtuals/include/qdqdbar_* ../../neuIneuJ+jet/FormCalc_Virtuals/squaredME/qdqdbar_* $(ls -1 -d */)
+rm -r ../../neuIneuJ+jet/FormCalc_Virtuals/include/* ../../neuIneuJ+jet/FormCalc_Virtuals/squaredME/* $(ls -1 -d */)

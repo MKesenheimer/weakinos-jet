@@ -63,7 +63,7 @@ DEST=${PWD}/../../${PROCDIR}
 NPART=5
 
 # process list file
-PROCF="./proc_nInJj_test"
+PROCF="./proc_nInJj"
 #PROCF="./proc_nInJjj_nr"
 #PROCF="./proc_nInJjj_os"
 #PROCF="./proc_nInJjj_reg"
