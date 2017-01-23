@@ -13,4 +13,4 @@ for filename in $(grep -lirn $FIND .); do
     sed -i -e "s/${FIND}/${REP}/g" $filename
 done
 
-rm *.F-e
+rm -f *.F-e

@@ -143,7 +143,7 @@ USRFLAGS += -DFORM_BORN
 ## Treatment of quark masses and squark widths
 # The current version uses vanishing masses for incoming quarks.
 # if you wish to use finite bottom mass, comment the following line.
-USRFLAGS += -DNEGLECTBMASS
+#USRFLAGS += -DNEGLECTBMASS
 
 ## Subtraction schemes
 # There are divergences originating from on-shell produced squark lines
@@ -199,7 +199,6 @@ VINCLUDE    = $(FORMVIRTS)/include
 RENINCLUDE  = $(FORMVIRTS)/RenConst
 MDINCLUDE   = $(MADREALS)/include
 PY8INCLUDE  = $(TOOLS)/pythia8215/include
-#LTINCLUDE   = $(TOOLS)/LoopTools-2.12/src/include
 SLHAINCLUDE = $(TOOLS)/SLHALib-2.2/src
 FRINCLUDE   = $(FORMREALS)/include
 FRGINCLUDE  = $(FORMREALS)/global
@@ -374,10 +373,6 @@ SOURCESPYTHIA = $(PYTHIA) $(PWHGANALYSIS) $(MADGRAPH)
 ### LibSLHA in Tools/SLHALib-2.2 ###
 LIBS += $(TOOLS)/libSLHA.a
 
-### LoopTools in Tools/Looptools-2.12 ###
-# is not used anymore
-#LIBS += $(TOOLS)/libooptools.a
-
 ### DHELAS in Tools/DHELAS ###
 LIBS += $(TOOLS)/libdhelas3.a
 
@@ -394,7 +389,6 @@ LIBS += -lz
 ## combine all flags, libraries and includes
 
 ALL_FCFLAGS   = $(REC_FCFLAGS) $(OPT) $(WARN) $(CPP) $(DEBUG) $(USRFLAGS) $(CHANNEL)
-# -I$(LTINCLUDE)
 ALL_FCFLAGS  += -I$(UINCLUDE) -I$(PINCLUDE) -I$(MDINCLUDE)
 ALL_FCFLAGS  += -I$(SINCLUDE) -I$(WORKINGDIR) -I$(VINCLUDE) -I$(SLHAINCLUDE)
 ALL_FCFLAGS  += -I$(FRINCLUDE) -I$(FRGINCLUDE) -I$(FVGINCLUDE) -I$(RENINCLUDE)
@@ -403,13 +397,11 @@ ALL_FCFLAGS  += -I$(CINCLUDE)
 ALL_FCFLAGS  += -J$(CMODULES)
 
 ALL_CFLAGS    = $(REC_CFLAGS) $(OPT)
-#ALL_CFLAGS   += -I$(LTINCLUDE)
 
 ALL_CXXFLAGS  = $(REC_CXXFLAGS) $(OPT)
 
 LINKER = $(CPPFLAGS) $(LIBS) $(LDFLAGS)
 
-# $(LTINCLUDE)/*.h
 HEADERS  = $(wildcard *.h $(UINCLUDE)/*.h  $(PINCLUDE)/*.h)
 HEADERS += $(wildcard *.h $(SLHAINCLUDE)/*.h)
 HEADERS += $(wildcard *.h $(MDINCLUDE)/*.h $(SINCLUDE)/*.h)
@@ -422,51 +414,51 @@ HEADERS += $(wildcard *.mod $(CMODULES)/*.mod)
 ########################################################################
 ## Rules, generate objects
 
-%.o: %.f $(HEADERS)
+./build/%.o: %.f $(HEADERS)
 	@echo "Compiling:" $<
-	@$(FC) $(ALL_FCFLAGS) -c -o build/$@ $<
+	@$(FC) $(ALL_FCFLAGS) -c -o $@ $<
 
-%.o: %.F $(HEADERS)
+./build/%.o: %.F $(HEADERS)
 	@echo "Compiling:" $<
-	@$(FC) $(ALL_FCFLAGS) -c -o build/$@ $<
+	@$(FC) $(ALL_FCFLAGS) -c -o $@ $<
 
-%.o: %.F90 $(HEADERS)
+./build/%.o: %.F90 $(HEADERS)
 	@echo "Compiling:" $<
-	@$(FC) $(ALL_FCFLAGS) -c -o build/$@ $<
+	@$(FC) $(ALL_FCFLAGS) -c -o $@ $<
 
-pythiafortran.o: pythiafortran.cc
+./build/pythiafortran.o: pythiafortran.cc
 	@echo "Compiling:" $<
-	@$(CXX) $(ALL_CXXFLAGS) $(PYCXXFLAGS) -c -o build/$@ $^
+	@$(CXX) $(ALL_CXXFLAGS) $(PYCXXFLAGS) -c -o $@ $^
 
-fastjetfortran.o: fastjetfortran.cc
+./build/fastjetfortran.o: fastjetfortran.cc
 	@echo "Compiling:" $<
-	@$(CXX) $(ALL_CXXFLAGS) $(FJCXXFLAGS) -c -o build/$@ $^
+	@$(CXX) $(ALL_CXXFLAGS) $(FJCXXFLAGS) -c -o $@ $^
 
-%.o: %.c $(HEADERS)
+./build/%.o: %.c $(HEADERS)
 	@echo "Compiling:" $<
-	@$(CC) $(ALL_CFLAGS) -c -o build/$@ $<
+	@$(CC) $(ALL_CFLAGS) -c -o $@ $<
 
 ########################################################################
 ## Rules, link
 ## type make -j4 [rule] to speed up the compilation
 
-formcalc_reals.a: $(REALS)
+formcalc_reals.a: $(addprefix ./build/, $(REALS))
 	ar cru $@ $(patsubst %,build/%,$(REALS))
 	mv $@ $(FORMREALS)
     
-formcalc_virtuals.a: $(VIRTUALS)
+formcalc_virtuals.a: $(addprefix ./build/, $(VIRTUALS))
 	ar cru $@ $(patsubst %,build/%,$(VIRTUALS))
 	mv $@ $(FORMVIRTS)
 
 libs: formcalc_reals.a formcalc_virtuals.a
 
-pwhg_main_ninj+jet: $(SOURCESMAIN)
+pwhg_main_ninj+jet: $(addprefix ./build/, $(SOURCESMAIN))
 	$(FC) $(ALL_FCFLAGS) $(patsubst %,build/%,$(SOURCESMAIN)) $(LINKER) $(FORMREALS)/formcalc_reals.a $(FORMVIRTS)/formcalc_virtuals.a -o $@
 
-lhef_analysis:$(SOURCESLHEF)
+lhef_analysis: $(addprefix ./build/, $(SOURCESLHEF))
 	$(FC) $(ALL_FCFLAGS) $(patsubst %,build/%,$(SOURCESLHEF)) $(LINKER) -o $@ 
 
-main-PYTHIA-lhef: $(SOURCESPYTHIA)
+main-PYTHIA-lhef: $(addprefix ./build/, $(SOURCESPYTHIA))
 	$(FC) $(ALL_FCFLAGS) $(patsubst %,build/%,$(SOURCESPYTHIA)) $(LINKER) -o $@
 
 merge-pwg-stat: 

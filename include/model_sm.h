@@ -12,11 +12,17 @@ c############### model_sm.h ############################################
         ! Quark masses
         double precision MU, MU2, MC, MC2, MT, MT2
         double precision MD, MD2, MS, MS2, MB, MB2
-        double precision Mf(4,3),Mf2(4,3)
+        double precision Mf(4,3), Mf2(4,3)
         ! CKM matrix (here: identity)
         double precision CKM(3,3)
         ! strong and e.m. coupling constants
         double precision EL, GS
+
+        ! complex parameters for loop integrals
+        double complex MZC, MZ2C, MWC, MW2C
+        double complex MUC, MU2C, MCC, MC2C, MTC, MT2C
+        double complex MDC, MD2C, MSC, MS2C, MBC, MB2C
+        double complex MfC(4,3), Mf2C(4,3) 
 
         common /smpara/ MZ, MZ2, MW, MW2, CW, CW2, SW, SW2
         common /smpara/ WZ, WW
@@ -25,5 +31,9 @@ c############### model_sm.h ############################################
         common /smpara/ MD, MD2, MS, MS2, MB, MB2
         common /smpara/ Mf,Mf2
         common /smpara/ CKM, EL, GS
+        common /smpara/ MZC, MZ2C, MWC, MW2C
+        common /smpara/ MUC, MU2C, MCC, MC2C, MTC, MT2C 
+        common /smpara/ MDC, MD2C, MSC, MS2C, MBC, MB2C
+        common /smpara/ MfC, Mf2C
 
 c############### end model_sm.h ########################################

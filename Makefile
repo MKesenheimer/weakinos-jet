@@ -73,7 +73,6 @@ WORKINGDIR = $(shell pwd)
 
 # directories
 TOOLS   = $(WORKINGDIR)/Tools
-LT     = $(TOOLS)/LoopTools-2.12
 SLHA   = $(TOOLS)/SLHALib-2.2
 DHELAS = $(TOOLS)/DHELAS
 PYTHIA = $(TOOLS)/pythia8215
@@ -82,19 +81,16 @@ COLLIERINTERFACE = $(TOOLS)/collier
 
 ALL_FCFLAGS  = $(REC_FCFLAGS) $(OPT) $(WARN)
 
-libs: libdhelas3.a liblooptools.a libSLHA.a print-info
+libs: libdhelas3.a libcollier.a libSLHA.a print-info
 
 all: libs pastegnudata
 
 libdhelas3.a:
 	cd $(DHELAS) && make FC="$(FC)" F77="$(FC)" XFFLAGS="$(ALL_FCFLAGS)"
-	
-liblooptools.a:
-	cd $(LT) && make FC="$(FC)" F77="$(FC)" FFLAGS="$(ALL_FCFLAGS)" CXXFLAGS="$(REC_CXXFLAGS)" CFLAGS="$(REC_CFLAGS)"
 
 libSLHA.a:
 	cd $(SLHA) && make FC="$(FC)" F77="$(FC)" FFLAGS="$(ALL_FCFLAGS)" CXXFLAGS="$(REC_CXXFLAGS)" CFLAGS="$(REC_CFLAGS)"
-	
+
 libpythia.a:
 	cd $(PYTHIA) && make CXX="$(CXX)" CXXFLAGS="$(REC_CXXFLAGS)" && make install
 
@@ -102,13 +98,12 @@ libcollier.a:
 	cd $(COLLIER)/build && make
 	mkdir -p $(COLLIERINTERFACE)/$(COLLIERMOD)
 	cp $(COLLIER)/modules/*.mod $(COLLIERINTERFACE)/$(COLLIERMOD)
-	
+
 pastegnudata:
 	cd ./plot-aux && $(FC) pastegnudata.f -o $@
 
 clean-libs:
 	rm -f $(TOOLS)/*.a
-	cd $(LT) && make clean
 	cd $(DHELAS) && make clean
 	cd $(SLHA) && make clean
 	cd $(PYTHIA) && make distclean

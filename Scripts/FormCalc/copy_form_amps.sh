@@ -139,10 +139,13 @@ function rename() {
     $SED -i -e "s/\t/        /g" $1
     $SED -i -e "s/vars.h/${2}vars.h/g" $1
     $SED -i -e "s/specs.h/${2}specs.h/g" $1
-    $SED -i -e "s/${TYPE}/${2}${TYPE}/g" $1
+    $SED -i -e "s/born/${2}born/g" $1
+    $SED -i -e "s/virt/${2}virt/g" $1
+    $SED -i -e "s/real/${2}real/g" $1
     $SED -i -e "s/vert/${2}vert/g" $1
     $SED -i -e "s/self/${2}self/g" $1
     $SED -i -e "s/box/${2}box/g" $1
+    $SED -i -e "s/pent/${2}pent/g" $1
     $SED -i -e "s/SquaredME/${2}SquaredME/g" $1
     $SED -i -e "s/abbr0h/${2}abbr0h/g" $1
     $SED -i -e "s/abbr1h/${2}abbr1h/g" $1

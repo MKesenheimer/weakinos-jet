@@ -793,6 +793,99 @@ c MadGraphs couplings.f as well.
         AlfaSMZ = dble(SMInputs_AlfasMZ)
         EL = dsqrt(4*m_pi*Alfa)
         GS = dsqrt(4*m_pi*AlfaS)
+
+        ! conjugate complex parameters
+        do i=1,2
+          do j=1,2
+            do k=1,4
+              do l=1,3
+                USfC(i,j,k,l) = dconjg(USf(i,j,k,l))
+              enddo
+            enddo
+          enddo
+       enddo
+
+       do i=1,2
+         do j=1,2
+           VChaC(i,j) = dconjg(VCha(i,j))
+           UChaC(i,j) = dconjg(UCha(i,j))
+         enddo
+       enddo
+
+       do i=1,4
+         do j=1,4
+           ZNeuC(i,j) = dconjg(ZNeu(i,j))
+         enddo
+       enddo
+
+       do i=2,4
+         do j=1,3
+           do k=1,3
+             AfC(i,j,k) = dconjg(Af(i,j,k))
+           enddo
+         enddo
+       enddo
+
+       Mino3C = dconjg(Mino3)
+       MUEC = dconjg(MUE)
+       
+       
+       ! complexified parameters for arguments of the loop integrals
+       ! are used only for internal propagators
+       MZC = dcmplx(MZ)
+       MZ2C = dcmplx(MZ2) - ii*MZ*WZ
+       MWC = dcmplx(MW)
+       MW2C = dcmplx(MW2) - ii*MW*WW
+       MUC = dcmplx(MU)
+       MU2C = dcmplx(MU2)
+       MCC = dcmplx(MC)
+       MC2C = dcmplx(MC2)
+       MTC = dcmplx(MT)
+       MT2C = dcmplx(MT2)
+       MDC = dcmplx(MD)
+       MD2C = dcmplx(MD2)
+       MSC = dcmplx(MS)
+       MS2C = dcmplx(MS2)
+       MBC = dcmplx(MB)
+       MB2C = dcmplx(MB2)
+
+       do i=1,4
+         do j=1,3
+           MfC(i,j) = dcmplx(Mf(i,j))
+           Mf2C(i,j) = dcmplx(Mf2(i,j))
+         enddo
+       enddo
+
+       do i=1,4
+         MNeuC(i) = dcmplx(MNeu(i))
+         MNeu2C(i) = dcmplx(MNeu2(i))
+       enddo
+
+       do i=1,2
+         MChaC(i) = dcmplx(MCha(i))
+         MCha2C(i) = dcmplx(MCha2(i))
+       enddo
+
+       do i=1,2
+         do j=1,4
+           do k=1,3
+             MSfC(i,j,k) = dcmplx(MSf(i,j,k))
+             MSf2C(i,j,k) = dcmplx(MSf2(i,j,k)) - ii*MSf(i,j,k)*WSf(i,j,k)
+           enddo
+         enddo
+       enddo
+
+       MGlC = dcmplx(MGlC)
+       MGl2C = dcmplx(MGl2) - ii*MGl*WGl
+
+       Mh0C = dcmplx(Mh0)
+       MHHC = dcmplx(MHH)
+       MA0C = dcmplx(MA0)
+       MHpC = dcmplx(MHp)
+       Mh02C = dcmplx(Mh02)
+       MHH2C = dcmplx(MHH2)
+       MA02C = dcmplx(MA02)
+       MHp2C = dcmplx(MHp2)
       end
 c############### end subroutine set_formcalc_params ####################
 

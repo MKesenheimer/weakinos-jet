@@ -130,6 +130,10 @@ c############### subroutine getBornAmps ################################
           bornjk(2,5) = fqg*born
           bornjk(5,2) = bornjk(2,5)
         endif
+
+#ifdef DEBUGQ
+        print*,"born =",born
+#endif 
       end
 c############### end subroutine getBornAmps ############################
       
@@ -149,7 +153,7 @@ c############### subroutine getVirtAmps ################################
         else
           ! = 110d, Bit0: set mass, Bit1: reset, Bit2: loop
           flags = 6
-          call calcRenConst
+          call RenConst
         endif
         
         !call ltini
@@ -173,7 +177,7 @@ c#define CHECKUV
         
 #ifdef DEBUGQ
         !print*,st_muren2
-        print*,"amps",amps
+        print*,"born, virt = ",amps
 #endif
       end
 c############### end subroutine getVirtAmps ############################

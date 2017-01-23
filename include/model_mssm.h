@@ -23,19 +23,17 @@ c#include "types.h"
         double precision Mh0, MHH, MA0, MHp
         double precision Mh02, MHH2, MA02, MHp2
 
-#ifndef USfC
-#define USfC(i,j,t,g) Conjugate(USf(i,j,t,g))
-#define VChaC(i,j) Conjugate(VCha(i,j))
-#define UChaC(i,j) Conjugate(UCha(i,j))
-#define ZNeuC(i,j) Conjugate(ZNeu(i,j))
-#define Mino3C Conjugate(Mino3)
-#define MUEC Conjugate(MUE)
-#define AfC(t,g1,g2) Conjugate(Af(t,g1,g2))
-#endif
+        double complex USfC(2,2,4,3), VChaC(2,2), UChaC(2,2)
+        double complex ZNeuC(4,4)
+        double complex Mino3C, MUEC, AfC(2:4,3,3)
+        double complex MNeuC(4), MNeu2C(4), MChaC(2), MCha2C(2)
+        double complex MSfC(2,4,3), MSf2C(2,4,3), MGlC, MGl2C
+        double complex Mh0C, MHHC, MA0C, MHpC
+        double complex Mh02C, MHH2C, MA02C, MHp2C 
 
         common /mssmpara/ UCha, VCha, ZNeu           ! Chargino & Neutralino mixing matrices
         common /mssmpara/ MNeu, MNeu2                ! Neutralino masses
-        common /mssmpara/ MCha, MCha2                ! Chargino masses   
+        common /mssmpara/ MCha, MCha2                ! Chargino masses 
         common /mssmpara/ USf                        ! Sfermion mixing matrix
         common /mssmpara/ SB, SB2, CB, CB2, TB, TB2  ! sin(beta), cos(beta), tan(beta)
         common /mssmpara/ C2B, S2B                   ! shorts
@@ -49,5 +47,11 @@ c#include "types.h"
         common /mssmpara/ CAB, SAB, SBA, SBA2, CBA, CBA2
         common /mssmpara/ Mh0, MHH, MA0, MHp
         common /mssmpara/ Mh02, MHH2, MA02, MHp2
+        common /mssmpara/ USfC, VChaC, UChaC, ZNeuC  ! complexified parameters for loop integrals
+        common /mssmpara/ Mino3C, MUEC, AfC
+        common /mssmpara/ MNeuC, MNeu2C, MChaC, MCha2C
+        common /mssmpara/ MSfC, MSf2C, MGlC, MGl2C
+        common /mssmpara/ Mh0C, MHHC, MA0C, MHpC
+        common /mssmpara/ Mh02C, MHH2C, MA02C, MHp2C
 
 c############### end model_mssm.h ######################################

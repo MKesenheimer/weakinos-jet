@@ -299,7 +299,7 @@ c     set process id using slepton types
         flst_real(6,1) = -2
 #endif
 
-#ifdef DEBUG
+#ifdef DEBUGQ
         ! Born process
         flst_nborn = 1
         flst_born(1,1) = 1
