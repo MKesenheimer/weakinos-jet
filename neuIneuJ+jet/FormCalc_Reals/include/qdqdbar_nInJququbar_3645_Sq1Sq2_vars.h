@@ -21,21 +21,21 @@
         ComplexType Sub15(3,4,2), Sub17(3,4,2)
         ComplexType Sub185(3,2), Sub187(3,2)
         ComplexType Sub189(3,2), Sub190(3,2)
-        common /varXs/ Sub10, Sub11, Sub13, Sub14, Sub15, Sub17
-        common /varXs/ Sub185, Sub187, Sub189, Sub190
+        common /qdqdbar_nInJququbar_3645_Sq1Sq2_varXs/ Sub10, Sub11, Sub13, Sub14, Sub15, Sub17
+        common /qdqdbar_nInJququbar_3645_Sq1Sq2_varXs/ Sub185, Sub187, Sub189, Sub190
 
         ComplexType Opt1(3,3,3,3)
         ComplexType Sub192(3,3,3,3,4,4)
         RealType S, T, T14, T15, U, T24, T25, S34, S35, S45
-        common /varXa/ Opt1, Sub192, S, T, T14, T15, U, T24, T25, S34
-        common /varXa/ S35, S45
+        common /qdqdbar_nInJququbar_3645_Sq1Sq2_varXa/ Opt1, Sub192, S, T, T14, T15, U, T24, T25, S34
+        common /qdqdbar_nInJququbar_3645_Sq1Sq2_varXa/ S35, S45
 
         HelType F3, F4, F8, F10, F11, F12, F13, F14, F15, F16
         HelType Sub12(HelDim(3),3)
         HelType Sub16(HelDim(3),4,2)
         HelType Sub18(HelDim(3),4,2)
-        common /varXh/ F3, F4, F8, F10, F11, F12, F13, F14, F15, F16
-        common /varXh/ Sub12, Sub16, Sub18
+        common /qdqdbar_nInJququbar_3645_Sq1Sq2_varXh/ F3, F4, F8, F10, F11, F12, F13, F14, F15, F16
+        common /qdqdbar_nInJququbar_3645_Sq1Sq2_varXh/ Sub12, Sub16, Sub18
 
         HelType Ctree(HelDim(2))
         ComplexType MatSUN(2,2)

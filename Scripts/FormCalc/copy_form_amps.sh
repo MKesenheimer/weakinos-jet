@@ -70,7 +70,7 @@ PROCF="./proc_nInJj"
 
 # the name of Mathematica Scripts
 #MSCRIPT="./nInJj.m"
-MSCRIPT="./nInJj_virt.m"
+MSCRIPT="./nInJj_virt_test.m"
 #MSCRIPT="./nInJjj.m"
 #MSCRIPT="./nInJjj_os.m"
 #MSCRIPT=""
@@ -84,6 +84,10 @@ TYPE="virt"
 # the number of subchannels of realOS amplitudes (f.e. ll, lr, rl, rr)
 NSQUARKSUBCHANNELS=4
 NGLUINOSUBCHANNELS=2
+
+# if needed: additional complex kinematics for virtual processes
+# modify "# add complex mandelstams to *_SquaredME.F" too.
+CKINVARS="SC, TC, T14C, UC, T24C, S34C"
 
 ########################################################################
 #       -*- usually no editing is required below this line -*-         #
@@ -171,11 +175,13 @@ function rename() {
     $SED -i -e "s/util.h/${TYPE}_util.h/g" $1
 }
 
-# rename variables in include files
+# rename variables in vars.h include files
 # $1: filename
 function rename2() {
         $SED -i -e "s/decl.h/${TYPE}_decl.h/g" $1
         $SED -i -e "s/\t/        /g" $1
+        $SED -i -e "s/varX/${PRE2}_varX/g" $1
+        $SED -i -e "s/indices/${PRE2}_indices/g" $1
         $SED -i -e "s/formfactors/${PRE2}_formfactors/g" $1
         # replace the indices \<Neu3\>, Neu4, Cha3, Cha4, ... with constants
         # max generation
@@ -319,6 +325,25 @@ for i in `seq 0 1 $((NPROC-1))`; do
             fi
         done
         rename2 ${PRE2}_vars.h
+        # add complex kinematical variables for virtual processes
+        if [[ $TYPE == "virt" ]]; then
+            #$SED -i -e "s/#endif//g" ${PRE2}_vars.h
+            echo "#ifndef vars2_h" >> ${PRE2}_vars.h
+            echo "#define vars2_h" >> ${PRE2}_vars.h
+            echo "#else" >> ${PRE2}_vars.h
+            echo "        ComplexType ${CKINVARS}" >> ${PRE2}_vars.h
+            echo "        common /${PRE2}_ckin/ ${CKINVARS}" >> ${PRE2}_vars.h
+            echo "#endif" >> ${PRE2}_vars.h
+        fi
+        # add complex mandelstams to *_SquaredME.F
+        if [[ $TYPE == "virt" ]]; then
+            $SED -i -e "s/* END INVARIANTS/        SC = dcmplx(S)\n* END INVARIANTS/g" ${PRE2}_SquaredME.F
+            $SED -i -e "s/* END INVARIANTS/        TC = dcmplx(T)\n* END INVARIANTS/g" ${PRE2}_SquaredME.F
+            $SED -i -e "s/* END INVARIANTS/        T14C = dcmplx(T14)\n* END INVARIANTS/g" ${PRE2}_SquaredME.F
+            $SED -i -e "s/* END INVARIANTS/        UC = dcmplx(U)\n* END INVARIANTS/g" ${PRE2}_SquaredME.F
+            $SED -i -e "s/* END INVARIANTS/        T24C = dcmplx(T24)\n* END INVARIANTS/g" ${PRE2}_SquaredME.F
+            $SED -i -e "s/* END INVARIANTS/        S34C = dcmplx(S34)\n* END INVARIANTS/g" ${PRE2}_SquaredME.F
+        fi
         rename ${PRE2}_specs.h # don't change Gen1 to 3 but to Gen(1)
         # -> modify this if needed.
         # if the channel identifiers contain the open squark indice "Sq1"

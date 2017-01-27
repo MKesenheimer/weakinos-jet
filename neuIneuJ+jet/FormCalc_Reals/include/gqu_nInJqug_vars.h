@@ -27,10 +27,10 @@
         ComplexType Sub372(3,3), Sub442(3,3)
         ComplexType Sub450(3,3), Sub592(3,3,4,4)
         ComplexType Sub806(3,2), Sub809(3,2)
-        common /varXs/ Sub1, Sub2, Sub3, Sub4, Sub6, Sub7, Sub9
-        common /varXs/ Sub10, Sub11, Sub12, Sub13, Sub15, Sub30
-        common /varXs/ Sub32, Sub314, Sub326, Sub364, Sub372, Sub442
-        common /varXs/ Sub450, Sub592, Sub806, Sub809
+        common /gqu_nInJqug_varXs/ Sub1, Sub2, Sub3, Sub4, Sub6, Sub7, Sub9
+        common /gqu_nInJqug_varXs/ Sub10, Sub11, Sub12, Sub13, Sub15, Sub30
+        common /gqu_nInJqug_varXs/ Sub32, Sub314, Sub326, Sub364, Sub372, Sub442
+        common /gqu_nInJqug_varXs/ Sub450, Sub592, Sub806, Sub809
 
         ComplexType Opt4, Sub71(3,3,4,4)
         ComplexType Sub87(3,3,4,4)
@@ -70,16 +70,16 @@
         ComplexType Sub549(3,3,4,4)
         ComplexType Sub594(3,3,4,4)
         RealType S, T, T14, T15, U, T24, T25, S34, S35, S45
-        common /varXa/ Opt4, Sub71, Sub87, Sub159, Sub211, Sub212
-        common /varXa/ Sub213, Sub219, Sub258, Sub315, Sub318
-        common /varXa/ Sub365, Sub410, Sub411, Sub566, Sub593
-        common /varXa/ Sub640, Sub671, Sub672, Sub681, Sub685
-        common /varXa/ Sub702, Sub724, Sub756, Sub757, Sub758
-        common /varXa/ Sub760, Sub777, Sub792, Sub794, Sub800
-        common /varXa/ Sub807, Sub808, Sub810, Sub812, Sub814
-        common /varXa/ Sub820, Sub827, Sub830, Sub831, Opt5, Sub72
-        common /varXa/ Sub73, Sub74, Sub547, Sub549, Sub594, S, T
-        common /varXa/ T14, T15, U, T24, T25, S34, S35, S45
+        common /gqu_nInJqug_varXa/ Opt4, Sub71, Sub87, Sub159, Sub211, Sub212
+        common /gqu_nInJqug_varXa/ Sub213, Sub219, Sub258, Sub315, Sub318
+        common /gqu_nInJqug_varXa/ Sub365, Sub410, Sub411, Sub566, Sub593
+        common /gqu_nInJqug_varXa/ Sub640, Sub671, Sub672, Sub681, Sub685
+        common /gqu_nInJqug_varXa/ Sub702, Sub724, Sub756, Sub757, Sub758
+        common /gqu_nInJqug_varXa/ Sub760, Sub777, Sub792, Sub794, Sub800
+        common /gqu_nInJqug_varXa/ Sub807, Sub808, Sub810, Sub812, Sub814
+        common /gqu_nInJqug_varXa/ Sub820, Sub827, Sub830, Sub831, Opt5, Sub72
+        common /gqu_nInJqug_varXa/ Sub73, Sub74, Sub547, Sub549, Sub594, S, T
+        common /gqu_nInJqug_varXa/ T14, T15, U, T24, T25, S34, S35, S45
 
         HelType F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12
         HelType F13, F14, F15, F16, F17, F18, F19, F20, F21, F22
@@ -601,200 +601,200 @@
         HelType Sub843(HelDim(3),3,4,4)
         HelType Sub845(HelDim(3),3,4,4)
         HelType Sub846(HelDim(3),3,4,4)
-        common /varXh/ F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11
-        common /varXh/ F12, F13, F14, F15, F16, F17, F18, F19, F20
-        common /varXh/ F21, F22, F23, F24, F25, F26, F27, F28, F29
-        common /varXh/ F30, F31, F32, F33, F34, F35, F36, F37, F38
-        common /varXh/ F39, F40, F41, F42, F43, F44, F45, F46, F47
-        common /varXh/ F48, F49, F50, F51, F52, F53, F54, F55, F56
-        common /varXh/ F57, F58, F59, F60, F61, F62, F63, F64, F65
-        common /varXh/ F66, F67, F68, F69, F70, F71, F72, F73, F74
-        common /varXh/ F75, F76, F77, F78, F79, F80, F81, F82, F83
-        common /varXh/ F84, F85, F86, F87, F88, F89, F90, F91, F92
-        common /varXh/ F93, F94, F95, F96, F97, F98, F99, F100, F101
-        common /varXh/ F102, F103, F104, F105, F106, F107, F108
-        common /varXh/ F109, F110, F111, F112, F113, F114, F115
-        common /varXh/ F116, F117, F118, F119, F120, F121, F122
-        common /varXh/ F123, F124, F125, F126, F127, F128, F129
-        common /varXh/ F130, F131, F132, F133, F134, F135, F136
-        common /varXh/ F137, F138, F139, F140, F141, F142, F143
-        common /varXh/ F144, F145, F146, F147, F148, F149, F150
-        common /varXh/ F151, F152, F153, F154, F155, F156, F157
-        common /varXh/ F158, F159, F160, F161, F162, F163, F164
-        common /varXh/ F165, F166, F167, F168, F169, F170, F171
-        common /varXh/ F172, F173, F174, F175, F176, F177, F178
-        common /varXh/ F179, F180, F181, F182, F183, F184, F185
-        common /varXh/ F186, F187, F188, F189, F190, F191, F192
-        common /varXh/ F193, F194, F195, F196, F197, F198, F199
-        common /varXh/ F200, F201, F202, F203, F204, F205, F206
-        common /varXh/ F207, F208, F209, F210, F211, F212, F213
-        common /varXh/ F214, F215, F216, F217, F218, F219, F220
-        common /varXh/ F221, F222, F223, F224, F225, F226, F227
-        common /varXh/ F228, F229, F230, F231, F232, F233, F234
-        common /varXh/ F235, F236, F237, F238, F239, F240, F241
-        common /varXh/ F242, Opt1, Opt6, Pair1, Pair2, Pair3, Pair4
-        common /varXh/ Pair5, Pair6, Pair7, Pair8, Pair9, Pair10
-        common /varXh/ Pair11, Sub5, Sub8, Sub14, Sub16, Sub17
-        common /varXh/ Sub19, Sub20, Sub21, Sub22, Sub23, Sub24
-        common /varXh/ Sub25, Sub26, Sub27, Sub28, Sub38, Sub42
-        common /varXh/ Sub46, Sub47, Sub48, Sub51, Sub54, Sub55
-        common /varXh/ Sub57, Sub58, Sub61, Sub62, Sub63, Sub64
-        common /varXh/ Sub65, Sub67, Sub68, Sub69, Sub70, Sub76
-        common /varXh/ Sub77, Sub78, Sub79, Sub82, Sub83, Sub84
-        common /varXh/ Sub85, Sub89, Sub92, Sub93, Sub94, Sub96
-        common /varXh/ Sub97, Sub98, Sub99, Sub100, Sub101, Sub102
-        common /varXh/ Sub103, Sub104, Sub105, Sub106, Sub107
-        common /varXh/ Sub109, Sub110, Sub111, Sub112, Sub113
-        common /varXh/ Sub114, Sub116, Sub117, Sub118, Sub119
-        common /varXh/ Sub127, Sub128, Sub129, Sub130, Sub131
-        common /varXh/ Sub132, Sub133, Sub134, Sub135, Sub136
-        common /varXh/ Sub137, Sub138, Sub139, Sub140, Sub141
-        common /varXh/ Sub144, Sub145, Sub147, Sub148, Sub149
-        common /varXh/ Sub153, Sub155, Sub156, Sub157, Sub158
-        common /varXh/ Sub161, Sub162, Sub163, Sub164, Sub165
-        common /varXh/ Sub170, Sub171, Sub172, Sub173, Sub174
-        common /varXh/ Sub176, Sub177, Sub178, Sub179, Sub180
-        common /varXh/ Sub181, Sub182, Sub183, Sub187, Sub188
-        common /varXh/ Sub191, Sub192, Sub193, Sub194, Sub195
-        common /varXh/ Sub196, Sub197, Sub198, Sub199, Sub200
-        common /varXh/ Sub201, Sub202, Sub203, Sub204, Sub205
-        common /varXh/ Sub206, Sub208, Sub209, Sub210, Sub215
-        common /varXh/ Sub217, Sub218, Sub222, Sub224, Sub225
-        common /varXh/ Sub229, Sub231, Sub232, Sub234, Sub235
-        common /varXh/ Sub236, Sub237, Sub238, Sub239, Sub240
-        common /varXh/ Sub241, Sub252, Sub255, Sub260, Sub262
-        common /varXh/ Sub269, Sub272, Sub274, Sub277, Sub280
-        common /varXh/ Sub294, Sub295, Sub297, Sub299, Sub300
-        common /varXh/ Sub301, Sub302, Sub303, Sub304, Sub307
-        common /varXh/ Sub308, Sub309, Sub310, Sub311, Sub312
-        common /varXh/ Sub313, Sub323, Sub324, Sub325, Sub333
-        common /varXh/ Sub335, Sub337, Sub338, Sub339, Sub340
-        common /varXh/ Sub341, Sub342, Sub343, Sub344, Sub345
-        common /varXh/ Sub346, Sub347, Sub348, Sub349, Sub350
-        common /varXh/ Sub351, Sub352, Sub353, Sub354, Sub355
-        common /varXh/ Sub356, Sub358, Sub359, Sub360, Sub361
-        common /varXh/ Sub362, Sub363, Sub366, Sub367, Sub368
-        common /varXh/ Sub370, Sub371, Sub373, Sub374, Sub375
-        common /varXh/ Sub376, Sub379, Sub380, Sub381, Sub382
-        common /varXh/ Sub383, Sub384, Sub386, Sub387, Sub388
-        common /varXh/ Sub389, Sub390, Sub391, Sub392, Sub393
-        common /varXh/ Sub394, Sub397, Sub399, Sub400, Sub401
-        common /varXh/ Sub402, Sub403, Sub404, Sub405, Sub407
-        common /varXh/ Sub408, Sub409, Sub415, Sub416, Sub417
-        common /varXh/ Sub419, Sub424, Sub426, Sub427, Sub428
-        common /varXh/ Sub429, Sub430, Sub431, Sub432, Sub433
-        common /varXh/ Sub434, Sub435, Sub436, Sub437, Sub438
-        common /varXh/ Sub439, Sub440, Sub441, Sub443, Sub444
-        common /varXh/ Sub447, Sub448, Sub449, Sub451, Sub453
-        common /varXh/ Sub457, Sub458, Sub459, Sub460, Sub461
-        common /varXh/ Sub464, Sub465, Sub466, Sub467, Sub468
-        common /varXh/ Sub472, Sub474, Sub475, Sub476, Sub477
-        common /varXh/ Sub478, Sub479, Sub480, Sub481, Sub482
-        common /varXh/ Sub483, Sub484, Sub485, Sub486, Sub489
-        common /varXh/ Sub490, Sub491, Sub498, Sub499, Sub500
-        common /varXh/ Sub501, Sub502, Sub503, Sub506, Sub507
-        common /varXh/ Sub508, Sub509, Sub510, Sub511, Sub513
-        common /varXh/ Sub514, Sub516, Sub519, Sub520, Sub521
-        common /varXh/ Sub522, Sub523, Sub524, Sub525, Sub526
-        common /varXh/ Sub528, Sub531, Sub532, Sub533, Sub534
-        common /varXh/ Sub535, Sub539, Sub540, Sub543, Sub545
-        common /varXh/ Sub552, Sub560, Sub561, Sub562, Sub563
-        common /varXh/ Sub564, Sub565, Sub567, Sub569, Sub570
-        common /varXh/ Sub574, Sub575, Sub577, Sub579, Sub584
-        common /varXh/ Sub586, Sub587, Sub588, Sub589, Sub590
-        common /varXh/ Sub591, Sub595, Sub599, Sub600, Sub601
-        common /varXh/ Sub602, Sub604, Sub605, Sub606, Sub607
-        common /varXh/ Sub608, Sub609, Sub610, Sub614, Sub618
-        common /varXh/ Sub619, Sub621, Sub629, Sub630, Sub631
-        common /varXh/ Sub632, Sub633, Sub634, Sub635, Sub636
-        common /varXh/ Sub637, Sub638, Sub639, Sub641, Sub643
-        common /varXh/ Sub644, Sub648, Sub650, Sub651, Sub652
-        common /varXh/ Sub653, Sub666, Sub668, Sub669, Sub670
-        common /varXh/ Sub675, Sub679, Sub684, Sub689, Sub696
-        common /varXh/ Sub697, Sub698, Sub699, Sub700, Sub701
-        common /varXh/ Sub703, Sub705, Sub706, Sub710, Sub711
-        common /varXh/ Sub713, Sub717, Sub718, Sub719, Sub720
-        common /varXh/ Sub721, Sub722, Sub726, Sub728, Sub729
-        common /varXh/ Sub730, Sub731, Sub732, Sub734, Sub736
-        common /varXh/ Sub737, Sub751, Sub752, Sub753, Sub754
-        common /varXh/ Sub768, Sub770, Sub771, Sub772, Sub773
-        common /varXh/ Sub774, Sub775, Sub776, Sub778, Sub780
-        common /varXh/ Sub781, Sub782, Sub786, Sub790, Sub791
-        common /varXh/ Sub793, Sub795, Sub796, Sub797, Sub798, Abb1
-        common /varXh/ Abb2, Abb3, Abb4, Abb5, Abb6, Abb7, Abb8
-        common /varXh/ Abb9, Abb10, Abb11, Abb12, Abb13, Abb14
-        common /varXh/ Abb15, Abb16, Abb17, Abb18, Abb19, Abb20
-        common /varXh/ Abb21, Abb22, Abb23, Abb24, Abb25, Abb26
-        common /varXh/ Abb27, Abb28, Abb29, Abb30, Abb31, Abb32
-        common /varXh/ Abb33, Abb34, Opt2, Sub29, Sub33, Sub35
-        common /varXh/ Sub36, Sub37, Sub39, Sub40, Sub41, Sub43
-        common /varXh/ Sub44, Sub45, Sub49, Sub50, Sub56, Sub59
-        common /varXh/ Sub60, Sub66, Sub75, Sub80, Sub81, Sub86
-        common /varXh/ Sub88, Sub90, Sub91, Sub95, Sub108, Sub115
-        common /varXh/ Sub120, Sub121, Sub122, Sub123, Sub124
-        common /varXh/ Sub142, Sub143, Sub146, Sub150, Sub151
-        common /varXh/ Sub152, Sub154, Sub160, Sub166, Sub167
-        common /varXh/ Sub168, Sub169, Sub175, Sub184, Sub185
-        common /varXh/ Sub186, Sub189, Sub190, Sub207, Sub214
-        common /varXh/ Sub216, Sub223, Sub233, Sub242, Sub243
-        common /varXh/ Sub244, Sub245, Sub246, Sub247, Sub248
-        common /varXh/ Sub249, Sub250, Sub251, Sub253, Sub254
-        common /varXh/ Sub256, Sub257, Sub259, Sub261, Sub263
-        common /varXh/ Sub264, Sub265, Sub266, Sub267, Sub268
-        common /varXh/ Sub270, Sub271, Sub273, Sub275, Sub276
-        common /varXh/ Sub278, Sub279, Sub281, Sub282, Sub283
-        common /varXh/ Sub284, Sub285, Sub286, Sub287, Sub288
-        common /varXh/ Sub289, Sub290, Sub291, Sub292, Sub293
-        common /varXh/ Sub296, Sub298, Sub305, Sub306, Sub316
-        common /varXh/ Sub317, Sub319, Sub320, Sub321, Sub322
-        common /varXh/ Sub327, Sub328, Sub329, Sub330, Sub331
-        common /varXh/ Sub332, Sub334, Sub336, Sub357, Sub369
-        common /varXh/ Sub377, Sub378, Sub385, Sub395, Sub396
-        common /varXh/ Sub398, Sub406, Sub412, Sub413, Sub414
-        common /varXh/ Sub418, Sub420, Sub421, Sub422, Sub423
-        common /varXh/ Sub425, Sub445, Sub446, Sub452, Sub454
-        common /varXh/ Sub455, Sub456, Sub462, Sub463, Sub469
-        common /varXh/ Sub470, Sub471, Sub473, Sub487, Sub488
-        common /varXh/ Sub492, Sub493, Sub494, Sub495, Sub496
-        common /varXh/ Sub497, Sub504, Sub505, Sub515, Sub517
-        common /varXh/ Sub518, Sub527, Sub529, Sub530, Sub536
-        common /varXh/ Sub537, Sub538, Sub541, Sub542, Sub544
-        common /varXh/ Sub546, Sub548, Sub550, Sub551, Sub553
-        common /varXh/ Sub554, Sub555, Sub556, Sub557, Sub558
-        common /varXh/ Sub559, Sub568, Sub571, Sub572, Sub573
-        common /varXh/ Sub576, Sub578, Sub580, Sub581, Sub582
-        common /varXh/ Sub583, Sub585, Sub596, Sub597, Sub598
-        common /varXh/ Sub603, Sub611, Sub612, Sub613, Sub615
-        common /varXh/ Sub616, Sub617, Sub620, Sub622, Sub623
-        common /varXh/ Sub624, Sub625, Sub626, Sub627, Sub628
-        common /varXh/ Sub642, Sub645, Sub646, Sub647, Sub657
-        common /varXh/ Sub658, Sub659, Sub660, Sub661, Sub662
-        common /varXh/ Sub663, Sub664, Sub665, Sub673, Sub674
-        common /varXh/ Sub676, Sub677, Sub678, Sub680, Sub682
-        common /varXh/ Sub683, Sub686, Sub687, Sub688, Sub690
-        common /varXh/ Sub691, Sub692, Sub693, Sub694, Sub695
-        common /varXh/ Sub704, Sub707, Sub708, Sub709, Sub712
-        common /varXh/ Sub714, Sub715, Sub716, Sub723, Sub725
-        common /varXh/ Sub727, Sub733, Sub735, Sub741, Sub742
-        common /varXh/ Sub743, Sub744, Sub745, Sub746, Sub747
-        common /varXh/ Sub748, Sub749, Sub755, Sub759, Sub761
-        common /varXh/ Sub762, Sub763, Sub764, Sub765, Sub766
-        common /varXh/ Sub767, Sub769, Sub779, Sub783, Sub784
-        common /varXh/ Sub785, Sub787, Sub788, Sub789, Sub799
-        common /varXh/ Sub801, Sub802, Sub803, Sub804, Sub805
-        common /varXh/ Sub815, Sub816, Sub817, Sub818, Sub819
-        common /varXh/ Sub821, Sub822, Sub823, Sub824, Sub825
-        common /varXh/ Sub828, Sub829, Sub833, Sub834, Sub836
-        common /varXh/ Sub837, Sub838, Sub839, Sub840, Sub841
-        common /varXh/ Sub844, Sub847, Sub848, Sub849, Opt3, Sub52
-        common /varXh/ Sub53, Sub125, Sub126, Sub220, Sub221, Sub226
-        common /varXh/ Sub227, Sub228, Sub230, Sub654, Sub655
-        common /varXh/ Sub656, Sub667, Sub738, Sub739, Sub740
-        common /varXh/ Sub750, Sub811, Sub813, Sub826, Sub832
-        common /varXh/ Sub835, Sub842, Sub843, Sub845, Sub846
+        common /gqu_nInJqug_varXh/ F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11
+        common /gqu_nInJqug_varXh/ F12, F13, F14, F15, F16, F17, F18, F19, F20
+        common /gqu_nInJqug_varXh/ F21, F22, F23, F24, F25, F26, F27, F28, F29
+        common /gqu_nInJqug_varXh/ F30, F31, F32, F33, F34, F35, F36, F37, F38
+        common /gqu_nInJqug_varXh/ F39, F40, F41, F42, F43, F44, F45, F46, F47
+        common /gqu_nInJqug_varXh/ F48, F49, F50, F51, F52, F53, F54, F55, F56
+        common /gqu_nInJqug_varXh/ F57, F58, F59, F60, F61, F62, F63, F64, F65
+        common /gqu_nInJqug_varXh/ F66, F67, F68, F69, F70, F71, F72, F73, F74
+        common /gqu_nInJqug_varXh/ F75, F76, F77, F78, F79, F80, F81, F82, F83
+        common /gqu_nInJqug_varXh/ F84, F85, F86, F87, F88, F89, F90, F91, F92
+        common /gqu_nInJqug_varXh/ F93, F94, F95, F96, F97, F98, F99, F100, F101
+        common /gqu_nInJqug_varXh/ F102, F103, F104, F105, F106, F107, F108
+        common /gqu_nInJqug_varXh/ F109, F110, F111, F112, F113, F114, F115
+        common /gqu_nInJqug_varXh/ F116, F117, F118, F119, F120, F121, F122
+        common /gqu_nInJqug_varXh/ F123, F124, F125, F126, F127, F128, F129
+        common /gqu_nInJqug_varXh/ F130, F131, F132, F133, F134, F135, F136
+        common /gqu_nInJqug_varXh/ F137, F138, F139, F140, F141, F142, F143
+        common /gqu_nInJqug_varXh/ F144, F145, F146, F147, F148, F149, F150
+        common /gqu_nInJqug_varXh/ F151, F152, F153, F154, F155, F156, F157
+        common /gqu_nInJqug_varXh/ F158, F159, F160, F161, F162, F163, F164
+        common /gqu_nInJqug_varXh/ F165, F166, F167, F168, F169, F170, F171
+        common /gqu_nInJqug_varXh/ F172, F173, F174, F175, F176, F177, F178
+        common /gqu_nInJqug_varXh/ F179, F180, F181, F182, F183, F184, F185
+        common /gqu_nInJqug_varXh/ F186, F187, F188, F189, F190, F191, F192
+        common /gqu_nInJqug_varXh/ F193, F194, F195, F196, F197, F198, F199
+        common /gqu_nInJqug_varXh/ F200, F201, F202, F203, F204, F205, F206
+        common /gqu_nInJqug_varXh/ F207, F208, F209, F210, F211, F212, F213
+        common /gqu_nInJqug_varXh/ F214, F215, F216, F217, F218, F219, F220
+        common /gqu_nInJqug_varXh/ F221, F222, F223, F224, F225, F226, F227
+        common /gqu_nInJqug_varXh/ F228, F229, F230, F231, F232, F233, F234
+        common /gqu_nInJqug_varXh/ F235, F236, F237, F238, F239, F240, F241
+        common /gqu_nInJqug_varXh/ F242, Opt1, Opt6, Pair1, Pair2, Pair3, Pair4
+        common /gqu_nInJqug_varXh/ Pair5, Pair6, Pair7, Pair8, Pair9, Pair10
+        common /gqu_nInJqug_varXh/ Pair11, Sub5, Sub8, Sub14, Sub16, Sub17
+        common /gqu_nInJqug_varXh/ Sub19, Sub20, Sub21, Sub22, Sub23, Sub24
+        common /gqu_nInJqug_varXh/ Sub25, Sub26, Sub27, Sub28, Sub38, Sub42
+        common /gqu_nInJqug_varXh/ Sub46, Sub47, Sub48, Sub51, Sub54, Sub55
+        common /gqu_nInJqug_varXh/ Sub57, Sub58, Sub61, Sub62, Sub63, Sub64
+        common /gqu_nInJqug_varXh/ Sub65, Sub67, Sub68, Sub69, Sub70, Sub76
+        common /gqu_nInJqug_varXh/ Sub77, Sub78, Sub79, Sub82, Sub83, Sub84
+        common /gqu_nInJqug_varXh/ Sub85, Sub89, Sub92, Sub93, Sub94, Sub96
+        common /gqu_nInJqug_varXh/ Sub97, Sub98, Sub99, Sub100, Sub101, Sub102
+        common /gqu_nInJqug_varXh/ Sub103, Sub104, Sub105, Sub106, Sub107
+        common /gqu_nInJqug_varXh/ Sub109, Sub110, Sub111, Sub112, Sub113
+        common /gqu_nInJqug_varXh/ Sub114, Sub116, Sub117, Sub118, Sub119
+        common /gqu_nInJqug_varXh/ Sub127, Sub128, Sub129, Sub130, Sub131
+        common /gqu_nInJqug_varXh/ Sub132, Sub133, Sub134, Sub135, Sub136
+        common /gqu_nInJqug_varXh/ Sub137, Sub138, Sub139, Sub140, Sub141
+        common /gqu_nInJqug_varXh/ Sub144, Sub145, Sub147, Sub148, Sub149
+        common /gqu_nInJqug_varXh/ Sub153, Sub155, Sub156, Sub157, Sub158
+        common /gqu_nInJqug_varXh/ Sub161, Sub162, Sub163, Sub164, Sub165
+        common /gqu_nInJqug_varXh/ Sub170, Sub171, Sub172, Sub173, Sub174
+        common /gqu_nInJqug_varXh/ Sub176, Sub177, Sub178, Sub179, Sub180
+        common /gqu_nInJqug_varXh/ Sub181, Sub182, Sub183, Sub187, Sub188
+        common /gqu_nInJqug_varXh/ Sub191, Sub192, Sub193, Sub194, Sub195
+        common /gqu_nInJqug_varXh/ Sub196, Sub197, Sub198, Sub199, Sub200
+        common /gqu_nInJqug_varXh/ Sub201, Sub202, Sub203, Sub204, Sub205
+        common /gqu_nInJqug_varXh/ Sub206, Sub208, Sub209, Sub210, Sub215
+        common /gqu_nInJqug_varXh/ Sub217, Sub218, Sub222, Sub224, Sub225
+        common /gqu_nInJqug_varXh/ Sub229, Sub231, Sub232, Sub234, Sub235
+        common /gqu_nInJqug_varXh/ Sub236, Sub237, Sub238, Sub239, Sub240
+        common /gqu_nInJqug_varXh/ Sub241, Sub252, Sub255, Sub260, Sub262
+        common /gqu_nInJqug_varXh/ Sub269, Sub272, Sub274, Sub277, Sub280
+        common /gqu_nInJqug_varXh/ Sub294, Sub295, Sub297, Sub299, Sub300
+        common /gqu_nInJqug_varXh/ Sub301, Sub302, Sub303, Sub304, Sub307
+        common /gqu_nInJqug_varXh/ Sub308, Sub309, Sub310, Sub311, Sub312
+        common /gqu_nInJqug_varXh/ Sub313, Sub323, Sub324, Sub325, Sub333
+        common /gqu_nInJqug_varXh/ Sub335, Sub337, Sub338, Sub339, Sub340
+        common /gqu_nInJqug_varXh/ Sub341, Sub342, Sub343, Sub344, Sub345
+        common /gqu_nInJqug_varXh/ Sub346, Sub347, Sub348, Sub349, Sub350
+        common /gqu_nInJqug_varXh/ Sub351, Sub352, Sub353, Sub354, Sub355
+        common /gqu_nInJqug_varXh/ Sub356, Sub358, Sub359, Sub360, Sub361
+        common /gqu_nInJqug_varXh/ Sub362, Sub363, Sub366, Sub367, Sub368
+        common /gqu_nInJqug_varXh/ Sub370, Sub371, Sub373, Sub374, Sub375
+        common /gqu_nInJqug_varXh/ Sub376, Sub379, Sub380, Sub381, Sub382
+        common /gqu_nInJqug_varXh/ Sub383, Sub384, Sub386, Sub387, Sub388
+        common /gqu_nInJqug_varXh/ Sub389, Sub390, Sub391, Sub392, Sub393
+        common /gqu_nInJqug_varXh/ Sub394, Sub397, Sub399, Sub400, Sub401
+        common /gqu_nInJqug_varXh/ Sub402, Sub403, Sub404, Sub405, Sub407
+        common /gqu_nInJqug_varXh/ Sub408, Sub409, Sub415, Sub416, Sub417
+        common /gqu_nInJqug_varXh/ Sub419, Sub424, Sub426, Sub427, Sub428
+        common /gqu_nInJqug_varXh/ Sub429, Sub430, Sub431, Sub432, Sub433
+        common /gqu_nInJqug_varXh/ Sub434, Sub435, Sub436, Sub437, Sub438
+        common /gqu_nInJqug_varXh/ Sub439, Sub440, Sub441, Sub443, Sub444
+        common /gqu_nInJqug_varXh/ Sub447, Sub448, Sub449, Sub451, Sub453
+        common /gqu_nInJqug_varXh/ Sub457, Sub458, Sub459, Sub460, Sub461
+        common /gqu_nInJqug_varXh/ Sub464, Sub465, Sub466, Sub467, Sub468
+        common /gqu_nInJqug_varXh/ Sub472, Sub474, Sub475, Sub476, Sub477
+        common /gqu_nInJqug_varXh/ Sub478, Sub479, Sub480, Sub481, Sub482
+        common /gqu_nInJqug_varXh/ Sub483, Sub484, Sub485, Sub486, Sub489
+        common /gqu_nInJqug_varXh/ Sub490, Sub491, Sub498, Sub499, Sub500
+        common /gqu_nInJqug_varXh/ Sub501, Sub502, Sub503, Sub506, Sub507
+        common /gqu_nInJqug_varXh/ Sub508, Sub509, Sub510, Sub511, Sub513
+        common /gqu_nInJqug_varXh/ Sub514, Sub516, Sub519, Sub520, Sub521
+        common /gqu_nInJqug_varXh/ Sub522, Sub523, Sub524, Sub525, Sub526
+        common /gqu_nInJqug_varXh/ Sub528, Sub531, Sub532, Sub533, Sub534
+        common /gqu_nInJqug_varXh/ Sub535, Sub539, Sub540, Sub543, Sub545
+        common /gqu_nInJqug_varXh/ Sub552, Sub560, Sub561, Sub562, Sub563
+        common /gqu_nInJqug_varXh/ Sub564, Sub565, Sub567, Sub569, Sub570
+        common /gqu_nInJqug_varXh/ Sub574, Sub575, Sub577, Sub579, Sub584
+        common /gqu_nInJqug_varXh/ Sub586, Sub587, Sub588, Sub589, Sub590
+        common /gqu_nInJqug_varXh/ Sub591, Sub595, Sub599, Sub600, Sub601
+        common /gqu_nInJqug_varXh/ Sub602, Sub604, Sub605, Sub606, Sub607
+        common /gqu_nInJqug_varXh/ Sub608, Sub609, Sub610, Sub614, Sub618
+        common /gqu_nInJqug_varXh/ Sub619, Sub621, Sub629, Sub630, Sub631
+        common /gqu_nInJqug_varXh/ Sub632, Sub633, Sub634, Sub635, Sub636
+        common /gqu_nInJqug_varXh/ Sub637, Sub638, Sub639, Sub641, Sub643
+        common /gqu_nInJqug_varXh/ Sub644, Sub648, Sub650, Sub651, Sub652
+        common /gqu_nInJqug_varXh/ Sub653, Sub666, Sub668, Sub669, Sub670
+        common /gqu_nInJqug_varXh/ Sub675, Sub679, Sub684, Sub689, Sub696
+        common /gqu_nInJqug_varXh/ Sub697, Sub698, Sub699, Sub700, Sub701
+        common /gqu_nInJqug_varXh/ Sub703, Sub705, Sub706, Sub710, Sub711
+        common /gqu_nInJqug_varXh/ Sub713, Sub717, Sub718, Sub719, Sub720
+        common /gqu_nInJqug_varXh/ Sub721, Sub722, Sub726, Sub728, Sub729
+        common /gqu_nInJqug_varXh/ Sub730, Sub731, Sub732, Sub734, Sub736
+        common /gqu_nInJqug_varXh/ Sub737, Sub751, Sub752, Sub753, Sub754
+        common /gqu_nInJqug_varXh/ Sub768, Sub770, Sub771, Sub772, Sub773
+        common /gqu_nInJqug_varXh/ Sub774, Sub775, Sub776, Sub778, Sub780
+        common /gqu_nInJqug_varXh/ Sub781, Sub782, Sub786, Sub790, Sub791
+        common /gqu_nInJqug_varXh/ Sub793, Sub795, Sub796, Sub797, Sub798, Abb1
+        common /gqu_nInJqug_varXh/ Abb2, Abb3, Abb4, Abb5, Abb6, Abb7, Abb8
+        common /gqu_nInJqug_varXh/ Abb9, Abb10, Abb11, Abb12, Abb13, Abb14
+        common /gqu_nInJqug_varXh/ Abb15, Abb16, Abb17, Abb18, Abb19, Abb20
+        common /gqu_nInJqug_varXh/ Abb21, Abb22, Abb23, Abb24, Abb25, Abb26
+        common /gqu_nInJqug_varXh/ Abb27, Abb28, Abb29, Abb30, Abb31, Abb32
+        common /gqu_nInJqug_varXh/ Abb33, Abb34, Opt2, Sub29, Sub33, Sub35
+        common /gqu_nInJqug_varXh/ Sub36, Sub37, Sub39, Sub40, Sub41, Sub43
+        common /gqu_nInJqug_varXh/ Sub44, Sub45, Sub49, Sub50, Sub56, Sub59
+        common /gqu_nInJqug_varXh/ Sub60, Sub66, Sub75, Sub80, Sub81, Sub86
+        common /gqu_nInJqug_varXh/ Sub88, Sub90, Sub91, Sub95, Sub108, Sub115
+        common /gqu_nInJqug_varXh/ Sub120, Sub121, Sub122, Sub123, Sub124
+        common /gqu_nInJqug_varXh/ Sub142, Sub143, Sub146, Sub150, Sub151
+        common /gqu_nInJqug_varXh/ Sub152, Sub154, Sub160, Sub166, Sub167
+        common /gqu_nInJqug_varXh/ Sub168, Sub169, Sub175, Sub184, Sub185
+        common /gqu_nInJqug_varXh/ Sub186, Sub189, Sub190, Sub207, Sub214
+        common /gqu_nInJqug_varXh/ Sub216, Sub223, Sub233, Sub242, Sub243
+        common /gqu_nInJqug_varXh/ Sub244, Sub245, Sub246, Sub247, Sub248
+        common /gqu_nInJqug_varXh/ Sub249, Sub250, Sub251, Sub253, Sub254
+        common /gqu_nInJqug_varXh/ Sub256, Sub257, Sub259, Sub261, Sub263
+        common /gqu_nInJqug_varXh/ Sub264, Sub265, Sub266, Sub267, Sub268
+        common /gqu_nInJqug_varXh/ Sub270, Sub271, Sub273, Sub275, Sub276
+        common /gqu_nInJqug_varXh/ Sub278, Sub279, Sub281, Sub282, Sub283
+        common /gqu_nInJqug_varXh/ Sub284, Sub285, Sub286, Sub287, Sub288
+        common /gqu_nInJqug_varXh/ Sub289, Sub290, Sub291, Sub292, Sub293
+        common /gqu_nInJqug_varXh/ Sub296, Sub298, Sub305, Sub306, Sub316
+        common /gqu_nInJqug_varXh/ Sub317, Sub319, Sub320, Sub321, Sub322
+        common /gqu_nInJqug_varXh/ Sub327, Sub328, Sub329, Sub330, Sub331
+        common /gqu_nInJqug_varXh/ Sub332, Sub334, Sub336, Sub357, Sub369
+        common /gqu_nInJqug_varXh/ Sub377, Sub378, Sub385, Sub395, Sub396
+        common /gqu_nInJqug_varXh/ Sub398, Sub406, Sub412, Sub413, Sub414
+        common /gqu_nInJqug_varXh/ Sub418, Sub420, Sub421, Sub422, Sub423
+        common /gqu_nInJqug_varXh/ Sub425, Sub445, Sub446, Sub452, Sub454
+        common /gqu_nInJqug_varXh/ Sub455, Sub456, Sub462, Sub463, Sub469
+        common /gqu_nInJqug_varXh/ Sub470, Sub471, Sub473, Sub487, Sub488
+        common /gqu_nInJqug_varXh/ Sub492, Sub493, Sub494, Sub495, Sub496
+        common /gqu_nInJqug_varXh/ Sub497, Sub504, Sub505, Sub515, Sub517
+        common /gqu_nInJqug_varXh/ Sub518, Sub527, Sub529, Sub530, Sub536
+        common /gqu_nInJqug_varXh/ Sub537, Sub538, Sub541, Sub542, Sub544
+        common /gqu_nInJqug_varXh/ Sub546, Sub548, Sub550, Sub551, Sub553
+        common /gqu_nInJqug_varXh/ Sub554, Sub555, Sub556, Sub557, Sub558
+        common /gqu_nInJqug_varXh/ Sub559, Sub568, Sub571, Sub572, Sub573
+        common /gqu_nInJqug_varXh/ Sub576, Sub578, Sub580, Sub581, Sub582
+        common /gqu_nInJqug_varXh/ Sub583, Sub585, Sub596, Sub597, Sub598
+        common /gqu_nInJqug_varXh/ Sub603, Sub611, Sub612, Sub613, Sub615
+        common /gqu_nInJqug_varXh/ Sub616, Sub617, Sub620, Sub622, Sub623
+        common /gqu_nInJqug_varXh/ Sub624, Sub625, Sub626, Sub627, Sub628
+        common /gqu_nInJqug_varXh/ Sub642, Sub645, Sub646, Sub647, Sub657
+        common /gqu_nInJqug_varXh/ Sub658, Sub659, Sub660, Sub661, Sub662
+        common /gqu_nInJqug_varXh/ Sub663, Sub664, Sub665, Sub673, Sub674
+        common /gqu_nInJqug_varXh/ Sub676, Sub677, Sub678, Sub680, Sub682
+        common /gqu_nInJqug_varXh/ Sub683, Sub686, Sub687, Sub688, Sub690
+        common /gqu_nInJqug_varXh/ Sub691, Sub692, Sub693, Sub694, Sub695
+        common /gqu_nInJqug_varXh/ Sub704, Sub707, Sub708, Sub709, Sub712
+        common /gqu_nInJqug_varXh/ Sub714, Sub715, Sub716, Sub723, Sub725
+        common /gqu_nInJqug_varXh/ Sub727, Sub733, Sub735, Sub741, Sub742
+        common /gqu_nInJqug_varXh/ Sub743, Sub744, Sub745, Sub746, Sub747
+        common /gqu_nInJqug_varXh/ Sub748, Sub749, Sub755, Sub759, Sub761
+        common /gqu_nInJqug_varXh/ Sub762, Sub763, Sub764, Sub765, Sub766
+        common /gqu_nInJqug_varXh/ Sub767, Sub769, Sub779, Sub783, Sub784
+        common /gqu_nInJqug_varXh/ Sub785, Sub787, Sub788, Sub789, Sub799
+        common /gqu_nInJqug_varXh/ Sub801, Sub802, Sub803, Sub804, Sub805
+        common /gqu_nInJqug_varXh/ Sub815, Sub816, Sub817, Sub818, Sub819
+        common /gqu_nInJqug_varXh/ Sub821, Sub822, Sub823, Sub824, Sub825
+        common /gqu_nInJqug_varXh/ Sub828, Sub829, Sub833, Sub834, Sub836
+        common /gqu_nInJqug_varXh/ Sub837, Sub838, Sub839, Sub840, Sub841
+        common /gqu_nInJqug_varXh/ Sub844, Sub847, Sub848, Sub849, Opt3, Sub52
+        common /gqu_nInJqug_varXh/ Sub53, Sub125, Sub126, Sub220, Sub221, Sub226
+        common /gqu_nInJqug_varXh/ Sub227, Sub228, Sub230, Sub654, Sub655
+        common /gqu_nInJqug_varXh/ Sub656, Sub667, Sub738, Sub739, Sub740
+        common /gqu_nInJqug_varXh/ Sub750, Sub811, Sub813, Sub826, Sub832
+        common /gqu_nInJqug_varXh/ Sub835, Sub842, Sub843, Sub845, Sub846
 
         integer Sfe7
-        common /indices/ Sfe7
+        common /gqu_nInJqug_indices/ Sfe7
 
         HelType Ctree(HelDim(2))
         ComplexType MatSUN(2,2)

@@ -147,6 +147,23 @@ c############### subroutine getVirtAmps ################################
         integer flav(nlegborn)
         double precision amps(2)
         integer flags
+
+        call setlambda(0d0) ! Only finite part
+        !call setuvdiv(0d0)  ! no 1/eps_UV terms
+        call setdelta(0d0)  ! set divergences to zero
+        call setmudim(st_muren2) ! renormalization scale
+        
+        call clearcache
+
+c#define CHECKUV
+#ifdef CHECKUV
+        ! test for finiteness
+        !print*, "checking for UV finiteness"
+        !print*, "flav = ", flav
+        !call setuvdiv(1d0)
+        call setdelta(1D17)    ! Test UV finiteness
+#endif
+
         if(flg_fakevirtuals) then
           ! = 010d, Bit0: set mass, Bit1: reset, Bit2: loop
           flags = 2
@@ -155,29 +172,14 @@ c############### subroutine getVirtAmps ################################
           flags = 6
           call RenConst
         endif
-        
-        !call ltini
-        call setlambda(0d0) ! Only finite part
-        call setuvdiv(0d0)  ! no 1/eps_UV terms
-        call setdelta(0d0)  ! set divergences to zero
-        call setmudim(st_muren2) ! renormalization scale
-        !call setparam_collier(0d0,st_muren2,0d0) ! delta_uv,mu2,lambda
-        
-        call clearcache
-
-c#define CHECKUV
-#ifdef CHECKUV
-        ! test for finiteness
-        print*, "checking for UV finiteness"
-        call setuvdiv(1d0)
-        call setDelta(1D7)    ! Test UV finiteness
-#endif
 
         call getAmps(p,flav,flags,amps(:))
         
-#ifdef DEBUGQ
+#ifdef DEBUG
         !print*,st_muren2
+        !print*,"flav = ",flav
         print*,"born, virt = ",amps
+        stop
 #endif
       end
 c############### end subroutine getVirtAmps ############################

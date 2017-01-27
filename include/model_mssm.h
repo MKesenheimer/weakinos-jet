@@ -23,13 +23,16 @@ c#include "types.h"
         double precision Mh0, MHH, MA0, MHp
         double precision Mh02, MHH2, MA02, MHp2
 
+        ! complex parameters for loop integrals
         double complex USfC(2,2,4,3), VChaC(2,2), UChaC(2,2)
         double complex ZNeuC(4,4)
         double complex Mino3C, MUEC, AfC(2:4,3,3)
         double complex MNeuC(4), MNeu2C(4), MChaC(2), MCha2C(2)
         double complex MSfC(2,4,3), MSf2C(2,4,3), MGlC, MGl2C
         double complex Mh0C, MHHC, MA0C, MHpC
-        double complex Mh02C, MHH2C, MA02C, MHp2C 
+        double complex Mh02C, MHH2C, MA02C, MHp2C
+        ! complex masses with particle widths included
+        double complex MSf2W(2,4,3), MGl2W
 
         common /mssmpara/ UCha, VCha, ZNeu           ! Chargino & Neutralino mixing matrices
         common /mssmpara/ MNeu, MNeu2                ! Neutralino masses
@@ -53,5 +56,6 @@ c#include "types.h"
         common /mssmpara/ MSfC, MSf2C, MGlC, MGl2C
         common /mssmpara/ Mh0C, MHHC, MA0C, MHpC
         common /mssmpara/ Mh02C, MHH2C, MA02C, MHp2C
+        common /mssmpara/ MSf2W, MGl2W
 
 c############### end model_mssm.h ######################################

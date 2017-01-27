@@ -22,15 +22,15 @@
         ComplexType Sub52(3,4,2), Sub53(3,4,2)
         ComplexType Sub54(3,4,2), Sub387(3,2)
         ComplexType Sub397(3,2)
-        common /varXs/ Sub1, Sub2, Sub8, Sub17, Sub47, Sub48, Sub52
-        common /varXs/ Sub53, Sub54, Sub387, Sub397
+        common /qubarqu_nInJqubarqu_465_Sq1_varXs/ Sub1, Sub2, Sub8, Sub17, Sub47, Sub48, Sub52
+        common /qubarqu_nInJqubarqu_465_Sq1_varXs/ Sub53, Sub54, Sub387, Sub397
 
         ComplexType Opt11(3,3,3,3)
         ComplexType Sub381(3,3,3,3,4,4)
         ComplexType Sub406(3,3,4)
         RealType S, T, T14, T15, U, T24, T25, S34, S35, S45
-        common /varXa/ Opt11, Sub381, Sub406, S, T, T14, T15, U, T24
-        common /varXa/ T25, S34, S35, S45
+        common /qubarqu_nInJqubarqu_465_Sq1_varXa/ Opt11, Sub381, Sub406, S, T, T14, T15, U, T24
+        common /qubarqu_nInJqubarqu_465_Sq1_varXa/ T25, S34, S35, S45
 
         HelType F2, F4, F33, F34, F36, F37, F39, F40, F42, F44, F45
         HelType F46, F49, F50, F53, F54, F55, F56
@@ -43,13 +43,13 @@
         HelType Sub63(HelDim(3)), Sub64(HelDim(3))
         HelType Sub65(HelDim(3),3,2,2)
         HelType Sub66(HelDim(3),3,2,2)
-        common /varXh/ F2, F4, F33, F34, F36, F37, F39, F40, F42, F44
-        common /varXh/ F45, F46, F49, F50, F53, F54, F55, F56, Sub9
-        common /varXh/ Sub49, Sub55, Sub60, Sub61, Sub62, Sub63
-        common /varXh/ Sub64, Sub65, Sub66
+        common /qubarqu_nInJqubarqu_465_Sq1_varXh/ F2, F4, F33, F34, F36, F37, F39, F40, F42, F44
+        common /qubarqu_nInJqubarqu_465_Sq1_varXh/ F45, F46, F49, F50, F53, F54, F55, F56, Sub9
+        common /qubarqu_nInJqubarqu_465_Sq1_varXh/ Sub49, Sub55, Sub60, Sub61, Sub62, Sub63
+        common /qubarqu_nInJqubarqu_465_Sq1_varXh/ Sub64, Sub65, Sub66
 
         integer Sfe8
-        common /indices/ Sfe8
+        common /qubarqu_nInJqubarqu_465_Sq1_indices/ Sfe8
 
         HelType Ctree(HelDim(2))
         ComplexType MatSUN(2,2)

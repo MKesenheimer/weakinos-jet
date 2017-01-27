@@ -22,7 +22,9 @@ c############### model_sm.h ############################################
         double complex MZC, MZ2C, MWC, MW2C
         double complex MUC, MU2C, MCC, MC2C, MTC, MT2C
         double complex MDC, MD2C, MSC, MS2C, MBC, MB2C
-        double complex MfC(4,3), Mf2C(4,3) 
+        double complex MfC(4,3), Mf2C(4,3)
+        ! complex masses with widths included 
+        double complex MZ2W, MW2W
 
         common /smpara/ MZ, MZ2, MW, MW2, CW, CW2, SW, SW2
         common /smpara/ WZ, WW
@@ -35,5 +37,6 @@ c############### model_sm.h ############################################
         common /smpara/ MUC, MU2C, MCC, MC2C, MTC, MT2C 
         common /smpara/ MDC, MD2C, MSC, MS2C, MBC, MB2C
         common /smpara/ MfC, Mf2C
+        common /smpara/ MZ2W, MW2W
 
 c############### end model_sm.h ########################################

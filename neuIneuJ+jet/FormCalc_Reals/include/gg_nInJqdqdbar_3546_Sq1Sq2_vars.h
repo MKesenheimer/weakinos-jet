@@ -21,8 +21,8 @@
         ComplexType Sub6(4), Sub7(3,4,2)
         ComplexType Sub559(3,2), Sub562(3,2)
         ComplexType Sub564(3,2), Sub565(3,2)
-        common /varXs/ Sub1, Sub2, Sub3, Sub5, Sub6, Sub7, Sub559
-        common /varXs/ Sub562, Sub564, Sub565
+        common /gg_nInJqdqdbar_3546_Sq1Sq2_varXs/ Sub1, Sub2, Sub3, Sub5, Sub6, Sub7, Sub559
+        common /gg_nInJqdqdbar_3546_Sq1Sq2_varXs/ Sub562, Sub564, Sub565
 
         ComplexType Opt1(3,4), Sub558(3,4)
         ComplexType Sub561(3,3,4,4)
@@ -30,8 +30,8 @@
         ComplexType Sub566(3,3,4,4,2)
         ComplexType Sub567(3,3,4,4)
         RealType S, T, T14, T15, U, T24, T25, S34, S35, S45
-        common /varXa/ Opt1, Sub558, Sub561, Sub563, Sub566, Sub567
-        common /varXa/ S, T, T14, T15, U, T24, T25, S34, S35, S45
+        common /gg_nInJqdqdbar_3546_Sq1Sq2_varXa/ Opt1, Sub558, Sub561, Sub563, Sub566, Sub567
+        common /gg_nInJqdqdbar_3546_Sq1Sq2_varXa/ S, T, T14, T15, U, T24, T25, S34, S35, S45
 
         HelType F1, F2, F3, F4, Pair1, Pair2, Pair3, Pair4, Pair5
         HelType Pair6, Pair7, Pair8, Pair9, Pair10, Pair11
@@ -39,10 +39,10 @@
         HelType Sub8(HelDim(3),4,2), Abb1, Abb2, Abb3, Abb4
         HelType Sub560(HelDim(3),4,2)
         HelType Sub568(HelDim(3),3,4,4,2)
-        common /varXh/ F1, F2, F3, F4, Pair1, Pair2, Pair3, Pair4
-        common /varXh/ Pair5, Pair6, Pair7, Pair8, Pair9, Pair10
-        common /varXh/ Pair11, Sub4, Sub8, Abb1, Abb2, Abb3, Abb4
-        common /varXh/ Sub560, Sub568
+        common /gg_nInJqdqdbar_3546_Sq1Sq2_varXh/ F1, F2, F3, F4, Pair1, Pair2, Pair3, Pair4
+        common /gg_nInJqdqdbar_3546_Sq1Sq2_varXh/ Pair5, Pair6, Pair7, Pair8, Pair9, Pair10
+        common /gg_nInJqdqdbar_3546_Sq1Sq2_varXh/ Pair11, Sub4, Sub8, Abb1, Abb2, Abb3, Abb4
+        common /gg_nInJqdqdbar_3546_Sq1Sq2_varXh/ Sub560, Sub568
 
         HelType Ctree(HelDim(2))
         ComplexType MatSUN(2,2)

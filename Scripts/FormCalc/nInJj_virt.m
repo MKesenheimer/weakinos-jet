@@ -142,7 +142,11 @@ PowerOf[EL][OrderEL] := 1
 
 (*widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};*)
 (*insertion of widths via complex masses. Theses masses are set in the external fortran code*)
-widths={MZ2->MZ2C, MW2->MW2C, MSf2[sfe_,n1_,n2_]:>MSf2C[sfe,n1,n2], MGl2->MGl2C, Mf2[i_,j_]:>Mf2C[i,j]};
+widths={MZ2->MZ2W, MW2->MW2W, MSf2[sfe_,n1_,n2_]:>MSf2W[sfe,n1,n2], MGl2->MGl2W};
+(*special case of ren consts: the kinematical variables only consist of masses, particle width should not added to these masses*)
+cmplx={0->dcmplx[0], MZ->MZC, MW->MWC, MZ2->MZ2C, MW2->MW2C, MU->MUC, MC->MCC, MT->MTC, MD->MDC, MS->MSC, MB->MBC, MU2->MU2C, MC2->MC2C, MT2->MT2C, MD2->MD2C, MS2->MS2C, MB2->MB2C, 
+       Mf2[i_,j_]:>Mf2C[i,j], MNeu[i_]:>MNeuC[i], MNeu2[i_]:>MNeu2C[i], MCha[i_]:>MChaC[i], Cha2[i_]:>MCha2C[i], MSf[i_,j_,k_]:>MSfC[i,j,k], MSf2[i_,j_,k_]:>MSf2C[i,j,k],
+       MGl->MGlC, MGl2->MGl2C, Mh0->Mh0C, MHH->MHHC, MA0->MA0C, MHp->MHpC, Mh02->Mh02C, MHH2->MHH2C, MA02->MA02C, MHp2->MHp2C};
 
 
 Print["Born"]
@@ -180,6 +184,11 @@ DoPaint[insVert, "counterVert"];
 counterVert = CreateFeynAmp[insVert];
 
 
+(*Somehow, this can't be defined earlier (problem with shadowing variables)*)
+ckinematics={S->SC, T->TC, U->UC, T24->T24C, T14->T14C, T13->T13C, T23->T23C, S34->S34C};
+cmplx=Join[cmplx,ckinematics];
+
+
 Print["Self Energies"]
 
 top = CreateTopologies[1, 2 -> 3, SelfEnergiesOnly];
@@ -201,15 +210,15 @@ ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[
 
 DoPaint[ins, "self"];
 
-ckinematics={S->SC, T->TC, U->UC, T24->T24C, T14->T14C, T13->T13C, T23->T23C, S34->S34C};
 self = CalcFeynAmp[CreateFeynAmp[ins], counterSelf];
 self = self/.{Den[x_,y_]:>Den[x,y/.widths]};
-self = self/.{A0[m1_]:>A0[m1/.widths]};
-self = self/.{A0i[aai_,m1_]:>A0i[aai,m1/.widths]};
-self = self/.{B0i[bbi_,p1_,m1_,m2_]:>B0i[bbi,p1/.ckinematics,m1/.widths,m2/.widths]};
-self = self/.{C0i[cci_,p1_,p2_,p3_,m1_,m2_,m3_]:>C0i[cci,p1/.ckinematics,p2/.ckinematics,p3/.ckinematics,m1/.widths,m2/.widths,m3/.widths]};
-self = self/.{D0i[ddi_,p1_,p2_,p3_,p4_,p5_,p6_,m1_,m2_,m3_,m4_]:>D0i[ddi,p1/.ckinematics,p2/.ckinematics,p3/.ckinematics,p4/.ckinematics,p5/.ckinematics,p6/.ckinematics,m1/.widths,m2/.widths,m3/.widths,m4/.widths]};
-self = self/.{E0i[eei_,p1_,p2_,p3_,p4_,p5_,p6_,p7_,p8_,p9_,p10_,m1_,m2_,m3_,m4_,m5_]:>E0i[eei,p1/.ckinematics,p2/.ckinematics,p3/.ckinematics,p4/.ckinematics,p5/.ckinematics,p6/.ckinematics,p7/.ckinematics,p8/.ckinematics,p9/.ckinematics,p10/.ckinematics,m1/.widths,m2/.widths,m3/.widths,m4/.widths,m5/.widths]};
+self = self/.{A0[m1_]:>A0[m1/.widths/.cmplx]};
+self = self/.{A0i[aai_,m1_]:>A0i[aai,m1/.widths/.cmplx]};
+self = self/.{B0i[bbi_,p1_,m1_,m2_]:>B0i[bbi,p1/.cmplx,m1/.widths/.cmplx,m2/.widths/.cmplx]};
+self = self/.{C0i[cci_,p1_,p2_,p3_,m1_,m2_,m3_]:>C0i[cci,p1/.cmplx,p2/.cmplx,p3/.cmplx,m1/.widths/.cmplx,m2/.widths/.cmplx,m3/.widths/.cmplx]};
+self = self/.{D0i[ddi_,p1_,p2_,p3_,p4_,p5_,p6_,m1_,m2_,m3_,m4_]:>D0i[ddi,p1/.cmplx,p2/.cmplx,p3/.cmplx,p4/.cmplx,p5/.cmplx,p6/.cmplx,m1/.widths/.cmplx,m2/.widths/.cmplx,m3/.widths/.cmplx,m4/.widths/.cmplx]};
+self = self/.{E0i[eei_,p1_,p2_,p3_,p4_,p5_,p6_,p7_,p8_,p9_,p10_,m1_,m2_,m3_,m4_,m5_]:>E0i[eei,p1/.cmplx,p2/.cmplx,p3/.cmplx,p4/.cmplx,p5/.cmplx,p6/.cmplx,p7/.cmplx,p8/.cmplx,p9/.cmplx,p10/.cmplx,m1/.widths/.cmplx,m2/.widths/.cmplx,m3/.widths/.cmplx,m4/.widths/.cmplx,m5/.widths/.cmplx]};
+(*
 (*cast real arguments into complex arguments*)
 $Assumptions=_\[Element]Reals;
 self = self/.{A0[m1_]:>A0[Cmplx[m1]]};
@@ -219,6 +228,7 @@ self = self/.{C0i[cci_,p1_,p2_,p3_,m1_,m2_,m3_]:>C0i[cci,Cmplx[p1],Cmplx[p2],Cmp
 self = self/.{D0i[ddi_,p1_,p2_,p3_,p4_,p5_,p6_,m1_,m2_,m3_,m4_]:>D0i[ddi,Cmplx[p1],Cmplx[p2],Cmplx[p3],Cmplx[p4],Cmplx[p5],Cmplx[p6],Cmplx[m1],Cmplx[m2],Cmplx[m3],Cmplx[m4]]};
 self = self/.{E0i[eei_,p1_,p2_,p3_,p4_,p5_,p6_,p7_,p8_,p9_,p10_,m1_,m2_,m3_,m4_,m5_]:>E0i[eei,Cmplx[p1],Cmplx[p2],Cmplx[p3],Cmplx[p4],Cmplx[p5],Cmplx[p6],Cmplx[p7],Cmplx[p8],Cmplx[p9],Cmplx[p10],Cmplx[m1],Cmplx[m2],Cmplx[m3],Cmplx[m4],Cmplx[m5]]};
 $Assumptions=True;
+*)
 self = self//.{Alfa2->0};
 
 Print["self = "];
@@ -269,12 +279,13 @@ DoPaint[ins, "vert"];
 
 vert = CalcFeynAmp[CreateFeynAmp[ins], counterVert];
 vert = vert/.{Den[x_,y_]:>Den[x,y/.widths]};
-vert = vert/.{A0[m1_]:>A0[m1/.widths]};
-vert = vert/.{A0i[aai_,m1_]:>A0i[aai,m1/.widths]};
-vert = vert/.{B0i[bbi_,p1_,m1_,m2_]:>B0i[bbi,p1/.ckinematics,m1/.widths,m2/.widths]};
-vert = vert/.{C0i[cci_,p1_,p2_,p3_,m1_,m2_,m3_]:>C0i[cci,p1/.ckinematics,p2/.ckinematics,p3/.ckinematics,m1/.widths,m2/.widths,m3/.widths]};
-vert = vert/.{D0i[ddi_,p1_,p2_,p3_,p4_,p5_,p6_,m1_,m2_,m3_,m4_]:>D0i[ddi,p1/.ckinematics,p2/.ckinematics,p3/.ckinematics,p4/.ckinematics,p5/.ckinematics,p6/.ckinematics,m1/.widths,m2/.widths,m3/.widths,m4/.widths]};
-vert = vert/.{E0i[eei_,p1_,p2_,p3_,p4_,p5_,p6_,p7_,p8_,p9_,p10_,m1_,m2_,m3_,m4_,m5_]:>E0i[eei,p1/.ckinematics,p2/.ckinematics,p3/.ckinematics,p4/.ckinematics,p5/.ckinematics,p6/.ckinematics,p7/.ckinematics,p8/.ckinematics,p9/.ckinematics,p10/.ckinematics,m1/.widths,m2/.widths,m3/.widths,m4/.widths,m5/.widths]};
+vert = vert/.{A0[m1_]:>A0[m1/.widths/.cmplx]};
+vert = vert/.{A0i[aai_,m1_]:>A0i[aai,m1/.widths/.cmplx]};
+vert = vert/.{B0i[bbi_,p1_,m1_,m2_]:>B0i[bbi,p1/.cmplx,m1/.widths/.cmplx,m2/.widths/.cmplx]};
+vert = vert/.{C0i[cci_,p1_,p2_,p3_,m1_,m2_,m3_]:>C0i[cci,p1/.cmplx,p2/.cmplx,p3/.cmplx,m1/.widths/.cmplx,m2/.widths/.cmplx,m3/.widths/.cmplx]};
+vert = vert/.{D0i[ddi_,p1_,p2_,p3_,p4_,p5_,p6_,m1_,m2_,m3_,m4_]:>D0i[ddi,p1/.cmplx,p2/.cmplx,p3/.cmplx,p4/.cmplx,p5/.cmplx,p6/.cmplx,m1/.widths/.cmplx,m2/.widths/.cmplx,m3/.widths/.cmplx,m4/.widths/.cmplx]};
+vert = vert/.{E0i[eei_,p1_,p2_,p3_,p4_,p5_,p6_,p7_,p8_,p9_,p10_,m1_,m2_,m3_,m4_,m5_]:>E0i[eei,p1/.cmplx,p2/.cmplx,p3/.cmplx,p4/.cmplx,p5/.cmplx,p6/.cmplx,p7/.cmplx,p8/.cmplx,p9/.cmplx,p10/.cmplx,m1/.widths/.cmplx,m2/.widths/.cmplx,m3/.widths/.cmplx,m4/.widths/.cmplx,m5/.widths/.cmplx]};
+(*
 (*cast real arguments into complex arguments*)
 $Assumptions=_\[Element]Reals;
 vert = vert/.{A0[m1_]:>A0[Cmplx[m1]]};
@@ -284,6 +295,7 @@ vert = vert/.{C0i[cci_,p1_,p2_,p3_,m1_,m2_,m3_]:>C0i[cci,Cmplx[p1],Cmplx[p2],Cmp
 vert = vert/.{D0i[ddi_,p1_,p2_,p3_,p4_,p5_,p6_,m1_,m2_,m3_,m4_]:>D0i[ddi,Cmplx[p1],Cmplx[p2],Cmplx[p3],Cmplx[p4],Cmplx[p5],Cmplx[p6],Cmplx[m1],Cmplx[m2],Cmplx[m3],Cmplx[m4]]};
 vert = vert/.{E0i[eei_,p1_,p2_,p3_,p4_,p5_,p6_,p7_,p8_,p9_,p10_,m1_,m2_,m3_,m4_,m5_]:>E0i[eei,Cmplx[p1],Cmplx[p2],Cmplx[p3],Cmplx[p4],Cmplx[p5],Cmplx[p6],Cmplx[p7],Cmplx[p8],Cmplx[p9],Cmplx[p10],Cmplx[m1],Cmplx[m2],Cmplx[m3],Cmplx[m4],Cmplx[m5]]};
 $Assumptions=True;
+*)
 vert = vert//.{Alfa2->0};
 
 Print["vert = "];
@@ -316,13 +328,14 @@ ins = DiagramComplement[ins,insDel];
 DoPaint[ins, "box"];
 
 box = CalcFeynAmp[CreateFeynAmp[ins]];
-box = box/.{A0[m1_]:>A0[m1/.widths]};
+box = box/.{A0[m1_]:>A0[m1/.widths/.cmplx]};
 box = box/.{Den[x_,y_]:>Den[x,y/.widths]};
-box = box/.{A0i[aai_,m1_]:>A0i[aai,m1/.widths]};
-box = box/.{B0i[bbi_,p1_,m1_,m2_]:>B0i[bbi,p1/.ckinematics,m1/.widths,m2/.widths]};
-box = box/.{C0i[cci_,p1_,p2_,p3_,m1_,m2_,m3_]:>C0i[cci,p1/.ckinematics,p2/.ckinematics,p3/.ckinematics,m1/.widths,m2/.widths,m3/.widths]};
-box = box/.{D0i[ddi_,p1_,p2_,p3_,p4_,p5_,p6_,m1_,m2_,m3_,m4_]:>D0i[ddi,p1/.ckinematics,p2/.ckinematics,p3/.ckinematics,p4/.ckinematics,p5/.ckinematics,p6/.ckinematics,m1/.widths,m2/.widths,m3/.widths,m4/.widths]};
-box = box/.{E0i[eei_,p1_,p2_,p3_,p4_,p5_,p6_,p7_,p8_,p9_,p10_,m1_,m2_,m3_,m4_,m5_]:>E0i[eei,p1/.ckinematics,p2/.ckinematics,p3/.ckinematics,p4/.ckinematics,p5/.ckinematics,p6/.ckinematics,p7/.ckinematics,p8/.ckinematics,p9/.ckinematics,p10/.ckinematics,m1/.widths,m2/.widths,m3/.widths,m4/.widths,m5/.widths]};
+box = box/.{A0i[aai_,m1_]:>A0i[aai,m1/.widths/.cmplx]};
+box = box/.{B0i[bbi_,p1_,m1_,m2_]:>B0i[bbi,p1/.cmplx,m1/.widths/.cmplx,m2/.widths/.cmplx]};
+box = box/.{C0i[cci_,p1_,p2_,p3_,m1_,m2_,m3_]:>C0i[cci,p1/.cmplx,p2/.cmplx,p3/.cmplx,m1/.widths/.cmplx,m2/.widths/.cmplx,m3/.widths/.cmplx]};
+box = box/.{D0i[ddi_,p1_,p2_,p3_,p4_,p5_,p6_,m1_,m2_,m3_,m4_]:>D0i[ddi,p1/.cmplx,p2/.cmplx,p3/.cmplx,p4/.cmplx,p5/.cmplx,p6/.cmplx,m1/.widths/.cmplx,m2/.widths/.cmplx,m3/.widths/.cmplx,m4/.widths/.cmplx]};
+box = box/.{E0i[eei_,p1_,p2_,p3_,p4_,p5_,p6_,p7_,p8_,p9_,p10_,m1_,m2_,m3_,m4_,m5_]:>E0i[eei,p1/.cmplx,p2/.cmplx,p3/.cmplx,p4/.cmplx,p5/.cmplx,p6/.cmplx,p7/.cmplx,p8/.cmplx,p9/.cmplx,p10/.cmplx,m1/.widths/.cmplx,m2/.widths/.cmplx,m3/.widths/.cmplx,m4/.widths/.cmplx,m5/.widths/.cmplx]};
+(*
 (*cast real arguments into complex arguments*)
 $Assumptions=_\[Element]Reals;
 box = box/.{A0[m1_]:>A0[Cmplx[m1]]};
@@ -332,6 +345,7 @@ box = box/.{C0i[cci_,p1_,p2_,p3_,m1_,m2_,m3_]:>C0i[cci,Cmplx[p1],Cmplx[p2],Cmplx
 box = box/.{D0i[ddi_,p1_,p2_,p3_,p4_,p5_,p6_,m1_,m2_,m3_,m4_]:>D0i[ddi,Cmplx[p1],Cmplx[p2],Cmplx[p3],Cmplx[p4],Cmplx[p5],Cmplx[p6],Cmplx[m1],Cmplx[m2],Cmplx[m3],Cmplx[m4]]};
 box = box/.{E0i[eei_,p1_,p2_,p3_,p4_,p5_,p6_,p7_,p8_,p9_,p10_,m1_,m2_,m3_,m4_,m5_]:>E0i[eei,Cmplx[p1],Cmplx[p2],Cmplx[p3],Cmplx[p4],Cmplx[p5],Cmplx[p6],Cmplx[p7],Cmplx[p8],Cmplx[p9],Cmplx[p10],Cmplx[m1],Cmplx[m2],Cmplx[m3],Cmplx[m4],Cmplx[m5]]};
 $Assumptions=True;
+*)
 box = box//.{Alfa2->0};
 
 Print["box = "];
@@ -347,13 +361,14 @@ ins = DiagramSelect[ins,(MemberQ[LoopFields[##], V[5,{_}]] || MemberQ[LoopFields
 DoPaint[ins, "pent"];
 
 pent = CalcFeynAmp[CreateFeynAmp[ins]];
-pent = pent/.{A0[m1_]:>A0[m1/.widths]};
+pent = pent/.{A0[m1_]:>A0[m1/.widths/.cmplx]};
 pent = pent/.{Den[x_,y_]:>Den[x,y/.widths]};
-pent = pent/.{A0i[aai_,m1_]:>A0i[aai,m1/.widths]};
-pent = pent/.{B0i[bbi_,p1_,m1_,m2_]:>B0i[bbi,p1/.ckinematics,m1/.widths,m2/.widths]};
-pent = pent/.{C0i[cci_,p1_,p2_,p3_,m1_,m2_,m3_]:>C0i[cci,p1/.ckinematics,p2/.ckinematics,p3/.ckinematics,m1/.widths,m2/.widths,m3/.widths]};
-pent = pent/.{D0i[ddi_,p1_,p2_,p3_,p4_,p5_,p6_,m1_,m2_,m3_,m4_]:>D0i[ddi,p1/.ckinematics,p2/.ckinematics,p3/.ckinematics,p4/.ckinematics,p5/.ckinematics,p6/.ckinematics,m1/.widths,m2/.widths,m3/.widths,m4/.widths]};
-pent = pent/.{E0i[eei_,p1_,p2_,p3_,p4_,p5_,p6_,p7_,p8_,p9_,p10_,m1_,m2_,m3_,m4_,m5_]:>E0i[eei,p1/.ckinematics,p2/.ckinematics,p3/.ckinematics,p4/.ckinematics,p5/.ckinematics,p6/.ckinematics,p7/.ckinematics,p8/.ckinematics,p9/.ckinematics,p10/.ckinematics,m1/.widths,m2/.widths,m3/.widths,m4/.widths,m5/.widths]};
+pent = pent/.{A0i[aai_,m1_]:>A0i[aai,m1/.widths/.cmplx]};
+pent = pent/.{B0i[bbi_,p1_,m1_,m2_]:>B0i[bbi,p1/.cmplx,m1/.widths/.cmplx,m2/.widths/.cmplx]};
+pent = pent/.{C0i[cci_,p1_,p2_,p3_,m1_,m2_,m3_]:>C0i[cci,p1/.cmplx,p2/.cmplx,p3/.cmplx,m1/.widths/.cmplx,m2/.widths/.cmplx,m3/.widths/.cmplx]};
+pent = pent/.{D0i[ddi_,p1_,p2_,p3_,p4_,p5_,p6_,m1_,m2_,m3_,m4_]:>D0i[ddi,p1/.cmplx,p2/.cmplx,p3/.cmplx,p4/.cmplx,p5/.cmplx,p6/.cmplx,m1/.widths/.cmplx,m2/.widths/.cmplx,m3/.widths/.cmplx,m4/.widths/.cmplx]};
+pent = pent/.{E0i[eei_,p1_,p2_,p3_,p4_,p5_,p6_,p7_,p8_,p9_,p10_,m1_,m2_,m3_,m4_,m5_]:>E0i[eei,p1/.cmplx,p2/.cmplx,p3/.cmplx,p4/.cmplx,p5/.cmplx,p6/.cmplx,p7/.cmplx,p8/.cmplx,p9/.cmplx,p10/.cmplx,m1/.widths/.cmplx,m2/.widths/.cmplx,m3/.widths/.cmplx,m4/.widths/.cmplx,m5/.widths/.cmplx]};
+(*
 (*cast real arguments into complex arguments*)
 $Assumptions=_\[Element]Reals;
 pent = pent/.{A0[m1_]:>A0[Cmplx[m1]]};
@@ -363,6 +378,7 @@ pent = pent/.{C0i[cci_,p1_,p2_,p3_,m1_,m2_,m3_]:>C0i[cci,Cmplx[p1],Cmplx[p2],Cmp
 pent = pent/.{D0i[ddi_,p1_,p2_,p3_,p4_,p5_,p6_,m1_,m2_,m3_,m4_]:>D0i[ddi,Cmplx[p1],Cmplx[p2],Cmplx[p3],Cmplx[p4],Cmplx[p5],Cmplx[p6],Cmplx[m1],Cmplx[m2],Cmplx[m3],Cmplx[m4]]};
 pent = pent/.{E0i[eei_,p1_,p2_,p3_,p4_,p5_,p6_,p7_,p8_,p9_,p10_,m1_,m2_,m3_,m4_,m5_]:>E0i[eei,Cmplx[p1],Cmplx[p2],Cmplx[p3],Cmplx[p4],Cmplx[p5],Cmplx[p6],Cmplx[p7],Cmplx[p8],Cmplx[p9],Cmplx[p10],Cmplx[m1],Cmplx[m2],Cmplx[m3],Cmplx[m4],Cmplx[m5]]};
 $Assumptions=True;
+*)
 pent = pent//.{Alfa2->0};
 
 Print["pent = "];

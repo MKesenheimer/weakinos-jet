@@ -918,6 +918,16 @@ end subroutine setdelta
 
 ! ----------------------------------------------------------------------
 
+double precision function getdelta()
+  use COLLIER
+  implicit none
+  double precision DeltaUV
+  call GetdeltaUV_cll(DeltaUV)
+  getdelta = DeltaUV
+end function getdelta
+
+! ----------------------------------------------------------------------
+
 subroutine setmudim(mu2)
   use COLLIER
   implicit none
