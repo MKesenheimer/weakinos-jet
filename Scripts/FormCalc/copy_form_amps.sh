@@ -70,7 +70,7 @@ PROCF="./proc_nInJj"
 
 # the name of Mathematica Scripts
 #MSCRIPT="./nInJj.m"
-MSCRIPT="./nInJj_virt_test.m"
+MSCRIPT="./nInJj_virt_collier.m"
 #MSCRIPT="./nInJjj.m"
 #MSCRIPT="./nInJjj_os.m"
 #MSCRIPT=""
@@ -192,6 +192,17 @@ function rename2() {
         done
 }
 
+# rename variables in RenConst*.* files
+# $1: filename
+# $2: prefix of new variable
+function rename3() {
+        $SED -i -e "s/decl.h/virt_decl.h/g" $1
+        $SED -i -e "s/inline.h/virt_inline.h/g" $1
+        $SED -i -e "s/contains.h/virt_contains.h/g" $1
+        $SED -i -e "s/subroutine RenConst/subroutine ${2}RenConst/g" $1
+        $SED -i -e "s/\t/        /g" $1
+}
+
 # read in the process list and ignore what comes after #
 IFS=$' \r\n' command eval 'PART=($(grep -v "^#" $PROCF | cut -f1 -d"#"))'
 unset IFS
@@ -298,7 +309,9 @@ for i in `seq 0 1 $((NPROC-1))`; do
         cp ${WORKINGDIR}/${PRE1}/squaredme/*.F ${DEST}/${PRE2}_squaredME/
         cp ${WORKINGDIR}/${PRE1}/squaredme/vars.h ${DEST}/${PRE2}_squaredME/${PRE2}_vars.h
         cp ${WORKINGDIR}/${PRE1}/squaredme/specs.h ${DEST}/${PRE2}_squaredME/${PRE2}_specs.h
-        
+        mkdir -p ${DEST}/${PRE2}_RenConst/
+        cp ${WORKINGDIR}/${PRE1}/renconst/RenConst* ${DEST}/${PRE2}_RenConst/
+
         echo "renaming files..."
         echo "cd ${DEST}/${PRE2}_squaredME"
         cd ${DEST}/${PRE2}_squaredME
@@ -307,6 +320,19 @@ for i in `seq 0 1 $((NPROC-1))`; do
             echo "$file -> ${PRE2}_${file}"
             mv "$file" "${PRE2}_${file}"
         done
+
+        if [[ $TYPE == "virt" ]]; then
+            echo "cd ${DEST}/${PRE2}_RenConst"
+            cd ${DEST}/${PRE2}_RenConst
+            for file in *.F; do
+                # rename files, append prefix
+                echo "$file -> ${PRE2}_${file}"
+                mv "$file" "${PRE2}_${file}"
+            done
+        fi
+
+        echo "cd ${DEST}/${PRE2}_squaredME"
+        cd ${DEST}/${PRE2}_squaredME
         for file in *.F; do
             # rename the variables
             echo "renaming variables in $file..."
@@ -325,25 +351,6 @@ for i in `seq 0 1 $((NPROC-1))`; do
             fi
         done
         rename2 ${PRE2}_vars.h
-        # add complex kinematical variables for virtual processes
-        if [[ $TYPE == "virt" ]]; then
-            #$SED -i -e "s/#endif//g" ${PRE2}_vars.h
-            echo "#ifndef vars2_h" >> ${PRE2}_vars.h
-            echo "#define vars2_h" >> ${PRE2}_vars.h
-            echo "#else" >> ${PRE2}_vars.h
-            echo "        ComplexType ${CKINVARS}" >> ${PRE2}_vars.h
-            echo "        common /${PRE2}_ckin/ ${CKINVARS}" >> ${PRE2}_vars.h
-            echo "#endif" >> ${PRE2}_vars.h
-        fi
-        # add complex mandelstams to *_SquaredME.F
-        if [[ $TYPE == "virt" ]]; then
-            $SED -i -e "s/* END INVARIANTS/        SC = dcmplx(S)\n* END INVARIANTS/g" ${PRE2}_SquaredME.F
-            $SED -i -e "s/* END INVARIANTS/        TC = dcmplx(T)\n* END INVARIANTS/g" ${PRE2}_SquaredME.F
-            $SED -i -e "s/* END INVARIANTS/        T14C = dcmplx(T14)\n* END INVARIANTS/g" ${PRE2}_SquaredME.F
-            $SED -i -e "s/* END INVARIANTS/        UC = dcmplx(U)\n* END INVARIANTS/g" ${PRE2}_SquaredME.F
-            $SED -i -e "s/* END INVARIANTS/        T24C = dcmplx(T24)\n* END INVARIANTS/g" ${PRE2}_SquaredME.F
-            $SED -i -e "s/* END INVARIANTS/        S34C = dcmplx(S34)\n* END INVARIANTS/g" ${PRE2}_SquaredME.F
-        fi
         rename ${PRE2}_specs.h # don't change Gen1 to 3 but to Gen(1)
         # -> modify this if needed.
         # if the channel identifiers contain the open squark indice "Sq1"
@@ -357,10 +364,48 @@ for i in `seq 0 1 $((NPROC-1))`; do
             $SED -i -e "s/\<Sfe7\>/2/g" ${PRE2}_vars.h
             $SED -i -e "s/\<Sfe8\>/2/g" ${PRE2}_vars.h
         fi
+
+        # modify virtual amplitudes
+        if [[ $TYPE == "virt" ]]; then
+            # add complex kinematical variables for virtual processes
+            #$SED -i -e "s/#endif//g" ${PRE2}_vars.h
+            echo "#ifndef vars2_h" >> ${PRE2}_vars.h
+            echo "#define vars2_h" >> ${PRE2}_vars.h
+            echo "#else" >> ${PRE2}_vars.h
+            echo "        ComplexType ${CKINVARS}" >> ${PRE2}_vars.h
+            echo "        common /${PRE2}_ckin/ ${CKINVARS}" >> ${PRE2}_vars.h
+            echo "#endif" >> ${PRE2}_vars.h
+            # add complex mandelstams to *_SquaredME.F
+            $SED -i -e "s/* END INVARIANTS/        SC = dcmplx(S)\n* END INVARIANTS/g" ${PRE2}_SquaredME.F
+            $SED -i -e "s/* END INVARIANTS/        TC = dcmplx(T)\n* END INVARIANTS/g" ${PRE2}_SquaredME.F
+            $SED -i -e "s/* END INVARIANTS/        T14C = dcmplx(T14)\n* END INVARIANTS/g" ${PRE2}_SquaredME.F
+            $SED -i -e "s/* END INVARIANTS/        UC = dcmplx(U)\n* END INVARIANTS/g" ${PRE2}_SquaredME.F
+            $SED -i -e "s/* END INVARIANTS/        T24C = dcmplx(T24)\n* END INVARIANTS/g" ${PRE2}_SquaredME.F
+            $SED -i -e "s/* END INVARIANTS/        S34C = dcmplx(S34)\n* END INVARIANTS/g" ${PRE2}_SquaredME.F
+            # rename variables in RenConst*
+            echo "cd ${DEST}/${PRE2}_RenConst"
+            cd ${DEST}/${PRE2}_RenConst
+            for file in *.F; do
+                echo "renaming variables in $file..."
+                rename3 $file "${PRE2}_"
+                # insert new regulator parameter. Note: Lines in reversed order
+                TAG="        implicit none"
+                $SED -i -e "s/$TAG/$TAG\n        parameter (MR=1D-10, MR2=MR**2)/g" $file
+                $SED -i -e "s/$TAG/$TAG\n        RealType MR,MR2/g" $file
+                $SED -i -e "s/$TAG/$TAG\n\n        \! Regularize 1\/MD Terms/g" $file
+            done
+        fi
+
+        # copy finished files to the common directory
         cp ${DEST}/${PRE2}_squaredME/*.F ${DEST}/squaredME/
         cp ${DEST}/${PRE2}_squaredME/${PRE2}_vars.h ${DEST}/include/
         cp ${DEST}/${PRE2}_squaredME/${PRE2}_specs.h ${DEST}/include/
         rm -rf ${DEST}/${PRE2}_squaredME/
+        
+        if [[ $TYPE == "virt" ]]; then
+            cp ${DEST}/${PRE2}_RenConst/* ${DEST}/RenConst/
+            rm -rf ${DEST}/${PRE2}_RenConst/
+        fi
     done
 done
 
@@ -393,6 +438,11 @@ $SED -i -e "s/looptools.h/lt_collier.h/g" ${TYPE}_decl.h
 #$SED -i -e 's/Sq(z_)/!Sq(z_)/g' ${TYPE}_inline.h
 cp ${DEST}/temp/*.h ${DEST}/global/
 rm -rf ${DEST}/temp/
+
+# copy and execute script to finalize the header files
+echo "modifying header files..."
+cp ${WORKINGDIR}/finalize.sh ${DEST}/include
+cd ${DEST}/include && ./finalize.sh
 
 
 # on-shell subroutines:

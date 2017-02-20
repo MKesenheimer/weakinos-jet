@@ -43,13 +43,14 @@ c and the Jacobi factor for the phase space volume
         kn_jacborn = 1d0
 
 #ifdef DEBUGQ
+        print*
         print*,"xborn(1) = ", xborn(1)
         print*,"xborn(2) = ", xborn(2)
         print*,"xborn(3) = ", xborn(3)
         print*,"xborn(4) = ", xborn(4)
         print*,"xborn(5) = ", xborn(5)
         print*,"xborn(6) = ", xborn(6)
-#define DEBUG1
+!#define DEBUG1
 #endif
 
         ! set masses for Born and real emission

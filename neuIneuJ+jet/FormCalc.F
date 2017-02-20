@@ -5,6 +5,17 @@ c Interface to the FormCalc amplitudes
 c -6  -5  -4  -3  -2  -1  0  1  2  3  4  5  6
 c t~  b~  c~  s~  u~  d~  g  d  u  s  c  b  t
 
+c############### subroutine setDivergence ##############################
+      subroutine setDivergence()
+        implicit none
+#include "virt_types.h"
+#include "virt_const.h"
+        double precision getdelta
+        external detdelta
+        Divergence = getdelta()
+      end
+c############### subroutine setDivergence ##############################
+
 c############### subroutine formCalcVecSet #############################
 c calculate unit vectors and set the vectors for FormCalc
       subroutine formCalcVecSet(nlegs,p,flav)
@@ -146,23 +157,14 @@ c############### subroutine getVirtAmps ################################
         double precision p(0:3,nlegborn)
         integer flav(nlegborn)
         double precision amps(2)
-        integer flags
+        integer i,j,flags
 
+        call clearcache
         call setlambda(0d0) ! Only finite part
-        !call setuvdiv(0d0)  ! no 1/eps_UV terms
+        call setuvdiv(0d0)  ! no 1/eps_UV terms
         call setdelta(0d0)  ! set divergences to zero
         call setmudim(st_muren2) ! renormalization scale
-        
-        call clearcache
-
-c#define CHECKUV
-#ifdef CHECKUV
-        ! test for finiteness
-        !print*, "checking for UV finiteness"
-        !print*, "flav = ", flav
-        !call setuvdiv(1d0)
-        call setdelta(1D17)    ! Test UV finiteness
-#endif
+        call setDivergence
 
         if(flg_fakevirtuals) then
           ! = 010d, Bit0: set mass, Bit1: reset, Bit2: loop
@@ -170,16 +172,43 @@ c#define CHECKUV
         else
           ! = 110d, Bit0: set mass, Bit1: reset, Bit2: loop
           flags = 6
-          call RenConst
         endif
 
         call getAmps(p,flav,flags,amps(:))
         
-#ifdef DEBUG
-        !print*,st_muren2
-        !print*,"flav = ",flav
-        print*,"born, virt = ",amps
-        stop
+c#define CHECKUV
+#ifdef CHECKUV
+        ! test for finiteness
+        print*
+        print*, "checking for UV finiteness"
+        print*, "flav = ", flav
+        call clearcache
+        call setuvdiv(1d0)
+        call setdelta(1D7)    ! Test UV finiteness
+        call setDivergence
+
+        print*,"p(:,:) = "
+        print*,p(:,1)
+        print*,p(:,2)
+        print*,p(:,3)
+        print*,p(:,4)
+        print*,p(:,5)
+        print*,"pt(5) = ",dsqrt(p(1,5)**2+p(2,5)**2)
+        print*,"born, virt   = ", amps
+        
+        call getAmps(p,flav,flags,amps(:))
+        print*,"born, virtUV = ", amps
+        call nstop(100)
+#endif
+#ifdef DEBUGQ
+        !call printFormcalcModelParameters
+        print*,st_muren2
+        do i=1,nlegborn
+          !print*,"        flav(",i,") = ",flav(i)
+          do j=0,3
+            print*,"        p(",j,",",i,") = ", p(j,i)
+          enddo
+        enddo
 #endif
       end
 c############### end subroutine getVirtAmps ############################
@@ -252,15 +281,19 @@ c############### subroutine getAmps ####################################
         ! F g -> F F F
         if((f1.eq.0 .or. f2.eq.0).and.(flav(5).ne.0)) then
           if((f1.gt.0.and.isodd(f1)) .or. (f2.gt.0.and.isodd(f2))) then
+            call qdg_nInJqd_RenConst
             call qdg_nInJqd_squaredME(fc_result,helicities,flags)
             goto 20
           elseif((f1.gt.0.and.iseven(f1)) .or. (f2.gt.0.and.iseven(f2))) then
+            call qug_nInJqu_RenConst
             call qug_nInJqu_squaredME(fc_result,helicities,flags)
             goto 20
           elseif((f1.lt.0.and.isodd(f1)) .or. (f2.lt.0.and.isodd(f2))) then
+            call qdbarg_nInJqdbar_RenConst
             call qdbarg_nInJqdbar_squaredME(fc_result,helicities,flags)
             goto 20
           elseif((f1.lt.0.and.iseven(f1)) .or. (f2.lt.0.and.iseven(f2))) then
+            call qubarg_nInJqubar_RenConst
             call qubarg_nInJqubar_squaredME(fc_result,helicities,flags)
             goto 20
           else
@@ -269,9 +302,11 @@ c############### subroutine getAmps ####################################
         ! F F -> F F g
         else
           if(isodd(abs(f1)).and.isodd(abs(f2))) then
+            call qdqdbar_nInJg_RenConst
             call qdqdbar_nInJg_squaredME(fc_result,helicities,flags)
             goto 20
           elseif(iseven(abs(f1)).and.iseven(abs(f2))) then
+            call ququbar_nInJg_RenConst
             call ququbar_nInJg_squaredME(fc_result,helicities,flags)
             goto 20
           else

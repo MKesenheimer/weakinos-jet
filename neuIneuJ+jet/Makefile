@@ -351,7 +351,10 @@ endif
 ### Virtual Amplitudes in Formcalc_Virtuals/ ###
 VIRTUALS_F := $(wildcard $(FORMVIRTS)/squaredME/*.F)
 VIRTUALS := $(notdir $(VIRTUALS_F:.F=.o))
-VIRTUALS += RenConst.o RenConst1.o RenConst2.o
+
+RENCONST_F := $(wildcard $(FORMVIRTS)/RenConst/*.F)
+RENCONST := $(notdir $(RENCONST_F:.F=.o))
+VIRTUALS += $(RENCONST)
 
 ### FormCalc Real Amplitudes ###
 REALS_F := $(wildcard $(FORMREALS)/squaredME/*.F)

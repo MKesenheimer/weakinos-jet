@@ -431,6 +431,11 @@ c#define EPSMASS 1D-30
         par_MC = 0D0
         par_MD = 0D0
         par_MS = 0D0
+        ! physical masses (used for FormCalc)
+        !par_MU = 2.3D-3
+        !par_MC = 1.275D0
+        !par_MD = 4.8D-3
+        !par_MS = 95D0
 #endif
 
 c b quark mass
@@ -440,6 +445,8 @@ c b quark mass
         par_MB = EPSMASS
 #else
         par_MB = 0D0
+        ! physical mass
+        !par_MB = 4.180D0
 #endif
 #else
         ! read mass paramater from slha file
@@ -683,6 +690,18 @@ c MadGraphs couplings.f as well.
         MGl2 = MGl**2
         WGl  = par_WGl
 
+#ifdef DEBUGQ
+        ! no widths
+        WGl = 0D0
+        do i=1,2 ! sfermion index s
+          do j=1,4 ! type (nu,e,u,d)
+            do k=1,3 ! generation
+              WSf(i,j,k)  = 0D0
+            enddo
+          enddo
+        enddo
+#endif
+        
         ! Z/W Widths (added by hand to formcalc)
         WZ  = par_Zwidth
         WW  = par_Wwidth
