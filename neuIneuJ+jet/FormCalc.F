@@ -176,7 +176,7 @@ c############### subroutine getVirtAmps ################################
 
         call getAmps(p,flav,flags,amps(:))
         
-c#define CHECKUV
+#define CHECKUV
 #ifdef CHECKUV
         ! test for finiteness
         print*
@@ -209,6 +209,7 @@ c#define CHECKUV
             print*,"        p(",j,",",i,") = ", p(j,i)
           enddo
         enddo
+        stop
 #endif
       end
 c############### end subroutine getVirtAmps ############################

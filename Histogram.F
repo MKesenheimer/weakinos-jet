@@ -93,7 +93,7 @@ c############### generate histograms ###################################
         if(nhists.gt.nhistsmax) then
           nhists = nhistsmax
           if(warning) then
-            print*,"warning: two many histograms..."
+            print*,"warning: too many histograms..."
             do i=1,nhistsmax
               print*,i,trim(histlist(i))
             enddo

@@ -7,17 +7,6 @@ c############### subroutine printFormcalcModelParameters ###############
 #include "PhysPars.h"
         print*,"== SM Parameters == "
         print*
-        print*,"CKM matrix"
-        print*,"CKM(1,1) = ",CKM(1,1)
-        print*,"CKM(1,2) = ",CKM(1,2)
-        print*,"CKM(1,3) = ",CKM(1,3)
-        print*,"CKM(2,1) = ",CKM(2,1)
-        print*,"CKM(2,2) = ",CKM(2,2)
-        print*,"CKM(2,3) = ",CKM(2,3)
-        print*,"CKM(3,1) = ",CKM(3,1)
-        print*,"CKM(3,2) = ",CKM(3,2)
-        print*,"CKM(3,3) = ",CKM(3,3)
-        print*
         print*,"Strong and e.m. couplings"
         print*,"Alfa^-1    = ", 1/Alfa
         print*,"AlfaS^-1   = ", 1/AlfaS

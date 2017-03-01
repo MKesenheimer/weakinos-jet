@@ -26,7 +26,7 @@ c#include "opp.h"
 #include "model_sm.h"
 #include "osres.h"
 #include "indices.h"
-#include "susy_restore.h"
+
 
 #endif
 

@@ -12,13 +12,16 @@ c requires encoded process ID in lprup(1)
 #include "pwhg_st.h"
 #include "nlegborn.h"
 #include "osres.h"
+#ifndef collier
+#include "looptools.h"
+#endif
         double precision powheginput
         external powheginput
         ! final state IDs
         integer id_fin1, id_fin2
         logical verbose
         parameter (verbose=.true.)
-        
+
         ! extract particle types from process id
         call decode_pair(lprup(1),id_fin1,id_fin2)
 #ifdef DEBUG
@@ -33,41 +36,6 @@ c requires encoded process ID in lprup(1)
         ! the provided slha file.
         call set_madgraph_params
         
-        ! override SLHA parameters by explicit parameters from powheg.input
-        ! this can be easily extended
-        print*, "checking for parameters in powheg.input"
-        print*, "(if given, they override SLHA SM parameters)"
-        if(powheginput("#inv_alpha").gt.0) then
-          print*,"note: using inv_alpha from powheg.input"
-          par_alpha = 1d0/powheginput("inv_alpha")
-          alpha = par_alpha
-          call set_madgraph_params ! overwrite the current madgraph alpha with the new one
-        endif
-        if(powheginput("#Zmass").gt.0) then
-          print*,"note: using Zmass from powheg.input"
-          par_Zmass = powheginput("Zmass")
-          zmass = par_Zmass
-          call set_madgraph_params
-        endif
-        if(powheginput("#Wmass").gt.0) then
-          print*,"note: using Wmass from powheg.input"
-          par_Wmass = powheginput("Wmass")
-          wmass = par_Wmass
-          call set_madgraph_params
-        endif
-        if(powheginput("#Zwidth").gt.0) then
-          print*,"note: using Zwidth from powheg.input"
-          par_Zwidth = powheginput("Zwidth")
-          zwidth = par_Zwidth ! madgraph
-          call set_madgraph_params
-        endif
-        if(powheginput("#Wwidth").gt.0) then
-          print*,"note: using Wwidth from powheg.input"
-          par_Wwidth = powheginput("Wwidth")
-          wwidth = par_Wwidth ! madgraph
-          call set_madgraph_params
-        endif
-
         ! set remaining FormCalc parameters
         call set_formcalc_params
 
@@ -82,7 +50,6 @@ c requires encoded process ID in lprup(1)
         call set_general_couplings(id_fin1,id_fin2)
         ! set the parameters for treating the on-shell resonances
         call set_os_regulator
-
 
         ! Print out all parameters if you want
         if(verbose) then
@@ -218,18 +185,33 @@ c requires encoded process ID in lprup(1)
           stop
         endif
 
-        ! init LoopTools
-        !print*, "===================================================="
-        !print*, "             init LoopTools                         "
-        !call ltini
-        !call setversionkey(0)
-        !print*
-        
+#ifdef collier
         ! init COLLIER
         print*, "===================================================="
         print*, "                   init Collier                     "
         print*, "===================================================="
         call init_collier(6,6)
+#else
+        ! init LoopTools
+        print*, "===================================================="
+        print*, "             init LoopTools                         "
+        call ltini
+        ! 0*key: compute version a
+        ! 1*key: compute version b
+        ! 2*key: compute both, compare, return a
+        ! 3*key: compute both, compare, return b
+        ! KeyA0, KeyBget, KeyC0, KeyD0, KeyEget, KeyEgetC, KeyAll 
+        call setversionkey(0*KeyAll) ! default 0
+        call setmaxdev(1D-3) ! default 1D-12
+        call setminmass(0D0) ! default 0D0
+        call setzeroeps(10D-22) ! default 1D-22
+        call setdiffeps(10D-12) ! default 1D-12
+        print*,"versionkey: ", getversionkey()
+        print*,"maxdev: ", getmaxdev()
+        print*,"minmass: ", getminmass()
+        print*, "===================================================="
+        print*
+#endif 
       end
 c############### end subroutine init_couplings #########################
 
@@ -286,10 +268,6 @@ c set the madgraph and formcalc couplings event by event
 
         ! set the MadGraph SUSY-QCD couplings
         call INIT_SUSY_QCD(GS)
-
-        ! initialize the counter term wich cures the susy breaking
-        ! introduced by DR
-        call init_susy_restore
 
 #ifdef DEBUGQ
         print*,"AlfaS: ", AlfaS
@@ -418,42 +396,20 @@ c sets the PhysPars.h parameters
         ! gluino mass
         par_MGl = dreal(Mass_MGl)
 
-c small mass to regularize LoopTools integrals
-c#define EPSMASS 1D-30
-#ifdef EPSMASS
-        print*,"note (PhysPars): neglecting u,d,c,s-quark masses"
-        par_MU = EPSMASS ! note: setting this exactly to zero can cause 
-        par_MC = EPSMASS ! problems in calculating propagators, since the
-        par_MD = EPSMASS ! formcalc code already neglects all light 
-        par_MS = EPSMASS ! masses analytically but leaves some masses in propagators
-#else
+        ! quark masses
         par_MU = 0D0
         par_MC = 0D0
         par_MD = 0D0
         par_MS = 0D0
-        ! physical masses (used for FormCalc)
-        !par_MU = 2.3D-3
-        !par_MC = 1.275D0
-        !par_MD = 4.8D-3
-        !par_MS = 95D0
-#endif
 
-c b quark mass
 #ifdef NEGLECTBMASS
         print*,"note (PhysPars): neglecting b-quark mass"
-#ifdef EPSMASS
-        par_MB = EPSMASS
-#else
         par_MB = 0D0
-        ! physical mass
-        !par_MB = 4.180D0
-#endif
 #else
         ! read mass paramater from slha file
         par_MB  = dreal(Mass_Mf(4,3)) 
 #endif
 
-        ! top mass
         !par_MT  = dreal(Mass_Mf(3,3))
         par_MT = dreal(SMInputs_Mt)
 
@@ -506,7 +462,7 @@ c version.
         enddo
 #endif
 
-! extract particle types from process id
+        ! extract particle types from process id
         call decode_pair(lprup(1),id_fin1,id_fin2)
 #ifdef DEBUG
         print*, "extracted from process ID: ", lprup(1)
@@ -593,29 +549,6 @@ c sets the FormCalc parameters
           called=.true.
         endif
 
-c CKM-Matrix
-c if you change this, you have to change something in
-c MadGraphs couplings.f as well.
-#define NO_CKM_MIXING
-#ifdef NO_CKM_MIXING
-        print*, "note (FormCalc): no CKM mixing"
-        do i=1,3
-          do j=1,3
-            CKM(i,j) = kronecker(i,j)
-          enddo
-        enddo
-#else
-        CKM(1,1) = 0.97427d0
-        CKM(1,2) = 0.22534d0
-        CKM(1,3) = 0.00351d0
-        CKM(2,1) = 0.22520d0
-        CKM(2,2) = 0.97344d0
-        CKM(2,3) = 0.04120d0
-        CKM(3,1) = 0.00867d0
-        CKM(3,2) = 0.04040d0
-        CKM(3,3) = 0.99915d0
-#endif
-
         ! Slepton/Squark masses and widths
         do i=1,2 ! sfermion index s
           do j=1,4 ! type (nu,e,u,d)
@@ -690,18 +623,6 @@ c MadGraphs couplings.f as well.
         MGl2 = MGl**2
         WGl  = par_WGl
 
-#ifdef DEBUGQ
-        ! no widths
-        WGl = 0D0
-        do i=1,2 ! sfermion index s
-          do j=1,4 ! type (nu,e,u,d)
-            do k=1,3 ! generation
-              WSf(i,j,k)  = 0D0
-            enddo
-          enddo
-        enddo
-#endif
-        
         ! Z/W Widths (added by hand to formcalc)
         WZ  = par_Zwidth
         WW  = par_Wwidth
@@ -910,43 +831,6 @@ c MadGraphs couplings.f as well.
         MHp2C = dcmplx(MHp2)
       end
 c############### end subroutine set_formcalc_params ####################
-
-c############### init_susy_restore subroutine ##########################
-c initialization of susy restoring counter terms and yukawa couplings
-c quark-squark-gluino (not needed here):
-c     gsy -> gsy + dZgs1y
-c                  dZgs1y = gs*Alfas/(3*Pi)
-c and SUSY-restoring term for Yukawa coupling
-c quark-squark-neutralino:
-c     gy -> gy + dZe1y
-c                dZe1y = - e*Alfas/(6*Pi)
-c the counter terms at amplitude squared niveau is implemented in
-c ddbar_SquaredME.F and uubar_SquaredME.F.
-      subroutine init_susy_restore
-        implicit none
-#include "PhysPars.h"
-#include "pwhg_st.h"
-#include "susy_restore.h"
-        ! the counter term for quark-squark-gluino is not needed here (TODO: check!)
-        dZgs1y = 0 ! gs*Alfas/(3D0*Pi)
-        ! counter term for quark-squark-neutralino yukawa coupling
-        dZe1y  = -el*Alfas/(6D0*m_pi)
-        
-#ifdef CHECKUV
-        dZgs1y = 0
-        dZe1y  = 0
-#endif
-        
-#ifdef DEBUGQ
-        print*,"dZgs1y",dZgs1y
-        print*,"dZe1y",dZe1y
-        print*,"st_alpha", st_alpha
-        print*,"AlfaS", AlfaS
-        print*,"Alfa",Alfa
-        print*,"EL**2/4Pi",EL**2/(4*m_i)
-#endif
-      end
-c############### end init_susy_restore subroutine ######################
 
 c############### subroutine set_os_regulator ###########################
 c set the on shell regulator wreg1 (single) and wreg2 (double resonances)

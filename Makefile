@@ -73,21 +73,25 @@ WORKINGDIR = $(shell pwd)
 
 # directories
 TOOLS   = $(WORKINGDIR)/Tools
-SLHA   = $(TOOLS)/SLHALib-2.2
-DHELAS = $(TOOLS)/DHELAS
-PYTHIA = $(TOOLS)/pythia8215
+SLHA    = $(TOOLS)/SLHALib-2.2
+DHELAS  = $(TOOLS)/DHELAS
+PYTHIA  = $(TOOLS)/pythia8215
 COLLIER = $(TOOLS)/COLLIER-1.1
 COLLIERINTERFACE = $(TOOLS)/collier
+LT      = $(TOOLS)/LoopTools-2.12
 
 ALL_FCFLAGS  = $(REC_FCFLAGS) $(OPT) $(WARN)
 
-libs: libdhelas3.a libcollier.a libSLHA.a print-info
+libs: libdhelas3.a libcollier.a libooptools.a libSLHA.a print-info
 
 all: libs pastegnudata
 
 libdhelas3.a:
 	cd $(DHELAS) && make FC="$(FC)" F77="$(FC)" XFFLAGS="$(ALL_FCFLAGS)"
 
+libooptools.a:
+	cd $(LT) && make FC="$(FC)" F77="$(FC)" FFLAGS="$(ALL_FCFLAGS)" CXXFLAGS="$(REC_CXXFLAGS)" CFLAGS="$(REC_CFLAGS)"
+	
 libSLHA.a:
 	cd $(SLHA) && make FC="$(FC)" F77="$(FC)" FFLAGS="$(ALL_FCFLAGS)" CXXFLAGS="$(REC_CXXFLAGS)" CFLAGS="$(REC_CFLAGS)"
 
@@ -108,6 +112,7 @@ clean-libs:
 	cd $(SLHA) && make clean
 	cd $(PYTHIA) && make distclean
 	cd $(COLLIER) && rm -rf build/*
+	cd $(LT) && make clean
 
 clean clean-all: clean-libs
 	cd neuIneuJ+jet && make clean-all

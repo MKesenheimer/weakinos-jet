@@ -89,7 +89,7 @@ subroutine Aput(Atab,m)
 
   call SetDeltaIR_cll(DeltaIR1s,DeltaIR2s) 
 
-#ifdef DEBUG
+#if DEBUG > 4
   do i=1,Naa
     if(isNaN(dble(Atab(i))) .or. isNaN(dimag(Atab(i)))) then
       print*,"Atab",Atab(:)
@@ -235,7 +235,7 @@ subroutine Bput(Btab,p10,m02,m12)
 
   call SetDeltaIR_cll(DeltaIR1s,DeltaIR2s)
 
-#ifdef DEBUG
+#if DEBUG > 4
   do i=1,Nbb
     if(isNaN(dble(Btab(i))) .or. isNaN(dimag(Btab(i)))) then
       print*,"Btab",Btab(:)
@@ -347,7 +347,7 @@ subroutine Cput(Ctab,p10,p21,p20,m02,m12,m22)
 
   call SetDeltaIR_cll(DeltaIR1s,DeltaIR2s)
 
-#ifdef DEBUG
+#if DEBUG > 4
   do i=1,Ncc
     if(isNaN(dble(Ctab(i))) .or. isNaN(dimag(Ctab(i)))) then
       print*,"Ctab",Ctab(:)
@@ -518,7 +518,7 @@ subroutine Dput(Dtab,p10,p21,p32,p30,p20,p31,m02,m12,m22,m32)
 
   call SetDeltaIR_cll(DeltaIR1s,DeltaIR2s)
 
-#ifdef DEBUG          
+#if DEBUG > 4
   do i=1,Ndd          
     if(isNaN(dble(Dtab(i))) .or. isNaN(dimag(Dtab(i)))) then
       print*,"Dtab",Dtab(:)
@@ -701,7 +701,7 @@ subroutine Eput(Etab,p10,p21,p32,p43,p40,p20,p31,p42,p30,p41,m02,m12, &
 
   call SetDeltaIR_cll(DeltaIR1s,DeltaIR2s)
 
-#ifdef DEBUG          
+#if DEBUG > 4 
   do i=1,Nee
     if(isNaN(dble(Etab(i))) .or. isNaN(dimag(Etab(i)))) then
       print*,"Etab",Etab(:)

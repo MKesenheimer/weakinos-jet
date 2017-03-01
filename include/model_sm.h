@@ -13,8 +13,6 @@ c############### model_sm.h ############################################
         double precision MU, MU2, MC, MC2, MT, MT2
         double precision MD, MD2, MS, MS2, MB, MB2
         double precision Mf(4,3), Mf2(4,3)
-        ! CKM matrix (here: identity)
-        double precision CKM(3,3)
         ! strong and e.m. coupling constants
         double precision EL, GS
 
@@ -32,7 +30,7 @@ c############### model_sm.h ############################################
         common /smpara/ MU, MU2, MC, MC2, MT, MT2
         common /smpara/ MD, MD2, MS, MS2, MB, MB2
         common /smpara/ Mf,Mf2
-        common /smpara/ CKM, EL, GS
+        common /smpara/ EL, GS
         common /smpara/ MZC, MZ2C, MWC, MW2C
         common /smpara/ MUC, MU2C, MCC, MC2C, MTC, MT2C 
         common /smpara/ MDC, MD2C, MSC, MS2C, MBC, MB2C

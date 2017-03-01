@@ -25,7 +25,6 @@ Print[process]
 
 
 (*Options*)
-(*MSSMCTPOWHEG, SQCDCT*)
 SetOptions[InsertFields, Model -> "SMQCD",
 		   LastSelections -> {}];
 

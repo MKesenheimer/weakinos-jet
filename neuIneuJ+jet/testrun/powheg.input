@@ -23,24 +23,14 @@ chainA '1000023->1000022,23;23->11,-11;'
 chainB '1000023->1000022,23;23->13,-13;'
 
 ! physics
-incomingflavors 4    ! (default 4) number of incoming flavor
-
-! by default, these parameters are set according to the SLHA input file.
-! however, they may be set to explicit values here.
-! do not change any parameters unless you know what you do.
+incomingflavors 4         ! (default 4) number of incoming flavor
 SLHA  'input_orig.slha'   !  name of the SLHA input-file, should not be longer than 100 signs
-#inv_alpha  132.45335526012687d0 ! 1/(fine struct. const) (or 1/(eff.coupl.), must be greater than 0d0
-#Zmass      91.186996459960938d0 ! directly used for propagators (PDG2012), must be greater than 0d0
-#Zwidth     1d-10                ! directly used for propagators (PDG2012), must be greater than 0d0
-#Wmass      80.410003662109375d0 ! directly used for propagators (PDG2012), must be greater than 0d0
-#Wwidth     1d-10                ! directly used for propagators (PDG2012), must be greater than 0d0
-
-ih1     1            ! hadron 1 (1 for protons, -1 for antiprotons)
-ih2     1            ! hadron 2 (1 for protons, -1 for antiprotons)
-#ndns1  132          ! pdf set for hadron 1 (mlm numbering)
-#ndns2  132          ! pdf set for hadron 2 (mlm numbering)
-ebeam1  7000d0       ! energy of beam 1
-ebeam2  7000d0       ! energy of beam 2
+ih1     1                 ! hadron 1 (1 for protons, -1 for antiprotons)
+ih2     1                 ! hadron 2 (1 for protons, -1 for antiprotons)
+#ndns1  132               ! pdf set for hadron 1 (mlm numbering)
+#ndns2  132               ! pdf set for hadron 2 (mlm numbering)
+ebeam1  7000d0            ! energy of beam 1
+ebeam2  7000d0            ! energy of beam 2
 
 ! To be set only if using LHA pdfs
 ! LO:

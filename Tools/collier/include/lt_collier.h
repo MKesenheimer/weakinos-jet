@@ -7,8 +7,8 @@ modified for interface with Collier
 #endif
 
 
-#ifndef LOOPTOOLS_H
-#define LOOPTOOLS_H
+#ifndef LT_COLLIER_H
+#define LT_COLLIER_H
 
 #define aa0 1
 #define aa00 4

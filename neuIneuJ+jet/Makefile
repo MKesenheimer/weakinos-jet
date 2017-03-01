@@ -74,6 +74,11 @@ LHAPDF_CONFIG = lhapdf-config
 ## path to fastjet config executable
 FASTJET_CONFIG = fastjet-config
 
+## choose LoopTools or Collier to evaluate loop integrals (Collier is slower
+## but can handle particle widths). (looptools, collier)
+LOOPINT = collier
+USRFLAGS += -D$(LOOPINT)
+
 ## Pythia8
 # if you want to use Pythia8 instead of Pythia6 uncomment the following
 #USE_PYTHIA8 = yes
@@ -204,6 +209,7 @@ FRINCLUDE   = $(FORMREALS)/include
 FRGINCLUDE  = $(FORMREALS)/global
 FVGINCLUDE  = $(FORMVIRTS)/global
 CINCLUDE    = $(TOOLS)/collier/include
+LTINCLUDE   = $(TOOLS)/LoopTools-2.12/src/include
 
 # modules
 ifeq ($(UNAME), Darwin)
@@ -292,7 +298,10 @@ USER = Born.o Born_phsp.o Reals.o Virtuals.o 	\
        set_channel.o Histogram.o
 
 ### Functions in Tools/functions/
-FUNC = funcprocess.o Print.o funcbasic.o off_to_on.o lt_collier_interface_complex.o
+FUNC = funcprocess.o Print.o funcbasic.o off_to_on.o 
+ifeq ("$(LOOPINT)","collier")
+  FUNC += lt_collier_interface_complex.o
+endif
 
 ### MadGraph mandatory files
 MADGRAPH = couplings.o hardstop.o printout.o read_slha.o \
@@ -379,8 +388,14 @@ LIBS += $(TOOLS)/libSLHA.a
 ### DHELAS in Tools/DHELAS ###
 LIBS += $(TOOLS)/libdhelas3.a
 
-### COLLIER in Tools/COLLIER ###
-LIBS += $(TOOLS)/libcollier.a
+ifeq ("$(LOOPINT)","collier")
+  ### COLLIER in Tools/COLLIER ###
+  LIBS += $(TOOLS)/libcollier.a
+else
+  ### LoopTools in Tools/Looptools-2.12 ###
+  LIBS += $(TOOLS)/libooptools.a
+  #$(error $(LIBS))
+endif
 
 ### Libraries for linking c++ code
 LIBS += -ldl -lstdc++
@@ -395,9 +410,12 @@ ALL_FCFLAGS   = $(REC_FCFLAGS) $(OPT) $(WARN) $(CPP) $(DEBUG) $(USRFLAGS) $(CHAN
 ALL_FCFLAGS  += -I$(UINCLUDE) -I$(PINCLUDE) -I$(MDINCLUDE)
 ALL_FCFLAGS  += -I$(SINCLUDE) -I$(WORKINGDIR) -I$(VINCLUDE) -I$(SLHAINCLUDE)
 ALL_FCFLAGS  += -I$(FRINCLUDE) -I$(FRGINCLUDE) -I$(FVGINCLUDE) -I$(RENINCLUDE)
-ALL_FCFLAGS  += -I$(CINCLUDE)
-
-ALL_FCFLAGS  += -J$(CMODULES)
+ifeq ("$(LOOPINT)","collier")
+  ALL_FCFLAGS  += -I$(CINCLUDE)
+  ALL_FCFLAGS  += -J$(CMODULES)
+else
+  ALL_FCFLAGS  += -I$(LTINCLUDE)
+endif
 
 ALL_CFLAGS    = $(REC_CFLAGS) $(OPT)
 
@@ -410,9 +428,14 @@ HEADERS += $(wildcard *.h $(SLHAINCLUDE)/*.h)
 HEADERS += $(wildcard *.h $(MDINCLUDE)/*.h $(SINCLUDE)/*.h)
 HEADERS += $(wildcard *.h $(VINCLUDE)/*.h $(FVGINCLUDE)/*.h)
 HEADERS += $(wildcard *.h $(FRINCLUDE)/*.h $(FRGINCLUDE)/*.h)
-HEADERS += $(wildcard *.h $(RENINCLUDE)/*.h $(CINCLUDE)/*.h)
+HEADERS += $(wildcard *.h $(RENINCLUDE)/*.h)
 HEADERS += $(wildcard *.inc $(MDINCLUDE)/*.inc $(UINCLUDE)/*.inc)
-HEADERS += $(wildcard *.mod $(CMODULES)/*.mod)
+ifeq ("$(LOOPINT)","collier")
+  HEADERS += $(wildcard *.h $(CINCLUDE)/*.h)
+  HEADERS += $(wildcard *.mod $(CMODULES)/*.mod)
+else
+  HEADERS += $(wildcard *.h $(LTINCLUDE)/*.h)
+endif
 
 ########################################################################
 ## Rules, generate objects
@@ -456,7 +479,7 @@ formcalc_virtuals.a: $(addprefix ./build/, $(VIRTUALS))
 libs: formcalc_reals.a formcalc_virtuals.a
 
 pwhg_main_ninj+jet: $(addprefix ./build/, $(SOURCESMAIN))
-	$(FC) $(ALL_FCFLAGS) $(patsubst %,build/%,$(SOURCESMAIN)) $(LINKER) $(FORMREALS)/formcalc_reals.a $(FORMVIRTS)/formcalc_virtuals.a -o $@
+	$(FC) $(ALL_FCFLAGS) $(patsubst %,build/%,$(SOURCESMAIN)) $(FORMREALS)/formcalc_reals.a $(FORMVIRTS)/formcalc_virtuals.a $(LINKER) -o $@
 
 lhef_analysis: $(addprefix ./build/, $(SOURCESLHEF))
 	$(FC) $(ALL_FCFLAGS) $(patsubst %,build/%,$(SOURCESLHEF)) $(LINKER) -o $@ 

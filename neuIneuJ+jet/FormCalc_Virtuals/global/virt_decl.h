@@ -16,7 +16,11 @@
 * declarations for every subroutine
 
 #include "virt_const.h"
+#ifdef collier
 #include "lt_collier.h"
+#else
+#include "looptools.h"
+#endif
 
 #endif
 
