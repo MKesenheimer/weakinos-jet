@@ -25,8 +25,8 @@ c parton parton -> weakino weakino
         logical verbose
         logical init_born
         data init_born/.true./
-#ifdef DEBUGQ
         integer i
+#ifdef DEBUGQ
         double precision s35, s45
 #endif
 

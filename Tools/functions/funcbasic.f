@@ -291,6 +291,7 @@ c transforms a lower case character string to an upper case
         implicit none
         character*100 str1, upper1
         integer j
+        upper1 = str1
 #ifdef DEBUGQ
         print*,str1
 #endif
@@ -304,9 +305,6 @@ c transforms a lower case character string to an upper case
         enddo
 #ifdef DEBUGQ
         print*,upper1
-#endif
-#ifdef DEBUGQ
-        upper1 = str1
 #endif
       end
 

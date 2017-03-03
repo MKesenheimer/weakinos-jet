@@ -5,7 +5,7 @@
 SHELL = /bin/sh
 .SUFFIXES:
 .SUFFIXES: .c .f .F .cc .cpp .h .hh .inc .o .a
-.DEFAULT_GOAL := all
+.DEFAULT_GOAL := pwhg_main_ninj+jet
 
 ########################################################################
 ## Flags
@@ -26,7 +26,7 @@ CFLAGS   = -pg
 # warnings, no -Wtabs, -Wunused
 WARNINGS  = -Waliasing -Wampersand -Wconversion -Wsurprising -Wc-binding-type
 WARNINGS += -Wintrinsics-std -Wintrinsic-shadow -Wline-truncation -Wtarget-lifetime
-WARNINGS += -Wreal-q-constant
+WARNINGS += -Wreal-q-constant 
   
 # recommended compiler flags
 ifeq ($(FC), ifort)
@@ -130,6 +130,8 @@ CPP = -cpp
 # 4 to choose the level of verbosity (higher means more output).
 LEVEL = 0
 DEBUG = -ggdb -pg -DDEBUG=$(LEVEL)
+# Runtime check
+#DEBUG += -fcheck=all
 
 ## More debugging flags
 # Check UV finiteness in FormCalc Virtuals: -DCHECKUV

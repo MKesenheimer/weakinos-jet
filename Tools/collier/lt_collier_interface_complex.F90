@@ -890,7 +890,7 @@ subroutine init_collier(Nmax,Rmax)
   NCacheSave = ncache
   NmaxSave = Nmax
   RmaxSave = Rmax
-  call Init_cll(Nmax,Rmax,"collier")
+  call Init_cll(Nmax,Rmax,"")
   call InitCacheSystem_cll(ncache,Nmax)
   ! 1: use COLI branch, 2: DD branch
   call SetMode_cll(1)

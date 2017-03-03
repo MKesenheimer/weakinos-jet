@@ -141,7 +141,7 @@ DoPaint[diags_, type_, opt___] := Paint[diags, opt,
   DisplayFunction -> (Export[ToFileName[$PaintSE, name <> "_" <> type <> ".pdf"], #]&)]
 
 (*faster code generation without boxes and pentagons, could be used for debugging*)
-$FastCode = False;
+$FastCode = True;
 
 (*complexify the arguments of the loop functions (required for the use with collier)*)
 cmplx = {0->dcmplx[0], MZ->MZC, MW->MWC, MZ2->MZ2C, MW2->MW2C, MU->MUC, MC->MCC, MT->MTC, MD->MDC, MS->MSC, MB->MBC, MU2->MU2C, MC2->MC2C, MT2->MT2C, MD2->MD2C, MS2->MS2C, MB2->MB2C, 

@@ -175,8 +175,8 @@ c############### subroutine getVirtAmps ################################
         endif
 
         call getAmps(p,flav,flags,amps(:))
-        
-#define CHECKUV
+      
+c#define CHECKUV
 #ifdef CHECKUV
         ! test for finiteness
         print*
@@ -277,24 +277,26 @@ c############### subroutine getAmps ####################################
         ! set the formCalc vectors
         call formCalcVecSet(nlegborn,ps,flavs)
 
+        print*,"getAmps: calling born+virtual amplitudes"
+
 #define MATRIXELEMENT
 #ifdef MATRIXELEMENT
         ! F g -> F F F
         if((f1.eq.0 .or. f2.eq.0).and.(flav(5).ne.0)) then
           if((f1.gt.0.and.isodd(f1)) .or. (f2.gt.0.and.isodd(f2))) then
-            call qdg_nInJqd_RenConst
+            if(flags.eq.6) call qdg_nInJqd_RenConst
             call qdg_nInJqd_squaredME(fc_result,helicities,flags)
             goto 20
           elseif((f1.gt.0.and.iseven(f1)) .or. (f2.gt.0.and.iseven(f2))) then
-            call qug_nInJqu_RenConst
+            if(flags.eq.6) call qug_nInJqu_RenConst
             call qug_nInJqu_squaredME(fc_result,helicities,flags)
             goto 20
           elseif((f1.lt.0.and.isodd(f1)) .or. (f2.lt.0.and.isodd(f2))) then
-            call qdbarg_nInJqdbar_RenConst
+            if(flags.eq.6) call qdbarg_nInJqdbar_RenConst
             call qdbarg_nInJqdbar_squaredME(fc_result,helicities,flags)
             goto 20
           elseif((f1.lt.0.and.iseven(f1)) .or. (f2.lt.0.and.iseven(f2))) then
-            call qubarg_nInJqubar_RenConst
+            if(flags.eq.6) call qubarg_nInJqubar_RenConst
             call qubarg_nInJqubar_squaredME(fc_result,helicities,flags)
             goto 20
           else
@@ -303,11 +305,11 @@ c############### subroutine getAmps ####################################
         ! F F -> F F g
         else
           if(isodd(abs(f1)).and.isodd(abs(f2))) then
-            call qdqdbar_nInJg_RenConst
+            if(flags.eq.6) call qdqdbar_nInJg_RenConst
             call qdqdbar_nInJg_squaredME(fc_result,helicities,flags)
             goto 20
           elseif(iseven(abs(f1)).and.iseven(abs(f2))) then
-            call ququbar_nInJg_RenConst
+            if(flags.eq.6) call ququbar_nInJg_RenConst
             call ququbar_nInJg_squaredME(fc_result,helicities,flags)
             goto 20
           else
@@ -320,6 +322,8 @@ c############### subroutine getAmps ####################################
         stop
  20     continue
 #endif
+
+        print*,"getAmps: finish.",fc_result(1)
 
         amp(1) = fc_result(1)/symfac
         amp(2) = fc_result(2)/symfac
@@ -407,6 +411,8 @@ c############### subroutine getRealAmps ################################
         ! set the formCalc vectors
         call formCalcVecSet(nlegreal,ps,flavs)
 
+        print*,"getRealAmps: calling real amplitudes"
+        
 #define MATRIXELEMENT
 #ifdef MATRIXELEMENT
         ! F F -> F F F F
@@ -414,10 +420,6 @@ c############### subroutine getRealAmps ################################
           if(isodd(abs(f1)).and.isodd(abs(f2))) then
             if(f1.lt.0.and.f2.lt.0) then
               call qdbarqdbar_nInJqdbarqdbar_squaredME(fc_result,helicities,flags)
-#ifdef DEBUGQ
-              print*,fc_result
-              stop
-#endif
               goto 20
             elseif(f1.gt.0.and.f2.lt.0.and.isodd(abs(f5)).and.f5.gt.0) then  
               call qdqdbar_nInJqdqdbar_squaredME(fc_result,helicities,flags)
@@ -590,6 +592,8 @@ c############### subroutine getRealAmps ################################
         stop
  20     continue
 #endif
+
+        print*,"getRealAmps: finish", fc_result(1)
  
         amp = fc_result(1)/symfac
 
@@ -685,6 +689,8 @@ c############### subroutine getRealOSAmps ##############################
         ! set the channel informations, in particular the sfermion indices
         ! which are needed by the realOS routines
         call set_channel(flav,ichan)
+      
+        print*,"getRealOSAmps: calling realOS amplitudes"
       
 #define MATRIXELEMENT
 #ifdef MATRIXELEMENT
@@ -831,6 +837,8 @@ c############### subroutine getRealOSAmps ##############################
         stop
  20     continue
 #endif
+
+        print*,"getRealOSAmps: finish", fc_result(1)
 
         ampos = fc_result(1)/symfac
       end

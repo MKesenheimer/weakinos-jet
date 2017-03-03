@@ -1,6 +1,6 @@
 ! Particle ids for final state weakinos A and B. PDG convention.
 fin1  1000022   ! neu10 = 1000022, neu20 = 1000023, neu30 = 1000025,
-fin2  1000023  ! neu40 = 1000035, cha1+ = 1000024, cha2+ = 1000037
+fin2  1000023   ! neu40 = 1000035, cha1+ = 1000024, cha2+ = 1000037
 
 ! Analysis
 ! the user should take care of which decay products are meaningful
@@ -23,24 +23,25 @@ chainA '1000023->1000022,23;23->11,-11;'
 chainB '1000023->1000022,23;23->13,-13;'
 
 ! physics
-incomingflavors 2         ! (default 4) number of incoming flavor
-SLHA  'input_orig.slha'   !  name of the SLHA input-file, should not be longer than 100 signs
-ih1     1                 ! hadron 1 (1 for protons, -1 for antiprotons)
-ih2     1                 ! hadron 2 (1 for protons, -1 for antiprotons)
-#ndns1  132               ! pdf set for hadron 1 (mlm numbering)
-#ndns2  132               ! pdf set for hadron 2 (mlm numbering)
-ebeam1  7000d0            ! energy of beam 1
-ebeam2  7000d0            ! energy of beam 2
+! name of the SLHA input-file, should not be longer than 100 signs
+SLHA 'input_orig.slha'   
+incomingflavors 2    ! (default 4) number of incoming flavor
+ih1     1            ! hadron 1 (1 for protons, -1 for antiprotons)
+ih2     1            ! hadron 2 (1 for protons, -1 for antiprotons)
+#ndns1  132          ! pdf set for hadron 1 (mlm numbering)
+#ndns2  132          ! pdf set for hadron 2 (mlm numbering)
+ebeam1  7000d0       ! energy of beam 1
+ebeam2  7000d0       ! energy of beam 2
 
 ! To be set only if using LHA pdfs
 ! LO:
-lhans1 10042        ! CTeQ6l1 PDF LO, pdf set for hadron 1 (LHA numbering)
-lhans2 10042        ! CTeQ6l1 PDF LO, pdf set for hadron 2 (LHA numbering)
+lhans1 10042         ! CTeQ6l1 PDF LO, pdf set for hadron 1 (LHA numbering)
+lhans2 10042         ! CTeQ6l1 PDF LO, pdf set for hadron 2 (LHA numbering)
 ! NLO:
 #lhans1 10550        ! CTeQ6.6M PDF NLO, pdf set for hadron 1 (LHA numbering)
 #lhans2 10550        ! CTeQ6.6M PDF NLO, pdf set for hadron 2 (LHA numbering)
-#lhans1 90400         ! PDF4LHC15_nlo_30_pdfas
-#lhans2 90400         ! PDF4LHC15_nlo_30_pdfas   
+#lhans1 90400        ! PDF4LHC15_nlo_30_pdfas
+#lhans2 90400        ! PDF4LHC15_nlo_30_pdfas   
 ! To be set only if using different pdf sets for the two incoming hadrons
 #QCDLambda5  0.25    ! for not equal pdf sets 
 
@@ -67,9 +68,9 @@ numevts  0           ! number of events to be generated
 
 ! OPTIONAL PARAMETERS
 runningscale   0     ! (default 0) use ref. scale=virtuality Q (default 0, use fixed scale)
-fakevirtuals  1     ! (default 0) generate the grid with fake virtuals
-softtest      1     ! (default 0) check soft singularities
-colltest      1     ! (default 0) check collinear singularities
+#fakevirtuals  1     ! (default 0) generate the grid with fake virtuals
+#softtest      1     ! (default 0) check soft singularities
+#colltest      1     ! (default 0) check collinear singularities
 renscfact     1d0    ! (default 1d0) ren scale factor: muren  = muref * renscfact
 facscfact     1d0    ! (default 1d0) fac scale factor: mufact = muref * facscfact
 #bornonly       1    ! (default 0) if 1 do Born only
@@ -81,12 +82,12 @@ facscfact     1d0    ! (default 1d0) fac scale factor: mufact = muref * facscfac
 #hfact        100d0  ! (default no damping factor) damp factor for high-pt radiation: > 0 dampfac=h**2/(pt2+h**2)
 #hdamp        100d0  ! damping factor h**2/(pt2+h**2) to separate real contributions between Sudakov and remnants
 #storemintupb   0    ! whether to save btilde calls to set up upper bounding envelope
-ewi1           0d0  ! regulator for single on-shell resonances
-ewi2           0d0  ! regulator for double on-shell resonances
+ewi1           0d0   ! regulator for single on-shell resonances
+ewi2           0d0   ! regulator for double on-shell resonances
 
 ! new POWHEG-BOX-V2 features (rev. >3306)
-compress_lhe 1      ! activate lhe compression 
-#rwl_add 1          ! uncomment if you want to reweight the events
+compress_lhe 1       ! activate lhe compression 
+#rwl_add 1           ! uncomment if you want to reweight the events
 rwl_file '-'
 <initrwgt>
 <weightgroup name='FAC'>
