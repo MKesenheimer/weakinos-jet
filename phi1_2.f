@@ -70,16 +70,10 @@ c psgen=3:     flat in tan tau with arbitrary exponent
 
         ! reset jacobian
         jac = 1D0
-
         ! min and max values of tau
         taumin = minmass**2/sbeams
-        taumax = 1D0
-
-#ifdef DEBUGQ
-#define DEBUG1
-        xx(1) = 1D0
-#endif        
-
+        taumax = 1D0         
+        
         ! map xx(1) to tau = x1*x2
         ! with condition:
         ! (m3+m4)**2 <= sborn <= sbeams
@@ -104,15 +98,7 @@ c psgen=3:     flat in tan tau with arbitrary exponent
          print*, 'Wrong psgen in Born_phsp.F'
          stop
         endif        
-
-#ifdef DEBUG1
-        print*,"taumin", taumin
-        print*,"taumax", taumax
-        print*,"tau = ", tau
-        print*,"jac = ", jac
-        stop
-#endif
-
+        
         ! map xx(2) to rapidity y
         ! with condition:
         ! 1/2*log(tau) <= y <= -1/2*log(tau)
@@ -124,11 +110,6 @@ c psgen=3:     flat in tan tau with arbitrary exponent
         s  = sbeams*tau
         x1 = dsqrt(tau)*dexp(y)
         x2 = tau/x1
-
-#ifdef DEBUG1
-        print*,"y   = ", y
-        print*,"jac = ", jac
-#endif
       
         ! check if NaN occured
         if(isnan(x1) .or. isnan(x2) .or. isnan(s) .or. isnan(jac)) then

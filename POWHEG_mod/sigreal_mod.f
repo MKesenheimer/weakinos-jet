@@ -198,9 +198,11 @@ c     to avoid divergent integral (25 is an ad hoc value)
          if(flg_nlotest) then
             out0=out0*www
             out1=out1*www
-            call analysis_extrainfo('realct',flst_nalr,out0arr,www)
+            if(flg_analysisextrainfo) then ! MK: added: call only if array is allocated
+              call analysis_extrainfo('realct',flst_nalr,out0arr,www)
+              call analysis_extrainfo('real',flst_nalr,out1arr,www)
+            endif
             if(out0.ne.0d0) call analysis_driver(out0,0)
-            call analysis_extrainfo('real',flst_nalr,out1arr,www)
             if(out1.ne.0d0) call analysis_driver(out1,1)
 #ifdef DEBUGQ
         if(out1.lt.0D0) then
@@ -1040,7 +1042,7 @@ c     average value of the generated momentum.
       scale = sqrt(kn_sbeams)/(nparticles+2)
       do j=1,nmomset
  1       ptmin=1d30
-         last = (nparticles-2)*random()+1
+         last = int((nparticles-2)*random()+1) ! MK: added int cast
          last=last+2
          do k=3,nparticles
             if (k.ne.last) then

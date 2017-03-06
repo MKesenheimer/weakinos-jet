@@ -289,12 +289,9 @@ c gibt das Vorzeichen einer reellen Zahl zurück (+-1)
 c transforms a lower case character string to an upper case
       subroutine to_uppercase(str1,upper1)
         implicit none
-        character*100 str1, upper1
+        character*(*) str1, upper1
         integer j
         upper1 = str1
-#ifdef DEBUGQ
-        print*,str1
-#endif
         do j=1,len(trim(str1))
           ! convert both strings to uppercase
           if(str1(j:j) .ge. "a" .and. str1(j:j) .le. "z") then
@@ -303,9 +300,6 @@ c transforms a lower case character string to an upper case
             upper1(j:j) = str1(j:j)
           endif
         enddo
-#ifdef DEBUGQ
-        print*,upper1
-#endif
       end
 
 c sorts the entries of an integer list in decreasing order

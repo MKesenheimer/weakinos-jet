@@ -240,15 +240,14 @@ c############### end subroutine set_process ############################
 
 c############### subroutine process_name ###############################
 c convert the powheg flavor string to an character string
-#define NCHARACTERS 50
       subroutine process_name(nlegs,flav,str,lstr)
         implicit none
         integer nlegs, lstr, i
         integer flav(nlegs)
-        character*NCHARACTERS str
-        do i=1,NCHARACTERS
-          str = " "
-        enddo
+        character*(*) str
+        !do i=1,NCHARACTERS
+        !  str = " "
+        !enddo
         lstr = 0
         do i=1,nlegs
         if(i.eq.3) then

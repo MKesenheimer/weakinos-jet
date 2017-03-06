@@ -37,6 +37,9 @@ c keep this order
         double precision xjac
         ! temporary results for calc. of resonant contributions
         double precision sigosres_contr
+        ! temporary arrays
+        double precision temp_arr(nosres)
+        integer temp_sign(nosres)
         ! sum only over relevant on-shell channels
         integer nos
         
@@ -77,8 +80,7 @@ c keep this order
             ! sigosres_contr is summed over all processes for a given channel
             sigosres_contr = sigosres_contr+rad_osres_arr(lset,ichan)
           enddo
-          call transfersign(rad_osres_arr(:,ichan),
-     &                      rad_osres_sign(:,ichan),flst_nosres)
+          call transfersign(rad_osres_arr(:,ichan),rad_osres_sign(:,ichan),flst_nosres)
           if(flg_nlotest) then
             call analysis_driver(sigosres_contr,1)
           endif
@@ -106,9 +108,10 @@ c keep this order
             call sigreal_osres(xjac,lset,ichan,rad_osres_arr(lset,ichan))
             ! sigosres_contr is summed over all channels for a given process
             sigosres_contr = sigosres_contr+rad_osres_arr(lset,ichan)
+            temp_arr(ichan) = rad_osres_arr(lset,ichan)
           enddo
-          call transfersign(rad_osres_arr(lset,:),
-     &                      rad_osres_sign(lset,:),nosres)
+          call transfersign(temp_arr(:),temp_sign(:),nosres)
+          rad_osres_sign(lset,:) = temp_sign(:)
           if(flg_nlotest) then
             call analysis_driver(sigosres_contr,1)
           endif
@@ -298,7 +301,7 @@ c keep this order
           totnegosres(j)  = totnegosres(j)  + dtotnegosres(j)
           etotnegosres(j) = etotnegosres(j) + dtotnegosres(j)**2
 
-          sigosres = sigosres + dtotabsosres(i)
+          sigosres = sigosres + dtotabsosres(j)
         enddo
 
 #ifdef DEBUGQ

@@ -277,8 +277,6 @@ c############### subroutine getAmps ####################################
         ! set the formCalc vectors
         call formCalcVecSet(nlegborn,ps,flavs)
 
-        print*,"getAmps: calling born+virtual amplitudes"
-
 #define MATRIXELEMENT
 #ifdef MATRIXELEMENT
         ! F g -> F F F
@@ -322,8 +320,6 @@ c############### subroutine getAmps ####################################
         stop
  20     continue
 #endif
-
-        print*,"getAmps: finish.",fc_result(1)
 
         amp(1) = fc_result(1)/symfac
         amp(2) = fc_result(2)/symfac
@@ -410,8 +406,6 @@ c############### subroutine getRealAmps ################################
         
         ! set the formCalc vectors
         call formCalcVecSet(nlegreal,ps,flavs)
-
-        print*,"getRealAmps: calling real amplitudes"
         
 #define MATRIXELEMENT
 #ifdef MATRIXELEMENT
@@ -592,8 +586,6 @@ c############### subroutine getRealAmps ################################
         stop
  20     continue
 #endif
-
-        print*,"getRealAmps: finish", fc_result(1)
  
         amp = fc_result(1)/symfac
 
@@ -689,8 +681,6 @@ c############### subroutine getRealOSAmps ##############################
         ! set the channel informations, in particular the sfermion indices
         ! which are needed by the realOS routines
         call set_channel(flav,ichan)
-      
-        print*,"getRealOSAmps: calling realOS amplitudes"
       
 #define MATRIXELEMENT
 #ifdef MATRIXELEMENT
@@ -837,8 +827,6 @@ c############### subroutine getRealOSAmps ##############################
         stop
  20     continue
 #endif
-
-        print*,"getRealOSAmps: finish", fc_result(1)
 
         ampos = fc_result(1)/symfac
       end

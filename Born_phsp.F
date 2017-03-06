@@ -42,7 +42,7 @@ c and the Jacobi factor for the phase space volume
         jac = 1D0
         kn_jacborn = 1d0
 
-#ifdef DEBUG
+#ifdef DEBUGQ
         print*,"born_phsp: start"
         print*,"xborn(:) = ", xborn(:)
 !#define DEBUG1
@@ -166,8 +166,6 @@ c and the Jacobi factor for the phase space volume
         call check_4conservation(kn_pborn,nlegborn,2,lresult)
         print*,"four momentum check in cm frame:", lresult
 #endif
-
-        print*,"born_phsp: end"
       end
 c############### end subroutine born_phsp ##############################
 

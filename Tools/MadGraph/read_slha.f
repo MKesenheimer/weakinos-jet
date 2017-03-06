@@ -120,16 +120,16 @@ cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
       implicit none
 
       include 'coupl.inc'    ! MK: added
-      character*100 searchstr1,searchstr2 ! MK: TODO: remove
-      character*100 upperstr
-
       character*(*) param_name
       integer   nin2,ii,j1,j2,check(1:20),check_final,check_sq(1:13)
       real*8    unimass(20),lowmass(0:99),bw(4,4),uu(2,2),vv(2,2)
       real*8    m_t(2,2),m_b(2,2),m_l(2,2)
       real*8    width(0:99),width_sq(1:10)
 c      real*8    mw,mz,sw,cw,sb,cb
-      character line1*6, line2*100
+      integer strlen1, strlen2 ! MK, added
+      parameter (strlen1 = 6, strlen2 = 100)
+      character*(strlen1) line1
+      character*(strlen2) line2
       logical   done
       logical fopened
 
@@ -179,7 +179,7 @@ c                  read new line into. goto 190 at end-of-file.
 
          if(line1//line2.eq.'') goto 10
 c                  rewrite line1(1:6) and line2(1:10) to all upper case  
-         do j1=1,6
+         do j1=1,strlen1 ! MK
             if (line1(j1:j1).ne.'#') then 
                do j2=97,122
                   if (line1(j1:j1).eq.CHAR(j2)) line1(j1:j1)=CHAR(j2-32)
@@ -187,7 +187,7 @@ c                  rewrite line1(1:6) and line2(1:10) to all upper case
             endif
          enddo
 
-         do j1=1,20
+         do j1=1,strlen2 ! MK
             if (line2(j1:j1).ne.'#') then 
                do j2=97,122
                   if (line2(j1:j1).eq.CHAR(j2)) line2(j1:j1)=CHAR(j2-32)
@@ -195,22 +195,11 @@ c                  rewrite line1(1:6) and line2(1:10) to all upper case
             endif
          enddo
          
-         !print*,line1
-         !print*,line2
-
 c                  look for blocks and pick them one after the other
          if (line1(1:1).eq.'B') then
 
-           !print*,"Test"
-           !searchstr1 = "bla"
-           !call to_uppercase(searchstr1,searchstr2)
-           !print*,trim(searchstr1),trim(searchstr2)
-           !stop
-
 c                  look for block MINPAR
-            call to_uppercase(line2(1:6),upperstr) ! MK: added
-            !print*,upperstr(1:5)
-            if (upperstr(1:6).eq.'MINPAR') then
+            if (line2(1:6).eq.'MINPAR') then
                call READ_BLOCK_MINPAR(nin2,unimass,done)
                if (done) then
                   check(1) = 1
@@ -221,8 +210,7 @@ c                  look for block MINPAR
                endif
 
 c                  look for block MASS
-            call to_uppercase(line2(1:4),upperstr) ! MK: added, it is not necessary to call this routine every time, but who cares?
-            elseif (upperstr(1:4).eq.'MASS') then
+            elseif (line2(1:4).eq.'MASS') then
                call READ_BLOCK_MASS(nin2,lowmass,done)
                if (done) then 
                   check(2) = 1
@@ -233,8 +221,7 @@ c                  look for block MASS
                endif
 
 c                  look for block STOPMIX
-            call to_uppercase(line2(1:7),upperstr) ! MK: added
-            elseif (upperstr(1:7).eq.'STOPMIX') then
+            elseif (line2(1:7).eq.'STOPMIX') then
                if (done) then 
                   check(3) = 1
                   cycle
@@ -244,8 +231,7 @@ c                  look for block STOPMIX
                endif 
 
 c                  look for block SBOTMIX
-            call to_uppercase(line2(1:7),upperstr) ! MK: added
-            elseif (upperstr(1:7).eq.'SBOTMIX') then
+            elseif (line2(1:7).eq.'SBOTMIX') then
                call READ_BLOCK_SBOTMIX(nin2,m_b,done)
                if (done) then 
                   check(4) = 1
@@ -256,8 +242,7 @@ c                  look for block SBOTMIX
                endif 
 
 c                  look for block STAUMIX
-            call to_uppercase(line2(1:7),upperstr) ! MK: added
-            elseif (upperstr(1:7).eq.'STAUMIX') then
+            elseif (line2(1:7).eq.'STAUMIX') then
                call READ_BLOCK_STAUMIX(nin2,m_l,done)
                if (done) then 
                   check(5) = 1
@@ -268,8 +253,7 @@ c                  look for block STAUMIX
                endif
 
 c                  look for block NMIX
-            call to_uppercase(line2(1:6),upperstr) ! MK: added
-            elseif (upperstr(1:4).eq.'NMIX') then
+            elseif (line2(1:4).eq.'NMIX') then
                call READ_BLOCK_NMIX(nin2,bw,done)
                if (done) then 
                   check(6) = 1
@@ -280,8 +264,7 @@ c                  look for block NMIX
                endif 
 
 c                  look for block UMIX
-            call to_uppercase(line2(1:4),upperstr) ! MK: added
-            elseif (upperstr(1:4).eq.'UMIX') then
+            elseif (line2(1:4).eq.'UMIX') then
                call READ_BLOCK_UMIX(nin2,uu,done)
                if (done) then 
                   check(7) = 1
@@ -292,8 +275,7 @@ c                  look for block UMIX
                endif 
 
 c                  look for block VMIX
-            call to_uppercase(line2(1:4),upperstr) ! MK: added
-            elseif (upperstr(1:4).eq.'VMIX') then
+            elseif (line2(1:4).eq.'VMIX') then
                call READ_BLOCK_VMIX(nin2,vv,done)
                if (done) then 
                   check(8) = 1
@@ -304,8 +286,7 @@ c                  look for block VMIX
                endif 
 
 c                  look for block ALPHA
-            call to_uppercase(line2(1:5),upperstr) ! MK: added
-            elseif (upperstr(1:5).eq.'ALPHA') then
+            elseif (line2(1:5).eq.'ALPHA') then
                call READ_BLOCK_ALPHA(nin2,lowmass,done)
                if (done) then 
                   check(9) = 1
@@ -316,8 +297,7 @@ c                  look for block ALPHA
                endif 
 
 c                  look for block HMIX
-            call to_uppercase(line2(1:4),upperstr) ! MK: added
-            elseif (upperstr(1:4).eq.'HMIX') then
+            elseif (line2(1:4).eq.'HMIX') then
                call READ_BLOCK_HMIX(nin2,lowmass,unimass,done)
                if (done) then 
                   check(10) = 1
@@ -328,8 +308,7 @@ c                  look for block HMIX
                endif 
 
 c                  look for block AU
-            call to_uppercase(line2(1:2),upperstr) ! MK: added
-            elseif (upperstr(1:2).eq.'AU') then
+            elseif (line2(1:2).eq.'AU') then
                call READ_BLOCK_AU(nin2,lowmass,done)
                if (done) then 
                   check(11) = 1
@@ -340,8 +319,7 @@ c                  look for block AU
                endif 
 
 c                  look for block AD
-            call to_uppercase(line2(1:2),upperstr) ! MK: added
-            elseif (upperstr(1:2).eq.'AD') then
+            elseif (line2(1:2).eq.'AD') then
                call READ_BLOCK_AD(nin2,lowmass,done)
                if (done) then 
                   check(12) = 1
@@ -352,8 +330,7 @@ c                  look for block AD
                endif 
 
 c                  look for block AE
-            call to_uppercase(line2(1:2),upperstr) ! MK: added
-            elseif (upperstr(1:2).eq.'AE') then
+            elseif (line2(1:2).eq.'AE') then
                call READ_BLOCK_AE(nin2,lowmass,done)
                if (done) then 
                   check(13) = 1
@@ -364,8 +341,7 @@ c                  look for block AE
                endif
 
 c                  look for block SMINPUTS
-            call to_uppercase(line2(1:8),upperstr) ! MK: added
-            elseif (upperstr(1:8).eq.'SMINPUTS') then ! JA
+            elseif (line2(1:8).eq.'SMINPUTS') then ! JA
                call READ_BLOCK_SMINPUTS(nin2,done)
                if (done) then 
                   check(14) = 1
@@ -387,8 +363,7 @@ c                  call HARD_STOP
 c               endif 
 
 c                  look for block YU
-            call to_uppercase(line2(1:2),upperstr) ! MK: added
-            elseif (upperstr(1:2).eq.'YU') then ! JA
+            elseif (line2(1:2).eq.'YU') then ! JA
                call READ_BLOCK_YU(nin2,lowmass,done)
                if (done) then 
                   check(17) = 1
@@ -399,8 +374,7 @@ c                  look for block YU
                endif 
 
 c                  look for block YD
-            call to_uppercase(line2(1:2),upperstr) ! MK: added
-            elseif (upperstr(1:2).eq.'YD') then ! JA
+            elseif (line2(1:2).eq.'YD') then ! JA
                call READ_BLOCK_YD(nin2,lowmass,done)
                if (done) then 
                   check(18) = 1
@@ -411,8 +385,7 @@ c                  look for block YD
                endif 
 
 c                  look for block YE
-            call to_uppercase(line2(1:2),upperstr) ! MK: added
-            elseif (upperstr(1:2).eq.'YE') then ! JA
+            elseif (line2(1:2).eq.'YE') then ! JA
                call READ_BLOCK_YE(nin2,lowmass,done)
                if (done) then 
                   check(19) = 1
@@ -428,8 +401,6 @@ c                  continue if block not interesting
             endif 
 
 c                  look for decay lines and fill them one by one
-         !call to_uppercase(line2(1:5),upperstr) ! MK: added
-         !elseif (upperstr(1:5).eq.'DECAY') then ! MK: changed D -> DECAY
          elseif (line1(1:1).eq.'D') then
             call READ_DECAY(nin2,width,check_sq,width_sq)
             check_final = 1

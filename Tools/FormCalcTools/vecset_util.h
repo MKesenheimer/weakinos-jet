@@ -162,7 +162,8 @@
 #else
 
 #ifndef LEGS
-#define LEGS 1
+! MK: changed 1 -> 6
+#define LEGS 6
 #endif
 
 * special vectors needed by num.h; overlaps intended
