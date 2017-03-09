@@ -54,13 +54,15 @@ WORKINGDIR=${PWD}
 #                    as proc_nInJjj_os, but without channel identifiers)
 
 # the name of the target process directory
-PROCDIR="neuIneuJ+jet/FormCalc_Virtuals"
+#PROCDIR="neuIneuJ+jet/FormCalc_Virtuals"
+PROCDIR="neuIneuJ+jet/FormCalc_Reals"
 
 # where to copy the amplitudes to
 DEST=${PWD}/../../${PROCDIR}
 
 # number of particles (incoming + outgoing)
 NPART=5
+#NPART=6
 
 # process list file
 PROCF="./proc_nInJj"
@@ -78,6 +80,7 @@ MSCRIPT="./nInJj_virt_collier.m"
 # the type of the amplitudes (born, virt, real, realOS)
 #TYPE="born"
 TYPE="virt"
+#TYPE="real"
 #TYPE="realOS"
 #TYPE="real"
 
@@ -159,10 +162,10 @@ function rename() {
     $SED -i -e "s/abbr1a/${2}abbr1a/g" $1    
     $SED -i -e 's/#ifdef DEBUG/#ifdef DEBUGQ/g' $1
     # handling of general process indices
-    for i in `seq 1 ${NPART}`; do
-      $SED -i -e "s/\<Gen${i}\>/Gen(${i})/g" $1
-      $SED -i -e "s/\<Neu${i}\>/Neu(${i})/g" $1
-      $SED -i -e "s/\<Cha${i}\>/Cha(${i})/g" $1
+    for irename in `seq 1 ${NPART}`; do
+      $SED -i -e "s/\<Gen${irename}\>/Gen(${irename})/g" $1
+      $SED -i -e "s/\<Neu${irename}\>/Neu(${irename})/g" $1
+      $SED -i -e "s/\<Cha${irename}\>/Cha(${irename})/g" $1
     done
     # ändere die Namen der globalen Include Dateien
     #$SED -i -e '/^#include "inline.h"/d' $1
@@ -185,10 +188,10 @@ function rename2() {
         $SED -i -e "s/formfactors/${PRE2}_formfactors/g" $1
         # replace the indices \<Neu3\>, Neu4, Cha3, Cha4, ... with constants
         # max generation
-        for i in `seq 1 ${NPART}`; do
-          $SED -i -e "s/\<Gen${i}\>/3/g" $1
-          $SED -i -e "s/\<Neu${i}\>/4/g" $1
-          $SED -i -e "s/\<Cha${i}\>/2/g" $1
+        for irename2 in `seq 1 ${NPART}`; do
+          $SED -i -e "s/\<Gen${irename2}\>/3/g" $1
+          $SED -i -e "s/\<Neu${irename2}\>/4/g" $1
+          $SED -i -e "s/\<Cha${irename2}\>/2/g" $1
         done
 }
 
@@ -211,7 +214,7 @@ unset IFS
 
 # total number of processes
 NPROC=0
-for i in ${PART[@]}; do
+for ipart in ${PART[@]}; do
     NPROC=$((NPROC+1))
 done
 # the on shell processes carry additional informations
@@ -227,29 +230,29 @@ echo "number of processes: $NPROC"
 echo 
 echo "building the process names..."
 CHANNELS=()
-for i in `seq 0 1 $((NPROC-1))`; do
+for iproc in `seq 0 1 $((NPROC-1))`; do
     PROC=""
     P=()
     if [[ $TYPE == "realOS" ]]; then
-        for j in `seq 0 1 $NPART`; do
-            if [[ $j -eq $NPART ]]; then
+        for jpart in `seq 0 1 $NPART`; do
+            if [[ $jpart -eq $NPART ]]; then
                 # store the last entry in an array CHANNELS
-                CHANNELS+=(${PART[$((j+i*(NPART+1)))]})
+                CHANNELS+=(${PART[$((jpart+iproc*(NPART+1)))]})
             else
                 # every other entry goes into P
-                P+=($(pdg2names ${PART[$((j+i*(NPART+1)))]}))
-                PROC=$PROC${P[j]}
+                P+=($(pdg2names ${PART[$((jpart+iproc*(NPART+1)))]}))
+                PROC=$PROC${P[jpart]}
             fi
-            if [[ $j -eq 1 ]]; then
+            if [[ $jpart -eq 1 ]]; then
                 PROC=$PROC"_"
             fi
         done
     else
          CHANNELS+=("none")
-        for j in `seq 0 1 $((NPART-1))`; do
-            P+=($(pdg2names ${PART[$((j+i*NPART))]}))
-            PROC=$PROC${P[j]}
-            if [[ $j -eq 1 ]]; then
+        for jpart in `seq 0 1 $((NPART-1))`; do
+            P+=($(pdg2names ${PART[$((jpart+iproc*NPART))]}))
+            PROC=$PROC${P[jpart]}
+            if [[ $jpart -eq 1 ]]; then
                 PROC=$PROC"_"
             fi
         done
@@ -259,7 +262,7 @@ for i in `seq 0 1 $((NPROC-1))`; do
     echo "current process: $PROC"    
     
     if [[ $TYPE == "realOS" ]]; then
-        IFS=$',;\r\n' command eval 'LIST=(${CHANNELS[i]})'
+        IFS=$',;\r\n' command eval 'LIST=(${CHANNELS[iproc]})'
         unset IFS
         echo "channels: ${LIST[@]}"
     fi
@@ -269,7 +272,7 @@ for i in `seq 0 1 $((NPROC-1))`; do
     if [[ -n "$MSCRIPT" ]]; then
         echo "removing ${PROC}_${TYPE}"
         rm -rf ${PROC}_${TYPE}
-        echo "calling Mathematica $MSCRIPT -script $MSCRIPT ${P[@]}"
+        echo "calling Mathematica $MATHK -script $MSCRIPT ${P[@]}"
         $MATHK -script $MSCRIPT ${P[@]}
     fi
     PROCESSES+=($PROC)
@@ -279,20 +282,21 @@ done
 #echo "Generating directories..."
 #mkdir ${DEST}/squaredME/
 
-for i in `seq 0 1 $((NPROC-1))`; do
+for iproc in `seq 0 1 $((NPROC-1))`; do
     # if no on-shell resonant channels were defined CHANNEL has only one
     # entry which is "none"
-    IFS=$',;\r\n' command eval 'CHANNEL=(${CHANNELS[i]})'
+    IFS=$',;\r\n' command eval 'CHANNEL=(${CHANNELS[iproc]})'
     unset IFS
-    for j in ${CHANNEL[@]}; do
+    for jchan in ${CHANNEL[@]}; do
         if [[ $TYPE == "realOS" ]]; then
-            APPEND="_${j}"
+            APPEND="_${jchan}"
         fi
-        PRE1="${PROCESSES[i]}_${TYPE}${APPEND}"
-        PRE2="${PROCESSES[i]}${APPEND}"
-        
-        echo
-        echo "${PROCESSES[i]} ${TYPE}${APPEND}"
+        PRE1="${PROCESSES[iproc]}_${TYPE}${APPEND}"
+        PRE2="${PROCESSES[iproc]}${APPEND}"
+       
+        #status 
+        echo "$iproc"
+        echo "${PROCESSES[iproc]}_${TYPE}${APPEND}"
         echo "PRE1 = $PRE1"
         echo "PRE2 = $PRE2"
 
@@ -309,8 +313,10 @@ for i in `seq 0 1 $((NPROC-1))`; do
         cp ${WORKINGDIR}/${PRE1}/squaredme/*.F ${DEST}/${PRE2}_squaredME/
         cp ${WORKINGDIR}/${PRE1}/squaredme/vars.h ${DEST}/${PRE2}_squaredME/${PRE2}_vars.h
         cp ${WORKINGDIR}/${PRE1}/squaredme/specs.h ${DEST}/${PRE2}_squaredME/${PRE2}_specs.h
-        mkdir -p ${DEST}/${PRE2}_RenConst/
-        cp ${WORKINGDIR}/${PRE1}/renconst/RenConst* ${DEST}/${PRE2}_RenConst/
+        if [[ $TYPE == "virt" ]]; then
+            mkdir -p ${DEST}/${PRE2}_RenConst/
+            cp ${WORKINGDIR}/${PRE1}/renconst/RenConst* ${DEST}/${PRE2}_RenConst/
+        fi
 
         echo "renaming files..."
         echo "cd ${DEST}/${PRE2}_squaredME"
@@ -391,8 +397,12 @@ for i in `seq 0 1 $((NPROC-1))`; do
                 # insert new regulator parameter. Note: Lines in reversed order
                 TAG="        implicit none"
                 $SED -i -e "s/$TAG/$TAG\n        parameter (MR=1D-10, MR2=MR**2)/g" $file
-                $SED -i -e "s/$TAG/$TAG\n        RealType MR,MR2/g" $file
+                $SED -i -e "s/$TAG/$TAG\n        RealType MR, MR2/g" $file
                 $SED -i -e "s/$TAG/$TAG\n\n        \! Regularize 1\/MD Terms/g" $file
+
+                $SED -i -e "s/$TAG/$TAG\n        parameter (xz0=0D0, xm0=0D0)/g" $file
+                $SED -i -e "s/$TAG/$TAG\n        RealType xz0, xm0/g" $file
+                $SED -i -e "s/$TAG/$TAG\n\n        \! decide if finite terms should be taken into account/g" $file
             done
         fi
 
@@ -433,7 +443,7 @@ if [[ $TYPE == "real" ]] || [[ $TYPE == "realOS" ]]; then
     $SED -i -e '/^#include "RenConst.h"/d' ${TYPE}_decl.h
     $SED -i -e '/^#include "looptools.h"/d' ${TYPE}_decl.h
 fi
-$SED -i -e 's/#include "model_mssm.h"/#include "model_mssm.h"\n#include "model_sm.h"\n#include "osres.h"\n#include "indices.h"\n/g' ${TYPE}_user.h
+$SED -i -e 's/#include "model_mssm.h"/#include "model_mssm.h"\n#include "model_sm.h"\n#include "osres.h"\n#include "indices.h"\n#include "Flags.h"\n/g' ${TYPE}_user.h
 $SED -i -e 's/#include "looptools.h"/#ifdef collier\n#include "lt_collier.h"\n#else\n#include "looptools.h"\n#endif/g' ${TYPE}_decl.h
 #$SED -i -e 's/Sq(z_)/!Sq(z_)/g' ${TYPE}_inline.h
 cp ${DEST}/temp/*.h ${DEST}/global/
@@ -452,10 +462,10 @@ if [[ $TYPE == "realOS" ]]; then
     echo
     echo "generating on shell routines..."
     cd ${DEST}/squaredME
-    for i in `seq 0 1 $((NPROC-1))`; do
-        IFS=$',;\r\n' command eval 'CHANNEL=(${CHANNELS[i]})'
+    for iproc in `seq 0 1 $((NPROC-1))`; do
+        IFS=$',;\r\n' command eval 'CHANNEL=(${CHANNELS[iproc]})'
         unset IFS
-        PRE2="${PROCESSES[i]}_${TYPE}"
+        PRE2="${PROCESSES[iproc]}_${TYPE}"
         
         echo "      subroutine ${PRE2}_squaredME(fc_result, ichan, helicities, flags)" > ${PRE2}_squaredME.F
         echo "        implicit none" >> ${PRE2}_squaredME.F
@@ -468,17 +478,17 @@ if [[ $TYPE == "realOS" ]]; then
         echo "        ! sfeij and sfekl get defined in subroutine set_channel" >> ${PRE2}_squaredME.F
         # track the number of processed channels
         ICHAN=0
-        for j in ${CHANNEL[@]}; do
-            PRE1="${PROCESSES[i]}_${j}"
+        for jchan in ${CHANNEL[@]}; do
+            PRE1="${PROCESSES[iproc]}_${jchan}"
             # -> modify this if needed.
             # if there are subchannels (for example different chiralities for squarks)
             # a different if statement is needed and the open indices have to be set
-            if [[ $j == *"Sq1Sq2" ]]; then
+            if [[ $jchan == *"Sq1Sq2" ]]; then
                 ICHAN=$((ICHAN+NSQUARKSUBCHANNELS))
                 echo "        if(ichan.ge.$((ICHAN-NSQUARKSUBCHANNELS+1)) .and. ichan.le.$ICHAN) then" >> ${PRE2}_squaredME.F
                 echo "          Sq1 = osres_sfeij" >> ${PRE2}_squaredME.F
                 echo "          Sq2 = osres_sfekl" >> ${PRE2}_squaredME.F
-            elif [[ $j == *"Sq1" ]]; then
+            elif [[ $jchan == *"Sq1" ]]; then
                 ICHAN=$((ICHAN+NGLUINOSUBCHANNELS))
                 echo "        if(ichan.ge.$((ICHAN-NGLUINOSUBCHANNELS+1)) .and. ichan.le.$ICHAN) then" >> ${PRE2}_squaredME.F
                 echo "          Sq1 = osres_sfeij" >> ${PRE2}_squaredME.F

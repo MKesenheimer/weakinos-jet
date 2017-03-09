@@ -1784,7 +1784,7 @@ c not found
          open(unit=iun,file=pwgprefix(1:lprefix)//'counters.dat'
      1     ,status='unknown')
       else
-         stage=powheginput("#parallelstage")
+         stage=int(powheginput("#parallelstage"))
          if(stage.gt.0) then
             write(cst(3:3),'(i1)') stage
             cst(1:2)='st'

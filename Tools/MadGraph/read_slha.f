@@ -643,13 +643,7 @@ c            array defined in Xsugra.f
 c            elseif (dumi.eq.4) then ! JA
 c               cmass   = dumr
             elseif (dumi.eq.5) then 
-               ! Kesenheimer:
-#ifdef NEGLECTBMASS
-                 print*,"Note (MadGraph): neglecting bottom quark mass"
-                 bmass = 0D0
-#else
-                 bmass   = dumr
-#endif
+               bmass   = dumr
             elseif (dumi.eq.24) then 
                wmass   = dumr
             endif 

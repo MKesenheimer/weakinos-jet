@@ -120,12 +120,10 @@ Conjugate[MSf[Sfe3,3,Gen3]^2]
 SetOptions[InsertFields, Model -> "MSSMCTPOWHEG_dZgg3", InsertionLevel->{Classes},
            (*No Fermion-Higgs coupling*)
            Restrictions -> {NoLightFHCoupling},
-           (*Exclude Top, Higgs, Neutrinos, massive Leptons, Sneutrinos, Sleptons*)
-		   (*ExcludeParticles -> {S[1|2|3|4|5|6|11|12], F[1|2]},*)
-		   (*Exclude Neutrinos, massive Leptons, Sneutrinos, Sleptons*)
-		   ExcludeParticles -> {S[11|12], F[1|2]},
-		   (*no internal Weakinos*)
-		   LastSelections -> {!F[11],!F[12]}];
+           (*Exclude Neutrinos, massive Leptons, Sneutrinos, Sleptons*)
+           ExcludeParticles -> {S[11|12], F[1|2]},
+           (*no internal Weakinos*)
+           LastSelections -> {!F[11],!F[12]}];
 
 SetOptions[Paint, PaintLevel -> {Classes}, ColumnsXRows -> {4, 5}, AutoEdit -> False];
 
@@ -141,7 +139,7 @@ DoPaint[diags_, type_, opt___] := Paint[diags, opt,
   DisplayFunction -> (Export[ToFileName[$PaintSE, name <> "_" <> type <> ".pdf"], #]&)]
 
 (*faster code generation without boxes and pentagons, could be used for debugging*)
-$FastCode = True;
+$FastCode = False;
 
 (*complexify the arguments of the loop functions (required for the use with collier)*)
 cmplx = {0->dcmplx[0], MZ->MZC, MW->MWC, MZ2->MZ2C, MW2->MW2C, MU->MUC, MC->MCC, MT->MTC, MD->MDC, MS->MSC, MB->MBC, MU2->MU2C, MC2->MC2C, MT2->MT2C, MD2->MD2C, MS2->MS2C, MB2->MB2C, 

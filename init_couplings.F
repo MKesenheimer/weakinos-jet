@@ -361,13 +361,13 @@ c sets the PhysPars.h parameters
           endif
         enddo
 
-        if( par_Wwidth .eq. invalid) then
+        if(par_Wwidth .eq. invalid) then
           print*, "warning: W-width not found in SLHA file."
           print*, "         Use zero width."
           par_Wwidth = 0D0
         endif
 
-        if( par_Zwidth .eq. invalid) then
+        if(par_Zwidth .eq. invalid) then
           print*, "warning: Z-width not found in SLHA file."
           print*, "         Use zero width."
           par_Zwidth = 0D0
@@ -402,15 +402,16 @@ c sets the PhysPars.h parameters
         par_MD = 0D0
         par_MS = 0D0
 
-#ifdef NEGLECTBMASS
-        print*,"note (PhysPars): neglecting b-quark mass"
-        par_MB = 0D0
-#else
-        ! read mass paramater from slha file
-        par_MB  = dreal(Mass_Mf(4,3)) 
-#endif
+        if(powheginput("#msbar").gt.0) then
+          if(powheginput("msbar").eq.1) then
+            par_MB = dreal(SMInputs_Mb) 
+            print*, "using msbar mass for b-quark: ", par_MB
+          endif
+        else
+          par_MB = dreal(Mass_Mf(4,3))
+          print*, "using pole mass for b-quark: ", par_MB
+        endif
 
-        !par_MT  = dreal(Mass_Mf(3,3))
         par_MT = dreal(SMInputs_Mt)
 
 c particle widths from SLHA-file

@@ -290,7 +290,7 @@ c restart from here
       logical is_charged,is_coloured
       external is_charged,is_coloured
       if(ini) then
-         firstreg=powheginput("#radregion")
+         firstreg=int(powheginput("#radregion"))
          if(firstreg.le.0) then
             firstreg=1
             lastreg=rad_nkinreg

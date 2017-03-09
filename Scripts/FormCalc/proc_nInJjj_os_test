@@ -1,12 +1,1 @@
-           qd           qdbar     nI     nJ           qd           qdbar    3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1     # double squark and single gluino resonances (mandelstam s_ij, s_kl and s_ijk)
-           qd           qdbar     nI     nJ           qdbar        qd       3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1
-           qd           qdbar     nI     nJ           qu           qubar    3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1
-           qdbar        qd        nI     nJ           qd           qdbar    3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1
-           qdbar        qd        nI     nJ           qdbar        qd       3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1
-           qdbar        qd        nI     nJ           qu           qubar    3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1
-           qu           qubar     nI     nJ           qd           qdbar    3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1
            qu           qubar     nI     nJ           qu           qubar    3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1
-           qu           qubar     nI     nJ           qubar        qu       3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1
-           qubar        qu        nI     nJ           qd           qdbar    3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1
-           qubar        qu        nI     nJ           qu           qubar    3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1
-           qubar        qu        nI     nJ           qubar        qu       3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1

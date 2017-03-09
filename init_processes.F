@@ -33,8 +33,14 @@ c     set process id using slepton types
 
         ! set number of active flavors for incoming partons
         max_flav = int(powheginput('incomingflavors'))
-        if (max_flav.eq.5)  print*,"WARNING: ignoring sbottom mixing"
-        if (max_flav.gt.5)  stop "can't handle more than 5 flavours"
+        if(max_flav.lt.1) then
+          print*,"error: incomingflavors should be between 1 and 5."
+          stop
+        endif
+        if(max_flav.gt.5) then
+          print*,"error: more than 5 incoming flavors are not supported"
+          stop
+        endif
 
         ! whether to use fake virtuals or not
         if(powheginput("#fakevirtuals").gt.0) then
@@ -44,14 +50,24 @@ c     set process id using slepton types
         else
           flg_fakevirtuals = .false.
         endif
+
+        ! whether to neglect box and pentagon diagrams or not
+        if(powheginput("#fastvirtuals").gt.0) then
+           if(int(powheginput("fastvirtuals")).gt.0) then
+             flg_fastv = .true.
+           endif
+        else
+          flg_fastv = .false.
+        endif
         
-        ! number of light quarks:
-#ifdef NEGLECTBMASS
+        ! number of light quarks
+        ! this number is used for computation of pwhg_alphas
         st_nlight = 5
-#else
-        st_nlight = 4
-#endif
-        
+
+        ! index of the first coloured particle in the final state
+        ! (all subsequent particles are coloured)
+        flst_lightpart = 5
+
         ! choose process
         i3 = int(powheginput("fin1"))
         i4 = int(powheginput("fin2"))
@@ -99,7 +115,6 @@ c     set process id using slepton types
      &       .or. ((i3.eq.1000035).and.(i4.eq.-1000037))
      &       .or. ((i3.eq.1000035).and.(i4.eq. 1000037)) ) then
           mixed_channels = .true.
-
         else
           print*, "requested final states not implemented"
           print*, "swap final states and try again"
@@ -158,21 +173,18 @@ c     set process id using slepton types
         print*, "                                                    "
         print*, "===================================================="
         print* 
-        print*,' number of incoming flavors: ', max_flav
+        print*, " number of incoming quark flavors    = ", max_flav
+        print*, " number of quark flavors for alpha_s = ", st_nlight
 
         ! set process id: encode types of slepton A and B
         lprup(1) = encode_pair(i3,i4)
-        print*,' encoded final states to process ID: ', lprup(1)
-
-        ! index of the first coloured particle in the final state
-        ! (all subsequent particles are coloured)
-        flst_lightpart=5
+        print*, " encoded final states to process ID: ", lprup(1)
 
         ! Born subprocesses (should be 30 for n1n1)
-        flst_nborn=0
-        do i1=-max_flav,max_flav
-          do i2=-max_flav,max_flav
-            do i5=-max_flav,max_flav
+        flst_nborn = 0
+        do i1 = -max_flav,max_flav
+          do i2 = -max_flav,max_flav
+            do i5 = -max_flav,max_flav
               condition=.false.
               ! q qbar (with mixed flavor in the initial state, e.g. u dbar)
               ! d ubar channels

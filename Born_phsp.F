@@ -227,7 +227,7 @@ c############### subroutine set_fac_ren_scales #########################
 
         if(init) then
            if(powheginput("#runningscale").gt.0) then
-              if (powheginput("runningscale").ne.1) then
+              if(powheginput("runningscale").ne.1) then
                  print*, "you set runningscale to ", runningscale
                  print*, "this runningscale value is not allowed"
                  stop
@@ -238,7 +238,7 @@ c############### subroutine set_fac_ren_scales #########################
            endif
         endif
         
-        if (runningscale) then
+        if(runningscale) then
            kn34(:) = kn_pborn(:,3)+kn_pborn(:,4)
            muref = dsqrt(dabs(kn34(0)**2-kn34(1)**2
      &                      -kn34(2)**2-kn34(3)**2))
@@ -246,11 +246,13 @@ c############### subroutine set_fac_ren_scales #########################
            muref = dabs(par_Fin1mass) + dabs(par_Fin2mass)
         endif
 
-        if (init) then
+        muref = max(muref,dsqrt(2d0))  ! avoid too small values of the scales
+
+        if(init) then
           print*
           print*, "===================================================="
           print*, "Factorization and renormalization scales:"
-          if (runningscale) then
+          if(runningscale) then
             print*, "using running scale and"
             print*, "invariant mass of neutralinos for muref"
           else
@@ -266,8 +268,6 @@ c############### subroutine set_fac_ren_scales #########################
           print*, "===================================================="
           init = .false.
         endif
-
-        muref = max(muref,dsqrt(2d0))  ! avoid too small values of the scales
 
         muf1 = muref
         mur1 = muref

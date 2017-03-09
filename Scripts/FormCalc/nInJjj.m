@@ -19,7 +19,7 @@ ClearProcess[]
 time1 = SessionTime[]
 
 
-(*You can now load the script with the command $ MathKernel -script nInJjj.m "d" "dbar" "n1" "n2" "d" "dbar"*)
+(*You can now load the script with the command $ MathKernel -script nInJjj.m "qu" "qubar" "nI" "nJ" "qd" "qdbar"*)
 Print[$CommandLine]
 If[$CommandLine[[2]] === "-script",
 	(p[1] = ToString[$CommandLine[[4]]];
@@ -91,18 +91,18 @@ Print[process]
 
 
 (*Neglect Masses (URL)*)
-Neglect[ME] = Neglect[ME2] = 0;
-(*Neglect[MQU] = Neglect[MQD] = 0;*)
 Neglect[MU] = Neglect[MU2] = 0;
 Neglect[MC] = Neglect[MC2] = 0;
-(*Neglect[MT] = Neglect[MT2] = 0;*)
 Neglect[MD] = Neglect[MD2] = 0;
 Neglect[MS] = Neglect[MS2] = 0;
-(*Neglect[MB] = Neglect[MB2] = 0;*)
-
-(*Diagonale CKM Matrix*)
-CKM = IndexDelta;
-CKMC = IndexDelta;
+Neglect[MUC] = Neglect[MU2C] = 0;
+Neglect[MCC] = Neglect[MC2C] = 0;
+Neglect[MDC] = Neglect[MD2C] = 0;
+Neglect[MSC] = Neglect[MS2C] = 0;
+Neglect[_Mf] = Neglect[_Mf2] = 0;
+Neglect[_MfC] = Neglect[_Mf2C] = 0;
+(*Neglect[MB] = Neglect[MB2] = 0;
+Neglect[MT] = Neglect[MT2] = 0;*)
 
 
 (*Options*)
@@ -117,8 +117,8 @@ SetOptions[InsertFields, Model -> "MSSMCT",
            (*No Fermion-Higgs coupling*)
            Restrictions -> {NoLightFHCoupling},
            (*Exclude Top, Higgs, Neutrinos, massive Leptons, Sneutrinos, Sleptons*)
-		   ExcludeParticles -> {S[1|2|3|4|5|6|11|12], F[1|2]},
-		   LastSelections -> lastsel];
+           ExcludeParticles -> {S[11|12], F[1|2]},
+           LastSelections -> lastsel];
 
 SetOptions[Paint, PaintLevel -> {Classes}, ColumnsXRows -> {4, 5}, AutoEdit -> False];
 

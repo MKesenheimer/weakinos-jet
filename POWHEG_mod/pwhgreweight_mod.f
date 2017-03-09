@@ -743,7 +743,7 @@ c alpha(kt2)/alpha_old(kt2) * (Lumreal(kt2)/Lumreal_old(kt2)) * (Lumborn_old(kt2
 c 
 
       if(ini) then
-         mode = powheginput("#fullrwgtmode")
+         mode = int(powheginput("#fullrwgtmode"))
          if(mode.lt.0) mode = 4
          if(pdf_ndns1.ne.pdf_ndns2) then
             write(*,*) " fullpdfrwgt now works only for identical pdf's"

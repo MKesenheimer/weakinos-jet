@@ -32,6 +32,7 @@ ih2     1            ! hadron 2 (1 for protons, -1 for antiprotons)
 #ndns2  132          ! pdf set for hadron 2 (mlm numbering)
 ebeam1  7000d0       ! energy of beam 1
 ebeam2  7000d0       ! energy of beam 2
+msbar   1            ! (default 1) use (=1) msbar mass for bottom quark or not (=0)
 
 ! To be set only if using LHA pdfs
 ! LO:
@@ -69,6 +70,7 @@ numevts  0           ! number of events to be generated
 ! OPTIONAL PARAMETERS
 runningscale   0     ! (default 0) use ref. scale=virtuality Q (default 0, use fixed scale)
 #fakevirtuals  1     ! (default 0) generate the grid with fake virtuals
+fastvirtuals   1     ! (default 0) neglect box and pentagon diagrams, which speeds up the calculation
 #softtest      1     ! (default 0) check soft singularities
 #colltest      1     ! (default 0) check collinear singularities
 renscfact     1d0    ! (default 1d0) ren scale factor: muren  = muref * renscfact

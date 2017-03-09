@@ -147,11 +147,6 @@ DEBUG = -ggdb -pg -DDEBUG=$(LEVEL)
 #USRFLAGS += -DMAD_BORN
 USRFLAGS += -DFORM_BORN
 
-## Treatment of quark masses and squark widths
-# The current version uses vanishing masses for incoming quarks.
-# if you wish to use finite bottom mass, comment the following line.
-#USRFLAGS += -DNEGLECTBMASS
-
 ## Subtraction schemes
 # There are divergences originating from on-shell produced squark lines
 # in the real processes. The resonant contribution can easily exceed 

@@ -35,7 +35,7 @@ c 2   prepare the upper bounding envelopes for the
 c     generation of the b_tilde function
 c 3   prepare the upper bound for the generation of radiation
 c 4   generate events
-      parallelstages =  powheginput('#parallelstage')
+      parallelstages = int(powheginput('#parallelstage'))
       if(flg_newweight .and. parallelstages .gt. 0) then
          write(*,*) ' Since we are running in reweighting mode '
          write(*,*) ' we set parallelstages to 4 '
@@ -66,9 +66,9 @@ c make sure the ifold arrays are read in
             ifoldosres(j)=1 ! CH, MK: added
          enddo
 c Override real integration parameters with powheg.input values         
-         ifold(ndiminteg-2) = powheginput("foldcsi")
-         ifold(ndiminteg-1) = powheginput("foldy")
-         ifold(ndiminteg)   = powheginput("foldphi")
+         ifold(ndiminteg-2) = int(powheginput("foldcsi"))
+         ifold(ndiminteg-1) = int(powheginput("foldy"))
+         ifold(ndiminteg)   = int(powheginput("foldphi"))
          if(flg_storemintupb) then
             ! CH, MK: changed the following call
             call loadgrids(iret,xgrid,ymax,ymaxrat,xgridrm,ymaxrm,
@@ -240,9 +240,9 @@ c make sure the ifold arrays are read in
          ifoldrm(j)=1
          ifoldosres(j)=1 ! CH, MK: added
       enddo
-      ifold(ndiminteg-2) = powheginput("foldcsi")
-      ifold(ndiminteg-1) = powheginput("foldy")
-      ifold(ndiminteg)   = powheginput("foldphi")
+      ifold(ndiminteg-2) = int(powheginput("foldcsi"))
+      ifold(ndiminteg-1) = int(powheginput("foldy"))
+      ifold(ndiminteg)   = int(powheginput("foldphi"))
       if(parallelstages.eq.2) then
          call bbinitgrids
          call writestat('st2')
@@ -394,17 +394,17 @@ c MK: added
          write(*,*)' POWHEG: Computing positive weight'
      1        //' contribution to inclusive cross section' 
       endif
-      ncall2=powheginput('ncall2')
-      itmx2=powheginput('itmx2')
-      ncall2rm=powheginput('#ncall2rm')
+      ncall2=int(powheginput('ncall2'))
+      itmx2=int(powheginput('itmx2'))
+      ncall2rm=int(powheginput('#ncall2rm'))
       if(ncall2rm.lt.0) ncall2rm=ncall2
-      itmx2rm=powheginput('#itmx2rm')
+      itmx2rm=int(powheginput('#itmx2rm'))
       if(itmx2rm.lt.0) itmx2rm=itmx2
       ! CH, MK: added the following lines
       !=================================================================
-      ncall2osres=powheginput('ncall2osres')
+      ncall2osres=int(powheginput('ncall2osres'))
       if(ncall2osres.lt.0) ncall2osres=ncall2
-      itmx2osres=powheginput('itmx2osres')
+      itmx2osres=int(powheginput('itmx2osres'))
       if(itmx2osres.lt.0) itmx2osres=itmx2
       !=================================================================
       if(ncall2*itmx2.le.0) then
@@ -769,7 +769,7 @@ c No folding while generating importance sampling grids
       enddo
 c         
       if(iparallel.eq.1) then
-         iteration = powheginput('#xgriditeration')
+         iteration = int(powheginput('#xgriditeration'))
          if(iteration.gt.par_maxxgriditerations) then
             write(*,*) ' POWHEG is compiled with a maximum'
             write(*,*) ' number of x-grid iterations=',
@@ -810,7 +810,7 @@ c different grid iterations
          itmp=0
          call resetrandom
          do j=1,iteration
-            itmp = random()*1d9
+            itmp = int(random()*1d9)
          enddo
          call setrandom(rnd_initialseed+itmp,rnd_i1,rnd_i2)
       endif
@@ -827,22 +827,22 @@ c different grid iterations
 c The actual value of the grid is the one to be saved in the
 c gridinfo file, since loadgridinfo updates the grid by itself
       xgrid0 = xgrid
-      ncall1 = powheginput("ncall1")
-      ncall1rm = powheginput("#ncall1rm")
+      ncall1 = int(powheginput("ncall1"))
+      ncall1rm = int(powheginput("#ncall1rm"))
       ! ncall1rm is additional, if it is not present use the standard one:
       if (ncall1rm.lt.0d0) ncall1rm = ncall1
       ! CH, MK: added
       !=================================================================
-      ncall1osres = powheginput("ncall1osres")
+      ncall1osres = int(powheginput("ncall1osres"))
       ! ncall1osres is additional, if it is not present use the standard one:
       if (ncall1osres.lt.0d0) ncall1osres = ncall1
       !=================================================================
-      itmx1 = powheginput("itmx1")
-      itmx1rm = powheginput("#itmx1rm")
+      itmx1 = int(powheginput("itmx1"))
+      itmx1rm = int(powheginput("#itmx1rm"))
       if(itmx1rm.lt.0) itmx1rm=itmx1
       ! CH, MK: added
       !=================================================================
-      itmx1osres = powheginput("itmx1osres")
+      itmx1osres = int(powheginput("itmx1osres"))
       if(itmx1osres.lt.0) itmx1osres=itmx1
       !=================================================================
 c with parallel grids only one iteration is allowed
@@ -1242,13 +1242,13 @@ c random seeds
          read(iun,iostat=ios) ncall2
          read(iun,iostat=ios) ncall2osres ! CH, MK: added
          if(powheginput("#ncallfrominput").eq.1) then
-            ncall2=powheginput("ncall2")
-            itmx2=powheginput("itmx2")
+            ncall2=int(powheginput("ncall2"))
+            itmx2=int(powheginput("itmx2"))
             ncall2=ncall2*itmx2
             ! CH, MK: read-in the different statistic-parameters 
             ! for the regulars (if present!) ->
-            ncall2osres=powheginput("#ncall2osres")
-            itmx2osres=powheginput("#itmx2osres")
+            ncall2osres=int(powheginput("#ncall2osres"))
+            itmx2osres=int(powheginput("#itmx2osres"))
             if (ncall2osres.lt.0) ncall2osres=ncall2
             if (itmx2osres.lt.0) itmx2osres=itmx2
             ncall2osres=ncall2osres*itmx2osres

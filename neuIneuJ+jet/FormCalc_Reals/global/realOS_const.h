@@ -41,3 +41,5 @@
 	RealType rootsvalue, imode
 	common /cuttools_para/ rootsvalue, imode
 
+	ComplexType CNULL
+	parameter (CNULL = (0D0,0D0))
