@@ -45,6 +45,7 @@ c     set process id using slepton types
         ! whether to use fake virtuals or not
         if(powheginput("#fakevirtuals").gt.0) then
            if(int(powheginput("fakevirtuals")).gt.0) then
+             print*,"Using fake virtuals."
              flg_fakevirtuals = .true.
            endif
         else
@@ -54,6 +55,7 @@ c     set process id using slepton types
         ! whether to neglect box and pentagon diagrams or not
         if(powheginput("#fastvirtuals").gt.0) then
            if(int(powheginput("fastvirtuals")).gt.0) then
+             print*,"Neglecting box and pentagon diagrams."
              flg_fastv = .true.
            endif
         else

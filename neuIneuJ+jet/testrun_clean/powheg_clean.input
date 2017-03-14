@@ -70,7 +70,6 @@ numevts  0           ! number of events to be generated
 ! OPTIONAL PARAMETERS
 runningscale   0     ! (default 0) use ref. scale=virtuality Q (default 0, use fixed scale)
 #fakevirtuals  1     ! (default 0) generate the grid with fake virtuals
-fastvirtuals   1     ! (default 0) neglect box and pentagon diagrams, which speeds up the calculation
 #softtest      1     ! (default 0) check soft singularities
 #colltest      1     ! (default 0) check collinear singularities
 renscfact     1d0    ! (default 1d0) ren scale factor: muren  = muref * renscfact

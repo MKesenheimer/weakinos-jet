@@ -8,7 +8,7 @@ c one per line, to be merged. An empty lines terminates the list.
       implicit none
       integer maxfiles,maxlines
       parameter (maxfiles=1000,maxlines=15000)
-      character *(100) files(maxfiles)
+      character *(300) files(maxfiles)
       character *(100) line(maxlines,maxfiles)
       integer nlines(maxfiles)
       integer ifile,nfiles,ios,k,imethod,N_NaN

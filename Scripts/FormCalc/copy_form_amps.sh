@@ -61,28 +61,26 @@ PROCDIR="neuIneuJ+jet/FormCalc_Reals"
 DEST=${PWD}/../../${PROCDIR}
 
 # number of particles (incoming + outgoing)
-NPART=5
-#NPART=6
+#NPART=5
+NPART=6
 
 # process list file
-PROCF="./proc_nInJj"
+#PROCF="./proc_nInJj"
 #PROCF="./proc_nInJjj_nr"
 #PROCF="./proc_nInJjj_os"
-#PROCF="./proc_nInJjj_reg"
+PROCF="./proc_nInJjj_reg"
 
 # the name of Mathematica Scripts
-#MSCRIPT="./nInJj.m"
-MSCRIPT="./nInJj_virt_collier.m"
+#MSCRIPT="./nInJj_virt_collier.m"
 #MSCRIPT="./nInJjj.m"
 #MSCRIPT="./nInJjj_os.m"
-#MSCRIPT=""
+MSCRIPT=""
 
 # the type of the amplitudes (born, virt, real, realOS)
-#TYPE="born"
-TYPE="virt"
+#TYPE="virt"
 #TYPE="real"
 #TYPE="realOS"
-#TYPE="real"
+TYPE="real"
 
 # the number of subchannels of realOS amplitudes (f.e. ll, lr, rl, rr)
 NSQUARKSUBCHANNELS=4

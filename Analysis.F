@@ -16,7 +16,8 @@ c book all histograms, will be filled later
         ! external functions
         double precision powheginput
         external powheginput
-        double precision mm, mp, ptm, ptp, ptjm, ptjp, em, ep, ym, yp
+        double precision mm, mp, ptm, ptp, ptj1m, ptj1p, ptj2m, ptj2p
+        double precision em, ep, ym, yp
         double precision mdm, mdp, ptdm, ptdp, edm, edp
         double precision phim, phip
         integer n1, n2, n3
@@ -64,9 +65,12 @@ c book all histograms, will be filled later
         ! Pt(A), Pt(B), Pt(miss), binwidth = 10GeV
         ptm = 0D0
         ptp = ptm + 800D0
-        ! Pt(J), binwidth = 2.5GeV
-        ptjm = 0D0
-        ptjp = ptjm + 200D0
+        ! Pt(J1), binwidth = 2.5GeV
+        ptj1m = 0D0
+        ptj1p = ptj1m + 200D0
+        ! Pt(J2), binwidth = 2.5GeV
+        ptj2m = 0D0
+        ptj2p = ptj2m + 200D0
         ! Pt(decI), binwidth = 10GeV
         ptdm = 0D0
         ptdp = ptdm + 800D0
@@ -74,7 +78,7 @@ c book all histograms, will be filled later
         ! number of bins
         n2 = 40
         n3 = 48
-        ! eta(A), eta(B), eta(J), binwidth = 0.25
+        ! eta(A), eta(B), eta(J1), binwidth = 0.25
         em = -5D0
         ep = em + 10D0
         ! eta(decI), binwidth = 0.125
@@ -103,40 +107,36 @@ c book all histograms, will be filled later
         call bookupeqbins("y(A)",(yp-ym)/n2,ym,yp)
         call bookupeqbins("y(B)",(yp-ym)/n2,ym,yp)
         call bookupeqbins("N(J)",1D0,-0.5D0,2.5D0)
-        call bookupeqbins("Pt(J)",(ptjp-ptjm)/n1,ptjm,ptjp)
-        call bookupeqbins("eta(J)",(ep-em)/n2,em,ep)
+        call bookupeqbins("Pt(J1)",(ptj1p-ptj1m)/n1,ptj1m,ptj1p)
+        call bookupeqbins("eta(J1)",(ep-em)/n2,em,ep)
+        call bookupeqbins("Pt(J2)",(ptj2p-ptj2m)/n1,ptj2m,ptj2p)
+        call bookupeqbins("eta(J2)",(ep-em)/n2,em,ep)
 
         ! jet cuts
         call bookupeqbins("xsec(Jcuts)",1D0,-0.5D0,0.5D0)
         call bookupeqbins("N(J,Jcuts)",1D0,-0.5D0,2.5D0)
-        call bookupeqbins("Pt(J,Jcuts)",(ptjp-ptjm)/n1,ptjm,ptjp)
-        call bookupeqbins("eta(J,Jcuts)",(ep-em)/n2,em,ep)
+        call bookupeqbins("Pt(J1,Jcuts)",(ptj1p-ptj1m)/n1,ptj1m,ptj1p)
+        call bookupeqbins("eta(J1,Jcuts)",(ep-em)/n2,em,ep)
+        call bookupeqbins("Pt(J2,Jcuts)",(ptj2p-ptj2m)/n1,ptj2m,ptj2p)
+        call bookupeqbins("eta(J2,Jcuts)",(ep-em)/n2,em,ep)
      
         ! decays and missing Pt
         if(WHCPRG.eq."PYTHIA") then
           ! no cuts
-          call bookupeqbins("dPhi("//cstr(corI)//"+"//cstr(corJ)//")",
-     &                     (phip-phim)/n2,phim,phip)
-          call bookupeqbins("mass("//cstr(corI)//"+"//cstr(corJ)//")",
-     &                     (mdp-mdm)/n1,mdm,mdp)
+          call bookupeqbins("dPhi("//cstr(corI)//"+"//cstr(corJ)//")",(phip-phim)/n2,phim,phip)
+          call bookupeqbins("mass("//cstr(corI)//"+"//cstr(corJ)//")",(mdp-mdm)/n1,mdm,mdp)
           do i=1,ndecay
-            call bookupeqbins("Pt("//cstr(i)//")",
-     &                       (ptdp-ptdm)/n1,ptdm,ptdp)
-            call bookupeqbins("eta("//cstr(i)//")",
-     &                       (edp-edm)/n3,edm,edp)
+            call bookupeqbins("Pt("//cstr(i)//")",(ptdp-ptdm)/n1,ptdm,ptdp)
+            call bookupeqbins("eta("//cstr(i)//")",(edp-edm)/n3,edm,edp)
           enddo
           ! decay cuts
           call bookupeqbins("xsec(Dcuts)",1d0,-0.5d0,0.5d0)
-          call bookupeqbins("dPhi("//cstr(corI)//"+"//cstr(corJ)//
-     &                     ",Dcuts)",(phip-phim)/n2,phim,phip)
-          call bookupeqbins("mass("//cstr(corI)//"+"//cstr(corJ)//
-     &                     ",Dcuts)",(mdp-mdm)/n1,mdm,mdp)
+          call bookupeqbins("dPhi("//cstr(corI)//"+"//cstr(corJ)//",Dcuts)",(phip-phim)/n2,phim,phip)
+          call bookupeqbins("mass("//cstr(corI)//"+"//cstr(corJ)//",Dcuts)",(mdp-mdm)/n1,mdm,mdp)
           call bookupeqbins("Pt(miss)",(ptp-ptm)/n1,ptm,ptp)
           do i=1,ndecay
-            call bookupeqbins("Pt("//cstr(i)//",Dcuts)",
-     &                       (ptdp-ptdm)/n1,ptdm,ptdp)
-            call bookupeqbins("eta("//cstr(i)//",Dcuts)",
-     &                       (edp-edm)/n3,edm,edp)
+            call bookupeqbins("Pt("//cstr(i)//",Dcuts)",(ptdp-ptdm)/n1,ptdm,ptdp)
+            call bookupeqbins("eta("//cstr(i)//",Dcuts)",(edp-edm)/n3,edm,edp)
           enddo
         endif
       end
@@ -217,12 +217,12 @@ c calculate quantities that shall be plotted and fill histograms
         ! variables for missing energy
         double precision p_miss(0:3), pt_miss, pt_miss1
         ! cuts
-        ! ptJmin is a technical cut
+        ! ptjmin is a technical cut
         integer mJmin
-        double precision ptJmin, etaJmax, R
-        common /jetcuts/ptJmin, etaJmax, R
+        double precision ptjmin, etaJmax, R
+        common /jetcuts/ptjmin, etaJmax, R
         ! physical Jet Cuts
-        double precision ptJminPhys
+        double precision ptjminPhys
         ! decay cuts
         double precision RDsepmin
         double precision RDmin(ndecay), RDsep(ndecay,ndecay)
@@ -317,12 +317,12 @@ c calculate quantities that shall be plotted and fill histograms
         ! that the variables are always filled
         ! jet cuts
         mJmin    = 1
-        ptJmin   = 1D0
+        ptjmin   = 1D0
         etaJmax  = 4.5D0
         R        = 0.4D0
         mjets    = 40
         ! physical pt_Jet cut (for pt_miss)
-        ptJminPhys = 20D0
+        ptjminPhys = 20D0
         ! lepton cuts
         ptDmin   = 10D0 ! physical cut
         etaDmax  = 2.5D0
@@ -336,8 +336,8 @@ c calculate quantities that shall be plotted and fill histograms
           print*, "cuts in analysis routines"
           print*
           print*, "cuts (jet):"
-          print*, "hardest jet p_t (selection) >",ptJmin," GeV"
-          print*, "hardest jet p_t (physical)  >",ptJminPhys," GeV"
+          print*, "hardest jet p_t (selection) >",ptjmin," GeV"
+          print*, "hardest jet p_t (physical)  >",ptjminPhys," GeV"
           print*, "hardest jet |eta| <",etaJmax
           print*, "radius parameter R = ",R
           print*
@@ -402,7 +402,7 @@ c calculate quantities that shall be plotted and fill histograms
         ! determine number of visible jets
         num_vis_jets = 0
         do i = 1,mjets
-          if ((kt(i).gt.ptJmin).and.(dabs(eta(i)).lt.etaJmax)) then
+          if ((kt(i).gt.ptjmin).and.(dabs(eta(i)).lt.etaJmax)) then
             num_vis_jets=num_vis_jets+1
           endif
         enddo
@@ -652,7 +652,7 @@ c calculate quantities that shall be plotted and fill histograms
             ! add the detectable jets
             if(mjets.ge.mJmin) then
               do i=1,mjets
-                if(kt(i).gt.ptJminPhys .and. eta(i).lt.etaJmax) then
+                if(kt(i).gt.ptjminPhys .and. eta(i).lt.etaJmax) then
                   p_miss(0) = p_miss(0) - pj(4,i)
                   do mu=1,3
                     p_miss(mu) = p_miss(mu) - pj(mu,i)
@@ -678,21 +678,25 @@ c calculate quantities that shall be plotted and fill histograms
         call filld("y(A)",y_finA,dsig)
         call filld("y(B)",y_finB,dsig)
         call filld("N(J)",dble(num_vis_jets),dsig)
-        call filld("Pt(J)",kt(1),dsig)
-        call filld("eta(J)",eta(1),dsig)
+        call filld("Pt(J1)",kt(1),dsig)
+        call filld("eta(J1)",eta(1),dsig)
+        call filld("Pt(J2)",kt(2),dsig)
+        call filld("eta(J2)",eta(2),dsig)
 
         ! determine if jet cuts have passed
         JcutsPassed = .true.
         if(mjets.lt.mJmin) JcutsPassed = .false.
-        if(kt(1).le.ptJmin) JcutsPassed = .false.
+        if(kt(1).le.ptjmin) JcutsPassed = .false.
         if(dabs(eta(1)).ge.etaJmax) JcutsPassed = .false.
 
         ! fill histograms if jet cuts have passed
         if(JcutsPassed) then
           call filld("xsec(Jcuts)",0D0,dsig)
           call filld("N(J,Jcuts)",dble(num_vis_jets),dsig)
-          call filld("Pt(J,Jcuts)",kt(1),dsig)
-          call filld("eta(J,Jcuts)",eta(1),dsig)
+          call filld("Pt(J1,Jcuts)",kt(1),dsig)
+          call filld("eta(J1,Jcuts)",eta(1),dsig)
+          call filld("Pt(J2,Jcuts)",kt(2),dsig)
+          call filld("eta(J2,Jcuts)",eta(2),dsig)
         endif
         
         ! if the branching ratios for the decays are modified in PYTHIA 
@@ -721,10 +725,8 @@ c calculate quantities that shall be plotted and fill histograms
         
         ! histogramms for decay products, no cuts
         if(decayed) then
-          call filld("dPhi("//cstr(corI)//"+"//cstr(corJ)//")",
-     &               dphi_decIdecJ,dsig)
-          call filld("mass("//cstr(corI)//"+"//cstr(corJ)//")",
-     &               m_decIdecJ,dsig)
+          call filld("dPhi("//cstr(corI)//"+"//cstr(corJ)//")",dphi_decIdecJ,dsig)
+          call filld("mass("//cstr(corI)//"+"//cstr(corJ)//")",m_decIdecJ,dsig)
           do i=1,ndecay
             call filld("Pt("//cstr(i)//")",pt_dec(i),dsig)
             call filld("eta("//cstr(i)//")",eta_dec(i),dsig)
@@ -733,10 +735,8 @@ c calculate quantities that shall be plotted and fill histograms
         
         ! histogramms for decay products, with Dcuts
         if(DcutsPassed) then
-          call filld("dPhi("//cstr(corI)//"+"//cstr(corJ)//",Dcuts)",
-     &                 dphi_decIdecJ,dsig)
-          call filld("mass("//cstr(corI)//"+"//cstr(corJ)//",Dcuts)",
-     &                 m_decIdecJ,dsig)
+          call filld("dPhi("//cstr(corI)//"+"//cstr(corJ)//",Dcuts)",dphi_decIdecJ,dsig)
+          call filld("mass("//cstr(corI)//"+"//cstr(corJ)//",Dcuts)",m_decIdecJ,dsig)
           do i=1,ndecay
             call filld("Pt("//cstr(i)//",Dcuts)",pt_dec(i),dsig)
             call filld("eta("//cstr(i)//",Dcuts)",eta_dec(i),dsig)
@@ -1224,8 +1224,8 @@ c jets are orderd by decreasing pt
         integer   ntracks,njets
         integer   j,k,mu
         double precision palg,pp,tmp
-        double precision ptJmin,etaJmax,R
-        common /jetcuts/ptJmin,etaJmax,R
+        double precision ptjmin,etaJmax,R
+        common /jetcuts/ptjmin,etaJmax,R
         logical isjetparticle
 
         ! Initialize arrays and counters for output jets
@@ -1262,10 +1262,10 @@ c jets are orderd by decreasing pt
           return
         endif
 
-        ! note: ptJmin and R are in common block "jetcuts"
+        ! note: ptjmin and R are in common block "jetcuts"
         ! palg=-1 -> anti-kT (c.f. ZZ code):
         palg=-1
-        call fastjetppgenkt(ptrack,ntracks,R,palg,ptJmin,pjet,njets,
+        call fastjetppgenkt(ptrack,ntracks,R,palg,ptjmin,pjet,njets,
      &                      jetvec)
         mjets = min(mjets,njets)
 #ifdef DEBUGQ

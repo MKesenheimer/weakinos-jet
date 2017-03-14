@@ -73,6 +73,8 @@ Optional arguments:
   --muf <n>                set facscfact
   --ewi <n>                set the regulator ewi
   --merge                  merge the event files and delete the old ones
+  --checklimits            check the soft and collinear limits during the NLO run
+  -w[i] <n>                the walltime in seconds of the i-th stage (f.e. -w1a 60)
 EOM
    exit 0
 }
@@ -120,6 +122,11 @@ GENEVENTS=false
 GENFOLGDER=false
 MERGE=false
 ARG1=""
+CHECKLIM=false
+WALLTIME1=3600
+WALLTIME2=43200
+WALLTIME3=1800
+WALLTIME4=43200
 
 # go through the options
 while [[ $# -gt 0 ]]; do
@@ -272,12 +279,36 @@ case $KEY in
         USEMSUB=true
         shift
         ;;
+     -w1)
+        WALLTIME1="$2"
+        shift
+        shift
+        ;;
+     -w2)
+        WALLTIME2="$2"
+        shift
+        shift
+        ;;
+     -w3)
+        WALLTIME3="$2"
+        shift
+        shift
+        ;;
+     -w4)
+        WALLTIME4="$2"
+        shift
+        shift
+        ;;
     --merge)
         MERGE=true
         shift
         ;;
     -g|--genfolder)
         GENFOLGDER=true
+        shift
+        ;;
+    --checklimits)
+        CHECKLIM=true
         shift
         ;;
     *)
@@ -352,6 +383,8 @@ overwrite_powheg_var "use-old-ubound" 1
 comment_powheg_var "iseed"
 overwrite_powheg_var "manyseeds" 1
 overwrite_powheg_var "testplots" 1
+overwrite_powheg_var "softtest" 0
+overwrite_powheg_var "colltest" 0
 
 # sed magic
 if [ "$NCALL1" != "" ]; then
@@ -484,6 +517,10 @@ overwrite_powheg_var "xgriditeration" 1
 overwrite_powheg_var "parallelstage" 2
 overwrite_powheg_var "numevts" 0
 overwrite_powheg_var "nubound" 0
+if [ "$CHECKLIM" = true ]; then
+  overwrite_powheg_var "softtest" 1
+  overwrite_powheg_var "colltest" 1
+fi
 cp $RUNDIR/powheg.input $RUNDIR/powheg_st2.input
 
 cat <<EOM > $WORKINGDIR/run_st2_${IDENT}.sh
@@ -645,7 +682,7 @@ rm -f $WORKINGDIR/run_st2_${IDENT}.sh
 rm -f $WORKINGDIR/run_st3_${IDENT}.sh
 rm -f $WORKINGDIR/run_st4_${IDENT}.sh
 rm -f $WORKINGDIR/run_${IDENT}.sh
-rm -f $RUNDIR/powheg_st*.input
+#rm -f $RUNDIR/powheg_st*.input
 fi
 
 
@@ -701,7 +738,7 @@ echo "Stage 1a: Generating Grids, iteration 1"
 echo "  submitting $JOBS job(s)..."
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(msub -l walltime=01:00:00 -v ARG1=\$NSEED -o $RUNDIR/powheg_st1a_\${NSEED}.output -e $RUNDIR/powheg_st1a_\${NSEED}.error $WORKINGDIR/run_st1a_${IDENT}.sh | grep -v -e '^$')
+  job[\$i]=\$(msub -l walltime=$WALLTIME1 -v ARG1=\$NSEED -o $RUNDIR/powheg_st1a_\${NSEED}.output -e $RUNDIR/powheg_st1a_\${NSEED}.error $WORKINGDIR/run_st1a_${IDENT}.sh | grep -v -e '^$')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs1a="\$dependIDs1a:\${job[\$i]}"
   #echo \$dependIDs
@@ -712,7 +749,7 @@ echo "Stage 1b: Generating Grids, iteration 2"
 echo "  submitting $JOBS job(s)..."
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(msub -l walltime=01:00:00,depend=afterok\${dependIDs1a} -v ARG1=\$NSEED -o $RUNDIR/powheg_st1b_\${NSEED}.output -e $RUNDIR/powheg_st1b_\${NSEED}.error $WORKINGDIR/run_st1b_${IDENT}.sh | grep -v -e '^$')
+  job[\$i]=\$(msub -l walltime=$WALLTIME1,depend=afterok\${dependIDs1a} -v ARG1=\$NSEED -o $RUNDIR/powheg_st1b_\${NSEED}.output -e $RUNDIR/powheg_st1b_\${NSEED}.error $WORKINGDIR/run_st1b_${IDENT}.sh | grep -v -e '^$')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs1b="\$dependIDs1b:\${job[\$i]}"
 done
@@ -722,7 +759,7 @@ echo "Stage 2: NLO run"
 echo "  submitting $JOBS job(s)..."
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(msub -l walltime=12:00:00,depend=afterok\${dependIDs1b} -v ARG1=\$NSEED -o $RUNDIR/powheg_st2_\${NSEED}.output -e $RUNDIR/powheg_st2_\${NSEED}.error $WORKINGDIR/run_st2_${IDENT}.sh | grep -v -e '^$')
+  job[\$i]=\$(msub -l walltime=$WALLTIME2,depend=afterok\${dependIDs1b} -v ARG1=\$NSEED -o $RUNDIR/powheg_st2_\${NSEED}.output -e $RUNDIR/powheg_st2_\${NSEED}.error $WORKINGDIR/run_st2_${IDENT}.sh | grep -v -e '^$')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs2="\$dependIDs2:\${job[\$i]}"
 done
@@ -735,7 +772,7 @@ echo "Stage 3: Upper bound"
 echo "  submitting $JOBS job(s)..."
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(msub -l walltime=00:30:00,depend=afterok\${dependIDs2} -v ARG1=\$NSEED -o $RUNDIR/powheg_st3_\${NSEED}.output -e $RUNDIR/powheg_st3_\${NSEED}.error $WORKINGDIR/run_st3_${IDENT}.sh | grep -v -e '^$')
+  job[\$i]=\$(msub -l walltime=$WALLTIME3,depend=afterok\${dependIDs2} -v ARG1=\$NSEED -o $RUNDIR/powheg_st3_\${NSEED}.output -e $RUNDIR/powheg_st3_\${NSEED}.error $WORKINGDIR/run_st3_${IDENT}.sh | grep -v -e '^$')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs3="\$dependIDs3:\${job[\$i]}"
 done
@@ -745,7 +782,7 @@ echo "Stage 4: Events"
 echo "  submitting $JOBS job(s)..."
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(msub -l walltime=12:00:00,depend=afterok\${dependIDs3} -v ARG1=\$NSEED -o $RUNDIR/powheg_st4_\${NSEED}.output -e $RUNDIR/powheg_st4_\${NSEED}.error $WORKINGDIR/run_st4_${IDENT}.sh | grep -v -e '^$')
+  job[\$i]=\$(msub -l walltime=$WALLTIME4,depend=afterok\${dependIDs3} -v ARG1=\$NSEED -o $RUNDIR/powheg_st4_\${NSEED}.output -e $RUNDIR/powheg_st4_\${NSEED}.error $WORKINGDIR/run_st4_${IDENT}.sh | grep -v -e '^$')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs4="\$dependIDs4:\${job[\$i]}"
 done

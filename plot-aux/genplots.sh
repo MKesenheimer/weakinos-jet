@@ -109,3 +109,35 @@ EOF
 fi
 i=$[$i+1]
 done
+
+# generate the plots imediately
+# no use of ./gnuplotsplit.sh genplots.gp necessary
+file="genplots.gp"
+if [ -e $file ]; then
+    rm -f tmp.gp
+    # no delimiters for read command
+    export IFS=
+    if ! [ -r $file ]; then
+        echo file $file not readable
+        exit -1
+    fi
+    cat $file | while :; do
+        read line
+        if [ $? -ne 0 ]; then
+            exit 0
+        fi
+        if [ "$line" = reset ]; then
+            if [ -e tmp.gp ]; then
+                gnuplot tmp.gp
+                 > tmp.gp
+            fi
+        else
+            echo $line >> tmp.gp
+        fi
+    done
+fi
+
+if [ -e tmp.gp ]; then
+    gnuplot tmp.gp
+     > tmp.gp
+fi

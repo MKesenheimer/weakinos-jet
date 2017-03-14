@@ -474,6 +474,8 @@ formcalc_virtuals.a: $(addprefix ./build/, $(VIRTUALS))
 	mv $@ $(FORMVIRTS)
 
 libs: formcalc_reals.a formcalc_virtuals.a
+reals: formcalc_reals.a
+virtuals: formcalc_virtuals.a
 
 pwhg_main_ninj+jet: $(addprefix ./build/, $(SOURCESMAIN))
 	$(FC) $(ALL_FCFLAGS) $(patsubst %,build/%,$(SOURCESMAIN)) $(FORMREALS)/formcalc_reals.a $(FORMVIRTS)/formcalc_virtuals.a $(LINKER) -o $@
