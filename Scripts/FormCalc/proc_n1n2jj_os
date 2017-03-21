@@ -1,0 +1,41 @@
+# These are all processes which reuire an on-shell subtraction (either double or single resonances).
+# Identifier 3546 means that a double resonant can occur in channel s_35 and s_46.
+# Same for 3645: double resonance in s_36 and s_45.
+# The number 356 (365,456,465) identifies a single resonance in s_356 (s_365,s_456,s_465).
+# Additional identifiers Sq1 and Sq2 are reuired to show over which suark indices to not sum over.
+# The Mathematica Script does not sum over the suark indices Sfe7 = Sq1 and Sfe8 = Sq2.
+# These indices are set in subroutine set_channel.
+           g            g         n1     n2           d           dbar    3546_Sq1Sq2,3645_Sq1Sq2     # double suark resonances in two distinct pairs of legs (mandelstam s_ij and s_kl)
+           g            g         n1     n2           u           ubar    3546_Sq1Sq2,3645_Sq1Sq2
+           d           d        n1     n2           d           d       3546_Sq1Sq2,3645_Sq1Sq2
+           d           dbar     n1     n2           d           dbar    3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1     # double suark and single gluino resonances (mandelstam s_ij, s_kl and s_ijk)
+           d           dbar     n1     n2           dbar        d       3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1
+           d           dbar     n1     n2           u           ubar    3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1
+           d           u        n1     n2           d           u       3546_Sq1Sq2,3645_Sq1Sq2
+           d           u        n1     n2           u           d       3546_Sq1Sq2,3645_Sq1Sq2
+           d           ubar     n1     n2           d           ubar    3546_Sq1Sq2,3645_Sq1Sq2
+           d           ubar     n1     n2           ubar        d       3546_Sq1Sq2,3645_Sq1Sq2
+           dbar        d        n1     n2           d           dbar    3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1
+           dbar        d        n1     n2           dbar        d       3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1
+           dbar        d        n1     n2           u           ubar    3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1
+           dbar        dbar     n1     n2           dbar        dbar    3546_Sq1Sq2,3645_Sq1Sq2
+           dbar        u        n1     n2           dbar        u       3546_Sq1Sq2,3645_Sq1Sq2
+           dbar        u        n1     n2           u           dbar    3546_Sq1Sq2,3645_Sq1Sq2
+           dbar        ubar     n1     n2           dbar        ubar    3546_Sq1Sq2,3645_Sq1Sq2
+           dbar        ubar     n1     n2           ubar        dbar    3546_Sq1Sq2,3645_Sq1Sq2
+           u           d        n1     n2           d           u       3546_Sq1Sq2,3645_Sq1Sq2
+           u           d        n1     n2           u           d       3546_Sq1Sq2,3645_Sq1Sq2
+           u           dbar     n1     n2           dbar        u       3546_Sq1Sq2,3645_Sq1Sq2
+           u           dbar     n1     n2           u           dbar    3546_Sq1Sq2,3645_Sq1Sq2
+           u           u        n1     n2           u           u       3546_Sq1Sq2,3645_Sq1Sq2
+           u           ubar     n1     n2           d           dbar    3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1
+           u           ubar     n1     n2           u           ubar    3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1
+           u           ubar     n1     n2           ubar        u       3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1
+           ubar        d        n1     n2           d           ubar    3546_Sq1Sq2,3645_Sq1Sq2
+           ubar        d        n1     n2           ubar        d       3546_Sq1Sq2,3645_Sq1Sq2
+           ubar        dbar     n1     n2           dbar        ubar    3546_Sq1Sq2,3645_Sq1Sq2
+           ubar        dbar     n1     n2           ubar        dbar    3546_Sq1Sq2,3645_Sq1Sq2
+           ubar        u        n1     n2           d           dbar    3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1
+           ubar        u        n1     n2           u           ubar    3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1
+           ubar        u        n1     n2           ubar        u       3546_Sq1Sq2,3645_Sq1Sq2,356_Sq1,365_Sq1,456_Sq1,465_Sq1
+           ubar        ubar     n1     n2           ubar        ubar    3546_Sq1Sq2,3645_Sq1Sq2

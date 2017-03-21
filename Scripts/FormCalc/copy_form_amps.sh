@@ -55,7 +55,7 @@ WORKINGDIR=${PWD}
 
 # the name of the target process directory
 #PROCDIR="neuIneuJ+jet/FormCalc_Virtuals"
-PROCDIR="neuIneuJ+jet/FormCalc_Reals"
+PROCDIR="neu1neu2+jet/FormCalc_Reals"
 
 # where to copy the amplitudes to
 DEST=${PWD}/../../${PROCDIR}
@@ -65,10 +65,10 @@ DEST=${PWD}/../../${PROCDIR}
 NPART=6
 
 # process list file
-#PROCF="./proc_nInJj"
-#PROCF="./proc_nInJjj_nr"
-#PROCF="./proc_nInJjj_os"
-PROCF="./proc_nInJjj_reg"
+#PROCF="./proc_n1n2j"
+#PROCF="./proc_n1n2jj_nr"
+#PROCF="./proc_n1n2jj_os"
+PROCF="./proc_n1n2jj_reg"
 
 # the name of Mathematica Scripts
 #MSCRIPT="./nInJj_virt_collier.m"

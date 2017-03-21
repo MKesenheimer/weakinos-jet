@@ -75,6 +75,7 @@ Optional arguments:
   --merge                  merge the event files and delete the old ones
   --checklimits            check the soft and collinear limits during the NLO run
   -w[i] <n>                the walltime in seconds of the i-th stage (f.e. -w1a 60)
+  --fakevirt               use fake virtuals in all calculations
 EOM
    exit 0
 }
@@ -127,6 +128,7 @@ WALLTIME1=3600
 WALLTIME2=43200
 WALLTIME3=1800
 WALLTIME4=43200
+FAKEVIRT=false
 
 # go through the options
 while [[ $# -gt 0 ]]; do
@@ -309,6 +311,10 @@ case $KEY in
         ;;
     --checklimits)
         CHECKLIM=true
+        shift
+        ;;
+    --fakevirt)
+        FAKEVIRT=true
         shift
         ;;
     *)
@@ -511,7 +517,9 @@ chmod +x $WORKINGDIR/run_st1b_${IDENT}.sh
 # STEP 2
 echo "" >> $RUNDIR/powheg.input
 echo "#Stage 2: NLO run" >> $RUNDIR/powheg.input
-overwrite_powheg_var "fakevirtuals" 0
+if [ "$FAKEVIRT" = false ]; then
+  overwrite_powheg_var "fakevirtuals" 0
+fi
 # TODO: xgriditeration = 1 necessary?
 overwrite_powheg_var "xgriditeration" 1
 overwrite_powheg_var "parallelstage" 2

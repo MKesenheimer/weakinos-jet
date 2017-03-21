@@ -88,18 +88,18 @@ Print[process]
 
 
 (*Neglect Masses (URL)*)
-Neglect[ME] = Neglect[ME2] = 0;
-(*Neglect[MQU] = Neglect[MQD] = 0;*)
 Neglect[MU] = Neglect[MU2] = 0;
 Neglect[MC] = Neglect[MC2] = 0;
-(*Neglect[MT] = Neglect[MT2] = 0;*)
 Neglect[MD] = Neglect[MD2] = 0;
 Neglect[MS] = Neglect[MS2] = 0;
-(*Neglect[MB] = Neglect[MB2] = 0;*)
-
-(*Diagonale CKM Matrix*)
-CKM = IndexDelta;
-CKMC = IndexDelta;
+Neglect[MUC] = Neglect[MU2C] = 0;
+Neglect[MCC] = Neglect[MC2C] = 0;
+Neglect[MDC] = Neglect[MD2C] = 0;
+Neglect[MSC] = Neglect[MS2C] = 0;
+Neglect[_Mf] = Neglect[_Mf2] = 0;
+Neglect[_MfC] = Neglect[_Mf2C] = 0;
+(*Neglect[MB] = Neglect[MB2] = 0;
+Neglect[MT] = Neglect[MT2] = 0;*)
 
 
 (*Options*)

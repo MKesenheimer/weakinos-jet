@@ -67,7 +67,7 @@ c book all histograms, will be filled later
         ptp = ptm + 800D0
         ! Pt(J1), binwidth = 2.5GeV
         ptj1m = 0D0
-        ptj1p = ptj1m + 200D0
+        ptj1p = ptj1m + 1000D0
         ! Pt(J2), binwidth = 2.5GeV
         ptj2m = 0D0
         ptj2p = ptj2m + 200D0
@@ -322,7 +322,7 @@ c calculate quantities that shall be plotted and fill histograms
         R        = 0.4D0
         mjets    = 40
         ! physical pt_Jet cut (for pt_miss)
-        ptjminPhys = 20D0
+        ptjminPhys = 30D0
         ! lepton cuts
         ptDmin   = 10D0 ! physical cut
         etaDmax  = 2.5D0

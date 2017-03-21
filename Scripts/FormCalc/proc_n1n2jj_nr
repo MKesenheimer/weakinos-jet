@@ -1,0 +1,10 @@
+# These are processes with no resonant diagrams. No subtraction for
+# these processes is needed.
+           d           dbar     n1     n2           g            g
+           dbar        d        n1     n2           g            g
+           u           ubar     n1     n2           g            g
+           ubar        u        n1     n2           g            g
+           g            d        n1     n2           d           g
+           g            dbar     n1     n2           dbar        g
+           g            u        n1     n2           u           g
+           g            ubar     n1     n2           ubar        g

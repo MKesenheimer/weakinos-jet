@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DEST=../../neuIneuJ+jet/FormCalc_Reals
+DEST=../../neu1neu2+jet/FormCalc_Reals
 
 if [ "$1" == "" ]; then
   rm -rf $DEST/include/* $DEST/squaredME/*

@@ -1,4 +1,4 @@
-c############### FormCalc.f ############################################
+c############## FormCalc.f ############################################
 c last modified by MK, 22.01.2015
 c weakino pair + jet production
 c Interface to the FormCalc amplitudes
@@ -72,7 +72,7 @@ c############### subroutine getBornAmps ################################
         integer flav(nlegborn)
         double precision amp(2),born,bornjk(nlegborn,nlegborn)
         double precision bmunu(0:3,0:3,nlegborn)
-#ifdef DEBUGQ
+#ifdef DEBUG
         double precision bmunu1(0:3,0:3,nlegborn)
         double precision b
 #endif
@@ -92,19 +92,19 @@ c############### subroutine getBornAmps ################################
         
 #ifdef DEBUGQ
         if(flav(1).eq.-2.and.flav(2).eq.2.and.flav(5).eq.0) then
-          call bornmunu_ubaru_n1n2g(p,bmunu1)
-          call born_ubaru_n1n2g(p,b)
-          print*,born,b,born/b
-          print*
+          print*,born
           print*,bmunu(0,:,5)
           print*,bmunu(1,:,5)
           print*,bmunu(2,:,5)
           print*,bmunu(3,:,5)
+          print*,"gmunu*bmunu = ",bmunu(0,0,5)-bmunu(1,1,5)-bmunu(2,2,5)-bmunu(3,3,5)
           print*
+          call bmunu_ubaru_n1n2g(p,bmunu1)
           print*,bmunu1(0,:,5)
           print*,bmunu1(1,:,5)
           print*,bmunu1(2,:,5)
           print*,bmunu1(3,:,5)
+          print*,"gmunu*bmunu = ",bmunu1(0,0,5)-bmunu1(1,1,5)-bmunu1(2,2,5)-bmunu1(3,3,5)
           print*
           stop
         endif

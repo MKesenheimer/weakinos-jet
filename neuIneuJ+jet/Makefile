@@ -18,6 +18,15 @@ FC  = gfortran
 CXX = g++
 CC  = gcc
 
+# check compiler version
+ifeq ($(FC), gfortran)
+  VERSIONGTEQ5 = $(shell expr `gfortran -dumpversion | cut -f1 -d.` \>= 5)
+  #$(error $(shell expr `gfortran -dumpversion | cut -f1 -d.`))
+  ifeq ($(VERSIONGTEQ5), 0)
+    $(error gfortran compiler version >=5 required) 
+  endif
+endif
+
 # p-flag to enable code profiling with gprof: gprof ./pwhg_main* gmon.out > analysis.txt
 FCFLAGS  = -pg
 CXXFLAGS = -g
@@ -292,7 +301,7 @@ endif
 USER = Born.o Born_phsp.o Reals.o Virtuals.o 	\
        init_processes.o init_couplings.o Reals_osres.o 		\
        Real_osres_phsp.o phi1_2.o sigosres.o version.o FormCalc.o \
-       set_channel.o Histogram.o
+       set_channel.o Histogram.o bmunu_ubaru_n1n2g.o
 
 ### Functions in Tools/functions/
 FUNC = funcprocess.o Print.o funcbasic.o off_to_on.o 

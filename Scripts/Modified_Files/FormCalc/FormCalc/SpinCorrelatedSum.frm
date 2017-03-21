@@ -4,7 +4,9 @@
 * last modified 7 Dec 16 th
 * Copied and modified on the basis of PolarizationSum.frm with thanks to
 * Thomas Hahn.
-
+*
+* Form Manual
+* https://www.nikhef.nl/~form/maindir/documentation/reference/online/online.html
 
 #procedure Prepare
 #call Square
@@ -55,12 +57,16 @@ mul DF;
 
 #if "`GaugeTerms'" != "Off"
 id DF * ET`i'([mu]?) * ETC`i'([nu]?) = 
-     (-d_([mu], [be])
-     + (d_(eta`i', [mu])*d_(k`i', [be])
-     +  d_(eta`i', [be])*d_(k`i', [mu]))/(eta`i'.k`i')) * 
-     (-d_([al], [nu])
-     + (d_(eta`i', [al])*d_(k`i', [nu])
-     +  d_(eta`i', [nu])*d_(k`i', [al]))/(eta`i'.k`i'));
+     (- d_([mu], [be])
+      - (d_(k`i', [mu]) * d_(k`i', [be]) 
+     	- (eta`i'.k`i')*(d_(eta`i', [mu])*d_(k`i', [be]) 
+     		+ d_(eta`i', [be])*d_(k`i', [mu])))
+       /((eta`i'.k`i')^2) ) * 
+     (- d_([al], [nu])
+      - (d_(k`i', [al]) * d_(k`i', [nu]) 
+     	- (eta`i'.k`i')*(d_(eta`i', [al])*d_(k`i', [nu]) 
+     		+ d_(eta`i', [nu])*d_(k`i', [al])))
+       /((eta`i'.k`i')^2) );
 #else
 id DF * ET`i'([mu]?) * ETC`i'([nu]?) = d_([mu], [be])*d_([al], [nu]);
 #endif
@@ -77,13 +83,17 @@ also DF * Pol(e`i', [mu]?, [nu]?) * Pol(ec`i', [ro]?, [si]?) =
   (d_([mu], [ro])*d_([nu], [si]) +
   d_([mu], [si])*d_([nu], [ro]) -
   d_([mu], [nu])*d_([ro], [si])) * 
-  (-d_([al], [be])
-     + (d_(eta`i', [al])*d_(k`i', [be])
-     +  d_(eta`i', [be])*d_(k`i', [al]))/(eta`i'.k`i'));
+  (- d_([al], [be])
+      - (d_(k`i', [al]) * d_(k`i', [be]) 
+     	- (eta`i'.k`i')*(d_(eta`i', [al])*d_(k`i', [be]) 
+     		+ d_(eta`i', [be])*d_(k`i', [al])))
+       /((eta`i'.k`i')^2) );
      
-also DF = (-d_([al], [be])
-     + (d_(eta`i', [al])*d_(k`i', [be])
-     +  d_(eta`i', [be])*d_(k`i', [al]))/(eta`i'.k`i'));
+also DF = (- d_([al], [be])
+      - (d_(k`i', [al]) * d_(k`i', [be]) 
+     	- (eta`i'.k`i')*(d_(eta`i', [al])*d_(k`i', [be]) 
+     		+ d_(eta`i', [be])*d_(k`i', [al])))
+       /((eta`i'.k`i')^2) );
 #else
 also DF * Pol(e`i', [mu]?, [nu]?) * Pol(ec`i', [ro]?, [si]?) =
   (d_([mu], [ro])*d_([nu], [si]) +
@@ -140,14 +150,34 @@ id eta`i' = 0;
 #enddo
 .sort;
 
+* UPDATE: With a new definition of the polarization sums the eta vectors
+* do not vanish in the final results.
 * only for the massless case, when all polarization vectors have been 
 * set to zero, we must multiply the amplitude with an additional factor
 * to account for the degrees of freedom (GaugeTerms = False for the 
 * massive case is meaningless).
-#if `m' == "0"
-multiply (`Dim' - 2)/`Dim';
+*#if `m' == "0"
+*multiply (`Dim' - 2)/`Dim';
+*#endif
+
 #endif
-#endif
+
+* we get rid of the eta remainder terms with a gauge choice eta = (1,0,0,0)
+* #if "`GaugeTerms'" == "LightGauge"
+#do i = 1, `Legs'
+id eta`i'.al = al0;
+id eta`i'.be = be0;
+id eta`i'([al]) = al0;
+id eta`i'([be]) = be0;
+#do j = 1, `Legs'
+id eta`i'.k`j' = k`j'0;
+id 1/eta`i'.k`j' = 1/k`j'0;
+id k`j'.eta`i' = k`j'0;
+id 1/k`j'.eta`i' = 1/k`j'0;
+#enddo
+#enddo
+.sort;
+* #endif
 
 #call EtaSubst
 
@@ -186,18 +216,24 @@ print +s;
 #procedure ReplaceOpenLorentzIndices
 .sort
 
+s deltaalbe
 #do i = 1, `Legs'
-* Symbols eta`i'al, eta`i'be;
-* Symbols k`i'al, k`i'be;
-v al, be;
+s eta`i'al, eta`i'be;
+s k`i'al, k`i'be;
 #enddo
+v al, be;
 
 #do i = 1, `Legs'
-id eta`i'([al]) = eta`i'.al;
-id eta`i'([be]) = eta`i'.be;
-id k`i'([al]) = k`i'.al;
-id k`i'([be]) = k`i'.be;
-id d_([al],[be]) = al.be;
+*#if "`GaugeTerms'" == "LightGauge"
+id eta`i'([al]) = al0;
+id eta`i'([be]) = be0;
+*#else
+*id eta`i'([al]) = eta`i'al;
+*id eta`i'([be]) = eta`i'be;
+*#endif
+id k`i'([al]) = k`i'al;
+id k`i'([be]) = k`i'be;
+id d_([al],[be]) = deltaalbe;
 id e_(k1?,k2?,k3?,[al]) = e_(k1,k2,k3,al);
 id e_(k1?,k2?,k3?,[be]) = e_(k1,k2,k3,be);
 id e_(k1?,k2?,[al],[be]) = e_(k1,k2,al,be);
@@ -216,9 +252,10 @@ s D, Dminus4, Dminus4Eps, `Invariants';
 
 nt GA;
 f GF;
-s DF, TAG, ETAG, QTAG;
+s DF, TAG, ETAG, QTAG, al0, be0, deltaal0, deltabe0;
 t ET, ETC, Pol;
 #do i = 1, `Legs'
+s k`i'0;
 t ET`i';
 t ETC`i';
 #enddo
