@@ -70,17 +70,20 @@ c############### subroutine getBornAmps ################################
 #include "nlegborn.h"
         double precision p(0:3,nlegborn)
         integer flav(nlegborn)
-        double precision amp(2),born,bornjk(nlegborn,nlegborn)
+        double precision amp(2),born
+        double precision bornjk(nlegborn,nlegborn)
         double precision bmunu(0:3,0:3,nlegborn)
 #ifdef DEBUG
+        integer i,mu,nu
+        double precision born1
+        double precision bornjk1(nlegborn,nlegborn)
         double precision bmunu1(0:3,0:3,nlegborn)
-        double precision b
+        double complex eps(0:3,2)
+        double precision n(0:3),pol1(0:3,0:3),pol2(0:3,0:3)
+        double precision dotp
+        external dotp
 #endif
         integer flags
-        double precision NC, CF, CA, eighth
-        parameter (NC=3D0, CF=4D0/3D0, CA=3D0, eighth=1D0/8D0)
-        double precision fqg, fqq
-        parameter (fqq=-eighth*CF, fqg=eighth*NC**2*CF)
         
         ! reset
         bornjk(:,:) = 0D0
@@ -88,63 +91,53 @@ c############### subroutine getBornAmps ################################
         
         ! TODO: calculate bmunu with FormCalc
         ! for now it is calculated by MadGraph
-        call sborn_proc(p,flav,born,bornjk,bmunu)
+        call sborn_proc(p,flav,born1,bornjk1,bmunu1)
         
-#ifdef DEBUGQ
-        if(flav(1).eq.-2.and.flav(2).eq.2.and.flav(5).eq.0) then
-          print*,born
-          print*,bmunu(0,:,5)
-          print*,bmunu(1,:,5)
-          print*,bmunu(2,:,5)
-          print*,bmunu(3,:,5)
-          print*,"gmunu*bmunu = ",bmunu(0,0,5)-bmunu(1,1,5)-bmunu(2,2,5)-bmunu(3,3,5)
+        ! = 010d, Bit0: set mass, Bit1: reset, Bit2: loop
+        flags = 2
+        call getAmps(p,flav,flags,amp,bornjk,bmunu)
+        born = amp(1)
+        
+#ifdef DEBUG
+        if(flav(1).eq.2.and.flav(2).eq.-2.and.flav(5).eq.0) then
+          print*,"MadGraph"
+          print*,born1
           print*
-          call bmunu_ubaru_n1n2g(p,bmunu1)
+          print*,bornjk1(1,:)
+          print*,bornjk1(2,:)
+          print*,bornjk1(3,:)
+          print*,bornjk1(4,:)
+          print*,bornjk1(5,:)
+          print*
           print*,bmunu1(0,:,5)
           print*,bmunu1(1,:,5)
           print*,bmunu1(2,:,5)
           print*,bmunu1(3,:,5)
           print*,"gmunu*bmunu = ",bmunu1(0,0,5)-bmunu1(1,1,5)-bmunu1(2,2,5)-bmunu1(3,3,5)
           print*
+          
+          print*,"FormCalc"
+          print*,born
+          print*
+          print*,bornjk(1,:)
+          print*,bornjk(2,:)
+          print*,bornjk(3,:)
+          print*,bornjk(4,:)
+          print*,bornjk(5,:)
+          print*
+          print*,bmunu(0,:,5)
+          print*,bmunu(1,:,5)
+          print*,bmunu(2,:,5)
+          print*,bmunu(3,:,5)
+          print*,"gmunu*bmunu = ",bmunu(0,0,5)-bmunu(1,1,5)-bmunu(2,2,5)-bmunu(3,3,5)
+          print*
           stop
         endif
 #endif
-        
-        ! = 010d, Bit0: set mass, Bit1: reset, Bit2: loop
-        flags = 2
-        call getAmps(p,flav,flags,amp)
-        born = amp(1)
-        
-        ! fill the color and spin correlated amplitudes
-        ! F F -> F F g
-        if(flav(1).ne.0.and.flav(2).ne.0) then
-          bornjk(1,2) = fqq*born
-          bornjk(2,1) = bornjk(1,2)
-          bornjk(1,5) = fqg*born
-          bornjk(5,1) = bornjk(1,5)
-          bornjk(2,5) = fqg*born
-          bornjk(5,2) = bornjk(2,5)
-        ! g F -> F F F
-        elseif(flav(1).eq.0.and.flav(2).ne.0) then
-          bornjk(1,2) = fqg*born
-          bornjk(2,1) = bornjk(1,2)
-          bornjk(1,5) = fqg*born
-          bornjk(5,1) = bornjk(1,5)
-          bornjk(2,5) = fqq*born
-          bornjk(5,2) = bornjk(2,5)
-        ! F g -> F F F  
-        elseif(flav(1).ne.0.and.flav(2).eq.0) then
-          bornjk(1,2) = fqg*born
-          bornjk(2,1) = bornjk(1,2)
-          bornjk(1,5) = fqq*born
-          bornjk(5,1) = bornjk(1,5)
-          bornjk(2,5) = fqg*born
-          bornjk(5,2) = bornjk(2,5)
-        endif
 
-#ifdef DEBUGQ
-        print*,"born =",born
-#endif 
+#ifdef DEBUG
+        bmunu(:,:,:) = bmunu1(:,:,:)
+#endif
       end
 c############### end subroutine getBornAmps ############################
       
@@ -158,6 +151,9 @@ c############### subroutine getVirtAmps ################################
         integer flav(nlegborn)
         double precision amps(2)
         integer i,j,flags
+        ! here: dummy variables
+        double precision bornjk(nlegborn,nlegborn)
+        double precision bmunu(0:3,0:3,nlegborn)
 
         call clearcache
         call setlambda(0d0) ! Only finite part
@@ -174,7 +170,7 @@ c############### subroutine getVirtAmps ################################
           flags = 6
         endif
 
-        call getAmps(p,flav,flags,amps(:))
+        call getAmps(p,flav,flags,amps(:),bornjk,bmunu)
       
 c#define CHECKUV
 #ifdef CHECKUV
@@ -200,22 +196,11 @@ c#define CHECKUV
         print*,"born, virtUV = ", amps
         call nstop(100)
 #endif
-#ifdef DEBUGQ
-        !call printFormcalcModelParameters
-        print*,st_muren2
-        do i=1,nlegborn
-          !print*,"        flav(",i,") = ",flav(i)
-          do j=0,3
-            print*,"        p(",j,",",i,") = ", p(j,i)
-          enddo
-        enddo
-        stop
-#endif
       end
 c############### end subroutine getVirtAmps ############################
 
 c############### subroutine getAmps ####################################
-      subroutine getAmps(p,flav,flags,amp)
+      subroutine getAmps(p,flav,flags,amp,bornjk,bmunu)
         implicit none
 #include "nlegborn.h"
         double precision p(0:3,nlegborn)
@@ -228,8 +213,14 @@ c############### subroutine getAmps ####################################
         integer flags
         ! formcalc results
         double precision fc_result(2), amp(2), symfac
+        double precision bornjk(nlegborn,nlegborn)
+        double precision bmunu(0:3,0:3,nlegborn)
         logical isodd, iseven
         external isodd, iseven
+        double precision NC, CF, CA, eighth
+        parameter (NC=3D0, CF=4D0/3D0, CA=3D0, eighth=1D0/8D0)
+        double precision fqg, fqq
+        parameter (fqq=-eighth*CF, fqg=eighth*NC**2*CF)
 
         ! reset
         fc_result(:) = 0D0
@@ -308,6 +299,7 @@ c############### subroutine getAmps ####################################
             goto 20
           elseif(iseven(abs(f1)).and.iseven(abs(f2))) then
             if(flags.eq.6) call ququbar_nInJg_RenConst
+            !if(flags.eq.2) call bmunu_ubaru_n1n2g(ps,bmunu)
             call ququbar_nInJg_squaredME(fc_result,helicities,flags)
             goto 20
           else
@@ -323,6 +315,35 @@ c############### subroutine getAmps ####################################
 
         amp(1) = fc_result(1)/symfac
         amp(2) = fc_result(2)/symfac
+        
+        if(flags.eq.2) then
+          ! fill the color and spin correlated amplitudes
+          ! F F -> F F g
+          if(flav(1).ne.0.and.flav(2).ne.0) then
+            bornjk(1,2) = fqq*amp(1)
+            bornjk(2,1) = bornjk(1,2)
+            bornjk(1,5) = fqg*amp(1)
+            bornjk(5,1) = bornjk(1,5)
+            bornjk(2,5) = fqg*amp(1)
+            bornjk(5,2) = bornjk(2,5)
+          ! g F -> F F F
+          elseif(flav(1).eq.0.and.flav(2).ne.0) then
+            bornjk(1,2) = fqg*amp(1)
+            bornjk(2,1) = bornjk(1,2)
+            bornjk(1,5) = fqg*amp(1)
+            bornjk(5,1) = bornjk(1,5)
+            bornjk(2,5) = fqq*amp(1)
+            bornjk(5,2) = bornjk(2,5)
+          ! F g -> F F F  
+          elseif(flav(1).ne.0.and.flav(2).eq.0) then
+            bornjk(1,2) = fqg*amp(1)
+            bornjk(2,1) = bornjk(1,2)
+            bornjk(1,5) = fqq*amp(1)
+            bornjk(5,1) = bornjk(1,5)
+            bornjk(2,5) = fqg*amp(1)
+            bornjk(5,2) = bornjk(2,5)
+          endif
+        endif
       end
 c############### subroutine getAmps ####################################
 

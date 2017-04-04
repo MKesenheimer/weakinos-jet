@@ -42,6 +42,7 @@
      &                              wgt1(2)*wps(i+1)*wm(j+1)+
      &                      dconjg(wgt1(2))*wms(i+1)*wp(j+1)
             else
+               !print*,wgt1(1),wgt1(2)
                cwgtmunu(i,j)= dble(wgt1(1))*wm(i+1)*wms(j+1)+
      &                       dimag(wgt1(1))*wp(i+1)*wps(j+1)+
      &                              wgt1(2)*wp(i+1)*wms(j+1)+

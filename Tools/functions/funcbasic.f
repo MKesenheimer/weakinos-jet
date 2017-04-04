@@ -8,13 +8,19 @@ c Kronecker delta
       double precision function kronecker(i,j)
         implicit none
         integer i,j
-        if (i.eq.j) then
-          kronecker = 1d0
-        else
-          kronecker = 0d0
-        endif
+        kronecker = 0D0
+        if(i.eq.j) kronecker = 1d0
       end
 
+c metric tensor
+      double precision function gmunu(mu,nu)
+        implicit none
+        integer mu,nu
+        gmunu = 0D0
+        if(mu.eq.0.and.mu.eq.nu) gmunu = 1d0
+        if(mu.ne.0.and.mu.eq.nu) gmunu = -1d0
+      end
+      
 c swap two integers
       subroutine swapi(i1,i2)
         implicit none
@@ -108,10 +114,10 @@ c denominator function needed by FormCalc
       end
       
 c the epsilon tensor fully contracted with four-momenta k1..k4
-      double precision function epsilon_k(k1,k2,k3,k4)
+      double precision function epsilonk(k1,k2,k3,k4)
         implicit none
         double precision k1(0:3),k2(0:3),k3(0:3),k4(0:3)
-        epsilon_k = k1(3)*k2(2)*k3(1)*k4(0) - k1(2)*k2(3)*k3(1)*k4(0) - 
+        epsilonk = k1(3)*k2(2)*k3(1)*k4(0) - k1(2)*k2(3)*k3(1)*k4(0) - 
      &            k1(3)*k2(1)*k3(2)*k4(0) + k1(1)*k2(3)*k3(2)*k4(0) + 
      &            k1(2)*k2(1)*k3(3)*k4(0) - k1(1)*k2(2)*k3(3)*k4(0) - 
      &            k1(3)*k2(2)*k3(0)*k4(1) + k1(2)*k2(3)*k3(0)*k4(1) + 
@@ -394,4 +400,61 @@ c calculates the kaellen function and the sqrt of kaellen function
         double precision x, y, z
         kaellenSqrt = dsqrt(dabs(x**2+y**2+z**2-2*(x*y+x*z+y*z)))
       end
+      
+c calculate the angles in spherical coordinates of a four vector
+      subroutine angles(p, phi, theta)
+        implicit none
+        double precision p(0:3), phi, theta
+        double precision pi
+        parameter (pi = 4.D0*datan(1.D0))
+        theta = dacos(p(3)/dsqrt(p(1)**2+p(2)**2+p(3)**2))
+        if(p(1).gt.0d0) then
+          phi = datan(p(2)/p(1))
+        elseif(p(1).eq.0d0) then
+          phi = sign(pi/2D0,p(2))
+        elseif(p(1).lt.0D0.and.p(2).ge.0D0) then
+          phi = datan(p(2)/p(1))+pi
+        elseif(p(1).lt.0D0.and.p(2).lt.0D0) then
+          phi = datan(p(2)/p(1))-pi
+        endif
+      end
+      
+c calculates the polarization vector eps(k,hel) of a massles vector particle
+c hel can be -1, 1 for a massles vector particle
+      subroutine polvector(p, hel, eps)
+        implicit none
+        double precision p(0:3), phi, theta
+        integer hel
+        double complex eps(0:3),ii
+        double precision pi,sqrt12
+        parameter (pi = 4.D0*datan(1.D0))
+        parameter (sqrt12 = 1D0/dsqrt(2D0))
+        parameter (ii = (0D0,1D0))
+        if(hel.ne.1 .and. hel.ne.-1) then
+          print*,"wrong helicity: ",hel
+          print*,"hel requested should be -1 or 1."
+          stop
+        endif  
+        call angles(p, phi, theta)
+        eps(0) = 0D0
+        eps(1) = sqrt12*(-hel*dcos(theta)*dcos(phi)+ii*dsin(phi))
+        eps(2) = sqrt12*(-hel*dcos(theta)*dsin(phi)-ii*dcos(phi))
+        eps(3) = sqrt12*hel*dsin(theta)
+      end
+      
+c polarization sum to a certain momenta and arbitrary vector n
+      subroutine polsum(p, n, mat)
+        implicit none
+        double precision p(0:3), n(0:3), mat(0:3,0:3)
+        double precision gmunu, dotp
+        external gmunu, dotp
+        integer mu,nu
+        do mu=0,3
+        do nu=0,3
+          mat(mu,nu) = -gmunu(mu,nu)-(p(mu)*p(nu)-dotp(p,n)*
+     &                  (p(mu)*n(nu)+p(nu)*n(mu))+dotp(p,p)*n(mu)*n(nu))
+     &                  /(dotp(n,p)**2-dotp(p,p)**2)
+        enddo
+        enddo
+      end  
 c############### end functions #########################################

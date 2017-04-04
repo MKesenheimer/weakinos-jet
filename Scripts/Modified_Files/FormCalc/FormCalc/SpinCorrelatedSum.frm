@@ -1,7 +1,7 @@
 * SpinCorrelatedSum.frm
 * the FORM part of the SpinCorrelatedSum function
 * this file is part of FormCalc
-* last modified 7 Dec 16 th
+* last modified 23 Mar 17 th
 * Copied and modified on the basis of PolarizationSum.frm with thanks to
 * Thomas Hahn.
 *
@@ -45,6 +45,9 @@ b e`i', ec`i', z`i', zc`i', Pol;
 .sort
 d `d';
 keep brackets;
+
+#if "`NumericSum'" == "False"
+* calculate an summed analytic expression
 
 id e`i' = ET`i'(?);
 id ec`i' = ETC`i'(?);
@@ -116,6 +119,25 @@ also DF = (-d_([al], [be]) + k`i'([al])*k`i'([be])/(`m')^2);
 #call Square
 #endif
 
+#else
+* NumericSum -> True
+* don't calculate an analytic expression and sum over the pol vectors
+* externally
+
+*mul es`i'([al]) * ect`i'([be]);
+*id e`i' = ET`i'(?);
+*id ec`i' = ETC`i'(?);
+*id ET`i'([mu]?) * ETC`i'([nu]?) = es`i'([mu]) * ect`i'([nu]);
+
+mul DF;
+id e`i' = ET`i'(?);
+id ec`i' = ETC`i'(?);
+id DF * ET`i'([mu]?) * ETC`i'([nu]?) = es`i'([mu]) * ect`i'([nu]) * es`i'([al]) * ect`i'([be]);
+also DF = et`i'([al]) * ect`i'([be]) * (`Dim' - 2)/`Dim';
+*also DF = es`i'([al]) * ect`i'([be]);
+
+#endif
+
 .sort
 d `Dim';
 
@@ -163,7 +185,6 @@ id eta`i' = 0;
 #endif
 
 * we get rid of the eta remainder terms with a gauge choice eta = (1,0,0,0)
-* #if "`GaugeTerms'" == "LightGauge"
 #do i = 1, `Legs'
 id eta`i'.al = al0;
 id eta`i'.be = be0;
@@ -177,7 +198,6 @@ id 1/k`j'.eta`i' = 1/k`j'0;
 #enddo
 #enddo
 .sort;
-* #endif
 
 #call EtaSubst
 
@@ -218,19 +238,24 @@ print +s;
 
 s deltaalbe
 #do i = 1, `Legs'
+s es`i'al, et`i'al;
+s ecs`i'be, ect`i'be;
 s eta`i'al, eta`i'be;
 s k`i'al, k`i'be;
 #enddo
 v al, be;
 
 #do i = 1, `Legs'
-*#if "`GaugeTerms'" == "LightGauge"
+* gauge vectors
 id eta`i'([al]) = al0;
 id eta`i'([be]) = be0;
-*#else
-*id eta`i'([al]) = eta`i'al;
-*id eta`i'([be]) = eta`i'be;
-*#endif
+
+* polarization vectors for external sum
+id es`i'([al]) = es`i'al;
+id et`i'([al]) = et`i'al;
+id ecs`i'([be]) = ecs`i'be;
+id ect`i'([be]) = ect`i'be;
+
 id k`i'([al]) = k`i'al;
 id k`i'([be]) = k`i'be;
 id d_([al],[be]) = deltaalbe;
@@ -253,11 +278,13 @@ s D, Dminus4, Dminus4Eps, `Invariants';
 nt GA;
 f GF;
 s DF, TAG, ETAG, QTAG, al0, be0, deltaal0, deltabe0;
-t ET, ETC, Pol;
+t ET, ETC, eps, epsc, Pol;
 #do i = 1, `Legs'
 s k`i'0;
 t ET`i';
 t ETC`i';
+v es`i', et`i';
+v ecs`i', ect`i';
 #enddo
 cf TMP, ABB;
 auto s ARG;

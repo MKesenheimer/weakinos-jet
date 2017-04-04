@@ -322,7 +322,7 @@ c calculate quantities that shall be plotted and fill histograms
         R        = 0.4D0
         mjets    = 40
         ! physical pt_Jet cut (for pt_miss)
-        ptjminPhys = 30D0
+        ptjminPhys = 20D0
         ! lepton cuts
         ptDmin   = 10D0 ! physical cut
         etaDmax  = 2.5D0
@@ -824,8 +824,7 @@ c Mother 1 with PDG = 1000023 decays into 1000022 and -14
 c Mother 2 with PDG = 1000023 decays into 1000022 and -16
 c Mother 3 with PDG = 1000024 decays into 1000022 and -15
 c
-c call getdaughters(1000023,.true.,D1PDG_ID,D2PDG_ID)
-c   -> D1PDG_ID = 1000022 and D2PDG_ID = -14
+c call getdaughters(1000023,.true.,D1PDG_ID,D2PDG_ID)2c   -> D1PDG_ID = 1000022 and D2PDG_ID = -14
 c call getdaughters(1000023,.false.,D1PDG_ID,D2PDG_ID)
 c   -> D1PDG_ID = 1000022 and D2PDG_ID = -16
 c call getdaughters(1000024,.false.,D1PDG_ID,D2PDG_ID)

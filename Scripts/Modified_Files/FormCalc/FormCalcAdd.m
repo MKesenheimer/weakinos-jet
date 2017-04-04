@@ -107,8 +107,8 @@ indices must be defined in the list <indices>. The substitution list <functions>
 <nlegs> is the number of legs of the diagrams."
 
 WriteSpinCorrelatedMatrixElement::usage = 
-"WriteSpinCorrelatedMatrixElement[name_String,ampmunu_,abbr_List,indices_List,functions_List,nlegs_Integer,spinleg_Integer] 
-writes out the spin correlated amplitude given in variable <ampmunu> with abbreviations <abbr>. All open 
+"WriteSpinCorrelatedMatrixElement[name_String,bmunu_,abbr_List,indices_List,functions_List,nlegs_Integer,spinleg_Integer] 
+writes out the spin correlated amplitude given in variable <bmunu> with abbreviations <abbr>. All open 
 indices must be defined in the list <indices>. The substitution list <functions> define which function names should be replaced.
 <nlegs> is the number of legs of the diagrams, <spinleg> is the number of the leg, that was used to calculate the spin correlation."
 
@@ -130,10 +130,14 @@ GetSumIndices::usage =
 GetSumand::usage =
 ""
 
+NumericSum::usage =
+"NumericSum is an option of SpinCorrelatedSum and WriteSpinCorrelatedMatrixElement. You can 
+choose to carry out the spinsum externally (NumericSum -> True) or to get an analytical expression (False)."
+
 Begin["`Private`"]
 
 Print[];
-Print["FormCalcAdd 1.2.3 (23 Jan 2016)"];
+Print["FormCalcAdd 1.3.0 (23 Mar 2016)"];
 Print["by Matthias Kesenheimer, with thanks to Thomas Hahn"];
 
 
@@ -164,7 +168,8 @@ Options[SpinCorrelatedSum] = {
   GaugeTerms -> True,
   NoBracket -> NoBracket,
   EditCode -> False,
-  RetainFile -> False }
+  RetainFile -> False,
+  NumericSum -> False }
 
 SpinCorrelatedSum::noprocess = "No process defined so far.  \
 SpinCorrelatedSum works only after DeclareProcess or CalcFeynAmp."
@@ -184,7 +189,7 @@ Block[ {Hel},
 ]
 
 SpinCorrelatedSum[expr_, opt___?OptionQ] :=
-Block[ {slegs, dim, gauge, nobrk, edit, retain,
+Block[ {slegs, dim, gauge, nobrk, edit, retain, numsum,
 fullexpr, lor, indices, legs, masses, etasubst, vars, hh, abbr,
 subexpr, subexprc, rules},
 
@@ -192,7 +197,7 @@ subexpr, subexprc, rules},
     Message[SpinCorrelatedSum::noprocess];
     Abort[] ];
     
-  {slegs, dim, gauge, nobrk, edit, retain} =
+  {slegs, dim, gauge, nobrk, edit, retain, numsum} =
     ParseOpt[SpinCorrelatedSum, opt] /. Options[CalcFeynAmp];
 
   abbr = OptimizeAbbr[Abbr[]];
@@ -225,6 +230,7 @@ subexpr, subexprc, rules},
   WriteString[hh, "\
 #define Dim \"", ToString[dim], "\"\n\
 #define GaugeTerms \"" <> ToString[gauge] <> "\"\n\
+#define NumericSum \"" <> ToString[numsum] <> "\"\n\
 #define FermionChains \"None\"\n\n" <>
     vars[[1]] <> "\n\
 #procedure EtaSubst\n" <>
@@ -504,27 +510,44 @@ GetSumand[sum_,indices_]:=Coefficient[sum,MapThread[SumOver[#1,#2]&,{GetVariable
 GetSumand[sum_,indices_]:=Coefficient[sum,MapThread[FeynArts`SumOver[#1,#2]&,{GetVariables[indices],GetValues[indices]}]/.List->Times]
 
 
-WriteSpinCorrelatedMatrixElement[name_String,ampmunu_,abbr_List,nlegs_Integer,spinleg_Integer]:=Block[
-  {strm,i,j,vars,ulist,indices,indlist,indlist50,indliststr,varlist,varlist50,varliststr,names,ampmunu0,functions,sumindices,indexcomb},
+Options[WriteSpinCorrelatedMatrixElement] = {
+  NumericSum -> False }
+
+WriteSpinCorrelatedMatrixElement[name_String,bmunu_,abbr_List,nlegs_Integer,spinleg_Integer,opt___?OptionQ]:=Block[
+  {numsum,strm,i,j,vars,ulist,indices,indlist,indlist50,indliststr,varlist,varlist50,varliststr,names,bmunu0,functions,sumindices,indexcomb},
 
   If[spinleg>nlegs,Print["Error: spinleg > nlegs."];Exit[];];
 
+  {numsum} =
+    ParseOpt[WriteSpinCorrelatedMatrixElement, opt];
+
   (*generate fortran code*)
   strm = OpenFortran[name<>".mf"];
-  WriteStringn[strm, "subroutine "<>name<>"(p,ampmunu)"];
+  WriteStringn[strm, "subroutine "<>name<>"(p,bmunu)"];
   WriteStringn[strm, "implicit none"];
   WriteStringn[strm, "#include \"PhysPars.h\""];
   WriteStringn[strm, "double precision pi"];
   WriteStringn[strm, "parameter (pi = 4.D0*datan(1.D0))"];
   WriteStringn[strm, "double precision p(0:3,"<>ToString[nlegs]<>")"];
-  WriteStringn[strm, "double precision al(0:3), be(0:3)"];
-  WriteStringn[strm, "double precision eta"<>ToString[spinleg]<>"(0:3)"];
-  WriteStringn[strm, "parameter (eta"<>ToString[spinleg]<>" = (/1.,0.,0.,0./))"];
-  WriteStringn[strm, "integer alind, beind, i, j"];
-  WriteStringn[strm, "double precision ampmunu(0:3,0:3,"<>ToString[nlegs]<>")"];
-  For[i=1,i<=nlegs,i++,
-    WriteStringn[strm, "double precision k"<>ToString[i]<>"(0:3)"];
+  If[!numsum,
+    WriteStringn[strm, "double precision al(0:3), be(0:3)"];
+    WriteStringn[strm, "double precision eta"<>ToString[spinleg]<>"(0:3)"];
+    WriteStringn[strm, "parameter (eta"<>ToString[spinleg]<>" = (/1.,0.,0.,0./))"];
+  ,(*else*)
+    WriteStringn[strm, "integer hels, helt"];
+    WriteStringn[strm, "double complex es"<>ToString[spinleg]<>"(0:3), ecs"<>ToString[spinleg]<>"(0:3)"];
+    WriteStringn[strm, "double complex et"<>ToString[spinleg]<>"(0:3), ect"<>ToString[spinleg]<>"(0:3)"];
   ];
+  WriteStringn[strm, "integer alind, beind, i, j"];
+  WriteStringn[strm, "double precision bmunu(0:3,0:3,"<>ToString[nlegs]<>")"];
+  For[i=1,i<=nlegs,i++,
+    If[!numsum,
+      WriteStringn[strm, "double precision k"<>ToString[i]<>"(0:3)"];
+    ,(*else*)
+      WriteStringn[strm, "double complex k"<>ToString[i]<>"(0:3)"];
+    ];
+  ];
+  (*TODO: generalize*)
   If[nlegs==4,
     WriteStringn[strm, "double precision S, T, U"];
   ];
@@ -533,9 +556,9 @@ WriteSpinCorrelatedMatrixElement[name_String,ampmunu_,abbr_List,nlegs_Integer,sp
   ];
 
   (*determine the indices that can occur in our matrix element*)
-  ampmunu0 = SplitSums[ampmunu];
-  sumindices = Map[GetSumIndices[#]&,ampmunu0];
-  ampmunu0 = Map[GetSumand[#,GetSumIndices[#]]&,ampmunu0];
+  bmunu0 = SplitSums[bmunu];
+  sumindices = Map[GetSumIndices[#]&,bmunu0];
+  bmunu0 = Map[GetSumand[#,GetSumIndices[#]]&,bmunu0];
   indices = Apply[Union,sumindices];
   (*bypass errors if indices list is empty*)
   If[Length[indices]==0,
@@ -559,7 +582,11 @@ WriteSpinCorrelatedMatrixElement[name_String,ampmunu_,abbr_List,nlegs_Integer,sp
   varliststr = Map[ListToString[#]&,varlist50];
   If[Length[varlist]!=0,
     For[i=1,i<=Length[varliststr],i++,
-      WriteStringn[strm, "double precision "<>varliststr[[i]]];
+      If[!numsum,
+        WriteStringn[strm, "double precision "<>varliststr[[i]]];
+      ,(*else*)
+        WriteStringn[strm, "double complex "<>varliststr[[i]]];
+      ];
     ];
   ];
 
@@ -567,12 +594,14 @@ WriteSpinCorrelatedMatrixElement[name_String,ampmunu_,abbr_List,nlegs_Integer,sp
   WriteStringn[strm, ""];
   WriteStringn[strm, "double precision Epsilon, DotP, Den, Kronecker"];
   WriteStringn[strm, "double precision momsq, momsum2sq, momsum3sq"];
+  WriteStringn[strm, "double complex cDotP"];
   WriteStringn[strm, "external Epsilon, DotP, Den, Kronecker"];
   WriteStringn[strm, "external momsq, momsum2sq, momsum3sq"];
+  WriteStringn[strm, "external cDotP"];
 
   (*reset the amplitude*)
   WriteStringn[strm, ""];
-  WriteStringn[strm, "ampmunu(:,:,:) = 0D0"];
+  WriteStringn[strm, "bmunu(:,:,:) = 0D0"];
 
   (*Momenta and Mandelstams*)
   WriteStringn[strm, "S   = momsum2sq(p(:,1), p(:,2))"];
@@ -585,35 +614,57 @@ WriteSpinCorrelatedMatrixElement[name_String,ampmunu_,abbr_List,nlegs_Integer,sp
   ];
 
   WriteStringn[strm, ""];
-  WriteStringn[strm, "do i=0,3"];
-  WriteStringn[strm, "if(i.eq.0) then"];
-  For[i=1,i<=nlegs,i++,
-    WriteStringn[strm, "k"<>ToString[i]<>"(i) = p(i,"<>ToString[i]<>")"];
+  If[!numsum,
+    WriteStringn[strm, "do i=0,3"];
+    WriteStringn[strm, "if(i.eq.0) then"];
+    For[i=1,i<=nlegs,i++,
+      WriteStringn[strm, "k"<>ToString[i]<>"(i) = p(i,"<>ToString[i]<>")"];
+    ];
+    WriteStringn[strm, "else"];
+    For[i=1,i<=nlegs,i++,
+      WriteStringn[strm, "k"<>ToString[i]<>"(i) = -p(i,"<>ToString[i]<>")"];
+    ];
+    WriteStringn[strm, "endif"];
+    WriteStringn[strm, "enddo"];
+  ,(*else*)
+    WriteStringn[strm, "do i=0,3"];
+    For[i=1,i<=nlegs,i++,
+      WriteStringn[strm, "k"<>ToString[i]<>"(i) = dcmplx(p(i,"<>ToString[i]<>"))"];
+    ];
+    WriteStringn[strm, "enddo"];
   ];
-  WriteStringn[strm, "else"];
-  For[i=1,i<=nlegs,i++,
-    WriteStringn[strm, "k"<>ToString[i]<>"(i) = -p(i,"<>ToString[i]<>")"];
-  ];
-  WriteStringn[strm, "endif"];
-  WriteStringn[strm, "enddo"];
 
   (*loop over al and be*)
   WriteStringn[strm, ""];
   WriteStringn[strm, "do alind=0,3"];
   WriteStringn[strm, "do beind=0,3"];
-  WriteStringn[strm, ""];
-  WriteStringn[strm, "al(:) = 0D0"];
-  WriteStringn[strm, "if(alind.eq.0) then"];
-  WriteStringn[strm, "al(alind) = 1D0"];
-  WriteStringn[strm, "else"];
-  WriteStringn[strm, "al(alind) = -1D0"];
-  WriteStringn[strm, "endif"];
-  WriteStringn[strm, "be(:) = 0D0"];
-  WriteStringn[strm, "if(beind.eq.0) then"];
-  WriteStringn[strm, "be(beind) = 1D0"];
-  WriteStringn[strm, "else"];
-  WriteStringn[strm, "be(beind) = -1D0"];
-  WriteStringn[strm, "endif"];
+
+  (*if NumericSum -> True was requested, sum over the gluon helicities*)
+  If[numsum,
+    WriteStringn[strm, "do hels=-1,1,2"];
+    WriteStringn[strm, "do helt=-1,1,2"];
+    WriteStringn[strm, ""];
+    WriteStringn[strm, "call polvector(dreal(k"<>ToString[spinleg]<>"), hels, es"<>ToString[spinleg]<>")"];
+    WriteStringn[strm, "call polvector(dreal(k"<>ToString[spinleg]<>"), helt, et"<>ToString[spinleg]<>")"];
+    WriteStringn[strm, "ecs"<>ToString[spinleg]<>"(:) = dconjg(es"<>ToString[spinleg]<>"(:))"];
+    WriteStringn[strm, "ect"<>ToString[spinleg]<>"(:) = dconjg(et"<>ToString[spinleg]<>"(:))"];
+  ];
+
+  If[!numsum,
+    WriteStringn[strm, ""];
+    WriteStringn[strm, "al(:) = 0D0"];
+    WriteStringn[strm, "if(alind.eq.0) then"];
+    WriteStringn[strm, "al(alind) = 1D0"];
+    WriteStringn[strm, "else"];
+    WriteStringn[strm, "al(alind) = -1D0"];
+    WriteStringn[strm, "endif"];
+    WriteStringn[strm, "be(:) = 0D0"];
+    WriteStringn[strm, "if(beind.eq.0) then"];
+    WriteStringn[strm, "be(beind) = 1D0"];
+    WriteStringn[strm, "else"];
+    WriteStringn[strm, "be(beind) = -1D0"];
+    WriteStringn[strm, "endif"];
+  ];
 
   (*calculate abbreviations*)
   vars=GetVariables[abbr];
@@ -641,7 +692,12 @@ WriteSpinCorrelatedMatrixElement[name_String,ampmunu_,abbr_List,nlegs_Integer,sp
   ];
 
   (*substitute wildcards and variable names for the abbreviations and the matrix element*)
-  functions = {ToExpression["Pair"]->ToExpression["DotP"],ToExpression["IndexDelta"]->ToExpression["Kronecker"],ToExpression["Eps"]->ToExpression["Epsilon"]};
+  If[!numsum,
+    functions = {ToExpression["Pair"]->ToExpression["DotP"],ToExpression["IndexDelta"]->ToExpression["Kronecker"],ToExpression["Eps"]->ToExpression["Epsilon"]};
+  ,(*else*)
+    functions = {ToExpression["Pair"]->ToExpression["cDotP"],ToExpression["IndexDelta"]->ToExpression["Kronecker"],ToExpression["Eps"]->ToExpression["Epsilon"]};
+  ];
+  (*TODO: Ersetzung von eta[al] schon fr\[UDoubleDot]her, z.B. in SpinCorrelatedSum, durchf\[UDoubleDot]hren.*)
   names = {eta[i_]:>ToExpression["eta"<>ToString[i]], k[i_]:>ToExpression["k"<>ToString[i]],
            al0->al[0],be0->be[0],ToExpression["deltaalbe"]->ToExpression["al[beind]"],I->ToExpression["ii"],-I->ToExpression["-ii"]};
   For[i=1,i<=nlegs,i++,
@@ -650,6 +706,10 @@ WriteSpinCorrelatedMatrixElement[name_String,ampmunu_,abbr_List,nlegs_Integer,sp
     names = Join[names,{ToExpression["k"<>ToString[i]<>"be"]->ToExpression["k"<>ToString[i]<>"[beind]"]}];
     names = Join[names,{ToExpression["eta"<>ToString[i]<>"al"]->ToExpression["eta"<>ToString[i]<>"[alind]"]}];
     names = Join[names,{ToExpression["eta"<>ToString[i]<>"be"]->ToExpression["eta"<>ToString[i]<>"[beind]"]}];
+    names = Join[names,{ToExpression["es"<>ToString[i]<>"al"]->ToExpression["es"<>ToString[i]<>"[alind]"]}];
+    names = Join[names,{ToExpression["ect"<>ToString[i]<>"be"]->ToExpression["ect"<>ToString[i]<>"[beind]"]}];
+    names = Join[names,{ToExpression["et"<>ToString[i]<>"al"]->ToExpression["et"<>ToString[i]<>"[alind]"]}];
+    names = Join[names,{ToExpression["ecs"<>ToString[i]<>"be"]->ToExpression["ecs"<>ToString[i]<>"[beind]"]}];
   ];
 
   (*assign the values for the abbreviations*)
@@ -657,12 +717,16 @@ WriteSpinCorrelatedMatrixElement[name_String,ampmunu_,abbr_List,nlegs_Integer,sp
   
   (*write Matrix element*)
   For[i=1,i<=Length[sumindices],i++,
-    Evaluate[ToExpression["FormCalc`AmpMuNuOut"<>ToString[i]]] = ampmunu0[[i]];
+    Evaluate[ToExpression["FormCalc`AmpMuNuOut"<>ToString[i]]] = bmunu0[[i]]/.names/.functions;
     WriteStringn[strm, ""];
     For[j=1,j<=Length[sumindices[[i]]],j++,
       WriteStringn[strm, "do "<>ToString[GetVariables[sumindices[[i]]][[j]]]<>"=1,"<>ToString[GetValues[sumindices[[i]]][[j]]]];
     ];
-    WriteStringn[strm, "ampmunu(alind,beind,"<>ToString[spinleg]<>") = ampmunu(alind,beind,"<>ToString[spinleg]<>") + (<* FormCalc`AmpMuNuOut"<>ToString[i]<>" *>)"];
+    If[!numsum,
+      WriteStringn[strm, "bmunu(alind,beind,"<>ToString[spinleg]<>") = bmunu(alind,beind,"<>ToString[spinleg]<>") + (<* FormCalc`AmpMuNuOut"<>ToString[i]<>" *>)"];
+    ,(*else*)
+      WriteStringn[strm, "bmunu(alind,beind,"<>ToString[spinleg]<>") = bmunu(alind,beind,"<>ToString[spinleg]<>") + dreal(<* FormCalc`AmpMuNuOut"<>ToString[i]<>" *>)"];
+    ];
     For[j=1,j<=Length[sumindices[[i]]],j++,
       WriteStringn[strm, "enddo"];
     ];
@@ -672,6 +736,12 @@ WriteSpinCorrelatedMatrixElement[name_String,ampmunu_,abbr_List,nlegs_Integer,sp
   WriteStringn[strm, ""];
   WriteStringn[strm, "enddo"];
   WriteStringn[strm, "enddo"];
+
+  (*end loop gluon helicities*)
+  If[numsum,
+    WriteStringn[strm, "enddo"];
+    WriteStringn[strm, "enddo"];
+  ];
 
   WriteStringn[strm, ""];
   WriteStringn[strm, "end"];
