@@ -142,20 +142,6 @@ DEBUG = -ggdb -pg -DDEBUG=$(LEVEL)
 # Runtime check
 #DEBUG += -fcheck=all
 
-## More debugging flags
-# Check UV finiteness in FormCalc Virtuals: -DCHECKUV
-# Check if MadGraph and FormCalc born amplitudes are the same during 
-# calculation and abort if they are not: -DCHECK_FORM_MAD
-# Note: Use this only for testing born amplitudes, not for the final 
-# program and not while checking real amplitudes!
-#USRFLAGS += -DCHECK_FORM_MAD
-
-## Additional and mandatory flags
-# Use MadGraph Borns (default): -DMAD_BORN 
-# Use FormCalc Borns: -DFORM_BORN
-#USRFLAGS += -DMAD_BORN
-USRFLAGS += -DFORM_BORN
-
 ## Subtraction schemes
 # There are divergences originating from on-shell produced squark lines
 # in the real processes. The resonant contribution can easily exceed 

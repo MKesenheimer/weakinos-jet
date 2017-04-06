@@ -1,10 +1,10 @@
-      subroutine sborn_proc(p_born,legs,wgt,wgtjk,wgtmunu)
+      subroutine sborn_proc(p_born,legs,wgtmunu)
       implicit none
       include "nexternal.inc"
       include "coupl.inc"
-      double precision wgt
-      double precision p_born(0:3,nexternal-1),wgt2(nexternal-1),
-     &   wgtmunu(0:3,0:3,nexternal-1),wgtjk(nexternal-1,nexternal-1)
+      double precision p_born(0:3,nexternal-1)
+      double precision wgtmunu(0:3,0:3,nexternal-1)
+      double precision wgt2
       integer legs(nexternal-1),lstr,i
       character*20 str
       logical calculatedBorn
@@ -14,153 +14,106 @@
       calculatedBorn=.false.
       
       call convert_to_string(nexternal-1,legs,str,lstr)
-#ifdef DEBUGQ
-      print*, "[DEBUG] str = ", str
-#endif
       
       if(str.eq."-11nInJ0") then
          call sborn_cl_001(p_born,wgtmunu,wgt2)
-         call sborn_sf_001(p_born,wgtjk)
          goto 20
       elseif(str.eq."-10nInJ-1") then
          call sborn_cl_002(p_born,wgtmunu,wgt2)
-         call sborn_sf_002(p_born,wgtjk)
          goto 20
       elseif(str.eq."1-1nInJ0") then
          call sborn_cl_003(p_born,wgtmunu,wgt2)
-         call sborn_sf_003(p_born,wgtjk)
          goto 20
       elseif(str.eq."10nInJ1") then
          call sborn_cl_004(p_born,wgtmunu,wgt2)
-         call sborn_sf_004(p_born,wgtjk)
          goto 20
       elseif(str.eq."-22nInJ0") then
          call sborn_cl_005(p_born,wgtmunu,wgt2)
-         call sborn_sf_005(p_born,wgtjk)
          goto 20
       elseif(str.eq."-20nInJ-2") then
          call sborn_cl_006(p_born,wgtmunu,wgt2)
-         call sborn_sf_006(p_born,wgtjk)
          goto 20
       elseif(str.eq."2-2nInJ0") then
          call sborn_cl_007(p_born,wgtmunu,wgt2)
-         call sborn_sf_007(p_born,wgtjk)
          goto 20
       elseif(str.eq."20nInJ2") then
          call sborn_cl_008(p_born,wgtmunu,wgt2)
-         call sborn_sf_008(p_born,wgtjk)
          goto 20
       elseif(str.eq."-44nInJ0") then
          call sborn_cl_005(p_born,wgtmunu,wgt2)
-         call sborn_sf_005(p_born,wgtjk)
          goto 20
       elseif(str.eq."-40nInJ-4") then
          call sborn_cl_006(p_born,wgtmunu,wgt2)
-         call sborn_sf_006(p_born,wgtjk)
          goto 20
       elseif(str.eq."4-4nInJ0") then
          call sborn_cl_007(p_born,wgtmunu,wgt2)
-         call sborn_sf_007(p_born,wgtjk)
          goto 20
       elseif(str.eq."40nInJ4") then
          call sborn_cl_008(p_born,wgtmunu,wgt2)
-         call sborn_sf_008(p_born,wgtjk)
          goto 20
       elseif(str.eq."-33nInJ0") then
          call sborn_cl_001(p_born,wgtmunu,wgt2)
-         call sborn_sf_001(p_born,wgtjk)
          goto 20
       elseif(str.eq."-30nInJ-3") then
          call sborn_cl_002(p_born,wgtmunu,wgt2)
-         call sborn_sf_002(p_born,wgtjk)
          goto 20
       elseif(str.eq."3-3nInJ0") then
          call sborn_cl_003(p_born,wgtmunu,wgt2)
-         call sborn_sf_003(p_born,wgtjk)
          goto 20
       elseif(str.eq."30nInJ3") then
          call sborn_cl_004(p_born,wgtmunu,wgt2)
-         call sborn_sf_004(p_born,wgtjk)
          goto 20
       elseif(str.eq."-55nInJ0") then
          call sborn_cl_001(p_born,wgtmunu,wgt2)
-         call sborn_sf_001(p_born,wgtjk)
          goto 20
       elseif(str.eq."-50nInJ-5") then
          call sborn_cl_002(p_born,wgtmunu,wgt2)
-         call sborn_sf_002(p_born,wgtjk)
          goto 20
       elseif(str.eq."5-5nInJ0") then
          call sborn_cl_003(p_born,wgtmunu,wgt2)
-         call sborn_sf_003(p_born,wgtjk)
          goto 20
       elseif(str.eq."50nInJ5") then
          call sborn_cl_004(p_born,wgtmunu,wgt2)
-         call sborn_sf_004(p_born,wgtjk)
          goto 20
       elseif(str.eq."0-1nInJ-1") then
          call sborn_cl_021(p_born,wgtmunu,wgt2)
-         call sborn_sf_021(p_born,wgtjk)
          goto 20
       elseif(str.eq."01nInJ1") then
          call sborn_cl_022(p_born,wgtmunu,wgt2)
-         call sborn_sf_022(p_born,wgtjk)
          goto 20
       elseif(str.eq."0-2nInJ-2") then
          call sborn_cl_023(p_born,wgtmunu,wgt2)
-         call sborn_sf_023(p_born,wgtjk)
          goto 20
       elseif(str.eq."02nInJ2") then
          call sborn_cl_024(p_born,wgtmunu,wgt2)
-         call sborn_sf_024(p_born,wgtjk)
          goto 20
       elseif(str.eq."0-4nInJ-4") then
          call sborn_cl_023(p_born,wgtmunu,wgt2)
-         call sborn_sf_023(p_born,wgtjk)
          goto 20
       elseif(str.eq."04nInJ4") then
          call sborn_cl_024(p_born,wgtmunu,wgt2)
-         call sborn_sf_024(p_born,wgtjk)
          goto 20
       elseif(str.eq."0-3nInJ-3") then
          call sborn_cl_021(p_born,wgtmunu,wgt2)
-         call sborn_sf_021(p_born,wgtjk)
          goto 20
       elseif(str.eq."03nInJ3") then
          call sborn_cl_022(p_born,wgtmunu,wgt2)
-         call sborn_sf_022(p_born,wgtjk)
          goto 20
       elseif(str.eq."0-5nInJ-5") then
          call sborn_cl_021(p_born,wgtmunu,wgt2)
-         call sborn_sf_021(p_born,wgtjk)
          goto 20
       elseif(str.eq."05nInJ5") then
          call sborn_cl_022(p_born,wgtmunu,wgt2)
-         call sborn_sf_022(p_born,wgtjk)
          goto 20
       endif
-      
- 20   wgt=0d0
-      do i=1,nexternal-1
-         if(wgt.eq.0d0 .and. wgt2(i).ne.0d0) then
-            wgt=wgt2(i)
-         elseif(wgt.ne.0d0 .and. wgt2(i).ne.0d0 .and.
-     &           abs((wgt-wgt2(i))/wgt).gt.1d-7) then
-            write(*,*) "Error #2 in sborn_proc ",i,wgt2
-            !stop
-         endif
-      enddo
-      
+ 20   continue
       end
-      
-      
-      
-      
       
       subroutine born_color(legs,color)
       implicit none
       include "nexternal.inc"
-      include "maxamps.inc"
+      integer maxamps, maxflow
+      parameter (maxamps=6000,maxflow=  10)
       Double Precision amp2001(maxamps), jamp2001(0:maxamps)
       common/to_amps_001/amp2001,jamp2001
       Double Precision amp2002(maxamps), jamp2002(0:maxamps)

@@ -14,9 +14,8 @@ c modifies the jacobian.
       subroutine  setosresreal(p,rflav,ichan,amp)
         implicit none
 #include "PhysPars.h"
-#include "nlegborn.h"
-#include "pwhg_flst.h"
 #include "pwhg_st.h"
+#include "nlegborn.h"
 #include "Flags.h"
 #include "osres.h"
         double precision p(0:3,nlegreal)

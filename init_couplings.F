@@ -9,8 +9,6 @@ c requires encoded process ID in lprup(1)
         implicit none
 #include "PhysPars.h"
 #include "LesHouches.h"
-#include "pwhg_st.h"
-#include "nlegborn.h"
 #include "osres.h"
 #ifndef collier
 #include "looptools.h"
@@ -19,8 +17,6 @@ c requires encoded process ID in lprup(1)
         external powheginput
         ! final state IDs
         integer id_fin1, id_fin2
-        logical verbose
-        parameter (verbose=.true.)
 
         ! extract particle types from process id
         call decode_pair(lprup(1),id_fin1,id_fin2)
@@ -52,43 +48,26 @@ c requires encoded process ID in lprup(1)
         call set_os_regulator
 
         ! Print out all parameters if you want
-        if(verbose) then
-          print*
-          print*, "===================================================="
-          print*, "               set POWHEG parameters                "
-          print*, "===================================================="
-          print*
-          print*, "Z mass          = ",par_Zmass
-          print*, "W mass          = ",par_Wmass
-          print*, "Z width         = ",par_Zwidth
-          print*, "W width         = ",par_Wwidth
-          print*, "1/alpha         = ",1d0/par_alpha
-          print*
-          print*, "final state masses = ", par_Fin1mass
-          print*, "                     ", par_Fin2mass
-          print*, "                     ", par_Fin3mass
-          print*
-          print*, "OS regulator WREG1, WREG2 = ", wreg1, wreg2
-          print*        
-#ifdef DEBUGQ
-          print*
-          print*, "===================================================="
-          print*, "               set FormCalc parameters              "
-          print*, "===================================================="
-          print*
-          call printFormcalcModelParameters
-          print*
-          print*
-          print*, "===================================================="
-          print*, "               set MadGraph parameters              "
-          print*, "===================================================="
-          print*
-          call printMadgraphModelParameters
-          print*
+#if DEBUG > 0
+        print*
+        print*, "===================================================="
+        print*, "               set POWHEG parameters                "
+        print*, "===================================================="
+        print*
+        print*, "Z mass          = ",par_Zmass
+        print*, "W mass          = ",par_Wmass
+        print*, "Z width         = ",par_Zwidth
+        print*, "W width         = ",par_Wwidth
+        print*, "1/alpha         = ",1d0/par_alpha
+        print*
+        print*, "final state masses = ", par_Fin1mass
+        print*, "                     ", par_Fin2mass
+        print*, "                     ", par_Fin3mass
+        print*
+        print*, "OS regulator WREG1, WREG2 = ", wreg1, wreg2
+        print*        
 #endif
-        endif
-        
-        
+ 
         ! check if the MadGraph parameters are the same as the ones
         ! used by FormCalc
         if( (MZ                 .ne. zmass        ) .or.
@@ -219,7 +198,6 @@ c############### subroutine init_madgraph_params #######################
 c sets the Madgraph parameters
       subroutine set_madgraph_params
         implicit none
-#include "PhysPars.h"
         character*100 slhafilename
         logical called, readslha
         data called/.false./
@@ -268,18 +246,6 @@ c set the madgraph and formcalc couplings event by event
 
         ! set the MadGraph SUSY-QCD couplings
         call INIT_SUSY_QCD(GS)
-
-#ifdef DEBUGQ
-        print*,"AlfaS: ", AlfaS
-        print*,"Alfa:  ", Alfa
-        !stop
-#endif
-        
-#ifdef DEBUGQ
-        print*, "par_Zwidth", par_Zwidth
-        print*, "par_Wwidth", par_Wwidth
-        stop
-#endif
       end
 c############### end subroutine set_ebe_couplings ######################
 

@@ -10,23 +10,18 @@ c Born contribution:
 c parton parton -> weakino weakino
       subroutine setborn(p,bflav,born,bornjk,bmunu)
         implicit none
-#include "PhysPars.h"
 #include "nlegborn.h"
-#include "pwhg_kn.h"
         double precision p(0:3,nlegborn), bornjk(nlegborn,nlegborn)
         integer bflav(nlegborn)
         double precision bmunu(0:3,0:3,nlegborn), born
-        ! function to calculate the squared momentum sum
-        double precision dotp, momsq, momsum3sq, momsum2sq
-        external dotp, momsq, momsum2sq, momsum3sq
-        ! calculate the relative error between formcalc and maqdgraph borns
-        double precision fborn, mborn
         ! initialization variables
         logical verbose
         logical init_born
         data init_born/.true./
         integer i
 #ifdef DEBUGQ
+        double precision momsum2sq
+        external momsum2sq
         double precision s35, s45
 #endif
 
@@ -39,106 +34,15 @@ c parton parton -> weakino weakino
            verbose = .false.
         endif
     
-#if !defined(FORM_BORN) && !defined(MAD_BORN)
-        print*,"Error: Preprocessor flag FORM_BORN or"
-     &       //" MAD_BORN not set in Makefile."
-        stop
-#endif
-        
-#if defined(CHECK_FORM_MAD) || defined(FORM_BORN)
-c ---------------------------- Formcalc Born ---------------------------
-
         ! calculate the couplings for this PS point
         call set_ebe_couplings
         call getBornAmps(p,bflav,born,bornjk,bmunu)
-        fborn = born
-        
-#ifdef DEBUGQ
-          print*
-          print*, "process: ", bflav
-          do i=1,nlegborn
-            print*, "bornjk = ", bornjk(i,:)/fborn
-          enddo
-          !stop
-#endif
         
         if (verbose) then
           print*, "process: ", bflav
-          print*, "s  = ", momsum2sq(p(0:3,1), p(0:3,2))
-          print*, "t  = ", momsum2sq(p(0:3,1),-p(0:3,3))
-          print*, "u  = ", momsum2sq(p(0:3,2),-p(0:3,3))
-          print*, "born (formcalc) = ", fborn
+          print*, "born = ", born
           print*
         endif
-c ---------------------------- End FormCalc Born -----------------------
-c endif preprocessor condition "if defined(CHECK_FORM_MAD) || defined(FORM_BORN)"
-#endif
-
-
-#if defined(CHECK_FORM_MAD) || defined(MAD_BORN)
-c ---------------------------- MadGraph Born ---------------------------
-        ! calculate the couplings for this PS point
-        call set_ebe_couplings
-        call sborn_proc(p,bflav,born,bornjk,bmunu)
-        mborn = born
-        
-#ifdef DEBUGQ
-          do j=1,nlegborn
-            print*, "bornjk = ", bornjk(j,:)/mborn
-          enddo
-          !stop
-#endif
-
-#ifdef DEBUGQ
-          print*, "process: ", bflav
-          do j=1,nlegborn
-          do nmu=0,3
-            print*, "bmunu(",nmu,", nu,",j,") = ", bmunu(nmu,:,j)/mborn
-          enddo
-          print*
-          enddo
-          !stop
-#endif
-        
-        if (verbose) then
-          print*, "process: ", bflav
-          print*, "s  = ", momsum2sq(p(0:3,1), p(0:3,2))
-          print*, "t  = ", momsum2sq(p(0:3,1),-p(0:3,3))
-          print*, "u  = ", momsum2sq(p(0:3,2),-p(0:3,3))
-          print*, "born (maqdgraph) = ", mborn
-          print*
-        endif
-c ---------------------------- End Maqdgraph Born -----------------------
-c endif preprocessor condition "if defined(CHECK_FORM_MAD) || defined(MAD_BORN)"
-#endif
-
-#ifdef CHECK_FORM_MAD
-        ! compare the formcalc and maqdgraph amplitudes
-        if(kn_jacborn.ne.0D0 .and.
-     &     (abs((fborn - mborn)/(fborn + mborn)) > 1d-08) ) then ! the relative error is probably larger for smaller amplitudes
-          print*, "Error: formcalc and maqdgraph borns are too different"
-          print*, "in process: ", bflav
-          do i=1,5
-            print*, "p(",i,") = ", p(:,i)
-          enddo
-          print*, "kn_jacborn = ",kn_jacborn
-          print*, "born (formcalc) = ", fborn
-          print*, "born (maqdgraph) = ", mborn
-          print*, "rel. err. = ", abs((fborn - mborn)/(fborn + mborn))
-          print*, "fborn/mborn = ", fborn/mborn, mborn/fborn
-          print*
-          stop
-        endif
-#endif
-
-! If the program calculates both maqdgraph and formcalc borns (preprocessor flag CHECK_FORM_MAD)
-! the user can choose which born amplitude powheg should use (formcalc or maqdgraph)
-#if defined(CHECK_FORM_MAD) && defined(MAD_BORN)
-        born = mborn ! (default)
-#endif
-#if defined(CHECK_FORM_MAD) && defined(FORM_BORN)
-        born = fborn
-#endif
 
         if(isnan(born)) then
           !print*,"got strange value for born amplitude...",born
@@ -182,7 +86,7 @@ c a (leading) color structure to an event.
         do j=1,nlegborn
           print*,"[DEBUG] icolup(",j,")",icolup(1,j),icolup(2,j)
         enddo
-        !stop
+        stop
 #endif
       end
 c############### end subroutine finalize_lh ############################

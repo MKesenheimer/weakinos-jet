@@ -16,7 +16,6 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
 #include "PhysPars.h"
 #include "pwhg_st.h"
 #include "nlegborn.h"
-#include "Flags.h"
 #include "osres.h"
         double precision p(0:3,nlegreal)
         integer rflav(nlegreal)
@@ -25,20 +24,9 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         logical verbose
         logical init_reals
         data init_reals/.true./        
-        ! kinematics
-        double precision s12, sij, skl
         integer ichan
-        ! jacobian for the on-shell terms
-        double precision corrfac
-        external corrfac
-        ! function to calculate the squared momentum sum
-        double precision momsum3sq, momsum2sq
-        external momsum2sq, momsum3sq
         ! sum only over relevant on-shell channels
         integer nos
-#ifdef DEBUG
-        double precision ampM
-#endif
 
         if (init_reals) then
           print*
@@ -54,28 +42,6 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
 
         ! get the formcalc real amplitudes
         call getRealAmps(p,rflav,amp)
-        
-#ifdef DEBUGQ
-        ! compare with MadGraph amplitudes
-        call sreal_proc(p,rflav,ampM)
-        if(dsqrt(p(1,5)**2+p(2,5)**2).gt.10D0 .and. dsqrt(p(1,6)**2+p(2,6)**2).gt.10D0) then
-          if((abs((amp - ampM)/(amp + ampM)) > 1d-04) ) then ! the relative error is probably larger for smaller amplitudes
-            print*,"process",rflav
-            do i=1,6
-              print*, "p(",i,") = ", p(:,i)
-            enddo
-            print*,"pt(5)",dsqrt(p(1,5)**2+p(2,5)**2)
-            print*,"pt(6)",dsqrt(p(1,6)**2+p(2,6)**2)
-            print*,"amp (formcalc)  = ", amp
-            print*,"amp (maqdgraph) = ", ampM
-            print*,"rel. err. = ", abs((amp - ampM)/(amp + ampM))
-            print*,"amp/ampM  = ", amp/ampM, ampM/amp
-            print*
-            !call nstop(3)
-          endif
-        endif
-        !amp = ampM
-#endif
         
 #if defined(DSUB_II) || defined(DSUB_II_TEST)
         ! subtract the resonant amplitudes (move the resonant contributions 
@@ -128,9 +94,6 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         ! Print informations
         if(verbose) then
           print*, "process: ", rflav
-          print*, "s  = ", momsum2sq(p(0:3,1), p(0:3,2))
-          print*, "t  = ", momsum2sq(p(0:3,1),-p(0:3,3))
-          print*, "u  = ", momsum2sq(p(0:3,2),-p(0:3,3))
           print*, "real = ", ampreal
           print*
         endif
