@@ -183,7 +183,7 @@ SUBWORKINGDIR = $(shell pwd)
 
 # important directories
 TOOLS = $(WORKINGDIR)/Tools
-MADREALS = $(SUBWORKINGDIR)/MadGraph_Reals
+MADREALS = $(SUBWORKINGDIR)/MadGraph
 FORMREALS = $(SUBWORKINGDIR)/FormCalc_Reals
 FORMVIRTS = $(SUBWORKINGDIR)/FormCalc_Virtuals
 SCRIPTS = $(WORKINGDIR)/Scripts
