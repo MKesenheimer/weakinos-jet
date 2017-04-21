@@ -100,6 +100,9 @@
 * END HSEL_DECL
 
         data MatSUN /NaN(4)/
+* -------- MK: added -----------------------------------------------------------
+#include "skiphel_vars.h"
+* -------- MK: added -----------------------------------------------------------
 
 #include "realOS_inline.h"
 
@@ -171,7 +174,32 @@
           SIMD_ONLY(v = mod(v, SIMD) + 1)
           SIMD_ONLY(if( v .eq. 1 ) then)
           h = h + 1
+          
+* -------- MK: added -----------------------------------------------------------
+#if NSKIP > 0
+          if(.not.skiphel(h)) then
+            call qubarqu_nInJqubarqu_365_Sq1_SquaredMEHel(HelInd(SIMD,res(HelAll(1),h)), flags)
+          else
+            res(HelAll(1),h) = 0D0
+#if DEBUG >= 1
+            print*,"skipping helicity ",h
+#endif
+          endif
+          ! determine which hel-amplitudes to skip during the initialisation phase
+          if(initskip) then
+            if(res(HelAll(1),h).eq.0D0) mskip(h) = mskip(h) + 1
+            if(mskip(h).ge.NSKIP) skiphel(h) = .true.
+            if(minit.ge.ninit) initskip = .false.
+            minit = minit + 1
+          endif
+#else
           call qubarqu_nInJqubarqu_365_Sq1_SquaredMEHel(HelInd(SIMD,res(HelAll(1),h)), flags)
+#endif
+#if DEBUG >= 2
+          print*,h,res(HelAll(1),h)
+#endif
+* -------- MK: added -----------------------------------------------------------
+
           SIMD_ONLY(endif)
         enddo
 
