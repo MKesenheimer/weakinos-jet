@@ -4,7 +4,15 @@
       integer ih
       real * 8 x,pdf(-pdf_nparton:pdf_nparton)
       include 'pwhg_st.h'
-      
+      if(x .ge. 1) then
+         if(x-1 .gt. 1d-4) then
+            write(*,*) 'pdfcall: warning, x=',x
+            write(*,*) 'returning pdf=0'
+         endif
+         pdf = 0
+         return
+      endif
+
 #ifdef DEBUGQ
       !x = 2.0393373472149643D-3
       x = 1.6480036108839822D-3

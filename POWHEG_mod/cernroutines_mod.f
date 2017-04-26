@@ -1,6 +1,3 @@
-c MK: copied and modified version of cernroutines.f, revision 3154
-c changes marked with "! MK:"
-
 c# 1 "dilog64.F"
 c# 1 "<built-in>"
 c# 1 "<command line>"
@@ -624,11 +621,21 @@ C!!! ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C for 32-bit machines, use IMPLICIT DOUBLE PRECISION
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
       DIMENSION RVEC(*)
-      COMMON/R48ST1/U(97),C,I97,J97
+c Jezo+Nason, 27-5-2016, make common block have all the status      
+c      COMMON/R48ST1/U(97),C,I97,J97
       PARAMETER (MODCNS=1000000000)
-      SAVE CD, CM, TWOM24, NTOT, NTOT2, IJKL,TWOM49, ONE, ZERO
+c      SAVE CD, CM, TWOM24, NTOT, NTOT2, IJKL,TWOM49, ONE, ZERO
+      COMMON/R48ST1/U(97),C,CD,CM,TWOM24,TWOM49,ONE,ZERO,I97,J97,
+     1     NTOT, NTOT2, IJKL
+      logical, save :: ini = .true.
       save /R48ST1/
-      DATA NTOT,NTOT2,IJKL/-1,0,0/
+      if(ini) then
+         ntot = -1
+         ntot2 = 0
+         ijkl = 0
+         ini = .false.
+      endif
+c end Jezo Nason
 C
       IF (NTOT .GE. 0)  GO TO 50
 C
@@ -645,8 +652,8 @@ C         generating pseudorandom numbers with RM48.   The input
 C         values should be in the ranges:  0<=IJKLIN<=900 OOO OOO
 C                                          0<=NTOTIN<=999 999 999
 C                                          0<=NTOT2N<<999 999 999!
-C To get the standard values in Marsaglia's paper, IJKLIN=54217137
-C                                            NTOTIN,NTOT2N=0
+C To get the standard values in Marsaglia's paper, IJKLIN=54217137 NTOTIN,NTOT2N=0
+      ini = .false.
       IJKL = IJKLIN
       NTOT = MAX(NTOTIN,0)
       NTOT2= MAX(NTOT2N,0)
@@ -737,6 +744,14 @@ C             Replace exact zeros by 2**-49
       RETURN
 C           Entry to output current status
       ENTRY RM48UT(IJKLUT,NTOTUT,NTOT2T)
+c     added by Jezo-Nason
+      if(ini) then
+         ntot = -1
+         ntot2 = 0
+         ijkl = 0
+         ini = .false.
+      endif
+c     end Jezo-Nason
       IJKLUT = IJKL
       NTOTUT = NTOT
       NTOT2T = NTOT2
@@ -1452,7 +1467,7 @@ C
 C
     2 IF (N.EQ.1)            RETURN
       IF (MODE)    10,20,30
-   10 CALL SORTTI(A,INDEX,N)
+   10 CALL SORTTI (A,INDEX,N)
       GO TO 40
 C
    20 CALL SORTTC(A,INDEX,N)
@@ -1684,8 +1699,9 @@ c Put constraint to avoid denormals
       enddo
 c not found
       if(ncounters.eq.maxnum) then
-         write(*,*) 'ERROR: increasecnt too many counters requested'
-         stop
+         write(*,*) ' increasecnt: too many counters requested'
+         write(*,*) ' exiting ...'
+         call exit(-1)
       endif
       ncounters=ncounters+1
       keywords(ncounters)=string
@@ -1712,8 +1728,39 @@ c not found
       enddo
 c not found
       if(ncounters.eq.maxnum) then
-         write(*,*) 'ERROR: increasecnt too many counters requested'
-         stop
+         write(*,*) ' addtocnt: too many counters requested'
+         write(*,*) ' exiting ...'
+         call exit(-1)
+       endif
+      ncounters=ncounters+1
+      keywords(ncounters)=string
+      counters(ncounters)=value
+      end
+
+
+      subroutine setcnt(string,value)
+      implicit none
+      character *(*) string
+      real * 8 value
+      integer maxnum
+      parameter (maxnum=100)
+      character * 100 keywords(maxnum)
+      real * 8 counters(maxnum)
+      integer ncounters
+      common/ccounters/keywords,counters,ncounters
+      integer j
+      call initcnt
+      do j=1,ncounters
+         if(string.eq.keywords(j)) then
+            counters(j)=value
+            return
+         endif
+      enddo
+c not found
+      if(ncounters.eq.maxnum) then
+         write(*,*) 'setcnt: too many counters requested'
+         write(*,*) ' exiting ...'
+         call exit(-1)
       endif
       ncounters=ncounters+1
       keywords(ncounters)=string
@@ -1738,8 +1785,9 @@ c not found
       enddo
 c not found
       if(ncounters.eq.maxnum) then
-         write(*,*) 'ERROR: increasecnt too many counters requested'
-         stop
+         write(*,*) ' resetcnt: too many counters requested'
+         write(*,*) ' exiting ...'
+         call exit(-1)
       endif
       ncounters=ncounters+1
       keywords(ncounters)=string
@@ -1784,7 +1832,7 @@ c not found
          open(unit=iun,file=pwgprefix(1:lprefix)//'counters.dat'
      1     ,status='unknown')
       else
-         stage=int(powheginput("#parallelstage"))
+         stage=int(powheginput("#parallelstage")) ! MK: added cast
          if(stage.gt.0) then
             write(cst(3:3),'(i1)') stage
             cst(1:2)='st'
@@ -1996,6 +2044,7 @@ c Assume we wrapped around
       call write_counters
       call exit(iret)
       end
+
 
       SUBROUTINE DGSET(A,B,N,X,W)
 C

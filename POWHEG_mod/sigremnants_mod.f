@@ -160,11 +160,15 @@ c        if (.not.pwhg_isfinite(rad_damp_rem_tot)) then
 c           rad_damp_rem_tot=0d0
 c           rad_damp_rem_arr=0d0
 c        endif
+c        rad_reg_tot = rad_reg_tot * suppfact
+c        rad_reg_arr = rad_reg_arr * suppfact
+c
+c        rad_damp_rem_tot = rad_damp_rem_tot * suppfact
+c        rad_damp_rem_arr = rad_damp_rem_arr * suppfact
 c        retval=rad_reg_tot+rad_damp_rem_tot
-         retval=totrem+totreg
-
-#ifdef DEBUGQ
-         print*,"sigremnants.f:167: retval",retval
+#ifdef DEBUG
+         print*,"sigremnants.f:176: retval",retval
+         print*,"sigremnants.f:177: suppfact",suppfact
          stop
 #endif
       end

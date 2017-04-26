@@ -296,7 +296,7 @@
           call qdbarg_nInJqdbar_SquaredMEHel(HelInd(SIMD,res(HelAll(1),h)), flags)
 #endif
 #if DEBUG >= 2
-          print*,h,res(HelAll(1),h)
+          print*,h,res(HelAll(1),h),res(HelAll(2),h)
 #endif
 * -------- MK: added -----------------------------------------------------------
 

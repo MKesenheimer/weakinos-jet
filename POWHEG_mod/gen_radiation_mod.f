@@ -281,7 +281,7 @@ c restart from here
       real * 8 t,csi,y,azi,sig,born
       real * 8 tmax
       common/ctmax/tmax
-      integer kinreg,firstreg,lastreg,fl1,fl2,flemitter
+      integer kinreg,jkinreg,firstreg,lastreg,fl1,fl2,flemitter
       logical ini
       data ini/.true./
       real * 8 pwhg_pt2,powheginput
@@ -290,7 +290,7 @@ c restart from here
       logical is_charged,is_coloured
       external is_charged,is_coloured
       if(ini) then
-         firstreg=int(powheginput("#radregion"))
+         firstreg=int(powheginput("#radregion")) ! MK: added cast
          if(firstreg.le.0) then
             firstreg=1
             lastreg=rad_nkinreg
@@ -302,7 +302,8 @@ c restart from here
 c Use highest bid procedure (see appendix B of FNO2006)
       tmax=0
       kinreg=0
-      do rad_kinreg=firstreg,lastreg
+      do jkinreg=firstreg,lastreg
+         rad_kinreg = jkinreg
          if(rad_kinreg_on(rad_kinreg)) then
             if(rad_kinreg.eq.1) then
 c     initial state radiation

@@ -208,16 +208,16 @@ c############### end subroutine born_suppression #######################
 c############### subroutine set_fac_ren_scales #########################
       subroutine set_fac_ren_scales(muf1,mur1)
         implicit none
-
 #include "PhysPars.h"
 #include "nlegborn.h"
 #include "pwhg_kn.h"
 #include "pwhg_st.h"
-
+#include "pwhg_flg.h"
         ! renamed to prevent conflicts with madgraph parameter mur
         double precision muf1,mur1
         double precision muref
         double precision kn34(0:3)
+        double precision ET(6), HT
         logical init
         data init/.true./
         logical runningscale
@@ -237,11 +237,47 @@ c############### subroutine set_fac_ren_scales #########################
               runningscale = .false.
            endif
         endif
-        
+       
+#ifdef DEBUGQ
+       print*,"p born:"
+       print*,kn_pborn(:,1)
+       print*,kn_pborn(:,2)
+       print*,kn_pborn(:,3)
+       print*,kn_pborn(:,4)
+       print*,kn_pborn(:,5)
+       print*,"p real:"
+       print*,kn_preal(:,1)
+       print*,kn_preal(:,2)
+       print*,kn_preal(:,3)
+       print*,kn_preal(:,4)
+       print*,kn_preal(:,5)
+       print*,kn_preal(:,6)
+#endif
+
+c choose the running scale
+c 1: invariant mass of weakino-pair
+c 2: sum of transverse energy of final states
+#define SCALE 2
         if(runningscale) then
+#if SCALE == 1
            kn34(:) = kn_pborn(:,3)+kn_pborn(:,4)
            muref = dsqrt(dabs(kn34(0)**2-kn34(1)**2
      &                      -kn34(2)**2-kn34(3)**2))
+#elif SCALE == 2
+           if(flg_bornonly) then
+             ET(3) = dsqrt(dabs(kn_pborn(1,3)**2 + kn_pborn(2,3)**2 + kn_masses(3)**2))
+             ET(4) = dsqrt(dabs(kn_pborn(1,4)**2 + kn_pborn(2,4)**2 + kn_masses(4)**2))
+             ET(5) = dsqrt(dabs(kn_pborn(1,5)**2 + kn_pborn(2,5)**2 + kn_masses(5)**2))
+             HT = ET(3) + ET(4) + ET(5)
+           else
+             ET(3) = dsqrt(dabs(kn_preal(1,3)**2 + kn_preal(2,3)**2 + kn_masses(3)**2))
+             ET(4) = dsqrt(dabs(kn_preal(1,4)**2 + kn_preal(2,4)**2 + kn_masses(4)**2))
+             ET(5) = dsqrt(dabs(kn_preal(1,5)**2 + kn_preal(2,5)**2 + kn_masses(5)**2))
+             ET(6) = dsqrt(dabs(kn_preal(1,6)**2 + kn_preal(2,6)**2 + kn_masses(6)**2))
+             HT = ET(3) + ET(4) + ET(5) + ET(6)
+           endif
+           muref = HT/2D0
+#endif
         else
            muref = dabs(par_Fin1mass) + dabs(par_Fin2mass)
         endif
@@ -250,22 +286,26 @@ c############### subroutine set_fac_ren_scales #########################
 
         if(init) then
           print*
-          print*, "===================================================="
-          print*, "Factorization and renormalization scales:"
+          print*,"===================================================="
+          print*,"Factorization and renormalization scales:"
           if(runningscale) then
-            print*, "using running scale and"
-            print*, "invariant mass of neutralinos for muref"
+            print*,"using running scale and"
+#if SCALE == 1
+            print*,"invariant mass of neutralinos for muref"
+#elif SCALE == 2
+            print*,"transverse energy of final states"
+#endif
           else
-            print*, "using fixed scale and"
-            print*, "sum of neutralino masses for muref"
-            print*, "muref = ", muref
+            print*,"using fixed scale and"
+            print*,"sum of neutralino masses for muref"
+            print*,"muref = ", muref
           endif
           ! NOTE: scales will be multiplied (outside of this function) by
           ! an additional factor if renscfact or facscfact is set > 0
           ! in powheg.input
-          print*, "muren = muref * ", st_renfact
-          print*, "mufac = muref * ", st_facfact
-          print*, "===================================================="
+          print*,"muren = muref * ", st_renfact
+          print*,"mufac = muref * ", st_facfact
+          print*,"===================================================="
           init = .false.
         endif
 

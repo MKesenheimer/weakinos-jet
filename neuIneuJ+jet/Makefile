@@ -168,7 +168,7 @@ USRFLAGS += -DDSUB_II
 ## SkipHel
 # skip the calculation of formcalc helicity amplitudes if the amplitude
 # is zero 'NSKIP'-times during the initialisation process.
-USRFLAGS += -DNSKIP=10
+USRFLAGS += -DNSKIP=50
 
 ########################################################################
 #           -*- no editing is required below this line -*-             #

@@ -149,12 +149,12 @@ c     change mothers of decaying particles
       mothuptmp(2,i2)=i1
       nup=nup+1      
       do i=i1+1, nup
-         idup(i) = int(iduptmp(i-1))
-         istup(i) = int(istuptmp(i-1))
-         mothup(1,i) = int(mothuptmp(1,i-1))
-         mothup(2,i) = int(mothuptmp(2,i-1))
-         icolup(1,i) = int(icoluptmp(1,i-1))
-         icolup(2,i) = int(icoluptmp(2,i-1))
+         idup(i) = int(iduptmp(i-1)) ! MK: added cast
+         istup(i) = int(istuptmp(i-1)) ! MK: added cast
+         mothup(1,i) = int(mothuptmp(1,i-1)) ! MK: added cast
+         mothup(2,i) = int(mothuptmp(2,i-1)) ! MK: added cast
+         icolup(1,i) = int(icoluptmp(1,i-1)) ! MK: added cast
+         icolup(2,i) = int(icoluptmp(2,i-1)) ! MK: added cast
          do j=1,5
             pup(j,i)=puptmp(j,i-1)
          enddo

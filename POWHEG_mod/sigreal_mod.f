@@ -23,11 +23,6 @@ c bigger changes over a whole section are marked with !===...
       logical pwhg_isfinite
       external pwhg_isfinite
       logical, save :: ini=.true.
-#ifdef DEBUGQ
-      double precision s35, s46
-      double precision momsum2sq
-      external momsum2sq
-#endif
 
       if(ini) then
          if(flg_analysisextrainfo) then
@@ -200,18 +195,10 @@ c     to avoid divergent integral (25 is an ad hoc value)
             out1=out1*www
             if(flg_analysisextrainfo) then ! MK: added: call only if array is allocated
               call analysis_extrainfo('realct',flst_nalr,out0arr,www)
+              if(out0.ne.0d0) call analysis_driver(out0,0)
               call analysis_extrainfo('real',flst_nalr,out1arr,www)
             endif
-            if(out0.ne.0d0) call analysis_driver(out0,0)
             if(out1.ne.0d0) call analysis_driver(out1,1)
-#ifdef DEBUGQ
-        if(out1.lt.0D0) then
-            s35 = momsum2sq(kn_cmpreal(0:3,3),kn_cmpreal(0:3,5))
-            s46 = momsum2sq(kn_cmpreal(0:3,4),kn_cmpreal(0:3,6))
-            call histogram("s35",100,1D4,2D4,s35,dabs(out1))
-            !call histogram("s46",100,1D4,2D4,s46,dabs(www))
-        endif
-#endif
          endif
       enddo
       end
@@ -672,12 +659,12 @@ c     endif
 c     generate "nmomset" random real-phase space configurations
             call fillmomenta(nlegreal,nmomset,kn_masses,preal)
             do alr=1,flst_nalr
+               flst_cur_alr=alr
                if(kn_emitter.eq.0) then
                   kn_resemitter=0
                else
                   kn_resemitter=flst_alrres(nlegreal,alr)
                endif
-               flst_cur_alr=alr ! MK: added
                do j=1,nmomset
                   call realgr(
      1                 flst_alr(1,alr),preal(0,1,j),res(j,alr))
@@ -869,12 +856,12 @@ c    csi^2 (1-y)   for FSR regions
 c     generate "nmomset" random real-phase space configurations
             call fillmomenta(nlegreal,nmomset,kn_masses,preal)
             do alr=1,flst_nalr
+               flst_cur_alr=alr
                do j=1,nmomset
                   if(kn_emitter.eq.0) then
                      kn_resemitter=0
                   else
                      kn_resemitter=flst_alrres(nlegreal,alr)
-                     flst_cur_alr=alr ! MK: added
                   endif
                   call realgr(
      1                 flst_alr(1,alr),preal(0,1,j),res(j,alr))

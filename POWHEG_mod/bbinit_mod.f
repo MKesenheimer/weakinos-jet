@@ -25,7 +25,7 @@ c MK: added
       integer mcalls,icalls,j
       integer btilde,sigremnant
       external btilde,sigremnant
-      integer ichan
+      integer ichan ! MK: added
       double precision rad_totosres_sum ! MK: added
       integer sigosres ! CH, MK: added
       external sigosres ! CH, MK: added
@@ -35,7 +35,7 @@ c 2   prepare the upper bounding envelopes for the
 c     generation of the b_tilde function
 c 3   prepare the upper bound for the generation of radiation
 c 4   generate events
-      parallelstages = int(powheginput('#parallelstage'))
+      parallelstages = int(powheginput('#parallelstage')) ! MK: added cast
       if(flg_newweight .and. parallelstages .gt. 0) then
          write(*,*) ' Since we are running in reweighting mode '
          write(*,*) ' we set parallelstages to 4 '
@@ -66,9 +66,9 @@ c make sure the ifold arrays are read in
             ifoldosres(j)=1 ! CH, MK: added
          enddo
 c Override real integration parameters with powheg.input values         
-         ifold(ndiminteg-2) = int(powheginput("foldcsi"))
-         ifold(ndiminteg-1) = int(powheginput("foldy"))
-         ifold(ndiminteg)   = int(powheginput("foldphi"))
+         ifold(ndiminteg-2) = int(powheginput("foldcsi")) ! MK: added cast
+         ifold(ndiminteg-1) = int(powheginput("foldy")) ! MK: added cast
+         ifold(ndiminteg)   = int(powheginput("foldphi")) ! MK: added cast
          if(flg_storemintupb) then
             ! CH, MK: changed the following call
             call loadgrids(iret,xgrid,ymax,ymaxrat,xgridrm,ymaxrm,
@@ -157,7 +157,7 @@ c     save random number seeds
      1           powheginput('#skipextratests').lt.0) then
                call randomsave
 c     generate few events from remnants, just to determine the generation efficiency
-               do j=1,int(min(powheginput('nubound'),10d0))
+               do j=1,int(min(powheginput('nubound'),10d0)) ! MK: added cast
                   call gen(sigremnant,ndiminteg,xgridrm,ymaxrm,
      1                ymaxratrm,xmmmrm,ifoldrm,1,mcalls,icalls,xx)
                enddo
@@ -193,7 +193,7 @@ c     print statistics
                call randomsave
                ! generate few events from osres-terms, just to determine
                ! the generation efficiency
-               do j=1,int(min(powheginput('nubound'),10d0))
+               do j=1,int(min(powheginput('nubound'),10d0)) ! MK: added cast
                   call gen(sigosres,ndiminteg,xgridosres,ymaxosres,
      1               ymaxratosres,xmmmosres,ifoldosres,1,
      2               mcalls,icalls,xx)
@@ -240,9 +240,9 @@ c make sure the ifold arrays are read in
          ifoldrm(j)=1
          ifoldosres(j)=1 ! CH, MK: added
       enddo
-      ifold(ndiminteg-2) = int(powheginput("foldcsi"))
-      ifold(ndiminteg-1) = int(powheginput("foldy"))
-      ifold(ndiminteg)   = int(powheginput("foldphi"))
+      ifold(ndiminteg-2) = int(powheginput("foldcsi")) ! MK: added cast
+      ifold(ndiminteg-1) = int(powheginput("foldy")) ! MK: added cast
+      ifold(ndiminteg)   = int(powheginput("foldphi")) ! MK: added cast
       if(parallelstages.eq.2) then
          call bbinitgrids
          call writestat('st2')
@@ -394,17 +394,17 @@ c MK: added
          write(*,*)' POWHEG: Computing positive weight'
      1        //' contribution to inclusive cross section' 
       endif
-      ncall2=int(powheginput('ncall2'))
-      itmx2=int(powheginput('itmx2'))
-      ncall2rm=int(powheginput('#ncall2rm'))
+      ncall2=int(powheginput('ncall2')) ! MK: added cast
+      itmx2=int(powheginput('itmx2')) ! MK: added cast
+      ncall2rm=int(powheginput('#ncall2rm')) ! MK: added cast
       if(ncall2rm.lt.0) ncall2rm=ncall2
-      itmx2rm=int(powheginput('#itmx2rm'))
+      itmx2rm=int(powheginput('#itmx2rm')) ! MK: added cast
       if(itmx2rm.lt.0) itmx2rm=itmx2
       ! CH, MK: added the following lines
       !=================================================================
-      ncall2osres=int(powheginput('ncall2osres'))
+      ncall2osres=int(powheginput('ncall2osres')) ! MK: added cast
       if(ncall2osres.lt.0) ncall2osres=ncall2
-      itmx2osres=int(powheginput('itmx2osres'))
+      itmx2osres=int(powheginput('itmx2osres')) ! MK: added cast
       if(itmx2osres.lt.0) itmx2osres=itmx2
       !=================================================================
       if(ncall2*itmx2.le.0) then
@@ -769,7 +769,7 @@ c No folding while generating importance sampling grids
       enddo
 c         
       if(iparallel.eq.1) then
-         iteration = int(powheginput('#xgriditeration'))
+         iteration = int(powheginput('#xgriditeration')) ! MK: added cast
          if(iteration.gt.par_maxxgriditerations) then
             write(*,*) ' POWHEG is compiled with a maximum'
             write(*,*) ' number of x-grid iterations=',
@@ -810,7 +810,7 @@ c different grid iterations
          itmp=0
          call resetrandom
          do j=1,iteration
-            itmp = int(random()*1d9)
+            itmp = int(random()*1d9) ! MK: added cast
          enddo
          call setrandom(rnd_initialseed+itmp,rnd_i1,rnd_i2)
       endif
@@ -827,22 +827,22 @@ c different grid iterations
 c The actual value of the grid is the one to be saved in the
 c gridinfo file, since loadgridinfo updates the grid by itself
       xgrid0 = xgrid
-      ncall1 = int(powheginput("ncall1"))
-      ncall1rm = int(powheginput("#ncall1rm"))
+      ncall1 = int(powheginput("ncall1")) ! MK: added cast
+      ncall1rm = int(powheginput("#ncall1rm")) ! MK: added cast
       ! ncall1rm is additional, if it is not present use the standard one:
       if (ncall1rm.lt.0d0) ncall1rm = ncall1
       ! CH, MK: added
       !=================================================================
-      ncall1osres = int(powheginput("ncall1osres"))
+      ncall1osres = int(powheginput("ncall1osres")) ! MK: added cast
       ! ncall1osres is additional, if it is not present use the standard one:
       if (ncall1osres.lt.0d0) ncall1osres = ncall1
       !=================================================================
-      itmx1 = int(powheginput("itmx1"))
-      itmx1rm = int(powheginput("#itmx1rm"))
+      itmx1 = int(powheginput("itmx1")) ! MK: added cast
+      itmx1rm = int(powheginput("#itmx1rm")) ! MK: added cast
       if(itmx1rm.lt.0) itmx1rm=itmx1
       ! CH, MK: added
       !=================================================================
-      itmx1osres = int(powheginput("itmx1osres"))
+      itmx1osres = int(powheginput("itmx1osres")) ! MK: added cast
       if(itmx1osres.lt.0) itmx1osres=itmx1
       !=================================================================
 c with parallel grids only one iteration is allowed
@@ -967,16 +967,41 @@ c         close(iun)
       implicit none
       include 'nlegborn.h'
       include 'pwhg_flst.h'
+      include 'pwhg_rad.h'
+      include 'pwhg_flg.h'
       integer mcalls,icalls
       include 'cgengrids.h'
-c MK: added
-#include "cgengrids_add.h"
-#include "pwhg_flst_add.h"
       real * 8 xx(ndiminteg)      
       real * 8 btilde
       external btilde
+c use these to provide an estimate of the cross section while generating an event
+      real * 8 sigma, sigma2
+      integer isigma
+      common/gencommon/sigma,sigma2,isigma
+      if(mcalls == 0) then
+         gen_sigma  = 0
+         gen_sigma2 = 0
+         gen_isigma = 0
+         gen_totev  = 0
+      endif
       call gen(btilde,ndiminteg,xgrid,ymax,ymaxrat,xmmm,ifold,1,
      1     mcalls,icalls,xx)
+      gen_sigma  = gen_sigma  + sigma
+      gen_sigma2 = gen_sigma2 + sigma2
+      gen_isigma = gen_isigma + isigma
+      gen_totev  = gen_totev  + rad_genubexceeded
+      gen_mcalls    = mcalls
+      call setcnt("btilde cross section used:", rad_totgen-rad_totrm)
+      call setcnt("btilde cross section estimate:",gen_sigma/gen_isigma)
+      call setcnt("btilde cross section estimate num. points:",
+     $     dble(gen_isigma))
+      call setcnt("btilde cross section error estimate:",
+     1     sqrt(((gen_sigma2/gen_isigma)-(gen_sigma/gen_isigma)**2)/
+     $     gen_isigma))
+      if(flg_ubexcess_correct) then
+         call setcnt("btilde bound violation correction factor:",
+     1        gen_totev/gen_mcalls)
+      endif
       end
 
       subroutine gen_sigremnant
@@ -984,22 +1009,46 @@ c MK: added
       include 'nlegborn.h'
       include 'pwhg_flst.h'
       include 'pwhg_flg.h'
+      include 'pwhg_rad.h'
       include 'cgengrids.h'
-c MK: added
-#include "pwhg_flst_add.h"
-#include "Flags.h"
-#include "cgengrids_add.h"
       real * 8 xx(ndiminteg)
       integer mcalls,icalls
       logical savelogical
       real * 8 sigremnant
       external sigremnant
+c use these to provide an estimate of the cross section while generating an event
+      real * 8 sigma, sigma2
+      integer isigma
+      common/gencommon/sigma,sigma2,isigma
+      if(mcalls == 0) then
+         gen_sigmarm  = 0
+         gen_sigma2rm = 0
+         gen_isigmarm = 0
+         gen_totevrm  = 0
+      endif
 c communicate file to load upper bound data
       savelogical=flg_fastbtlbound
       flg_fastbtlbound=.false.
       call gen(sigremnant,ndiminteg,xgridrm,ymaxrm,ymaxratrm,
      1    xmmmrm,ifoldrm,1,mcalls,icalls,xx)
       flg_fastbtlbound=savelogical
+      gen_sigmarm  = gen_sigmarm  + sigma
+      gen_sigma2rm = gen_sigma2rm + sigma2
+      gen_isigmarm = gen_isigmarm + isigma
+      gen_totevrm  = gen_totevrm  + rad_genubexceeded
+      gen_mcallsrm    = mcalls
+      call setcnt("remnant cross section used:", rad_totrm)
+      call setcnt("remnant cross section estimate:",
+     $     gen_sigmarm/gen_isigmarm)
+      call setcnt("remnant cross section error estimate:",
+     1     sqrt(((gen_sigma2rm/gen_isigmarm)
+     2     -(gen_sigmarm/gen_isigmarm)**2)/gen_isigmarm))
+      call setcnt("remnant cross section estimate num. points:",
+     1     dble(gen_isigmarm))
+      if(flg_ubexcess_correct) then
+         call setcnt("remnant bound violation correction factor:",
+     1        gen_totevrm/gen_mcallsrm)
+      endif
       end
 
 
@@ -1242,13 +1291,13 @@ c random seeds
          read(iun,iostat=ios) ncall2
          read(iun,iostat=ios) ncall2osres ! CH, MK: added
          if(powheginput("#ncallfrominput").eq.1) then
-            ncall2=int(powheginput("ncall2"))
-            itmx2=int(powheginput("itmx2"))
+            ncall2=int(powheginput("ncall2")) ! MK: added cast
+            itmx2=int(powheginput("itmx2")) ! MK: added cast
             ncall2=ncall2*itmx2
             ! CH, MK: read-in the different statistic-parameters 
             ! for the regulars (if present!) ->
-            ncall2osres=int(powheginput("#ncall2osres"))
-            itmx2osres=int(powheginput("#itmx2osres"))
+            ncall2osres=int(powheginput("#ncall2osres")) ! MK: added cast
+            itmx2osres=int(powheginput("#itmx2osres")) ! MK: added cast
             if (ncall2osres.lt.0) ncall2osres=ncall2
             if (itmx2osres.lt.0) itmx2osres=itmx2
             ncall2osres=ncall2osres*itmx2osres
@@ -1301,8 +1350,6 @@ c random seeds
                  enddo
                enddo
             enddo
-            ! this is called only once and is mandatory
-            call apply_totarr ! MK: save the array totarr to the individual variables -> OK!
          else
             do k=1,ndiminteg
                do j=0,nbins
@@ -1340,6 +1387,7 @@ c random seeds
      &                                  xymaxratosres(j,k)) ! CH, MK: added
                enddo
             enddo
+            do j=1,ntot
 c turn these to reals; very large integer can overflow in fortran
 c               rjfound = jfound
 c               rncall2 = ncall2
@@ -1352,7 +1400,6 @@ c again assign these values directly to the rad_totarr
 c if we use different VEGAS-parameters for the osres-terms: make sure to take the
 c appropriate ncall2 here (this is not possible for rad_tot(gen), as here btilde and
 c osres. parts are naturally "mixed"-> simply recalculate these 2 entries at the end
-            do j=1,ntot
               if(j.le.15) then! CH, MK: these are the btilde/remnant-entries
                 rad_totarr(2,j)=dsqrt((rad_totarr(2,j)**2*(jfound-1)**2+
      &                          tot(2,j)**2)/jfound**2+(jfound-1)*
@@ -1381,8 +1428,26 @@ c osres. parts are naturally "mixed"-> simply recalculate these 2 entries at the
      &            tot_osres(1,j,ichan))/jfound
               enddo
             enddo
-            call apply_totarr ! MK: added -> OK!
          endif
+         ! this is called only once and is mandatory
+         call apply_totarr ! MK: save the array totarr to the individual variables -> OK!
+c MK: not necessary any more (already done by call apply_totarr)
+c         rad_totbtl     =rtot(1,1)
+c         rad_etotbtl    =rtot(2,1)
+c         rad_totabsbtl  =rtot(1,2)
+c         rad_etotabsbtl =rtot(2,2)
+c         rad_totposbtl  =rtot(1,3)
+c         rad_etotposbtl =rtot(2,3)
+c         rad_totnegbtl  =rtot(1,4)
+c         rad_etotnegbtl =rtot(2,4)
+c         rad_totrm      =rtot(1,5)
+c         rad_etotrm     =rtot(2,5)
+c         rad_totbtlgen  =rtot(1,6)
+c         rad_etotbtlgen =rtot(2,6)
+c         rad_totgen     =rtot(1,7)
+c         rad_etotgen    =rtot(2,7)
+c         rad_tot        =rtot(1,8)
+c         rad_etot       =rtot(2,8)
          close(iun)
  111     continue
       enddo
