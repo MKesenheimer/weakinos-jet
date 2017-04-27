@@ -74,7 +74,7 @@ Optional arguments:
   --ewi <n>                set the regulator ewi
   --merge                  merge the event files and delete the old ones
   --checklimits            check the soft and collinear limits during the NLO run
-  -w[i] <n>                the walltime in seconds of the i-th stage (f.e. -w1a 60)
+  --w[i] <n>               the walltime in seconds of the i-th stage (f.e. -w1 60)
   --fakevirt               use fake virtuals in all calculations
 EOM
    exit 0
@@ -281,22 +281,22 @@ case $KEY in
         USEMSUB=true
         shift
         ;;
-     -w1)
+     --w1)
         WALLTIME1="$2"
         shift
         shift
         ;;
-     -w2)
+     --w2)
         WALLTIME2="$2"
         shift
         shift
         ;;
-     -w3)
+     --w3)
         WALLTIME3="$2"
         shift
         shift
         ;;
-     -w4)
+     --w4)
         WALLTIME4="$2"
         shift
         shift
@@ -625,12 +625,6 @@ for job in \`jobs -p\`; do
     wait \$job
     echo "  job with pid=\$job finished"
 done
-# combined results for stage 2
-echo ""
-echo "Combined results for stage 2:"
-rm $RUNDIR/pwg-st2-combined-stat.dat
-cd $RUNDIR && ../merge-pwg-stat \$(ls ./pwg-st2-*-stat.dat) > pwg-st2-combined-stat.dat
-cat $RUNDIR/pwg-st2-combined-stat.dat
 EOM
 
 if [ "$GENEVENTS" = true ]; then
@@ -660,25 +654,31 @@ for job in \`jobs -p\`; do
     wait \$job
     echo "  job with pid=\$job finished"
 done
-
 EOM
+fi #if GENEVENTS
 
 if [ "$MERGE" = true ]; then
 cat <<EOM >> $WORKINGDIR/run_${IDENT}.sh
 # merge the event files
-cat $RUNDIR/pwgevents-*.lhe | grep -v "/LesHouchesEvents" > $RUNDIR/pwgevents.lhe
-echo "</LesHouchesEvents>" >> $RUNDIR/pwgevents.lhe
+if [ "\$(ls $RUNDIR/pwgevents-*.lhe 2>/dev/null)" != "" ]; then
+  cat $RUNDIR/pwgevents-*.lhe | grep -v "/LesHouchesEvents" > $RUNDIR/pwgevents.lhe
+  echo "</LesHouchesEvents>" >> $RUNDIR/pwgevents.lhe
+fi
 #if [ -e "$RUNDIR/pwgevents.lhe" ]; then
 #  echo "merged event files succesfully, deleting old event files..."
 #  find $RUNDIR -type f -name "pwgevents-*" -exec rm -f '{}' \;
 #fi
-# merge the NLO top files
-rm $RUNDIR/pwg-NLO.top
-cd $RUNDIR && ../merge-data 1 \$(ls ./pwg-*-NLO.top) && mv fort.12 pwg-NLO.top
 
+# merge the NLO top files
+rm -f $RUNDIR/pwg-NLO.top
+cd $RUNDIR && ../merge-data 1 \$(ls $RUNDIR/pwg-*-NLO.top) && mv fort.12 pwg-NLO.top
+
+# combined results for stage 2
+rm -f $RUNDIR/pwg-st2-combined-stat.dat
+$WORKINGDIR/merge-pwg-stat \$(ls $RUNDIR/pwg-st2-*-stat.dat) > $RUNDIR/pwg-st2-combined-stat.dat
+cat $RUNDIR/pwg-st2-combined-stat.dat
 EOM
 fi #if MERGE
-fi #if GENEVENTS
 
 chmod +x $WORKINGDIR/run_${IDENT}.sh
 $WORKINGDIR/run_${IDENT}.sh
