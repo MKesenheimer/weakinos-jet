@@ -100,7 +100,9 @@ c modifies the jacobian.
         ! this is |M_R(res)|**2 (still with on-shell resonances)
         call getRealOSAmps(p,rflav,ichan,amp)
         !print*,"amp",amp
-        
+
+#define SUBTRACTION
+#ifdef SUBTRACTION        
         ! subtraction scheme for double resonances
         if(ichan.ge.1 .and. ichan.le.8 .and. 
      &     (s12.ge.(mij+mkl)**2).and.(mij.ge.(mi+mj)).and.(mkl.ge.(mk+ml))) then
@@ -142,7 +144,8 @@ c modifies the jacobian.
           !ampCT = corrfac(s12,mi,mj,mk,ml,mij,mkl,sij,skl)*ampCT
           amp = amp - ampCT
         endif
- 
+#endif
+
         if(isnan(amp)) then
           !print*,"got strange value for ampreal amplitude...",ampreal
           amp = 0D0

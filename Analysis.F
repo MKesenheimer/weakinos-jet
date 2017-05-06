@@ -235,8 +235,8 @@ c calculate quantities that shall be plotted and fill histograms
         double precision ptjmintech, etaJmax, R
         common /jetcuts/ptjmintech, etaJmax, R
         ! physical Jet Cuts
-        double precision ptjmin1,ptjmin2,ptjmissmin
-        double precision ptjminM1, ptjminM2
+        double precision ptjmin1,ptjmax2,ptjmissmin
+        double precision ptjminM1, ptjmaxM2
         ! decay cuts
         double precision RDsepmin
         double precision RDmin(ndecay), RDsep(ndecay,ndecay)
@@ -350,9 +350,9 @@ c calculate quantities that shall be plotted and fill histograms
         ! physical pt_Jet cuts
         ptjmin1 = 10D0
         if(flg_bornonly) then
-          ptjmin2 = 0D0 ! LO
+          ptjmax2 = 0D0 ! LO
         else
-          ptjmin2 = 10D0 ! NLO
+          ptjmax2 = 30D0 ! NLO
         endif
         
         ! lepton cuts
@@ -368,9 +368,9 @@ c calculate quantities that shall be plotted and fill histograms
         etmissmin = 85D0
         ptjminM1 = 100D0
         if(flg_bornonly) then
-          ptjminM2 = 0D0 ! LO
+          ptjmaxM2 = 0D0 ! LO
         else
-          ptjminM2 = 30D0 ! NLO
+          ptjmaxM2 = 30D0 ! NLO
         endif
         
         if(ini) then
@@ -380,8 +380,8 @@ c calculate quantities that shall be plotted and fill histograms
           print*
           print*, "cuts (jet):"
           print*, "jet p_t (for missing ET) >",ptjmissmin," GeV"
-          print*, "hardest jet p_t  >",ptjmin1," GeV"
-          print*, "second hardest jet p_t >",ptjmin2," GeV"
+          print*, "hardest jet p_t >",ptjmin1," GeV"
+          print*, "veto second hardest jet p_t <",ptjmax2," GeV"
           print*, "hardest jet |eta| <",etaJmax
           print*, "radius parameter R = ",R
           print*, "missing ET >", etmissmin," GeV"
@@ -750,7 +750,7 @@ c calculate quantities that shall be plotted and fill histograms
         if(kt(1).lt.ptjmin1) JcutsPassed = .false.
         if(dabs(eta(1)).gt.etaJmax) JcutsPassed = .false.
         if(.not.flg_bornonly) then
-          if(kt(2).lt.ptjmin2) JcutsPassed = .false.
+          if(kt(2).gt.ptjmax2) JcutsPassed = .false.
           if(dabs(eta(2)).gt.etaJmax) JcutsPassed = .false.
         endif
 
@@ -768,7 +768,7 @@ c calculate quantities that shall be plotted and fill histograms
           print*,"cuts not passed"
           print*,"mjets",mjets,"should be >= ",mJmin
           print*,"kt(1)",kt(1),"should be >= ",ptjmin1
-          print*,"kt(1)",kt(2),"should be >= ",ptjmin2
+          print*,"kt(2)",kt(2),"should be <= ",ptjmax2
           print*,"eta(1)",eta(1),"should be <= ",etaJmax
 #endif
         endif
@@ -779,7 +779,7 @@ c calculate quantities that shall be plotted and fill histograms
         if(kt(1).lt.ptjminM1) McutsPassed = .false.
         if(dabs(eta(1)).gt.etaJmax) McutsPassed = .false.
         if(.not.flg_bornonly) then
-          if(kt(2).lt.ptjminM2) McutsPassed = .false.
+          if(kt(2).gt.ptjmaxM2) McutsPassed = .false.
           if(dabs(eta(2)).gt.etaJmax) McutsPassed = .false.
         endif
         if(et_miss.lt.etmissmin) McutsPassed = .false.
@@ -791,8 +791,8 @@ c calculate quantities that shall be plotted and fill histograms
         else
           print*,"cuts not passed"
           print*,"mjets",mjets,"should be >= ",mJmin
-          print*,"kt(1)",kt(1),"should be >= ",ptjmin1
-          print*,"kt(1)",kt(2),"should be >= ",ptjmin2
+          print*,"kt(1)",kt(1),"should be >= ",ptjminM1
+          print*,"kt(2)",kt(2),"should be <= ",ptjmaxM2
           print*,"eta(1)",eta(1),"should be <= ",etaJmax
           print*,"et_miss",et_miss,"should be >= ",etmissmin
 #endif

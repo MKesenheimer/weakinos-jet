@@ -163,7 +163,7 @@ DEBUG = -ggdb -pg -DDEBUG=$(LEVEL)
 #   integrated seperately in sigosres.f and is included at a later point
 #   to the main result.
 #USRFLAGS += -DDSUB_II_TEST
-USRFLAGS += -DDSUB_II
+#USRFLAGS += -DDSUB_II
 
 ## SkipHel
 # skip the calculation of formcalc helicity amplitudes if the amplitude
@@ -315,7 +315,7 @@ PWHG = pwhg_init.o btilde.o utils.o gen_Born_phsp.o		\
 	pwhg_bookhist-multi.o pwhg_analysis_driver.o checkmomzero.o	\
 	setstrongcoupl.o integrator.o mwarn.o				\
 	sigcollsoft.o validflav.o decidemerging.o          		\
-	loadstorenlo.o setlocalscales.o ubprojections.o      		\
+	loadstorenlo.o setlocalscales.o \
 	mint_upb.o reshufflemoms.o opencount.o \
 	lhefread.o pwhg_io_interface.o rwl_weightlists.o rwl_setup_param_weights.o
 
@@ -325,7 +325,8 @@ PWHG += cernroutines_mod.o find_regions_mod.o gen_real_phsp_mod.o	\
 	sigvirtual_mod.o bbinit_mod.o LesHouches_mod.o 			\
 	LesHouchesreg_mod.o gen_index_mod.o lhefwrite_mod.o		\
 	gen_radiation_mod.o sigremnants_mod.o pwhgreweight_mod.o 	\
-	pdfcalls_mod.o newunit_mod.o pwhg_main_mod.o
+	pdfcalls_mod.o newunit_mod.o pwhg_main_mod.o \
+	ubprojections_mod.o
 
 ### LHEF ###
 # analyze LHEF output
