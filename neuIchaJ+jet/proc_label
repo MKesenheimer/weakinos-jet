@@ -1,0 +1,28 @@
+# neutralino chargino+
+        -1         2     nI     xJ           0
+        -1         0     nI     xJ          -2
+         2        -1     nI     xJ           0
+         2         0     nI     xJ           1
+         4        -3     nI     xJ           0
+         4         0     nI     xJ           3
+        -3         4     nI     xJ           0
+        -3         0     nI     xJ          -4
+         0        -1     nI     xJ          -2
+         0         2     nI     xJ           1
+         0         4     nI     xJ           3
+         0        -3     nI     xJ          -4
+
+
+# neutralino chargino-
+         1        -2     nI    -xJ           0
+         1         0     nI    -xJ           2
+        -2         1     nI    -xJ           0
+        -2         0     nI    -xJ          -1
+        -4         3     nI    -xJ           0
+        -4         0     nI    -xJ          -3
+         3        -4     nI    -xJ           0
+         3         0     nI    -xJ           4
+         0         1     nI    -xJ           2
+         0        -2     nI    -xJ          -1
+         0        -4     nI    -xJ          -3
+         0         3     nI    -xJ           4
