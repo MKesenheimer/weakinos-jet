@@ -42,6 +42,14 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
 
         ! get the formcalc real amplitudes
         call getRealAmps(p,rflav,amp)
+
+#ifdef DEBUGQ
+        print*,rflav,amp
+        call getRealAmps_new(p,rflav,ampreal)
+        print*,rflav,ampreal
+        if(dabs(amp-ampreal)/dabs(amp+ampreal).gt.1d-6) stop
+        print*
+#endif
         
 #if defined(DSUB_II) || defined(DSUB_II_TEST)
         ! subtract the resonant amplitudes (move the resonant contributions 
