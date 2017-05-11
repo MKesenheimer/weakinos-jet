@@ -54,8 +54,12 @@ WORKINGDIR=${PWD}
 #                    as proc_nInJjj_os, but without channel identifiers)
 
 # the name of the target process directory
+# nInJ
 #PROCDIR="neuIneuJ+jet/FormCalc_Virtuals"
-PROCDIR="neu1neu2+jet/FormCalc_Reals"
+#PROCDIR="neuIneuJ+jet/FormCalc_Reals"
+# nIxJ
+#PROCDIR="neuIchaJ+jet/FormCalc_Virtuals"
+PROCDIR="neuIchaJ+jet/FormCalc_Reals"
 
 # where to copy the amplitudes to
 DEST=${PWD}/../../${PROCDIR}
@@ -65,22 +69,30 @@ DEST=${PWD}/../../${PROCDIR}
 NPART=6
 
 # process list file
-#PROCF="./proc_n1n2j"
-#PROCF="./proc_n1n2jj_nr"
-#PROCF="./proc_n1n2jj_os"
-PROCF="./proc_n1n2jj_reg"
+# nInJ
+#PROCF="./proc_nInJj"
+#PROCF="./proc_nInJjj"
+#PROCF="./proc_nInJjj_nr"
+#PROCF="./proc_nInJjj_os"
+#PROCF="./proc_nInJjj_reg"
+# nIxJ
+#PROCF="./proc_nIxJj"
+#PROCF="./proc_nIxJjj"
+#PROCF="./proc_nIxJjj_nr"
+PROCF="./proc_nIxJjj_os"
+#PROCF="./proc_nIxJjj_reg"
 
 # the name of Mathematica Scripts
-#MSCRIPT="./nInJj_virt_collier.m"
-#MSCRIPT="./nInJjj.m"
-#MSCRIPT="./nInJjj_os.m"
-MSCRIPT=""
+#MSCRIPT="./virt_collier.m"
+#MSCRIPT="./real.m"
+MSCRIPT="./real_os.m"
+#MSCRIPT=""
 
 # the type of the amplitudes (born, virt, real, realOS)
 #TYPE="virt"
 #TYPE="real"
-#TYPE="realOS"
-TYPE="real"
+TYPE="realOS"
+#TYPE="real"
 
 # the number of subchannels of realOS amplitudes (f.e. ll, lr, rl, rr)
 NSQUARKSUBCHANNELS=4
@@ -275,6 +287,9 @@ for iproc in `seq 0 1 $((NPROC-1))`; do
     fi
     PROCESSES+=($PROC)
 done
+
+# DEBUG
+exit -1;
 
 # commented: do this by hand
 #echo "Generating directories..."

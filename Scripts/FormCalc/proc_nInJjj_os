@@ -8,7 +8,7 @@
            g            g         nI     nJ           qd           qdbar    3546_Sq1Sq2,3645_Sq1Sq2     # double squark resonances in two distinct pairs of legs (mandelstam s_ij and s_kl)
            g            g         nI     nJ           qu           qubar    3546_Sq1Sq2,3645_Sq1Sq2
 #           g            qd        nI     nJ           qd           g        356_Sq1Sq2,365_Sq1Sq2,456_Sq1Sq2,465_Sq1Sq2     # double squark resonances in three legs (mandelstam s_ijk)
-#           g            qdbar     nI     nJ           qdbar        g        356_Sq1Sq2,365_Sq1Sq2,456_Sq1Sq2,465_Sq1Sq2     # These resonances are not critical since they can only occur for very small jet momementa.
+#           g            qdbar     nI     nJ           qdbar        g        356_Sq1Sq2,365_Sq1Sq2,456_Sq1Sq2,465_Sq1Sq2     # These resonances are not critical since they can only occur for very small jet momenta.
 #           g            qu        nI     nJ           qu           g        356_Sq1Sq2,365_Sq1Sq2,456_Sq1Sq2,465_Sq1Sq2     # They vanish with a sufficient high cut on the transverse jet momenta.
 #           g            qubar     nI     nJ           qubar        g        356_Sq1Sq2,365_Sq1Sq2,456_Sq1Sq2,465_Sq1Sq2
            qd           qd        nI     nJ           qd           qd       3546_Sq1Sq2,3645_Sq1Sq2
