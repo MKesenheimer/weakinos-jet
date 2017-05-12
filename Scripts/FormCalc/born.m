@@ -19,7 +19,7 @@ ClearProcess[]
 time1 = SessionTime[]
 
 
-(*You can now load the script with the command $ MathKernel -script nInJjj.m "d" "dbar" "n1" "n2" "g"*)
+(*You can now load the script with the command $ MathKernel -script born.m "d" "dbar" "n1" "n2" "g"*)
 Print[$CommandLine]
 If[$CommandLine[[2]] === "-script",
 	(p[1] = ToString[$CommandLine[[4]]];

@@ -56,7 +56,7 @@ WORKINGDIR=${PWD}
 # the name of the target process directory
 # nInJ
 #PROCDIR="neuIneuJ+jet/FormCalc_Virtuals"
-PROCDIR="neuIchaJ+jet/FormCalc_Reals"
+PROCDIR="neuIneuJ+jet/FormCalc_Reals"
 # nIxJ
 #PROCDIR="neuIchaJ+jet/FormCalc_Virtuals"
 #PROCDIR="neuIchaJ+jet/FormCalc_Reals"
@@ -74,25 +74,25 @@ NPART=6
 #PROCF="./proc_nInJjj"
 #PROCF="./proc_nInJjj_nr"
 #PROCF="./proc_nInJjj_os"
-#PROCF="./proc_nInJjj_reg"
+PROCF="./proc_nInJjj_reg"
 # nIxJ
 #PROCF="./proc_nIxJj"
 #PROCF="./proc_nIxJjj"
 #PROCF="./proc_nIxJjj_nr"
-PROCF="./proc_nIxJjj_os"
+#PROCF="./proc_nIxJjj_os"
 #PROCF="./proc_nIxJjj_reg"
 
 # the name of Mathematica Scripts
 #MSCRIPT="./virt_collier.m"
 #MSCRIPT="./real.m"
-MSCRIPT="./real_os.m"
-#MSCRIPT=""
+#MSCRIPT="./real_os.m"
+MSCRIPT=""
 
 # the type of the amplitudes (born, virt, real, realOS)
 #TYPE="virt"
 #TYPE="real"
-TYPE="realOS"
-#TYPE="real"
+#TYPE="realOS"
+TYPE="real"
 
 # the number of subchannels of realOS amplitudes (f.e. ll, lr, rl, rr)
 NSQUARKSUBCHANNELS=4
@@ -289,7 +289,7 @@ for iproc in `seq 0 1 $((NPROC-1))`; do
 done
 
 # DEBUG
-exit -1;
+#exit -1;
 
 # commented: do this by hand
 #echo "Generating directories..."
