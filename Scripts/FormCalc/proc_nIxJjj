@@ -1,27 +1,25 @@
 # These are all possible processes that can occur in weakino-pair + jet production.
          g             g         nI     xJ+           qd              qubar
+         g             g         nI     xJ-           qu              qdbar
+         g             qd        nI     xJ-           qu              g
          g             qdbar     nI     xJ+           qubar           g
          g             qu        nI     xJ+           qd              g
-         qdbar         qu        nI     xJ+           g               g
-         qu            qdbar     nI     xJ+           g               g
-         qdbar         qdbar     nI     xJ+           qdbar           qubar
-         qdbar         qd        nI     xJ+           qd              qubar
-         qdbar         qubar     nI     xJ+           qubar           qubar
-         qdbar         qu        nI     xJ+           qdbar           qd
-         qdbar         qu        nI     xJ+           qubar           qu
-         qd            qu        nI     xJ+           qd              qd
-         qubar         qu        nI     xJ+           qd              qubar
-         qu            qu        nI     xJ+           qd              qu
-         g             g         nI     xJ-           qdbar           qu
-         g             qd        nI     xJ-           qu              g
          g             qubar     nI     xJ-           qdbar           g
-         qd            qubar     nI     xJ-           g               g
-         qubar         qd        nI     xJ-           g               g
          qd            qd        nI     xJ-           qd              qu
-         qd            qdbar     nI     xJ-           qdbar           qu
+         qd            qdbar     nI     xJ+           qd              qubar
+         qd            qdbar     nI     xJ-           qu              qdbar
          qd            qu        nI     xJ-           qu              qu
+         qd            qu        nI     xJ+           qd              qd
          qd            qubar     nI     xJ-           qd              qdbar
          qd            qubar     nI     xJ-           qu              qubar
+         qdbar         qdbar     nI     xJ+           qdbar           qubar
+         qu            qubar     nI     xJ-           qu              qdbar
+         qu            qubar     nI     xJ+           qd              qubar
          qdbar         qubar     nI     xJ-           qdbar           qdbar
-         qu            qubar     nI     xJ-           qdbar           qu
+         qdbar         qubar     nI     xJ+           qubar           qubar
+         qu            qu        nI     xJ+           qd              qu
+         qu            qdbar     nI     xJ+           qd              qdbar
+         qu            qdbar     nI     xJ+           qu              qubar
          qubar         qubar     nI     xJ-           qdbar           qubar
+         qu            qdbar     nI     xJ+           g               g
+         qd            qubar     nI     xJ-           g               g

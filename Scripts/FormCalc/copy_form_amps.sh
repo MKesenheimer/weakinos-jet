@@ -17,14 +17,14 @@ WORKINGDIR=${PWD}
 #     PROCDIR="neuIneuJ+jet/FormCalc_Virtuals"
 #     NPART=5
 #     PROCF="./proc_nInJj"
-#     MSCRIPT="./nInJj.m"
+#     MSCRIPT="./born.m" or "./virt.m"
 #     TYPE="born"
 #
 # 2. generate and copy the amplitudes with purely non resonant diagrams:
 #     PROCDIR="neuIneuJ+jet/FormCalc_Reals"
 #     NPART=6
 #     PROCF="./proc_nInJjj_nr"
-#     MSCRIPT="./nInJjj.m"
+#     MSCRIPT="./real.m"
 #     TYPE="real"
 #
 # 3. If needed, modify the parts where squark indices get explicitly 
@@ -34,7 +34,7 @@ WORKINGDIR=${PWD}
 #     PROCDIR="neuIneuJ+jet/FormCalc_Reals"
 #     NPART=6
 #     PROCF="./proc_nInJjj_os"
-#     MSCRIPT="./nInJjj_os.m"
+#     MSCRIPT="./real_os.m"
 #     TYPE="realOS"
 #
 # 5. copy the regulated real processes (no creation of the amplitudes is
@@ -56,10 +56,10 @@ WORKINGDIR=${PWD}
 # the name of the target process directory
 # nInJ
 #PROCDIR="neuIneuJ+jet/FormCalc_Virtuals"
-#PROCDIR="neuIneuJ+jet/FormCalc_Reals"
+PROCDIR="neuIchaJ+jet/FormCalc_Reals"
 # nIxJ
 #PROCDIR="neuIchaJ+jet/FormCalc_Virtuals"
-PROCDIR="neuIchaJ+jet/FormCalc_Reals"
+#PROCDIR="neuIchaJ+jet/FormCalc_Reals"
 
 # where to copy the amplitudes to
 DEST=${PWD}/../../${PROCDIR}

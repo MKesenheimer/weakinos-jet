@@ -129,7 +129,7 @@ SetOptions[Paint, PaintLevel -> {Classes}, ColumnsXRows -> {4, 5}, AutoEdit -> F
 SetOptions[CalcFeynAmp, Dimension->D];
 
 (*Save the Diagrams*)
-$PaintSE = MkDir["Diagrams"];
+$PaintSE = MkDir["Diagrams_"<>name];
 DoPaint[diags_, type_, opt___] := Paint[diags, opt,
   DisplayFunction -> (Export[ToFileName[$PaintSE, name <> "_" <> type <> ".pdf"], #]&)]
 
