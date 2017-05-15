@@ -98,9 +98,16 @@ MSCRIPT=""
 #TYPE="realOS"
 TYPE="real"
 
-# the number of subchannels of realOS amplitudes (f.e. ll, lr, rl, rr)
-NSQUARKSUBCHANNELS=4
-NGLUINOSUBCHANNELS=2
+# the number and types of subchannels of realOS amplitudes (f.e. ll, lr, rl, rr)
+# ordered as follows: ("resonance name", ichan_start, ichan_end, "special conditions (e.g. index assignment)", ...)
+# "resonance name" should be the same as in process list file "proc_*_os"
+RESTYPES=(\
+"3546_Sq1Sq2" 1 4 "\tSq1 = osres_sfeij\n\tSq2 = osres_sfekl" \
+"3645_Sq1Sq2" 5 8 "\tSq1 = osres_sfeij\n\tSq2 = osres_sfekl" \
+"356_Sq1"  9 10 "\tSq1 = osres_sfeij" \
+"365_Sq1" 11 12 "\tSq1 = osres_sfeij" \
+"456_Sq1" 13 14 "\tSq1 = osres_sfeij" \
+"465_Sq1" 15 16 "\tSq1 = osres_sfeij")
 
 # if needed: additional complex kinematics for virtual processes
 # modify "# add complex mandelstams to *_SquaredME.F" too.
@@ -486,7 +493,7 @@ if [[ $TYPE == "realOS" ]]; then
         IFS=$',;\r\n' command eval 'CHANNEL=(${CHANNELS[iproc]})'
         unset IFS
         PRE2="${PROCESSES[iproc]}_${TYPE}"
-        
+        echo "${PRE2}_squaredME.F"
         echo "      subroutine ${PRE2}_squaredME(fc_result, ichan, helicities, flags)" > ${PRE2}_squaredME.F
         echo "        implicit none" >> ${PRE2}_squaredME.F
         echo "#include \"osres.h\"" >> ${PRE2}_squaredME.F
@@ -496,26 +503,14 @@ if [[ $TYPE == "realOS" ]]; then
         echo "        double precision fc_result(2)" >> ${PRE2}_squaredME.F
         echo "        fc_result(:) = 0D0" >> ${PRE2}_squaredME.F
         echo "        ! sfeij and sfekl get defined in subroutine set_channel" >> ${PRE2}_squaredME.F
-        # track the number of processed channels
-        ICHAN=0
         for jchan in ${CHANNEL[@]}; do
             PRE1="${PROCESSES[iproc]}_${jchan}"
-            # -> modify this if needed.
-            # if there are subchannels (for example different chiralities for squarks)
-            # a different if statement is needed and the open indices have to be set
-            if [[ $jchan == *"Sq1Sq2" ]]; then
-                ICHAN=$((ICHAN+NSQUARKSUBCHANNELS))
-                echo "        if(ichan.ge.$((ICHAN-NSQUARKSUBCHANNELS+1)) .and. ichan.le.$ICHAN) then" >> ${PRE2}_squaredME.F
-                echo "          Sq1 = osres_sfeij" >> ${PRE2}_squaredME.F
-                echo "          Sq2 = osres_sfekl" >> ${PRE2}_squaredME.F
-            elif [[ $jchan == *"Sq1" ]]; then
-                ICHAN=$((ICHAN+NGLUINOSUBCHANNELS))
-                echo "        if(ichan.ge.$((ICHAN-NGLUINOSUBCHANNELS+1)) .and. ichan.le.$ICHAN) then" >> ${PRE2}_squaredME.F
-                echo "          Sq1 = osres_sfeij" >> ${PRE2}_squaredME.F
-            else
-                ICHAN=$((ICHAN+1))
-                echo "        if(ichan.eq.$ICHAN) then" >> ${PRE2}_squaredME.F
-            fi
+            for nchan in `seq 0 1 $((${#RESTYPES[@]}-1))`; do
+                if [[ "$jchan" == "${RESTYPES[nchan]}" ]]; then
+                        echo "        if(ichan.ge.${RESTYPES[$((nchan+1))]} .and. ichan.le.${RESTYPES[$((nchan+2))]}) then" >> ${PRE2}_squaredME.F
+                        echo -e ${RESTYPES[$((nchan+3))]} >> ${PRE2}_squaredME.F
+                fi
+            done
             echo "          call ${PRE1}_SquaredME(fc_result, helicities, flags)" >> ${PRE2}_squaredME.F
             echo "          goto 10" >> ${PRE2}_squaredME.F
             echo "        endif" >> ${PRE2}_squaredME.F
