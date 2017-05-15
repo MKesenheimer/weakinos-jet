@@ -3,7 +3,7 @@
 (*
 generates the Fortran code for
 p p -> weakino weakino jet jet in the MSSM
-last modified November 2016
+last modified May 2017
 
 Note: Generating the non-resonant amplitudes might be version dependent.
 To be on the sure side use FeynArts 3.9 and FormCal 8.4.
@@ -23,7 +23,7 @@ time1 = SessionTime[]
 
 
 (*Process dependent input parameters and flags*)
-(*You can now load the script with the command $ MathKernel -script real_os.m "qu" "qubar" "nI" "nJ" "qd" "qdbar"*)
+(*You can now load the script with the command $ MathKernel -script nInJjj_os.m "qu" "qubar" "nI" "nJ" "qd" "qdbar"*)
 Print[$CommandLine]
 If[$CommandLine[[2]] === "-script",
   (p[1] = ToString[$CommandLine[[4]]];
@@ -42,7 +42,7 @@ If[$CommandLine[[2]] === "-script",
 ]
 
 CalcProcess = p[1]<>p[2]<>"_"<>p[3]<>p[4]<>p[5]<>p[6];
-name = CalcProcess;
+name = StringReplace[CalcProcess, {"+" -> "", "-" -> ""}];
 Print[CalcProcess]
 
 isIOGluon = False;
@@ -94,10 +94,11 @@ process = {P[1], P[2]} -> {P[3], P[4], P[5], P[6]};
 Print["Process: ", process]
 
 (*Check if it is a process with gluino single resonances,*)
-(*gluino resonances can only occur in processes with same type*)
-(*of quarks in initial or final state*)
-(*If[Or[P[3] === F[11], P[3] === F[11,{1}]]*)
-isGluinoRes = And[P[1] === -P[2], P[5] === -P[6], Not[P[1] === V[5]], Not[P[5] === V[5]]];
+(*gluino resonances can only occur in processes with *)
+(*quark and antiquark in initial and final state*)
+isGluinoRes1 = And[Head[P[1]] === F, Head[P[2]] =!= F, Not[P[1] === V[5]], Not[P[5] === V[5]]];
+isGluinoRes2 = And[Head[P[1]] =!= F, Head[P[2]] === F, Not[P[1] === V[5]], Not[P[5] === V[5]]];
+isGluinoRes = Or[isGluinoRes1, isGluinoRes2]
 
 (*Check if it is a process with squark double resonances in two distinct pairs of legs (mandelstam s_ij and s_kl).*)
 (*These types of resonances can only occur in processes with no gluon in the final state.*)
@@ -113,16 +114,11 @@ isSquarkRes2 = False;
 (*Generate only diagrams without calculating anything*)
 DiagramsOnly = False;
 
-(*DEBUG*)
-(*isGluinoRes = True;
-isSquarkRes1 = True;*)
-
 (*Print Flags*)
 Print["isIOGluon: ", isIOGluon]
 Print["isGluinoRes: ", isGluinoRes]
 Print["isSquarkRes1: ", isSquarkRes1]
 Print["isSquarkRes2: ", isSquarkRes2]
-
 (*Quit[]*)
 
 

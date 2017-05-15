@@ -17,14 +17,14 @@ WORKINGDIR=${PWD}
 #     PROCDIR="neuIneuJ+jet/FormCalc_Virtuals"
 #     NPART=5
 #     PROCF="./proc_nInJj"
-#     MSCRIPT="./born.m" or "./virt.m"
+#     MSCRIPT="./nInJj.m" or "./nInJj_virt.m"
 #     TYPE="born"
 #
 # 2. generate and copy the amplitudes with purely non resonant diagrams:
 #     PROCDIR="neuIneuJ+jet/FormCalc_Reals"
 #     NPART=6
 #     PROCF="./proc_nInJjj_nr"
-#     MSCRIPT="./real.m"
+#     MSCRIPT="./nInJjj.m"
 #     TYPE="real"
 #
 # 3. If needed, modify the parts where squark indices get explicitly 
@@ -34,7 +34,7 @@ WORKINGDIR=${PWD}
 #     PROCDIR="neuIneuJ+jet/FormCalc_Reals"
 #     NPART=6
 #     PROCF="./proc_nInJjj_os"
-#     MSCRIPT="./real_os.m"
+#     MSCRIPT="./nInJjj_os.m"
 #     TYPE="realOS"
 #
 # 5. copy the regulated real processes (no creation of the amplitudes is
@@ -56,10 +56,10 @@ WORKINGDIR=${PWD}
 # the name of the target process directory
 # nInJ
 #PROCDIR="neuIneuJ+jet/FormCalc_Virtuals"
-PROCDIR="neuIneuJ+jet/FormCalc_Reals"
+#PROCDIR="neuIneuJ+jet/FormCalc_Reals"
 # nIxJ
 #PROCDIR="neuIchaJ+jet/FormCalc_Virtuals"
-#PROCDIR="neuIchaJ+jet/FormCalc_Reals"
+PROCDIR="neuIchaJ+jet/FormCalc_Reals"
 
 # where to copy the amplitudes to
 DEST=${PWD}/../../${PROCDIR}
@@ -71,21 +71,25 @@ NPART=6
 # process list file
 # nInJ
 #PROCF="./proc_nInJj"
-#PROCF="./proc_nInJjj"
 #PROCF="./proc_nInJjj_nr"
 #PROCF="./proc_nInJjj_os"
-PROCF="./proc_nInJjj_reg"
+#PROCF="./proc_nInJjj_reg"
 # nIxJ
 #PROCF="./proc_nIxJj"
-#PROCF="./proc_nIxJjj"
 #PROCF="./proc_nIxJjj_nr"
 #PROCF="./proc_nIxJjj_os"
-#PROCF="./proc_nIxJjj_reg"
+PROCF="./proc_nIxJjj_reg"
 
 # the name of Mathematica Scripts
-#MSCRIPT="./virt_collier.m"
-#MSCRIPT="./real.m"
-#MSCRIPT="./real_os.m"
+# nInJ
+#MSCRIPT="./nInJj_virt.m"
+#MSCRIPT="./nInJjj.m"
+#MSCRIPT="./nInJjj_os.m"
+#MSCRIPT=""
+# nIxJ
+#MSCRIPT="./nIxJj_virt.m"
+#MSCRIPT="./nIxJjj.m"
+#MSCRIPT="./nIxJjj_os.m"
 MSCRIPT=""
 
 # the type of the amplitudes (born, virt, real, realOS)
@@ -267,6 +271,9 @@ for iproc in `seq 0 1 $((NPROC-1))`; do
             fi
         done
     fi
+    # delete + or - signs in order not to confuse fortran
+    PROC=${PROC/"+"/""}
+    PROC=${PROC/"-"/""}
     #echo ${P[@]}
     echo
     echo "current process: $PROC"    

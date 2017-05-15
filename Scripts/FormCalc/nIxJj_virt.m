@@ -3,7 +3,7 @@
 (*
 generates the Fortran code for
 p p -> weakino weakino jet in the MSSM
-last modified February 2016
+last modified May 2017
 *)
 
 
@@ -19,7 +19,7 @@ ClearProcess[]
 time1 = SessionTime[]
 
 
-(*You can now load the script with the command $ MathKernel -script virt_collier.m "qd" "qdbar" "nI" "nJ" "g"*)
+(*You can now load the script with the command $ MathKernel -script nInJj_virt.m "qd" "qdbar" "nI" "nJ" "g"*)
 Print[$CommandLine]
 If[$CommandLine[[2]] === "-script",
 	(p[1] = ToString[$CommandLine[[4]]];
@@ -31,12 +31,12 @@ If[$CommandLine[[2]] === "-script",
 	(p[1] = "qubar";
 	 p[2] = "g";
 	 p[3] = "nI";
-	 p[4] = "nJ";
-	 p[5] = "qubar";)
+	 p[4] = "xJ-";
+	 p[5] = "qdbar";)
 ]
 
 CalcProcess = p[1]<>p[2]<>"_"<>p[3]<>p[4]<>p[5];
-name = CalcProcess;
+name = StringReplace[CalcProcess, {"+" -> "", "-" -> ""}];
 Print[CalcProcess]
 
 For[i=1, i<=5, i++,

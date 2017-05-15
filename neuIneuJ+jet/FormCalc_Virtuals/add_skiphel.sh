@@ -3,7 +3,6 @@
 for x in $(ls *_SquaredME.F); do
     echo $x
     proc=${x:0:${#x}-12}
-    echo $proc
 
 cat > vars.txt << EOM
 * -------- MK: added -----------------------------------------------------------
@@ -15,6 +14,9 @@ EOM
     gsed -i '/TAG/r vars.txt' $x
     gsed -i "s/TAG/data MatSUN \/NaN(4)\//g" $x
 
+    gsed -i 's/data MatSUN \/NaN(9)\//TAG/g' $x
+    gsed -i '/TAG/r vars.txt' $x
+    gsed -i "s/TAG/data MatSUN \/NaN(9)\//g" $x
 
     cat > func.txt << EOM
 * -------- MK: added -----------------------------------------------------------
@@ -41,6 +43,7 @@ EOM
           print*,h,res(HelAll(1),h)
 #endif
 * -------- MK: added -----------------------------------------------------------
+
 EOM
 
     gsed -i "s/call ${proc}_SquaredMEHel(HelInd(SIMD,res(HelAll(1),h)), flags)/TAG/g" $x
