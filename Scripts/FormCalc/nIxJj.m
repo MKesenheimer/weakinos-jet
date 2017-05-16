@@ -28,11 +28,11 @@ If[$CommandLine[[2]] === "-script",
 	 p[4] = ToString[$CommandLine[[7]]];
 	 p[5] = ToString[$CommandLine[[8]]];),
 	(*Else*)
-        (p[1] = "qubar";
+        (p[1] = "qd";
          p[2] = "g";
          p[3] = "nI";
          p[4] = "xJ-";
-         p[5] = "qdbar";)
+         p[5] = "qu";)
 ]
 
 CalcProcess = p[1]<>p[2]<>"_"<>p[3]<>p[4]<>p[5];
@@ -123,9 +123,9 @@ SetOptions[CalcFeynAmp,Dimension->D];
 (*One has to replace "Derivative(1)(IGram)(MS2)" with "(-1/(MS2**2))"*)
 
 (*Save the Diagrams*)
-$PaintSE = MkDir["Diagrams"];
+$PaintSE = MkDir["Diagrams_"<>name];
 DoPaint[diags_, type_, opt___] := Paint[diags, opt,
-  DisplayFunction -> (Export[ToFileName[$PaintSE, name <> "_" <> type <> ".pdf"], #]&)]
+  DisplayFunction -> (Export[ToFileName[$PaintSE, name <> "_" <> type <> ".pdf"], #]&)];
 
 (*Coupling order of amplitude*)
 (*Note: all diagrams are calculated, but after the feynman amplitude is generated*)

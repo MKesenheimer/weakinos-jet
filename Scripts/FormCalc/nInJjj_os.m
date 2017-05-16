@@ -45,7 +45,7 @@ CalcProcess = p[1]<>p[2]<>"_"<>p[3]<>p[4]<>p[5]<>p[6];
 name = StringReplace[CalcProcess, {"+" -> "", "-" -> ""}];
 Print[CalcProcess]
 
-isIOGluon = False;
+$IsIOGluon = False;
 For[i=1, i<=6, i++,
 If[p[i] === "qu", P[i] = F[3],
 If[p[i] === "qubar", P[i] = -F[3],
@@ -58,7 +58,7 @@ If[p[i] === "xI+", P[i] = -F[12],
 If[p[i] === "xJ-", P[i] = F[12],
 If[p[i] === "xJ+", P[i] = -F[12],
 
-If[p[i] === "g", (isIOGluon = True; P[i] = V[5]),
+If[p[i] === "g", ($IsIOGluon = True; P[i] = V[5]),
 If[p[i] === "gam", P[i] = V[1],
 If[p[i] === "Z", P[i] = V[2],
 If[p[i] === "W+", P[i] = V[3],
@@ -97,33 +97,33 @@ Print["Process: ", process]
 (*gluino resonances can only occur in processes with same type*)
 (*of quarks in initial or final state*)
 (*If[Or[P[3] === F[11], P[3] === F[11,{1}]]*)
-isGluinoRes = And[P[1] === -P[2], P[5] === -P[6], Not[P[1] === V[5]], Not[P[5] === V[5]]];
+$IsGluinoRes = And[P[1] === -P[2], P[5] === -P[6], Not[P[1] === V[5]], Not[P[5] === V[5]]];
 
 (*Check if it is a process with squark double resonances in two distinct pairs of legs (mandelstam s_ij and s_kl).*)
 (*These types of resonances can only occur in processes with no gluon in the final state.*)
-isSquarkRes1 = And[Not[P[5] === V[5]], Not[P[6] === V[5]]];
+$IsSquarkRes1 = And[Not[P[5] === V[5]], Not[P[6] === V[5]]];
 
 (*Check if it is a process with squark double resonances in three legs (mandelstam s_ijk)*)
 (*These types of resonances can only occur in processes with only one gluon in the final state.*)
 (*Note: These resonances are not critical since they can only occur for very small jet momementa.*)
-(*With a sufficient high cut on the transverse jet momenta they vanish, set isSquarkRes2 to false..*)
-(*isSquarkRes2 = Or[And[Not[P[5] === V[5]], P[6] === V[5]], And[P[5] === V[5], Not[P[6] === V[5]]]];*)
-isSquarkRes2 = False;
+(*With a sufficient high cut on the transverse jet momenta they vanish, set $IsSquarkRes2 to false..*)
+(*$IsSquarkRes2 = Or[And[Not[P[5] === V[5]], P[6] === V[5]], And[P[5] === V[5], Not[P[6] === V[5]]]];*)
+$IsSquarkRes2 = False;
 
 (*Generate only diagrams without calculating anything*)
-DiagramsOnly = False;
+$DiagramsOnly = False;
 
 (*Print Flags*)
-Print["isIOGluon: ", isIOGluon]
-Print["isGluinoRes: ", isGluinoRes]
-Print["isSquarkRes1: ", isSquarkRes1]
-Print["isSquarkRes2: ", isSquarkRes2]
+Print["IsIOGluon: ", $IsIOGluon]
+Print["IsGluinoRes: ", $IsGluinoRes]
+Print["IsSquarkRes1: ", $IsSquarkRes1]
+Print["IsSquarkRes2: ", $IsSquarkRes2]
 
 (*Quit[]*)
 
 
 (*Options and parameters*)
-If[isIOGluon,
+If[$IsIOGluon,
   (*no internal Weakinos*)
   lastsel = {!F[11],!F[12]};
   (*else*),
@@ -152,7 +152,7 @@ SetOptions[CalcFeynAmp,Dimension->D];
 (*Save the Diagrams*)
 $PaintSE = MkDir["Diagrams_"<>name];
 DoPaint[diags_, type_, opt___] := Paint[diags, opt,
-  DisplayFunction -> (Export[ToFileName[$PaintSE, name <> "_" <> type <> ".pdf"], #]&)]
+  DisplayFunction -> (Export[ToFileName[$PaintSE, name <> "_" <> type <> ".pdf"], #]&)];
 
 (*Coupling order of amplitude*)
 (*Note: all possible diagrams are calculated, but after the feynman amplitude is generated*)
@@ -180,7 +180,7 @@ Neglect[_MfC] = Neglect[_Mf2C] = 0;
 Neglect[MT] = Neglect[MT2] = 0;*)
 
 
-If[isSquarkRes1,
+If[$IsSquarkRes1,
   Print["On-shell squark double resonances type 1"];
 
   (*On-shell topologies built by hand*)
@@ -262,7 +262,7 @@ If[isSquarkRes1,
   ins3645 = InsertFields[top3645, process];
   DoPaint[ins3645, "realOS_3645_Sq1"];
 
-  If[Not[DiagramsOnly], 
+  If[Not[$DiagramsOnly], 
     (*widths and regulator replacement rules*)
     widths = {MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
     reg2 = {Den[sij_,MSf2[cij_,tij_,gij_]-I MSf[cij_,tij_,gij_] WSf[cij_,tij_,gij_]]Den[skl_,MSf2[ckl_,tkl_,gkl_]-I MSf[ckl_,tkl_,gkl_] WSf[ckl_,tkl_,gkl_]]:>((Den[sij,MSf2[cij,tij,gij]-I MSf[cij,tij,gij] (WSf[cij,tij,gij]+WREG2)]^-1+Den[skl,MSf2[ckl,tkl,gkl]-I MSf[ckl,tkl,gkl] (WSf[ckl,tkl,gkl]+WREG2)]^-1)^-1)*(Den[sij,MSf2[cij,tij,gij]-I MSf[cij,tij,gij] WSf[cij,tij,gij]]+Den[skl,MSf2[ckl,tkl,gkl]-I MSf[ckl,tkl,gkl] WSf[ckl,tkl,gkl]])};
@@ -341,7 +341,7 @@ If[isSquarkRes1,
 ];
 
 
-If[isGluinoRes,
+If[$IsGluinoRes,
   Print["On-shell gluino single resonances"];
 
   (*On-shell topologies built by hand*)
@@ -467,7 +467,7 @@ If[isGluinoRes,
   DoPaint[ins465, "realOS_465_Gl"];
 
 
-  If[Not[DiagramsOnly],
+  If[Not[$DiagramsOnly],
     (*widths and regulator replacement rules*)
     widths = {MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
     reg1 = {Den[sijk_,MGl2-I MGl WGl]:>Den[sijk,MGl2-I MGl (WGl+WREG1)]};
@@ -504,7 +504,7 @@ If[isGluinoRes,
 ];
 
 
-If[isSquarkRes2,
+If[$IsSquarkRes2,
   Print["On-shell squark double resonances type 2"];
 
   (*On-shell topologies built by hand*)
@@ -629,7 +629,7 @@ If[isSquarkRes2,
   ins465 = InsertFields[top465, process];
   DoPaint[ins465, "realOS_465_Sq2"];
 
-  If[Not[DiagramsOnly],
+  If[Not[$DiagramsOnly],
     (*widths and regulator replacement rules*)
     widths = {MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
     reg2 = {Den[sij_,MSf2[cij_,tij_,gij_]-I MSf[cij_,tij_,gij_] WSf[cij_,tij_,gij_]]Den[skl_,MSf2[ckl_,tkl_,gkl_]-I MSf[ckl_,tkl_,gkl_] WSf[ckl_,tkl_,gkl_]]:>((Den[sij,MSf2[cij,tij,gij]-I MSf[cij,tij,gij] (WSf[cij,tij,gij]+WREG2)]^-1+Den[skl,MSf2[ckl,tkl,gkl]-I MSf[ckl,tkl,gkl] (WSf[ckl,tkl,gkl]+WREG2)]^-1)^-1)*(Den[sij,MSf2[cij,tij,gij]-I MSf[cij,tij,gij] WSf[cij,tij,gij]]+Den[skl,MSf2[ckl,tkl,gkl]-I MSf[ckl,tkl,gkl] WSf[ckl,tkl,gkl]])};
@@ -671,7 +671,7 @@ tops = CreateTopologies[0, 2 -> 4];
 insNR = InsertFields[tops, process];
 DoPaint[insNR, "realAll"];
 
-If[Or[isGluinoRes, isSquarkRes2],
+If[Or[$IsGluinoRes, $IsSquarkRes2],
   (*remove diagrams respective topologies with gluino single resonances*)
   (*Note: this might be version dependent, so be careful! In case of doubts use FeynArts 3.9 and FormCal 8.4*)
   tops = TopologyList[Sequence@@Delete[
@@ -684,14 +684,14 @@ If[Or[isGluinoRes, isSquarkRes2],
   insNR = InsertFields[tops, process];
 ];
 
-If[isSquarkRes1,
+If[$IsSquarkRes1,
   (*remove diagrams with squark double resonances*)
   insNR = DiagramSelect[insNR,(Not[SChannelExtQ[S[_],3,5][##] && SChannelExtQ[S[_],4,6][##]] &&
                                Not[SChannelExtQ[S[_],3,6][##] && SChannelExtQ[S[_],4,5][##]])&];
 ];
 DoPaint[insNR, "realNR"];
 
-If[Not[DiagramsOnly],
+If[Not[$DiagramsOnly],
   (*insert the particle widths*)
   widths={MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
   
@@ -702,8 +702,8 @@ If[Not[DiagramsOnly],
 ];
 
 
-If[Not[DiagramsOnly],
-  If[And[isSquarkRes1, Not[Component[real3546Sq1ExtSum,1]===0]],
+If[Not[$DiagramsOnly],
+  If[And[$IsSquarkRes1, Not[Component[real3546Sq1ExtSum,1]===0]],
     (*Write files for on-shell resonant reals, OS3546*)
     amps = {real3546Sq1ExtSum};
     {realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
@@ -731,8 +731,8 @@ If[Not[DiagramsOnly],
 ];
 
 
-If[Not[DiagramsOnly],
-  If[And[isSquarkRes1, Not[Component[real3645Sq1ExtSum,1]===0]],
+If[Not[$DiagramsOnly],
+  If[And[$IsSquarkRes1, Not[Component[real3645Sq1ExtSum,1]===0]],
     (*Write files for on-shell resonant reals, OS3645*)
     amps = {real3645Sq1ExtSum};
     {realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
@@ -760,8 +760,8 @@ If[Not[DiagramsOnly],
 ];
 
 
-If[Not[DiagramsOnly],
-  If[And[isGluinoRes, Not[Component[real356GlExtSum,1]===0]],
+If[Not[$DiagramsOnly],
+  If[And[$IsGluinoRes, Not[Component[real356GlExtSum,1]===0]],
     (*Write files for on-shell resonant reals, OS356*)
     amps = {real356GlExtSum};
     {realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
@@ -789,8 +789,8 @@ If[Not[DiagramsOnly],
 ];
 
 
-If[Not[DiagramsOnly],
-  If[And[isGluinoRes, Not[Component[real365GlExtSum,1]===0]],
+If[Not[$DiagramsOnly],
+  If[And[$IsGluinoRes, Not[Component[real365GlExtSum,1]===0]],
     (*Write files for on-shell resonant reals, OS365*)
     amps = {real365GlExtSum};
     {realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
@@ -818,8 +818,8 @@ If[Not[DiagramsOnly],
 ];
 
 
-If[Not[DiagramsOnly],
-  If[And[isGluinoRes, Not[Component[real456GlExtSum,1]===0]],
+If[Not[$DiagramsOnly],
+  If[And[$IsGluinoRes, Not[Component[real456GlExtSum,1]===0]],
     (*Write files for on-shell resonant reals, OS456*)
     amps = {real456GlExtSum};
     {realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
@@ -847,8 +847,8 @@ If[Not[DiagramsOnly],
 ];
 
 
-If[Not[DiagramsOnly],
-  If[And[isGluinoRes, Not[Component[real465GlExtSum,1]===0]],
+If[Not[$DiagramsOnly],
+  If[And[$IsGluinoRes, Not[Component[real465GlExtSum,1]===0]],
     (*Write files for on-shell resonant reals, OS465*)
     amps = {real465GlExtSum};
     {realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
@@ -876,8 +876,8 @@ If[Not[DiagramsOnly],
 ];
 
 
-If[Not[DiagramsOnly],
-  If[And[isSquarkRes2, Not[Component[real356Sq2ExtSum,1]===0]],
+If[Not[$DiagramsOnly],
+  If[And[$IsSquarkRes2, Not[Component[real356Sq2ExtSum,1]===0]],
     (*Write files for on-shell resonant reals, OS356*)
     amps = {real356Sq2ExtSum};
     {realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
@@ -905,8 +905,8 @@ If[Not[DiagramsOnly],
 ];
 
 
-If[Not[DiagramsOnly],
-  If[And[isSquarkRes2, Not[Component[real365Sq2ExtSum,1]===0]],
+If[Not[$DiagramsOnly],
+  If[And[$IsSquarkRes2, Not[Component[real365Sq2ExtSum,1]===0]],
     (*Write files for on-shell resonant reals, OS365*)
     amps = {real365Sq2ExtSum};
     {realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
@@ -934,8 +934,8 @@ If[Not[DiagramsOnly],
 ];
 
 
-If[Not[DiagramsOnly],
-  If[And[isSquarkRes2, Not[Component[real456Sq2ExtSum,1]===0]],
+If[Not[$DiagramsOnly],
+  If[And[$IsSquarkRes2, Not[Component[real456Sq2ExtSum,1]===0]],
     (*Write files for on-shell resonant reals, OS456*)
     amps = {real456Sq2ExtSum};
     {realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
@@ -962,8 +962,8 @@ If[Not[DiagramsOnly],
   ];
 ];
 
-If[Not[DiagramsOnly],
-  If[And[isSquarkRes2, Not[Component[real465Sq2ExtSum,1]===0]],
+If[Not[$DiagramsOnly],
+  If[And[$IsSquarkRes2, Not[Component[real465Sq2ExtSum,1]===0]],
     (*Write files for on-shell resonant reals, OS465*)
     amps = {real465Sq2ExtSum};
     {realOS} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
@@ -992,15 +992,15 @@ If[Not[DiagramsOnly],
 
 (*Combine the amplitudes again, but this time the resonant diagrams are regulated*)
 (*Use here the regulated on shell amplitudes with summation over the sfermion indices*)
-If[Not[DiagramsOnly],
+If[Not[$DiagramsOnly],
   real = realNR;
-  If[isSquarkRes1,
+  If[$IsSquarkRes1,
     real = Combine[real,real3546Sq1,real3645Sq1];
   ];
-  If[isGluinoRes,
+  If[$IsGluinoRes,
     real = Combine[real,real356Gl,real365Gl,real456Gl,real465Gl];
   ];
-  If[isSquarkRes2,
+  If[$IsSquarkRes2,
     real = Combine[real,real356Sq2,real365Sq2,real456Sq2,real465Sq2];
   ];
   

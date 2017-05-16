@@ -123,9 +123,9 @@ SetOptions[CalcFeynAmp,Dimension->D];
 (*One has to replace "Derivative(1)(IGram)(MS2)" with "(-1/(MS2**2))"*)
 
 (*Save the Diagrams*)
-$PaintSE = MkDir["Diagrams"];
+$PaintSE = MkDir["Diagrams_"<>name];
 DoPaint[diags_, type_, opt___] := Paint[diags, opt,
-  DisplayFunction -> (Export[ToFileName[$PaintSE, name <> "_" <> type <> ".pdf"], #]&)]
+  DisplayFunction -> (Export[ToFileName[$PaintSE, name <> "_" <> type <> ".pdf"], #]&)];
 
 (*Coupling order of amplitude*)
 (*Note: all diagrams are calculated, but after the feynman amplitude is generated*)

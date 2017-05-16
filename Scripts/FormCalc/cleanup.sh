@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DEST=../../neuIchaJ+jet/FormCalc_Reals
+DEST=../../neuIchaJ+jet/FormCalc_Virtuals
 
 echo -n "Do you really want to clean up directory $DEST [y/n]? "
 read answer

@@ -41,7 +41,7 @@ CalcProcess = p[1]<>p[2]<>"_"<>p[3]<>p[4]<>p[5]<>p[6];
 name = StringReplace[CalcProcess, {"+" -> "", "-" -> ""}];
 Print[CalcProcess]
 
-IOGluon = False;
+$IsIOGluon = False;
 For[i=1, i<=6, i++,
 If[p[i] === "qu", P[i] = F[3],
 If[p[i] === "qubar", P[i] = -F[3],
@@ -54,7 +54,7 @@ If[p[i] === "xI+", P[i] = -F[12],
 If[p[i] === "xJ-", P[i] = F[12],
 If[p[i] === "xJ+", P[i] = -F[12],
 
-If[p[i] === "g", (IOGluon = True; P[i] = V[5]),
+If[p[i] === "g", ($IsIOGluon = True; P[i] = V[5]),
 If[p[i] === "gam", P[i] = V[1],
 If[p[i] === "Z", P[i] = V[2],
 If[p[i] === "W+", P[i] = V[3],
@@ -106,7 +106,7 @@ Neglect[MT] = Neglect[MT2] = 0;*)
 
 
 (*Options*)
-If[IOGluon,
+If[$IsIOGluon,
           (*no internal Weakinos*)
           lastsel = {!F[11],!F[12]};
           (*else*),
@@ -131,7 +131,7 @@ SetOptions[CalcFeynAmp, Dimension->D];
 (*Save the Diagrams*)
 $PaintSE = MkDir["Diagrams_"<>name];
 DoPaint[diags_, type_, opt___] := Paint[diags, opt,
-  DisplayFunction -> (Export[ToFileName[$PaintSE, name <> "_" <> type <> ".pdf"], #]&)]
+  DisplayFunction -> (Export[ToFileName[$PaintSE, name <> "_" <> type <> ".pdf"], #]&)];
 
 (*Set Options for Abbreviations*)
 (*SetOptions[Abbreviate,MinLeafCount\[Rule]100];*)
