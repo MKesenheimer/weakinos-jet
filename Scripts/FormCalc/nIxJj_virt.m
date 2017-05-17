@@ -28,11 +28,11 @@ If[$CommandLine[[2]] === "-script",
 	 p[4] = ToString[$CommandLine[[7]]];
 	 p[5] = ToString[$CommandLine[[8]]];),
 	(*Else*)
-	(p[1] = "qd";
+	(p[1] = "qdbar";
 	 p[2] = "g";
 	 p[3] = "nI";
-	 p[4] = "xJ-";
-	 p[5] = "qu";)
+	 p[4] = "xJ+";
+	 p[5] = "qubar";)
 ]
 
 CalcProcess = p[1]<>p[2]<>"_"<>p[3]<>p[4]<>p[5];
@@ -189,6 +189,7 @@ If[Not[$DiagramsOnly],
   counterVert = CreateFeynAmp[insVert];
 ];
 
+
 (*Somehow, this can\.b4t be defined earlier (problem with shadowing variables)*)
 ckinematics = {S->SC, T->TC, U->UC, T24->T24C, T14->T14C, T13->T13C, T23->T23C, S34->S34C};
 cmplx = Join[cmplx,ckinematics];
@@ -203,16 +204,16 @@ ins = InsertFields[top, process];
 ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_. F[3|4,_], _. F[3|4,_], _. S[n_/;n<=6]]])& ];
 
 ins = DiagramSelect[ins,(FieldMemberQ[LoopFields[##], _. F[15,_]] || FieldMemberQ[LoopFields[##], _. S[13|14,_]] || FieldMemberQ[LoopFields[##], V[5,_]]) &]; (*Loop contains g, sguark, q, gluino*)
-ins = DiagramSelect[ins,(FreeQ[LoopFields[##], V[1|2|3]] && FreeQ[LoopFields[##], _. S[n_/;n<=6]]) &]; (*Loop does not contain Z, W, gam, Higgs/Goldstone*)
+ins = DiagramSelect[ins,(FreeQ[LoopFields[##], _. V[1|2|3]] && FreeQ[LoopFields[##], _. S[n_/;n<=6]]) &]; (*Loop does not contain Z, W, gam, Higgs/Goldstone*)
 
 (*delete diagrams with two ew particles that couple to the loop*)
 insDel = DiagramSelect[ins,(FieldMemberQ[LoopFields[##],_. S[13|14,_]])& ]; (*only squark loops*)
-insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],V[1|2|3|5,___]]])& ]; (*vector couples to the loop*)
-insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. F[11|12,_],_. F[11|12,_],V[1|2|3]]] ||
+insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],_. V[1|2|3|5,___]]])& ]; (*vector couples to the loop*)
+insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. F[11|12,_],_. F[11|12,_],_. V[1|2|3]]] ||
                                 FieldMemberQ[FieldPoints[##],FieldPoint[_][_. F[11|12,_],_. F[11|12,_],_. S[n_/;n<=6]]])& ]; (*ew vector couples to the weakino*)
 ins = DiagramComplement[ins,insDel];
 
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],V[1|2|3],V[1|2|3|5,___]]]) &]; (*Diagram does not contain V-V-squark-squark coupling*)
+ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],_. V[1|2|3],_. V[1|2|3|5,___]]]) &]; (*Diagram does not contain V-V-squark-squark coupling*)
 DoPaint[ins, "self"];
 
 If[Not[$DiagramsOnly],
@@ -239,12 +240,12 @@ top = CreateTopologies[1, 2 -> 3, TrianglesOnly];
 ins = InsertFields[top, process];
 
 ins = DiagramSelect[ins,(FieldMemberQ[LoopFields[##], _. F[15,_]] || FieldMemberQ[LoopFields[##], _. S[13|14,_]] || FieldMemberQ[LoopFields[##], V[5,_]] || FieldMemberQ[LoopFields[##], _. F[3|4,_]]) &]; (*Loop contains g, sguark, q, gluino*)
-ins = DiagramSelect[ins,(FreeQ[LoopFields[##], V[1|2|3]] && FreeQ[LoopFields[##], _. S[n_/;n<=6]]) &]; (*Loop does not contain Z, W, gam, Higgs/Goldstone*)
+ins = DiagramSelect[ins,(FreeQ[LoopFields[##], _. V[1|2|3]] && FreeQ[LoopFields[##], _. S[n_/;n<=6]]) &]; (*Loop does not contain Z, W, gam, Higgs/Goldstone*)
 
 (*delete diagrams with two ew particles that couple to the loop*)
 insDel = DiagramSelect[ins,(FieldMatchQ[LoopFields[##],{_. S[13|14,_],_. S[13|14,_],_. S[13|14,_]}] || FieldMatchQ[LoopFields[##],{_. F[3|4,_],_. F[3|4,_],_. F[3|4,_]}])&]; (*only squark or quark loops*)
-insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],V[1|2|3]]] || FieldMemberQ[FieldPoints[##],FieldPoint[_][_. F[3|4,_],_. F[3|4,_],V[1|2|3]]])& ]; (* ew vector couples to the loop*)
-insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. F[11|12,_],_. F[11|12,_],V[1|2|3]]] || FieldMemberQ[FieldPoints[##],FieldPoint[_][_. F[11|12,_],_. F[11|12,_],_. S[n_/;n<=6]]])& ]; (*ew vector couples to the weakinos*)
+insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],_. V[1|2|3]]] || FieldMemberQ[FieldPoints[##],FieldPoint[_][_. F[3|4,_],_. F[3|4,_],_. V[1|2|3]]])& ]; (* ew vector couples to the loop*)
+insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. F[11|12,_],_. F[11|12,_],_. V[1|2|3]]] || FieldMemberQ[FieldPoints[##],FieldPoint[_][_. F[11|12,_],_. F[11|12,_],_. S[n_/;n<=6]]])& ]; (*ew vector couples to the weakinos*)
 (*insDel = DiagramSelect[insDel, NotSChannelQ[V[5,_]]]; (*no s-channel gluons in the diagrams that we want to delete*)*)
 insDel = DiagramSelect[insDel, FreeQ[#, Field[n_/;n>5] -> V[5,_]]& ];  (*no internal gluon lines in the diagrams that we want to delete*)
 ins = DiagramComplement[ins,insDel];
@@ -257,9 +258,9 @@ insDel = DiagramSelect[insDel, FreeQ[#, Field[n_/;n>5] -> V[5,_]]& ];  (*no inte
 ins = DiagramComplement[ins,insDel];
 
 (*Diagram does not contain V-V-squark-squark coupling*)
-insDel = DiagramSelect[ins,(MemberQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],V[1|2|3],V[1|2|3|5,___]]]) &];
+insDel = DiagramSelect[ins,(MemberQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],_. V[1|2|3],_. V[1|2|3|5,___]]]) &];
 (*but allow diagrams with gluon-Z-squark-squark coupling*)
-insDel = DiagramSelect[insDel,(Not[MemberQ[FieldPoints[##],FieldPoint[_][_. F[11|12,_],_. F[11|12,_],V[2]]] && FreeQ[FieldPoints[##],FieldPoint[_][_. F[3|4,_],_. F[3|4,_],V[1|2|3]]]]) &];
+insDel = DiagramSelect[insDel,(Not[MemberQ[FieldPoints[##],FieldPoint[_][_. F[11|12,_],_. F[11|12,_],_. V[1|2|3]]] && FreeQ[FieldPoints[##],FieldPoint[_][_. F[3|4,_],_. F[3|4,_],_. V[1|2|3]]]]) &];
 ins = DiagramComplement[ins,insDel];
 
 (*Diagram does not contain higgs-higgs-squark-squark coupling*)
@@ -267,7 +268,7 @@ ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_. S[1|2|3|4|5|6],_
 
 (*delete diagrams with ew particle couplings in the loop and ew vector in propagator*)
 insDel = DiagramSelect[ins,(FieldMatchQ[LoopFields[##],{_. S[13|14,_],_. F[3|4,_],_. F[3|4,_]}] || FieldMatchQ[LoopFields[##],{_. F[3|4,_],_. S[13|14,_],_. S[13|14,_]}])&]; (*only squark or quark loops*)
-insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_,_,V[1|2|3|5,___]]])&]; (*diagram contains ew vector or has zero color trace*)
+insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_,_,_. V[1|2|3|5,___]]])&]; (*diagram contains ew vector or has zero color trace*)
 ins = DiagramComplement[ins,insDel];
 
 (*delete higgs to external fermion coupling (no external tops)*)
@@ -308,18 +309,18 @@ ins = InsertFields[top, process];
 ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_. F[3|4,_], _. F[3|4,_], _. S[n_/;n<=6]]])& ];
 
 ins = DiagramSelect[ins,(FieldMemberQ[LoopFields[##], _. F[15,_]] || FieldMemberQ[LoopFields[##], _. S[13|14,_]] || FieldMemberQ[LoopFields[##], V[5,_]] || FieldMemberQ[LoopFields[##], _. F[3|4,_]]) &]; (*Loop contains g, sguark, q, gluino*)
-ins = DiagramSelect[ins,(FreeQ[LoopFields[##], V[1|2|3]] && FreeQ[LoopFields[##], _. S[n_/;n<=6]]) &]; (*Loop does not contain Z, W, gam, Higgs/Goldstone*)
+ins = DiagramSelect[ins,(FreeQ[LoopFields[##], _. V[1|2|3]] && FreeQ[LoopFields[##], _. S[n_/;n<=6]]) &]; (*Loop does not contain Z, W, gam, Higgs/Goldstone*)
 
 (*delete diagrams which contains V-V-squark-squark coupling, but do not delete diagram with gluino squark squark loop*)
 insDel = DiagramSelect[ins,(Not[FieldMatchQ[LoopFields[##],{_. F[15,_],_. S[13|14,_],_. S[13|14,_]}]])&];
-insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],V[1|2|3],V[1|2|3|5,___]]]) &];
+insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],_. V[1|2|3],_. V[1|2|3|5,___]]]) &];
 ins = DiagramComplement[ins,insDel];
 
 (*delete diagrams with s channel ew vector*)
-(*insDel = DiagramSelect[ins, SChannelQ[V[1|2|3]]];*)
-insDel = DiagramSelect[ins, MemberQ[#, Field[n_/;n>5] -> V[1|2|3]]& ];  (*internal ew vector line*)
+(*insDel = DiagramSelect[ins, SChannelQ[_. V[1|2|3]]];*)
+insDel = DiagramSelect[ins, MemberQ[#, Field[n_/;n>5] -> _. V[1|2|3]]& ];  (*internal ew vector line*)
 insDel = DiagramSelect[insDel,(FieldMemberQ[LoopFields[##], _. S[13|14,_]] && FieldMemberQ[LoopFields[##], _. F[3|4,_]])&];
-insDel = DiagramSelect[insDel,(FreeQ[LoopFields[##], V[1|2|3|5,___]] && FreeQ[LoopFields[##], _. S[n_/;n<=6]])&];
+insDel = DiagramSelect[insDel,(FreeQ[LoopFields[##], _. V[1|2|3|5,___]] && FreeQ[LoopFields[##], _. S[n_/;n<=6]])&];
 ins = DiagramComplement[ins,insDel];
 
 DoPaint[ins, "box"];

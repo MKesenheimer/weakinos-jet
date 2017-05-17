@@ -243,21 +243,21 @@ c############### subroutine getAmps ####################################
 #ifdef MATRIXELEMENT
         ! F g -> F F F
         if((f1.eq.0 .or. f2.eq.0).and.(flav(5).ne.0)) then
-          if((f1.gt.0.and.isodd(f1)) .or. (f2.gt.0.and.isodd(f2))) then
-            if(flags.eq.6) call qdg_nInJqd_RenConst
-            call qdg_nInJqd_squaredME(fc_result,helicities,flags)
+          if((f1.gt.0.and.isodd(f1)) .or. (f2.gt.0.and.iseven(f2))) then
+            if(flags.eq.6) call qdg_nInJqu_RenConst
+            call qdg_nInJqu_squaredME(fc_result,helicities,flags)
             goto 20
-          elseif((f1.gt.0.and.iseven(f1)) .or. (f2.gt.0.and.iseven(f2))) then
-            if(flags.eq.6) call qug_nInJqu_RenConst
-            call qug_nInJqu_squaredME(fc_result,helicities,flags)
+          elseif((f1.gt.0.and.iseven(f1)) .or. (f2.gt.0.and.isodd(f2))) then
+            if(flags.eq.6) call qug_nInJqd_RenConst
+            call qug_nInJqd_squaredME(fc_result,helicities,flags)
             goto 20
-          elseif((f1.lt.0.and.isodd(f1)) .or. (f2.lt.0.and.isodd(f2))) then
-            if(flags.eq.6) call qdbarg_nInJqdbar_RenConst
-            call qdbarg_nInJqdbar_squaredME(fc_result,helicities,flags)
+          elseif((f1.lt.0.and.isodd(f1)) .or. (f2.lt.0.and.iseven(f2))) then
+            if(flags.eq.6) call qdbarg_nInJqubar_RenConst
+            call qdbarg_nInJqubar_squaredME(fc_result,helicities,flags)
             goto 20
-          elseif((f1.lt.0.and.iseven(f1)) .or. (f2.lt.0.and.iseven(f2))) then
-            if(flags.eq.6) call qubarg_nInJqubar_RenConst
-            call qubarg_nInJqubar_squaredME(fc_result,helicities,flags)
+          elseif((f1.lt.0.and.iseven(f1)) .or. (f2.lt.0.and.isodd(f2))) then
+            if(flags.eq.6) call qubarg_nInJqdbar_RenConst
+            call qubarg_nInJqdbar_squaredME(fc_result,helicities,flags)
             goto 20
           else
             goto 21

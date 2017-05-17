@@ -10,6 +10,10 @@ cat > vars.txt << EOM
 * -------- MK: added -----------------------------------------------------------
 EOM
 
+    gsed -i 's/data MatSUN \/NaN(1)\//TAG/g' $x
+    gsed -i '/TAG/r vars.txt' $x
+    gsed -i "s/TAG/data MatSUN \/NaN(1)\//g" $x
+
     gsed -i 's/data MatSUN \/NaN(4)\//TAG/g' $x
     gsed -i '/TAG/r vars.txt' $x
     gsed -i "s/TAG/data MatSUN \/NaN(4)\//g" $x
