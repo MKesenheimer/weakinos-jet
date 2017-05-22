@@ -507,12 +507,12 @@ c############### subroutine getRealAmps ################################
         else
           goto 21
         endif
-#endif
 
  21     print*, "error: Wrong flavor structure in getRealAmps."
         print*, "flav = ", flav
         stop
  20     continue
+#endif
 
         amp = fc_result(1)/symfac
 
@@ -714,12 +714,12 @@ c############### subroutine getRealOSAmps ##############################
         else
           goto 21
         endif
-#endif
-
+        
  21     print*, "error: Wrong flavor structure in getRealAmps."
         print*, "flav = ", flav
         stop
  20     continue
+#endif
 
         ampos = fc_result(1)/symfac
       end

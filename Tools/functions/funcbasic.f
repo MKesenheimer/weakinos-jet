@@ -42,19 +42,152 @@ c check odd or even integer
       logical function iseven(n)
         implicit none
         integer n
-        iseven = .true.
-        if(mod(abs(n),2).eq.1) iseven = .false.
+        if(mod(abs(n),2).eq.1) then
+          iseven = .false.
+        else
+          iseven = .true.
+        endif
       end
       logical function isodd(n)
         implicit none
         integer n
-        isodd = .false.
-        if(mod(abs(n),2).eq.1) isodd = .true.
-      end 
+        if(mod(abs(n),2).eq.1) then
+          isodd = .true.
+        else
+          isodd = .false.
+        endif
+      end
+      
+c check quark types
+      logical function isg(n)
+        implicit none
+        integer n
+        if(n.eq.0) then 
+          isg = .true.
+        else
+          isg = .false.
+        endif
+      end
+
+      logical function isd(n)
+        implicit none
+        integer n
+        logical isodd
+        external isodd
+        if(isodd(n).and.n>0) then
+          isd = .true.
+        else
+          isd = .false.
+        endif
+      end
+
+      logical function isu(n)
+        implicit none
+        integer n
+        logical iseven
+        external iseven
+        if(iseven(n).and.n>0) then
+          isu = .true.
+        else
+          isu = .false.
+        endif
+      end
+
+      logical function isdbar(n)
+        implicit none
+        integer n
+        logical isodd
+        external isodd
+        if(isodd(n).and.n<0) then
+          isdbar = .true.
+        else
+          isdbar = .false.
+        endif
+      end
+
+      logical function isubar(n)
+        implicit none
+        integer n
+        logical iseven
+        external iseven
+        if(iseven(n).and.n<0) then
+          isubar = .true.
+        else
+          isubar = .false.
+        endif
+      end
+      
+c quark generation
+      integer function qgen(n)
+        implicit none
+        integer n
+        qgen = -999
+        if(abs(n).eq.1.or.abs(n).eq.2) qgen = 1
+        if(abs(n).eq.3.or.abs(n).eq.4) qgen = 2
+        if(abs(n).eq.5.or.abs(n).eq.6) qgen = 3
+        !if(n.lt.0) qgen = -1*qgen
+      end  
+      
+c electric charge
+      double precision function elc(n)
+        implicit none
+        integer n
+        logical isd, isdbar, isu, isubar
+        external isd, isdbar, isu, isubar
+        elc = 0
+        if(isd(n)) elc = -1/3D0
+        if(isdbar(n)) elc = 1/3D0
+        if(isu(n)) elc = 2/3D0
+        if(isubar(n)) elc = -2/3D0
+        if(n.eq.1000024.or.n.eq.1000037) elc = 1D0
+        if(n.eq.-1000024.or.n.eq.-1000037) elc = -1D0
+      end
+      
+c removes duplicate entries of a two dimensional list(m,n)
+c m and n are the dimensions of the list. Example:
+c input: m=2, n=3
+c   list(:,1) = (1, 0)
+c   list(:,2) = (1, 2)
+c   list(:,3) = (1, 0)
+c output: m=2, n=2
+c   list(:,1) = (1, 0)
+c   list(:,2) = (1, 2)
+      subroutine remove_duplicates(list,m,n)
+        implicit none
+        integer list, m, n, i, j, k, l
+        integer nstart, nend
+        dimension list(m,n)
+        logical check
+        nstart = n
+   10   do i=1,n ! go through all the entries
+          do j=i+1,n ! don't compare entries with same index
+            check = .true.
+            do k=1,m ! compare every entry
+              if(list(k,i).ne.list(k,j)) check = check .and. .false.
+            enddo
+            if(check) then
+              do l=j,n-1 ! if an entry is a duplicate, delete it, and 
+                do k=1,m ! move all following entries one position up
+                  list(k,l) = list(k,l+1)
+                enddo
+              enddo
+              do k=1,m ! delete the last entry
+                list(k,n) = 0
+              enddo
+              n = n-1 ! the dimension n is decreased
+            endif
+          enddo
+        enddo
+        nend = n
+        if(nend.ne.nstart) then ! again until n does not change anymore
+          nstart = nend
+          goto 10
+        endif
+      end
 
 c squared of sum of 2 four vectors
       double precision function momsum2sq(p1,p2)
-      implicit none
+        implicit none
         double precision p1(0:3),p2(0:3),psum(0:3)
         double precision dotp
         external dotp
@@ -67,7 +200,7 @@ c squared of sum of 2 four vectors
 
 c squared of sum of 3 four vectors
       double precision function momsum3sq(p1,p2,p3)
-      implicit none
+        implicit none
         double precision p1(0:3),p2(0:3),p3(0:3),psum(0:3)
         double precision dotp
         external dotp
@@ -80,7 +213,7 @@ c squared of sum of 3 four vectors
       
 c levi-civita symbol
       integer function levi_civita(i,j,k)
-      implicit none
+        implicit none
         integer i,j,k
         ! unit vectors
         integer x(3,3)
@@ -201,7 +334,7 @@ c Statuszwecken zu finden.
           r(:,k,j) = q(:,a(j))
         enddo 
         k = k+1  
-        if(nextp(n,a)) go to 10
+        if(nextp(n,a)) goto 10
         p(:,:) = r(:,i,:)
         indices(:) = pindices(i,:)  
         !print*,indices(i,:)
@@ -212,10 +345,10 @@ c Statuszwecken zu finden.
         logical nextp
         dimension a(n)
         i=n-1
-   10   if(a(i).lt.a(i+1)) go to 20
+   10   if(a(i).lt.a(i+1)) goto 20
         i=i-1
-        if(i.eq.0) go to 20
-        go to 10
+        if(i.eq.0) goto 20
+        goto 10
    20   j=i+1
         k=n
    30   t=a(j)
@@ -223,13 +356,13 @@ c Statuszwecken zu finden.
         a(k)=t
         j=j+1
         k=k-1
-        if(j.lt.k) go to 30
+        if(j.lt.k) goto 30
         j=i
-        if(j.ne.0) go to 40
+        if(j.ne.0) goto 40
         nextp=.false.
         return
    40   j=j+1
-        if(a(j).lt.a(i)) go to 40
+        if(a(j).lt.a(i)) goto 40
         t=a(i)
         a(i)=a(j)
         a(j)=t
@@ -243,17 +376,17 @@ c berechnet die Größenordnung einer Zahl
         integer i
         i = 0
         z = x
-        if(dabs(x).eq.0D0) go to 20
+        if(dabs(x).eq.0D0) goto 20
         if(dabs(x).lt.1d0) p = 1D1
         if(dabs(x).gt.1d0) p = 1D-1
    10   z = z*p
         if(dabs(x).gt.1d0.and.dabs(z).ge.1d0) then
           i = i+1
-          go to 10
+          goto 10
         endif
         if(dabs(x).lt.1d0.and.dabs(z).le.1d0) then
           i = i-1
-          go to 10
+          goto 10
         endif
    20   magnitude = i
       end 
@@ -276,7 +409,7 @@ c Basis "BASE" und gibt die Zahl an der Stelle k zurück
         b(i) = df
         di = r    
         i = i - 1    
-        if(r.ne.0) go to 10
+        if(r.ne.0) goto 10
         cdec = b(k)  
       end
 

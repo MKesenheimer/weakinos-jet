@@ -166,11 +166,6 @@ c
 c        rad_damp_rem_tot = rad_damp_rem_tot * suppfact
 c        rad_damp_rem_arr = rad_damp_rem_arr * suppfact
 c        retval=rad_reg_tot+rad_damp_rem_tot
-#ifdef DEBUG
-         print*,"sigremnants.f:176: retval",retval
-         print*,"sigremnants.f:177: suppfact",suppfact
-         stop
-#endif
       end
 
       subroutine sigreal_reg(xjac,sig,r0)

@@ -11,17 +11,7 @@
 
         subroutine qubarg_nIxJqdbar_RenConst
         implicit none
-
-        ! decide if finite terms should be taken into account
-        RealType xz0, xm0
-        parameter (xz0=0D0, xm0=0D0)
-
-        ! Regularize 1/MD Terms
-        RealType MR, MR2
-        parameter (MR=1D-10, MR2=MR**2)
-
-
-        call RenConst1
-        call RenConst2
+        call qubarg_nIxJqdbar_RenConst1
+        call qubarg_nIxJqdbar_RenConst2
         end
 

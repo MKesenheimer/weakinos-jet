@@ -72,12 +72,12 @@ numevts  0           ! number of events to be generated
 
 ! OPTIONAL PARAMETERS
 runningscale   1     ! (default 0) use ref. scale=virtuality Q (default 0, use fixed scale)
-#fakevirtuals  1     ! (default 0) generate the grid with fake virtuals
+fakevirtuals  1     ! (default 0) generate the grid with fake virtuals
 softtest       1     ! (default 0) check soft singularities
 colltest       1     ! (default 0) check collinear singularities
 renscfact      1d0   ! (default 1d0) ren scale factor: muren  = muref * renscfact
 facscfact      1d0   ! (default 1d0) fac scale factor: mufact = muref * facscfact
-bornonly      1     ! (default 0) if 1 do Born only
+#bornonly      1     ! (default 0) if 1 do Born only
 #LOevents      1     ! (default 0) only LO events
 #smartsig      1     ! (default 1) remember equal amplitudes (0 do not remember)
 testplots      1     ! write data for gnuplot histograms to *.top
