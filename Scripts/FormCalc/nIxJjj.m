@@ -19,7 +19,7 @@ ClearProcess[]
 time1 = SessionTime[]
 
 
-(*You can now load the script with the command $ MathKernel -script nInJjj.m "qu" "qubar" "nI" "nJ" "qd" "qdbar"*)
+(*You can now load the script with the command $ MathKernel -script nIxJjj.m "g" "g" "nI" "xJ-" "qd" "qubar"*)
 Print[$CommandLine]
 If[$CommandLine[[2]] === "-script",
 	(p[1] = ToString[$CommandLine[[4]]];

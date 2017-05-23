@@ -23,7 +23,7 @@ time1 = SessionTime[]
 
 
 (*Process dependent input parameters and flags*)
-(*You can now load the script with the command $ MathKernel -script nInJjj_os.m "qu" "qubar" "nI" "nJ" "qd" "qdbar"*)
+(*You can now load the script with the command $ MathKernel -script nIxJjj_os.m "g" "g" "nI" "xJ+" "qd" "qubar"*)
 Print[$CommandLine]
 If[$CommandLine[[2]] === "-script",
   (p[1] = ToString[$CommandLine[[4]]];

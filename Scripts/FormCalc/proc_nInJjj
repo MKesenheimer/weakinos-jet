@@ -6,16 +6,16 @@
            g            qu        nI     nJ           qu           g
            g            qubar     nI     nJ           qubar        g
            qd           qd        nI     nJ           qd           qd
+           qd           qu        nI     nJ           qd           qu
+           qu           qu        nI     nJ           qu           qu
            qd           qdbar     nI     nJ           qd           qdbar
            qd           qdbar     nI     nJ           qu           qubar
-           qd           qu        nI     nJ           qd           qu
            qd           qubar     nI     nJ           qd           qubar
-           qdbar        qdbar     nI     nJ           qdbar        qdbar
            qu           qdbar     nI     nJ           qu           qdbar
-           qdbar        qubar     nI     nJ           qdbar        qubar
-           qu           qu        nI     nJ           qu           qu
            qu           qubar     nI     nJ           qd           qdbar
            qu           qubar     nI     nJ           qu           qubar
+           qdbar        qdbar     nI     nJ           qdbar        qdbar
+           qdbar        qubar     nI     nJ           qdbar        qubar
            qubar        qubar     nI     nJ           qubar        qubar
            qd           qdbar     nI     nJ           g            g
            qu           qubar     nI     nJ           g            g

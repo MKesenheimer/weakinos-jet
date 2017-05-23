@@ -118,7 +118,6 @@ Print["IsIOGluon: ", $IsIOGluon]
 Print["IsGluinoRes: ", $IsGluinoRes]
 Print["IsSquarkRes1: ", $IsSquarkRes1]
 Print["IsSquarkRes2: ", $IsSquarkRes2]
-
 (*Quit[]*)
 
 

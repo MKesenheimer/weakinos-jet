@@ -53,20 +53,27 @@ WORKINGDIR=${PWD}
 # proc_nInJjj_reg -> regulated real processes with resonant diagrams (same 
 #                    as proc_nInJjj_os, but without channel identifiers)
 
+
 # the name of the target process directory
 # nInJ
 #PROCDIR="neuIneuJ+jet/FormCalc_Virtuals"
 #PROCDIR="neuIneuJ+jet/FormCalc_Reals"
 # nIxJ
-PROCDIR="neuIchaJ+jet/FormCalc_Virtuals"
+#PROCDIR="neuIchaJ+jet/FormCalc_Virtuals"
 #PROCDIR="neuIchaJ+jet/FormCalc_Reals"
+# xIxJ
+#PROCDIR="chaIchaJ+jet/FormCalc_Virtuals"
+PROCDIR="chaIchaJ+jet/FormCalc_Reals"
+
 
 # where to copy the amplitudes to
 DEST=${PWD}/../../${PROCDIR}
 
+
 # number of particles (incoming + outgoing)
-NPART=5
-#NPART=6
+#NPART=5
+NPART=6
+
 
 # process list file
 # nInJ
@@ -75,10 +82,16 @@ NPART=5
 #PROCF="./proc_nInJjj_os"
 #PROCF="./proc_nInJjj_reg"
 # nIxJ
-PROCF="./proc_nIxJj"
+#PROCF="./proc_nIxJj"
 #PROCF="./proc_nIxJjj_nr"
 #PROCF="./proc_nIxJjj_os"
 #PROCF="./proc_nIxJjj_reg"
+# xIxJ
+#PROCF="./proc_xIxJj"
+#PROCF="./proc_xIxJjj_nr"
+#PROCF="./proc_xIxJjj_os"
+PROCF="./proc_xIxJjj_reg"
+
 
 # the name of Mathematica Scripts
 # nInJ
@@ -87,16 +100,23 @@ PROCF="./proc_nIxJj"
 #MSCRIPT="./nInJjj_os.m"
 #MSCRIPT=""
 # nIxJ
-MSCRIPT="./nIxJj_virt.m"
+#MSCRIPT="./nIxJj_virt.m"
 #MSCRIPT="./nIxJjj.m"
 #MSCRIPT="./nIxJjj_os.m"
 #MSCRIPT=""
+# xIxJ
+#MSCRIPT="./xIxJj_virt.m"
+#MSCRIPT="./xIxJjj.m"
+#MSCRIPT="./xIxJjj_os.m"
+MSCRIPT=""
+
 
 # the type of the amplitudes (born, virt, real, realOS)
-TYPE="virt"
+#TYPE="virt"
 #TYPE="real"
 #TYPE="realOS"
-#TYPE="real"
+TYPE="real"
+
 
 # the number and types of subchannels of realOS amplitudes (f.e. ll, lr, rl, rr)
 # ordered as follows: ("resonance name", ichan_start, ichan_end, "special conditions (e.g. index assignment)", ...)
@@ -108,6 +128,7 @@ RESTYPES=(\
 "365_Sq1" 11 12 "\tSq1 = osres_sfeij" \
 "456_Sq1" 13 14 "\tSq1 = osres_sfeij" \
 "465_Sq1" 15 16 "\tSq1 = osres_sfeij")
+
 
 # if needed: additional complex kinematics for virtual processes
 # modify "# add complex mandelstams to *_SquaredME.F" too.

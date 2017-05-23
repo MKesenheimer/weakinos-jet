@@ -1,0 +1,12 @@
+# These are all possible processes that can occur in weakino-pair + jet production.
+# more comments in proc_nInJjj_os
+           g            g         xI+    xJ-          qd           qdbar    3546_Sq1Sq2
+           g            g         xI+    xJ-          qu           qubar    3645_Sq1Sq2
+           qd           qu        xI+    xJ-          qd           qu       3546_Sq1Sq2
+           qd           qdbar     xI+    xJ-          qd           qdbar    3546_Sq1Sq2
+           qd           qdbar     xI+    xJ-          qu           qubar    3645_Sq1Sq2
+           qd           qubar     xI+    xJ-          qd           qubar    356_Sq1,365_Sq1
+           qu           qdbar     xI+    xJ-          qu           qdbar    456_Sq1,465_Sq1
+           qu           qubar     xI+    xJ-          qd           qdbar    3546_Sq1Sq2
+           qu           qubar     xI+    xJ-          qu           qubar    3645_Sq1Sq2
+           qdbar        qubar     xI+    xJ-          qdbar        qubar    3645_Sq1Sq2

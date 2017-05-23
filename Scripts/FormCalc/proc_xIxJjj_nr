@@ -1,0 +1,12 @@
+# These are processes with no resonant diagrams. No subtraction for
+# these processes is needed.
+           g            qd        xI+    xJ-          qd           g
+           g            qdbar     xI+    xJ-          qdbar        g
+           g            qu        xI+    xJ-          qu           g
+           g            qubar     xI+    xJ-          qubar        g
+           qd           qdbar     xI+    xJ-          g            g
+           qu           qubar     xI+    xJ-          g            g
+           qd           qd        xI+    xJ-          qd           qd
+           qu           qu        xI+    xJ-          qu           qu
+           qdbar        qdbar     xI+    xJ-          qdbar        qdbar
+           qubar        qubar     xI+    xJ-          qubar        qubar
