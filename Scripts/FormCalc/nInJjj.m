@@ -32,7 +32,7 @@ If[$CommandLine[[2]] === "-script",
 	(p[1] = "qd";
 	 p[2] = "qubar";
 	 p[3] = "nI";
-	 p[4] = "xJ-";
+	 p[4] = "nJ";
 	 p[5] = "qubar";
 	 p[6] = "qu";)
 ]

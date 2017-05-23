@@ -19,7 +19,7 @@ ClearProcess[]
 time1 = SessionTime[]
 
 
-(*You can now load the script with the command $ MathKernel -script nInJj_virt.m "qd" "qdbar" "nI" "nJ" "g"*)
+(*You can now load the script with the command $ MathKernel -script xIxJj_virt.m "qd" "qdbar" "xI+" "xJ-" "g"*)
 Print[$CommandLine]
 If[$CommandLine[[2]] === "-script",
 	(p[1] = ToString[$CommandLine[[4]]];
@@ -28,10 +28,10 @@ If[$CommandLine[[2]] === "-script",
 	 p[4] = ToString[$CommandLine[[7]]];
 	 p[5] = ToString[$CommandLine[[8]]];),
 	(*Else*)
-	(p[1] = "qdbar";
+	(p[1] = "qubar";
 	 p[2] = "g";
-	 p[3] = "nI";
-	 p[4] = "xJ+";
+	 p[3] = "xI+";
+	 p[4] = "xJ-";
 	 p[5] = "qubar";)
 ]
 
@@ -208,12 +208,12 @@ ins = DiagramSelect[ins,(FreeQ[LoopFields[##], _. V[1|2|3]] && FreeQ[LoopFields[
 
 (*delete diagrams with two ew particles that couple to the loop*)
 insDel = DiagramSelect[ins,(FieldMemberQ[LoopFields[##],_. S[13|14,_]])& ]; (*only squark loops*)
-insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],_. V[1|2|3|5,___]]])& ]; (*vector couples to the loop*)
+insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],_. V[1|2|3|5,___]]] ||  
+                               FieldMemberQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],_. V[1|2|3],_. V[1|2|3|5,___]]])& ]; (*vector couples to the loop*)
 insDel = DiagramSelect[insDel,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. F[11|12,_],_. F[11|12,_],_. V[1|2|3]]] ||
                                 FieldMemberQ[FieldPoints[##],FieldPoint[_][_. F[11|12,_],_. F[11|12,_],_. S[n_/;n<=6]]])& ]; (*ew vector couples to the weakino*)
 ins = DiagramComplement[ins,insDel];
 
-ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_. S[13|14,_],_. S[13|14,_],_. V[1|2|3],_. V[1|2|3|5,___]]]) &]; (*Diagram does not contain V-V-squark-squark coupling*)
 DoPaint[ins, "self"];
 
 If[Not[$DiagramsOnly],
@@ -275,7 +275,7 @@ ins = DiagramComplement[ins,insDel];
 insDel = DiagramSelect[ins,(FieldMemberQ[FieldPoints[##],FieldPoint[_][_. S[n_/;n<=6],_,_]] || FieldMemberQ[FieldPoints[##],FieldPoint[_][_,_,_. S[n_/;n<=6]]])&];
 insDel = DiagramSelect[insDel,(Not[FieldMatchQ[LoopFields[##],{_. F[3|4,_],_. F[3|4,_],_. F[3|4,_]}]])&]; (*no pure quark loops*)
 insDel = DiagramSelect[insDel,(Not[FieldMatchQ[LoopFields[##],{_. S[13|14,_],_. S[13|14,_],_. S[13|14,_]}]])&]; (*no pure squark loops*)
-insDel = DiagramSelect[insDel,(Not[FieldMatchQ[LoopFields[##],{_. S[13|14,_],_. S[13|14,_]}]])&]; (*no pure squark loops*)
+insDel = DiagramSelect[insDel,(Not[FieldMatchQ[LoopFields[##],{_. S[13|14,_],_. S[13|14,_]}] && FieldMemberQ[FieldPoints[##],FieldPoint[_][_. F[3|4,_],_. F[3|4,_],_. V[5,___]]]])&]; (*no pure squark loops when no gluon coupling*)
 insDel = DiagramSelect[insDel,(Not[FieldMatchQ[LoopFields[##],{_. F[15,_],_. S[13|14,_],_. S[13|14,_]}]])&]; (*no gluino squark squark loop*)
 ins = DiagramComplement[ins,insDel];
 
@@ -351,6 +351,7 @@ top = CreateTopologies[1, 2 -> 3, PentagonsOnly];
 ins = InsertFields[top, process];
 
 ins = DiagramSelect[ins,(MemberQ[LoopFields[##], V[5,{_}]] || MemberQ[LoopFields[##], _. F[15,{_}]]) &];(*Loop contains a g or gluino*)
+
 DoPaint[ins, "pent"];
 
 If[Not[$DiagramsOnly],
@@ -443,5 +444,6 @@ If[Not[$DiagramsOnly],
   WriteRenConst[ren,dir];
 ];
 
-Print["time used: ", SessionTime[] - time1]
+
+Print["time used: ", SessionTime[] - time1];
 Exit[];

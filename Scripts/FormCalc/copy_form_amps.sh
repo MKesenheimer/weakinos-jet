@@ -62,8 +62,8 @@ WORKINGDIR=${PWD}
 #PROCDIR="neuIchaJ+jet/FormCalc_Virtuals"
 #PROCDIR="neuIchaJ+jet/FormCalc_Reals"
 # xIxJ
-#PROCDIR="chaIchaJ+jet/FormCalc_Virtuals"
-PROCDIR="chaIchaJ+jet/FormCalc_Reals"
+PROCDIR="chaIchaJ+jet/FormCalc_Virtuals"
+#PROCDIR="chaIchaJ+jet/FormCalc_Reals"
 
 
 # where to copy the amplitudes to
@@ -71,8 +71,8 @@ DEST=${PWD}/../../${PROCDIR}
 
 
 # number of particles (incoming + outgoing)
-#NPART=5
-NPART=6
+NPART=5
+#NPART=6
 
 
 # process list file
@@ -87,10 +87,10 @@ NPART=6
 #PROCF="./proc_nIxJjj_os"
 #PROCF="./proc_nIxJjj_reg"
 # xIxJ
-#PROCF="./proc_xIxJj"
+PROCF="./proc_xIxJj"
 #PROCF="./proc_xIxJjj_nr"
 #PROCF="./proc_xIxJjj_os"
-PROCF="./proc_xIxJjj_reg"
+#PROCF="./proc_xIxJjj_reg"
 
 
 # the name of Mathematica Scripts
@@ -105,17 +105,17 @@ PROCF="./proc_xIxJjj_reg"
 #MSCRIPT="./nIxJjj_os.m"
 #MSCRIPT=""
 # xIxJ
-#MSCRIPT="./xIxJj_virt.m"
+MSCRIPT="./xIxJj_virt.m"
 #MSCRIPT="./xIxJjj.m"
 #MSCRIPT="./xIxJjj_os.m"
-MSCRIPT=""
+#MSCRIPT=""
 
 
 # the type of the amplitudes (born, virt, real, realOS)
-#TYPE="virt"
+TYPE="virt"
 #TYPE="real"
 #TYPE="realOS"
-TYPE="real"
+#TYPE="real"
 
 
 # the number and types of subchannels of realOS amplitudes (f.e. ll, lr, rl, rr)
