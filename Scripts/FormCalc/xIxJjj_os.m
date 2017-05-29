@@ -135,7 +135,7 @@ SetOptions[InsertFields, Model -> "MSSMCT",
   (*No Fermion-Higgs coupling*)
   Restrictions -> {NoLightFHCoupling},
   (*Exclude Top, Higgs, Neutrinos, massive Leptons, Sneutrinos, Sleptons*)
-  ExcludeParticles -> {S[11|12], F[1|2]},
+  ExcludeParticles -> {S[11|12], F[1|2] (*, S[1|2|3|4|5|6], V[1]*)},
   LastSelections -> lastsel];
 
 SetOptions[Paint, PaintLevel -> {Classes}, ColumnsXRows -> {4, 5}, AutoEdit -> False];

@@ -392,19 +392,15 @@ c############### subroutine getRealAmps ################################
         if(f1.ne.0.and.f2.ne.0.and.f5.ne.0.and.f6.ne.0) then
           if(isodd(abs(f1)).and.isodd(abs(f2))) then
             if(f1.lt.0.and.f2.lt.0) then
-              ! ok
               call qdbarqdbar_nInJqdbarqdbar_squaredME(fc_result,helicities,flags)
               goto 20
             elseif(f1.gt.0.and.f2.lt.0.and.isodd(abs(f5)).and.f5.gt.0) then
-              ! ok
               call qdqdbar_nInJqdqdbar_squaredME(fc_result,helicities,flags)
               goto 20
             elseif(f1.gt.0.and.f2.lt.0.and.iseven(abs(f5)).and.f5.gt.0) then
-              ! ok
               call qdqdbar_nInJququbar_squaredME(fc_result,helicities,flags)
               goto 20
             elseif(f1.gt.0.and.f2.gt.0) then
-              ! ok
               call qdqd_nInJqdqd_squaredME(fc_result,helicities,flags)
               goto 20
             else
@@ -412,19 +408,15 @@ c############### subroutine getRealAmps ################################
             endif
           elseif(iseven(abs(f1)).and.iseven(abs(f2))) then
             if(f1.lt.0.and.f2.lt.0) then
-              ! ok
               call qubarqubar_nInJqubarqubar_squaredME(fc_result,helicities,flags)
               goto 20
             elseif(f1.gt.0.and.f2.lt.0.and.iseven(abs(f5)).and.f5.gt.0) then
-              ! ok
               call ququbar_nInJququbar_squaredME(fc_result,helicities,flags)
               goto 20
             elseif(f1.gt.0.and.f2.lt.0.and.isodd(abs(f5)).and.f5.gt.0) then
-              ! ok
               call ququbar_nInJqdqdbar_squaredME(fc_result,helicities,flags)
               goto 20
             elseif(f1.gt.0.and.f2.gt.0) then
-              ! ok
               call ququ_nInJququ_squaredME(fc_result,helicities,flags)
               goto 20
             else
@@ -432,15 +424,12 @@ c############### subroutine getRealAmps ################################
             endif
           elseif(isodd(abs(f1)).and.iseven(abs(f2))) then
             if(f1.lt.0.and.f2.lt.0.and.isodd(abs(f5)).and.f5.lt.0) then
-              ! ok
               call qdbarqubar_nInJqdbarqubar_squaredME(fc_result,helicities,flags)
               goto 20
             elseif(f1.gt.0.and.f2.lt.0.and.isodd(abs(f5)).and.f5.gt.0) then
-              ! ok
               call qdqubar_nInJqdqubar_squaredME(fc_result,helicities,flags)
               goto 20
             elseif(f1.gt.0.and.f2.gt.0.and.isodd(abs(f5)).and.f5.gt.0) then
-              ! ok 
               call qdqu_nInJqdqu_squaredME(fc_result,helicities,flags)
               goto 20
             else
@@ -448,7 +437,6 @@ c############### subroutine getRealAmps ################################
             endif
           elseif(iseven(abs(f1)).and.isodd(abs(f2))) then
             if(f1.gt.0.and.f2.lt.0.and.iseven(abs(f5)).and.f5.gt.0) then
-              ! ok 
               call quqdbar_nInJquqdbar_squaredME(fc_result,helicities,flags)
               goto 20
             else
@@ -460,19 +448,15 @@ c############### subroutine getRealAmps ################################
         ! g F -> F F F g
         elseif(f1.eq.0.and.f2.ne.0.and.f5.ne.0.and.f6.eq.0) then
           if(iseven(abs(f2)).and.f2.gt.0) then
-            ! ok
             call gqu_nInJqug_squaredME(fc_result,helicities,flags)
             goto 20
           elseif(iseven(abs(f2)).and.f2.lt.0) then
-            ! ok
             call gqubar_nInJqubarg_squaredME(fc_result,helicities,flags)
             goto 20
           elseif(isodd(abs(f2)).and.f2.gt.0) then
-            ! ok
             call gqd_nInJqdg_squaredME(fc_result,helicities,flags)
             goto 20
           elseif(isodd(abs(f2)).and.f2.lt.0) then
-            ! ok
             call gqdbar_nInJqdbarg_squaredME(fc_result,helicities,flags)
             goto 20
           else
@@ -481,11 +465,9 @@ c############### subroutine getRealAmps ################################
         ! F F -> F F g g
         elseif(f1.ne.0.and.f2.ne.0.and.f5.eq.0.and.f6.eq.0) then
           if(isodd(abs(f1)).and.f1.gt.0) then
-            ! ok
             call qdqdbar_nInJgg_squaredME(fc_result,helicities,flags)
             goto 20
           elseif(iseven(abs(f1)).and.f1.gt.0) then
-            ! ok
             call ququbar_nInJgg_squaredME(fc_result,helicities,flags)
             goto 20
           else
@@ -494,11 +476,9 @@ c############### subroutine getRealAmps ################################
         ! g g -> F F F F
         elseif(f1.eq.0.and.f2.eq.0.and.f5.ne.0.and.f6.ne.0) then
           if(isodd(abs(f5)).and.f5.gt.0) then
-            ! ok
             call gg_nInJqdqdbar_squaredME(fc_result,helicities,flags)
             goto 20
           elseif(iseven(abs(f5)).and.f5.gt.0) then
-            ! ok
             call gg_nInJququbar_squaredME(fc_result,helicities,flags)
             goto 20  
           else
@@ -633,19 +613,15 @@ c############### subroutine getRealOSAmps ##############################
         if(f1.ne.0.and.f2.ne.0.and.f5.ne.0.and.f6.ne.0) then
           if(isodd(abs(f1)).and.isodd(abs(f2))) then
             if(f1.lt.0.and.f2.lt.0) then
-              ! ok
               call qdbarqdbar_nInJqdbarqdbar_realOS_squaredME(fc_result,helicities,flags)
               goto 20
             elseif(f1.gt.0.and.f2.lt.0.and.isodd(abs(f5)).and.f5.gt.0) then
-              ! ok
               call qdqdbar_nInJqdqdbar_realOS_squaredME(fc_result,helicities,flags)
               goto 20
             elseif(f1.gt.0.and.f2.lt.0.and.iseven(abs(f5)).and.f5.gt.0) then
-              ! ok
               call qdqdbar_nInJququbar_realOS_squaredME(fc_result,helicities,flags)
               goto 20
             elseif(f1.gt.0.and.f2.gt.0) then
-              ! ok
               call qdqd_nInJqdqd_realOS_squaredME(fc_result,helicities,flags)
               goto 20
             else
@@ -653,19 +629,15 @@ c############### subroutine getRealOSAmps ##############################
             endif
           elseif(iseven(abs(f1)).and.iseven(abs(f2))) then
             if(f1.lt.0.and.f2.lt.0) then
-              ! ok
               call qubarqubar_nInJqubarqubar_realOS_squaredME(fc_result,helicities,flags)
               goto 20
             elseif(f1.gt.0.and.f2.lt.0.and.iseven(abs(f5)).and.f5.gt.0) then
-              ! ok
               call ququbar_nInJququbar_realOS_squaredME(fc_result,helicities,flags)
               goto 20
             elseif(f1.gt.0.and.f2.lt.0.and.isodd(abs(f5)).and.f5.gt.0) then
-              ! ok
               call ququbar_nInJqdqdbar_realOS_squaredME(fc_result,helicities,flags)
               goto 20
             elseif(f1.gt.0.and.f2.gt.0) then
-              ! ok
               call ququ_nInJququ_realOS_squaredME(fc_result,helicities,flags)
               goto 20
             else
@@ -673,15 +645,12 @@ c############### subroutine getRealOSAmps ##############################
             endif
           elseif(isodd(abs(f1)).and.iseven(abs(f2))) then
             if(f1.lt.0.and.f2.lt.0.and.isodd(abs(f5)).and.f5.lt.0) then
-              ! ok
               call qdbarqubar_nInJqdbarqubar_realOS_squaredME(fc_result,helicities,flags)
               goto 20
             elseif(f1.gt.0.and.f2.lt.0.and.isodd(abs(f5)).and.f5.gt.0) then
-              ! ok
               call qdqubar_nInJqdqubar_realOS_squaredME(fc_result,helicities,flags)
               goto 20
             elseif(f1.gt.0.and.f2.gt.0.and.isodd(abs(f5)).and.f5.gt.0) then
-              ! ok 
               call qdqu_nInJqdqu_realOS_squaredME(fc_result,helicities,flags)
               goto 20
             else
@@ -689,7 +658,6 @@ c############### subroutine getRealOSAmps ##############################
             endif
           elseif(iseven(abs(f1)).and.isodd(abs(f2))) then
             if(f1.gt.0.and.f2.lt.0.and.iseven(abs(f5)).and.f5.gt.0) then
-              ! ok 
               call quqdbar_nInJquqdbar_realOS_squaredME(fc_result,helicities,flags)
               goto 20
             else
@@ -701,11 +669,9 @@ c############### subroutine getRealOSAmps ##############################
         ! g g -> F F F F
         elseif(f1.eq.0.and.f2.eq.0.and.f5.ne.0.and.f6.ne.0) then
           if(isodd(abs(f5)).and.f5.gt.0) then
-            ! ok
             call gg_nInJqdqdbar_realOS_squaredME(fc_result,helicities,flags)
             goto 20
           elseif(iseven(abs(f5)).and.f5.gt.0) then
-            ! ok
             call gg_nInJququbar_realOS_squaredME(fc_result,helicities,flags)
             goto 20  
           else
@@ -715,7 +681,7 @@ c############### subroutine getRealOSAmps ##############################
           goto 21
         endif
         
- 21     print*, "error: Wrong flavor structure in getRealAmps."
+ 21     print*, "error: Wrong flavor structure in getRealOSAmps."
         print*, "flav = ", flav
         stop
  20     continue

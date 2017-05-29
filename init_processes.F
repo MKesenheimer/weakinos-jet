@@ -23,7 +23,7 @@ c     set process id using slepton types
         real*8 powheginput
         external powheginput
         logical check, isnInJ, isnIxJ, isxIxJ
-        integer max_flav,encode_pair
+        integer max_flav, max_flav_out, encode_pair
         logical isodd, iseven, isg, isd, isu, isdbar, isubar
         external isodd, iseven, isg, isd, isu, isdbar, isubar
         integer qgen
@@ -36,6 +36,7 @@ c     set process id using slepton types
 
         ! set number of active flavors for incoming partons
         max_flav = int(powheginput('incomingflavors'))
+        max_flav_out = int(powheginput('outgoingflavors'))
         if(max_flav.lt.1) then
           print*,"error: incomingflavors should be between 1 and 5."
           stop
@@ -192,15 +193,15 @@ c     set process id using slepton types
         flst_nborn = 0
         do i1 = -max_flav,max_flav
           do i2 = -max_flav,max_flav
-            do i5 = -max_flav,max_flav
+            do i5 = -max_flav_out,max_flav_out
               check = .false.
               if(isnInJ .or. isxIxJ) then
                 if(isubar(i1).and.isg(i2).and.isubar(i5).and.i1.eq.i5) check = .true. ! ubar g -> nI nJ ubar
                 if(isu(i1).and.isg(i2).and.isu(i5).and.i1.eq.i5) check = .true. ! u g -> nI nJ u
                 if(isdbar(i1).and.isg(i2).and.isdbar(i5).and.i1.eq.i5) check = .true. ! dbar g -> nI nJ dbar
                 if(isd(i1).and.isg(i2).and.isd(i5).and.i1.eq.i5) check = .true. ! d g -> nI nJ d
-                if(isu(i1).and.isubar(i2).and.isg(i5)) check = .true. ! u ubar -> nI nJ g
-                if(isd(i1).and.isdbar(i2).and.isg(i5)) check = .true. ! u ubar -> nI nJ g
+                if(isu(i1).and.isubar(i2).and.isg(i5).and.i1.eq.-i2) check = .true. ! u ubar -> nI nJ g
+                if(isd(i1).and.isdbar(i2).and.isg(i5).and.i1.eq.-i2) check = .true. ! d dbar -> nI nJ g
               endif
               if(isnIxJ.and.i4.lt.0) then
                 if(isubar(i1).and.isd(i2).and.isg(i5).and.(i1+i2.eq.-1)) check = .true. ! ubar d -> nI xJ- g
@@ -242,16 +243,27 @@ c     set process id using slepton types
         flst_nreal=0
         do i1 = -max_flav,max_flav
           do i2 = -max_flav,max_flav
-            do i5 = -max_flav,max_flav
-              do i6 = -max_flav,max_flav
+            do i5 = -max_flav_out,max_flav_out
+              do i6 = -max_flav_out,max_flav_out
                 check = .false.
-                if(isnInJ .or. isxIxJ) then
+                if(isnInJ) then
                   if(i1.eq.i2.and.i1.eq.i5.and.i5.eq.i6) check = .true. ! q q -> nI nJ q q
-                  if(i1.eq.-i2.and.i1.ne.0.and.i5.eq.-i6.and.i5.ge.0) check = .true. ! q q -> nI nJ q q (mixed flavours)
-                  if((i1.eq.i5.or.i2.eq.i5).and.(i1+i2).eq.(i5+i6).and.abs(i5).lt.abs(i6).and.i5.ne.0) check = .true. ! q qbar -> nI nJ q qbar, q qbar -> nI nJ g g
-                  if((isg(i1).or.isg(i2)).and.(i1+i2).eq.(i5+i6).and. isg(i6)) check = .true. ! q g -> nI nJ q g
+                  if(i1.eq.-i2.and.i1.ne.0.and.i5.eq.-i6.and.i5.ge.0) check = .true. ! q qbar -> nI nJ q qbar, q qbar -> nI nJ g g (mixed flavours)
+                  if((i1.eq.i5.or.i2.eq.i5).and.(i1+i2).eq.(i5+i6).and.i5.ne.0) check = .true. ! q qbar -> nI nJ q qbar
+                  if((isg(i1).or.isg(i2)).and.(i1+i2).eq.(i5+i6).and.isg(i6)) check = .true. ! q g -> nI nJ q g
                   if(isg(i1).and.isg(i2).and.i5.eq.-i6.and.i5.gt.0) check = .true. ! g g -> nI nJ q qbar
                   if(isg(i1).and.isg(i2).and.isg(i5).and.isg(i6)) check = .false. ! exclude g g -> nI nJ g g
+                endif
+                if(isxIxJ) then
+                  if(i1.eq.i2.and.i1.eq.i5.and.i5.eq.i6) check = .true. ! q q -> nI nJ q q
+                  if(i1.eq.-i2.and.i1.ne.0.and.i5.eq.-i6.and.i5.ge.0) check = .true. ! q qbar -> nI nJ q qbar, q qbar -> nI nJ g g (mixed flavours)
+                  if(i1.ne.0.and.i2.ne.0.and.i5.ne.0.and.i6.ne.0.and.(i1+i2).eq.(i5+i6).and.(qgen(i1)+qgen(i2)).eq.(qgen(i5)+qgen(i6))) check = .true. ! q qbar -> nI nJ q qbar
+                  if(i1.ne.0.and.i2.ne.0.and.i5.ne.0.and.i6.ne.0.and.(i1+i2).eq.(i5+i6).and.qgen(i1).eq.qgen(i2).and.qgen(i5).eq.qgen(i6)) check = .true. ! q qbar -> nI nJ q qbar
+                  if((isg(i1).or.isg(i2)).and.(i1+i2).eq.(i5+i6).and.isg(i6)) check = .true. ! q g -> nI nJ q g
+                  if(isg(i1).and.isg(i2).and.i5.eq.-i6.and.i5.gt.0) check = .true. ! g g -> nI nJ q qbar
+                  if(isg(i1).and.isg(i2).and.isg(i5).and.isg(i6)) check = .false. ! exclude g g -> nI nJ g g
+                  if(qgen(i1).eq.qgen(i2).and.qgen(i5).ne.qgen(i6)) check = .false. ! sort out not allowed flavour combination
+                  if(qgen(i1).ne.qgen(i2).and.qgen(i5).eq.qgen(i6)) check = .false.
                 endif
                 if(isnIxJ.and.i4.gt.0.and.dabs(elc(i1)+elc(i2)-elc(i5)-elc(i6)-1D0).lt.1D-3) then
                   if(isg(i1).and.isg(i2).and.isd(i5).and.isubar(i6).and.(i5+i6).eq.-1) check = .true. ! g g -> nI xJ d ubar

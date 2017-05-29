@@ -26,7 +26,8 @@ chainB '1000023->1000022,23;23->13,-13;'
 ! name of the SLHA input-file, should not be longer than 100 signs
 SLHA 'input_p19MSSM1.slha'   
 #SLHA 'input_orig.slha'
-incomingflavors 4    ! (default 4) number of incoming flavor
+incomingflavors 4    ! (default 4) max number of incoming flavor
+outgoingflavors 4    ! (default 4) max number of outgoing flavor
 ih1     1            ! hadron 1 (1 for protons, -1 for antiprotons)
 ih2     1            ! hadron 2 (1 for protons, -1 for antiprotons)
 #ndns1  132          ! pdf set for hadron 1 (mlm numbering)
@@ -72,12 +73,12 @@ numevts  0           ! number of events to be generated
 
 ! OPTIONAL PARAMETERS
 runningscale   1     ! (default 0) use ref. scale=virtuality Q (default 0, use fixed scale)
-#fakevirtuals  1     ! (default 0) generate the grid with fake virtuals
+fakevirtuals  1     ! (default 0) generate the grid with fake virtuals
 softtest       1     ! (default 0) check soft singularities
 colltest       1     ! (default 0) check collinear singularities
 renscfact      1d0   ! (default 1d0) ren scale factor: muren  = muref * renscfact
 facscfact      1d0   ! (default 1d0) fac scale factor: mufact = muref * facscfact
-bornonly      1     ! (default 0) if 1 do Born only
+#bornonly      1     ! (default 0) if 1 do Born only
 #LOevents      1     ! (default 0) only LO events
 #smartsig      1     ! (default 1) remember equal amplitudes (0 do not remember)
 testplots      1     ! write data for gnuplot histograms to *.top

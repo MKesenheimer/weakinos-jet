@@ -53,70 +53,79 @@ WORKINGDIR=${PWD}
 # proc_nInJjj_reg -> regulated real processes with resonant diagrams (same 
 #                    as proc_nInJjj_os, but without channel identifiers)
 
+if [[ $# == 0 ]]; then
+  # the name of the target process directory
+  # nInJ
+  #PROCDIR="neuIneuJ+jet/FormCalc_Virtuals"
+  #PROCDIR="neuIneuJ+jet/FormCalc_Reals"
+  # nIxJ
+  #PROCDIR="neuIchaJ+jet/FormCalc_Virtuals"
+  #PROCDIR="neuIchaJ+jet/FormCalc_Reals"
+  # xIxJ
+  #PROCDIR="chaIchaJ+jet/FormCalc_Virtuals"
+  PROCDIR="chaIchaJ+jet/FormCalc_Reals"
 
-# the name of the target process directory
-# nInJ
-#PROCDIR="neuIneuJ+jet/FormCalc_Virtuals"
-#PROCDIR="neuIneuJ+jet/FormCalc_Reals"
-# nIxJ
-#PROCDIR="neuIchaJ+jet/FormCalc_Virtuals"
-#PROCDIR="neuIchaJ+jet/FormCalc_Reals"
-# xIxJ
-PROCDIR="chaIchaJ+jet/FormCalc_Virtuals"
-#PROCDIR="chaIchaJ+jet/FormCalc_Reals"
+  # where to copy the amplitudes to
+  DEST=${PWD}/../../${PROCDIR}
 
+  # number of particles (incoming + outgoing)
+  #NPART=5
+  NPART=6
 
-# where to copy the amplitudes to
-DEST=${PWD}/../../${PROCDIR}
+  # process list file
+  # nInJ
+  #PROCF="./proc_nInJj"
+  #PROCF="./proc_nInJjj_nr"
+  #PROCF="./proc_nInJjj_os"
+  #PROCF="./proc_nInJjj_reg"
+  # nIxJ
+  #PROCF="./proc_nIxJj"
+  #PROCF="./proc_nIxJjj_nr"
+  #PROCF="./proc_nIxJjj_os"
+  #PROCF="./proc_nIxJjj_reg"
+  # xIxJ
+  #PROCF="./proc_xIxJj"
+  PROCF="./proc_xIxJjj_nr"
+  #PROCF="./proc_xIxJjj_os"
+  #PROCF="./proc_xIxJjj_reg"
 
+  # the name of Mathematica Scripts
+  # nInJ
+  #MSCRIPT="./nInJj_virt.m"
+  #MSCRIPT="./nInJjj.m"
+  #MSCRIPT="./nInJjj_os.m"
+  #MSCRIPT=""
+  # nIxJ
+  #MSCRIPT="./nIxJj_virt.m"
+  #MSCRIPT="./nIxJjj.m"
+  #MSCRIPT="./nIxJjj_os.m"
+  #MSCRIPT=""
+  # xIxJ
+  #MSCRIPT="./xIxJj_virt.m"
+  MSCRIPT="./xIxJjj.m"
+  #MSCRIPT="./xIxJjj_os.m"
+  #MSCRIPT=""
 
-# number of particles (incoming + outgoing)
-NPART=5
-#NPART=6
-
-
-# process list file
-# nInJ
-#PROCF="./proc_nInJj"
-#PROCF="./proc_nInJjj_nr"
-#PROCF="./proc_nInJjj_os"
-#PROCF="./proc_nInJjj_reg"
-# nIxJ
-#PROCF="./proc_nIxJj"
-#PROCF="./proc_nIxJjj_nr"
-#PROCF="./proc_nIxJjj_os"
-#PROCF="./proc_nIxJjj_reg"
-# xIxJ
-PROCF="./proc_xIxJj"
-#PROCF="./proc_xIxJjj_nr"
-#PROCF="./proc_xIxJjj_os"
-#PROCF="./proc_xIxJjj_reg"
-
-
-# the name of Mathematica Scripts
-# nInJ
-#MSCRIPT="./nInJj_virt.m"
-#MSCRIPT="./nInJjj.m"
-#MSCRIPT="./nInJjj_os.m"
-#MSCRIPT=""
-# nIxJ
-#MSCRIPT="./nIxJj_virt.m"
-#MSCRIPT="./nIxJjj.m"
-#MSCRIPT="./nIxJjj_os.m"
-#MSCRIPT=""
-# xIxJ
-MSCRIPT="./xIxJj_virt.m"
-#MSCRIPT="./xIxJjj.m"
-#MSCRIPT="./xIxJjj_os.m"
-#MSCRIPT=""
-
-
-# the type of the amplitudes (born, virt, real, realOS)
-TYPE="virt"
-#TYPE="real"
-#TYPE="realOS"
-#TYPE="real"
-
+  # the type of the amplitudes (born, virt, real, realOS)
+  #TYPE="virt"
+  TYPE="real"
+  #TYPE="realOS"
+  #TYPE="real"
+elif [[ $# == 5 ]]; then
+  PROCDIR=$1
+  DEST=${PWD}/../../${PROCDIR}
+  NPART=$2
+  PROCF=$3
+  MSCRIPT=$4
+  TYPE=$5
+elif [[ $# == 4 ]]; then
+  PROCDIR=$1
+  DEST=${PWD}/../../${PROCDIR}
+  NPART=$2
+  PROCF=$3
+  MSCRIPT=""
+  TYPE=$4
+fi
 
 # the number and types of subchannels of realOS amplitudes (f.e. ll, lr, rl, rr)
 # ordered as follows: ("resonance name", ichan_start, ichan_end, "special conditions (e.g. index assignment)", ...)
@@ -550,5 +559,5 @@ find . -type f -name '*.h-e'  -exec rm -f '{}' \;
 # zurück an Anfang
 cd ${WORKINGDIR}/
 
-echo
-echo "script ended succesfully."
+#echo
+#echo "script ended succesfully."

@@ -26,7 +26,8 @@ chainB '1000023->1000022,23;23->13,-13;'
 ! name of the SLHA input-file, should not be longer than 100 signs
 SLHA 'input_p19MSSM1.slha'
 #SLHA 'input_orig.slha'
-incomingflavors 4    ! (default 4) number of incoming flavor
+incomingflavors 4    ! (default 4) max number of incoming flavor
+outgoingflavors 4    ! (default 4) max number of outgoing flavor
 ih1     1            ! hadron 1 (1 for protons, -1 for antiprotons)
 ih2     1            ! hadron 2 (1 for protons, -1 for antiprotons)
 #ndns1  132          ! pdf set for hadron 1 (mlm numbering)

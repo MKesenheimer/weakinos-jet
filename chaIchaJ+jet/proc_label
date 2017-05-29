@@ -29,7 +29,7 @@
         -5         5     xI+    xJ-           0
          0        -5     xI+    xJ-          -5
          0         5     xI+    xJ-           5
-### REAL
+### REAL, 5flv, 199
         -1        -1     xI+    xJ-          -1          -1
         -1         1     xI+    xJ-           1          -1
         -1         1     xI+    xJ-           2          -2
@@ -224,6 +224,157 @@
          0         3     xI+    xJ-           3           0
          0        -5     xI+    xJ-          -5           0
          0         5     xI+    xJ-           5           0
+         0         0     xI+    xJ-           1          -1
+         0         0     xI+    xJ-           2          -2
+         0         0     xI+    xJ-           4          -4
+         0         0     xI+    xJ-           3          -3
+         0         0     xI+    xJ-           5          -5
+         
+### REAL, 4flv, 149
+        -1        -1     xI+    xJ-          -1          -1
+        -1         1     xI+    xJ-           1          -1
+        -1         1     xI+    xJ-           2          -2
+        -1         1     xI+    xJ-           4          -4
+        -1         1     xI+    xJ-           3          -3
+        -1         1     xI+    xJ-           5          -5
+        -1         1     xI+    xJ-           0           0
+        -1        -2     xI+    xJ-          -1          -2
+        -1         2     xI+    xJ-          -1           2
+        -1         2     xI+    xJ-           4          -3
+        -1        -4     xI+    xJ-          -1          -4
+        -1        -4     xI+    xJ-          -2          -3
+        -1         4     xI+    xJ-          -1           4
+        -1        -3     xI+    xJ-          -1          -3
+        -1         3     xI+    xJ-          -1           3
+        -1         3     xI+    xJ-          -2           4
+        -1         0     xI+    xJ-          -1           0
+         1        -1     xI+    xJ-           1          -1
+         1        -1     xI+    xJ-           2          -2
+         1        -1     xI+    xJ-           4          -4
+         1        -1     xI+    xJ-           3          -3
+         1        -1     xI+    xJ-           5          -5
+         1        -1     xI+    xJ-           0           0
+         1         1     xI+    xJ-           1           1
+         1        -2     xI+    xJ-           1          -2
+         1        -2     xI+    xJ-          -4           3
+         1         2     xI+    xJ-           1           2
+         1        -4     xI+    xJ-           1          -4
+         1         4     xI+    xJ-           1           4
+         1         4     xI+    xJ-           2           3
+         1        -3     xI+    xJ-           1          -3
+         1        -3     xI+    xJ-           2          -4
+         1         3     xI+    xJ-           1           3
+         1         0     xI+    xJ-           1           0
+        -2        -1     xI+    xJ-          -1          -2
+        -2         1     xI+    xJ-           1          -2
+        -2         1     xI+    xJ-          -4           3
+        -2        -2     xI+    xJ-          -2          -2
+        -2         2     xI+    xJ-           1          -1
+        -2         2     xI+    xJ-           2          -2
+        -2         2     xI+    xJ-           4          -4
+        -2         2     xI+    xJ-           3          -3
+        -2         2     xI+    xJ-           5          -5
+        -2         2     xI+    xJ-           0           0
+        -2        -4     xI+    xJ-          -2          -4
+        -2         4     xI+    xJ-          -1           3
+        -2         4     xI+    xJ-          -2           4
+        -2        -3     xI+    xJ-          -1          -4
+        -2        -3     xI+    xJ-          -2          -3
+        -2         3     xI+    xJ-          -2           3
+        -2         0     xI+    xJ-          -2           0
+         2        -1     xI+    xJ-          -1           2
+         2        -1     xI+    xJ-           4          -3
+         2         1     xI+    xJ-           1           2
+         2        -2     xI+    xJ-           1          -1
+         2        -2     xI+    xJ-           2          -2
+         2        -2     xI+    xJ-           4          -4
+         2        -2     xI+    xJ-           3          -3
+         2        -2     xI+    xJ-           5          -5
+         2        -2     xI+    xJ-           0           0
+         2         2     xI+    xJ-           2           2
+         2        -4     xI+    xJ-           1          -3
+         2        -4     xI+    xJ-           2          -4
+         2         4     xI+    xJ-           2           4
+         2        -3     xI+    xJ-           2          -3
+         2         3     xI+    xJ-           1           4
+         2         3     xI+    xJ-           2           3
+         2         0     xI+    xJ-           2           0
+        -4        -1     xI+    xJ-          -1          -4
+        -4        -1     xI+    xJ-          -2          -3
+        -4         1     xI+    xJ-           1          -4
+        -4        -2     xI+    xJ-          -2          -4
+        -4         2     xI+    xJ-           1          -3
+        -4         2     xI+    xJ-           2          -4
+        -4        -4     xI+    xJ-          -4          -4
+        -4         4     xI+    xJ-           1          -1
+        -4         4     xI+    xJ-           2          -2
+        -4         4     xI+    xJ-           4          -4
+        -4         4     xI+    xJ-           3          -3
+        -4         4     xI+    xJ-           5          -5
+        -4         4     xI+    xJ-           0           0
+        -4        -3     xI+    xJ-          -4          -3
+        -4         3     xI+    xJ-           1          -2
+        -4         3     xI+    xJ-          -4           3
+        -4         0     xI+    xJ-          -4           0
+         4        -1     xI+    xJ-          -1           4
+         4         1     xI+    xJ-           1           4
+         4         1     xI+    xJ-           2           3
+         4        -2     xI+    xJ-          -1           3
+         4        -2     xI+    xJ-          -2           4
+         4         2     xI+    xJ-           2           4
+         4        -4     xI+    xJ-           1          -1
+         4        -4     xI+    xJ-           2          -2
+         4        -4     xI+    xJ-           4          -4
+         4        -4     xI+    xJ-           3          -3
+         4        -4     xI+    xJ-           5          -5
+         4        -4     xI+    xJ-           0           0
+         4         4     xI+    xJ-           4           4
+         4        -3     xI+    xJ-          -1           2
+         4        -3     xI+    xJ-           4          -3
+         4         3     xI+    xJ-           4           3
+         4         0     xI+    xJ-           4           0
+        -3        -1     xI+    xJ-          -1          -3
+        -3         1     xI+    xJ-           1          -3
+        -3         1     xI+    xJ-           2          -4
+        -3        -2     xI+    xJ-          -1          -4
+        -3        -2     xI+    xJ-          -2          -3
+        -3         2     xI+    xJ-           2          -3
+        -3        -4     xI+    xJ-          -4          -3
+        -3         4     xI+    xJ-          -1           2
+        -3         4     xI+    xJ-           4          -3
+        -3        -3     xI+    xJ-          -3          -3
+        -3         3     xI+    xJ-           1          -1
+        -3         3     xI+    xJ-           2          -2
+        -3         3     xI+    xJ-           4          -4
+        -3         3     xI+    xJ-           3          -3
+        -3         3     xI+    xJ-           5          -5
+        -3         3     xI+    xJ-           0           0
+        -3         0     xI+    xJ-          -3           0
+         3        -1     xI+    xJ-          -1           3
+         3        -1     xI+    xJ-          -2           4
+         3         1     xI+    xJ-           1           3
+         3        -2     xI+    xJ-          -2           3
+         3         2     xI+    xJ-           1           4
+         3         2     xI+    xJ-           2           3
+         3        -4     xI+    xJ-           1          -2
+         3        -4     xI+    xJ-          -4           3
+         3         4     xI+    xJ-           4           3
+         3        -3     xI+    xJ-           1          -1
+         3        -3     xI+    xJ-           2          -2
+         3        -3     xI+    xJ-           4          -4
+         3        -3     xI+    xJ-           3          -3
+         3        -3     xI+    xJ-           5          -5
+         3        -3     xI+    xJ-           0           0
+         3         3     xI+    xJ-           3           3
+         3         0     xI+    xJ-           3           0
+         0        -1     xI+    xJ-          -1           0
+         0         1     xI+    xJ-           1           0
+         0        -2     xI+    xJ-          -2           0
+         0         2     xI+    xJ-           2           0
+         0        -4     xI+    xJ-          -4           0
+         0         4     xI+    xJ-           4           0
+         0        -3     xI+    xJ-          -3           0
+         0         3     xI+    xJ-           3           0
          0         0     xI+    xJ-           1          -1
          0         0     xI+    xJ-           2          -2
          0         0     xI+    xJ-           4          -4

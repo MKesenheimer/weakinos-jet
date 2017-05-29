@@ -705,7 +705,7 @@ c############### subroutine getRealOSAmps ##############################
           goto 21
         endif
         
- 21     print*, "error: Wrong flavor structure in getRealAmps."
+ 21     print*, "error: Wrong flavor structure in getRealOSAmps."
         print*, "flav = ", flav
         stop
  20     continue
