@@ -78,7 +78,12 @@ c############### subroutine getBornAmps ################################
         parameter (NC=3D0, CF=4D0/3D0, CA=3D0, eighth=1D0/8D0)
         double precision fqg, fqq
         parameter (fqq=-eighth*CF, fqg=eighth*NC**2*CF)
-        
+#define CHECKMADFORM
+#ifdef CHECKMADFORM
+        integer i,gleg
+        double precision bmad
+#endif
+
         ! reset
         born = 0D0
         bornjk(:,:) = 0D0
@@ -118,6 +123,20 @@ c############### subroutine getBornAmps ################################
 
         ! MadGraph spincorrelated amplitude
         call sborn_proc(p,flav,bmunu)
+        
+#ifdef CHECKMADFORM
+        do i=1,nlegborn
+          if(flav(i).eq.0) gleg = i
+        enddo
+        bmad = -bmunu(0,0,gleg)+bmunu(1,1,gleg)+bmunu(2,2,gleg)+bmunu(3,3,gleg)
+        if(dsqrt(p(1,5)**2+p(2,5)**2).gt.10.and.(born-bmad)/(born+bmad).gt.1d-4) then
+          print*,flav
+          print*,"FormCalc = ", born
+          print*,"MadGraph = ", bmad
+          print*,(born-bmad)/(born+bmad)
+          print*
+        endif
+#endif
       end
 c############### end subroutine getBornAmps ############################
       

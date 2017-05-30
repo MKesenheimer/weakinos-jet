@@ -129,7 +129,7 @@ c############### subroutine getBornAmps ################################
           if(flav(i).eq.0) gleg = i
         enddo
         bmad = -bmunu(0,0,gleg)+bmunu(1,1,gleg)+bmunu(2,2,gleg)+bmunu(3,3,gleg)
-        if((born-bmad)/(born+bmad).gt.1d-6) then
+        if(dsqrt(p(1,5)**2+p(2,5)**2).gt.10.and.(born-bmad)/(born+bmad).gt.1d-4) then
           print*,flav
           print*,"FormCalc = ", born
           print*,"MadGraph = ", bmad
