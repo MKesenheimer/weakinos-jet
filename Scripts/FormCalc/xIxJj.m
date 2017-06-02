@@ -2,8 +2,8 @@
 
 (*
 generates the Fortran code for
-p p -> weakino weakino jet jet in the MSSM
-last modified May 2017
+p p -> weakino weakino jet in the MSSM
+last modified February 2017
 *)
 
 
@@ -11,7 +11,7 @@ Clear["Global`*"]
 SetDirectory[NotebookDirectory[]];
 << FeynArts`
 << FeynArtsAdd`
-<< FormCalc`
+<< FormCalcCMS`
 << FormCalcAdd`
 ClearProcess[]
 <<"!rm *.frm"
@@ -19,30 +19,27 @@ ClearProcess[]
 time1 = SessionTime[]
 
 
-(*You can now load the script with the command $ MathKernel -script nIxJjj.m "g" "g" "nI" "xJ-" "qd" "qubar"*)
+(*You can now load the script with the command $ MathKernel -script xIxJj.m "qd" "qdbar" "xI+" "xJ-" "g"*)
 Print[$CommandLine]
 If[$CommandLine[[2]] === "-script",
 	(p[1] = ToString[$CommandLine[[4]]];
 	 p[2] = ToString[$CommandLine[[5]]];
 	 p[3] = ToString[$CommandLine[[6]]];
 	 p[4] = ToString[$CommandLine[[7]]];
-	 p[5] = ToString[$CommandLine[[8]]];
-	 p[6] = ToString[$CommandLine[[9]]];),
+	 p[5] = ToString[$CommandLine[[8]]];),
 	(*Else*)
-	(p[1] = "g";
+	(p[1] = "qubar";
 	 p[2] = "g";
-	 p[3] = "nI";
+	 p[3] = "xI+";
 	 p[4] = "xJ-";
-	 p[5] = "qd";
-	 p[6] = "qubar";)
+	 p[5] = "qubar";)
 ]
 
-CalcProcess = p[1]<>p[2]<>"_"<>p[3]<>p[4]<>p[5]<>p[6];
+CalcProcess = p[1]<>p[2]<>"_"<>p[3]<>p[4]<>p[5];
 name = StringReplace[CalcProcess, {"+" -> "", "-" -> ""}];
-Print[CalcProcess];
+Print[CalcProcess]
 
-$IsIOGluon = False;
-For[i=1, i<=6, i++,
+For[i=1, i<=5, i++,
 If[p[i] === "qu", P[i] = F[3],
 If[p[i] === "qubar", P[i] = -F[3],
 If[p[i] === "qd", P[i] = F[4],
@@ -54,7 +51,7 @@ If[p[i] === "xI+", P[i] = -F[12],
 If[p[i] === "xJ-", P[i] = F[12],
 If[p[i] === "xJ+", P[i] = -F[12],
 
-If[p[i] === "g", ($IsIOGluon = True; P[i] = V[5]),
+If[p[i] === "g", P[i] = V[5],
 If[p[i] === "gam", P[i] = V[1],
 If[p[i] === "Z", P[i] = V[2],
 If[p[i] === "W+", P[i] = V[3],
@@ -86,11 +83,8 @@ If[p[i] === "x2+", P[i] = -F[12,{2}]
 ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 ]
 
-process = {P[1], P[2]} -> {P[3], P[4], P[5], P[6]};
-Print[process];
-
-(*Generate only diagrams without calculating anything*)
-$DiagramsOnly = False;
+process = {P[1], P[2]} -> {P[3], P[4], P[5]};
+Print[process]
 
 
 (*Neglect Masses (URL)*)
@@ -107,94 +101,100 @@ Neglect[_MfC] = Neglect[_Mf2C] = 0;
 (*Neglect[MB] = Neglect[MB2] = 0;
 Neglect[MT] = Neglect[MT2] = 0;*)
 
+(*particle widths (complex mass scheme)*)
+Sq[MGl] = MGl2 - I MGl WGl;
+Sq[MSf[a__]] = MSf2[a] - I MSf[a] WSf[a];
+(*Sq[MZ] = MZ2 - I MZ WZ;
+Sq[MW] = MW2 - I MW WW;*)
+widths = {MZ2 -> MZ2 - I MZ WZ, MW2 -> MW2 - I MW WW};
+
+(*real widths*)
+Scan[ (RealQ[#] = True)&, {WGl, _WSf, WW, WZ}];
+
+(*Test*)
+Re[MSf[Sfe3,3,Gen3]^2]
+Conjugate[MSf[Sfe3,3,Gen3]^2]
+
 
 (*Options*)
-If[$IsIOGluon,
-          (*no internal Weakinos*)
-          lastsel = {!F[11],!F[12]};
-          (*else*),
-          (*no internal Weakinos, but internal gluons or gluinos required*)
-          lastsel = {!F[11],!F[12],V[5]|F[15]};
-]
-SetOptions[InsertFields, Model -> "MSSMCT",
+SetOptions[InsertFields, Model -> "MSSMCTPOWHEG_dZgg3", InsertionLevel->{Classes},
            (*No Fermion-Higgs coupling*)
            Restrictions -> {NoLightFHCoupling},
-           (*Exclude Top, Higgs, Neutrinos, massive Leptons, Sneutrinos, Sleptons*)
+           (*Exclude Neutrinos, massive Leptons, Sneutrinos, Sleptons*)
            ExcludeParticles -> {S[11|12], F[1|2]},
-           LastSelections -> lastsel];
+           (*no internal Weakinos*)
+           LastSelections -> {!F[11],!F[12]}];
 
 SetOptions[Paint, PaintLevel -> {Classes}, ColumnsXRows -> {4, 5}, AutoEdit -> False];
 
-(*Reduce tensor to scalar integrals and choose regularization scheme*)
+(*Reduce tensor to scalar integrals and choose regularisazation scheme*)
 (*D = dimensional regularization (default),*)
 (*4 = constrained differential renormalization,*)
 (*0 = keeps the whole amplitude D-dimensional*)
-SetOptions[CalcFeynAmp, Dimension->D];
+SetOptions[CalcFeynAmp,Dimension->D];
 
 (*Save the Diagrams*)
 $PaintSE = MkDir["Diagrams_"<>name];
 DoPaint[diags_, type_, opt___] := Paint[diags, opt,
   DisplayFunction -> (Export[ToFileName[$PaintSE, name <> "_" <> type <> ".pdf"], #]&)];
 
-(*Set Options for Abbreviations*)
-(*SetOptions[Abbreviate,MinLeafCount\[Rule]100];*)
+(*faster code generation without boxes and pentagons, could be used for debugging*)
+$FastCode = False;
+(*Generate only diagrams without calculating anything*)
+$DiagramsOnly = False;
 
-(*Coupling order of amplitude*)
-(*Note: all diagrams are calculated, but after the feynman amplitude is generated*)
-(*only the amplitudes with specified order of the coupling constants survive.*)
-(*The diagrams that are generated are therefore not reliable any more.*)
-(*Check results with coupl_order.nb*)
-(*OrderEL = 2;
-OrderGS = 2;
-PowerOf[GS][x_Integer] := 0/;x>OrderGS
-PowerOf[GS][OrderGS] := 1
-PowerOf[EL][x_Integer] := 0/;x>OrderEL
-PowerOf[EL][OrderEL] := 1*)
+(*complexify the arguments of the loop functions (required for the use with collier)*)
+cmplx = {0->dcmplx[0], MZ->MZC, MW->MWC, MZ2->MZ2C, MW2->MW2C, MU->MUC, MC->MCC, MT->MTC, MD->MDC, MS->MSC, MB->MBC, MU2->MU2C, MC2->MC2C, MT2->MT2C, MD2->MD2C, MS2->MS2C, MB2->MB2C, 
+       Mf[i_,j_]:>MfC[i,j], Mf2[i_,j_]:>Mf2C[i,j], MNeu[i_]:>MNeuC[i], MNeu2[i_]:>MNeu2C[i], MCha[i_]:>MChaC[i], Cha2[i_]:>MCha2C[i], MSf[i_,j_,k_]:>MSfC[i,j,k], MSf2[i_,j_,k_]:>MSf2C[i,j,k],
+       MGl->MGlC, MGl2->MGl2C, Mh0->Mh0C, MHH->MHHC, MA0->MA0C, MHp->MHpC, Mh02->Mh02C, MHH2->MHH2C, MA02->MA02C, MHp2->MHp2C};
 
 
-Print["Reals"]
+Print["Born"];
 
-tops = CreateTopologies[0, 2 -> 4];
+tops = CreateTopologies[0, 2 -> 3];
 ins = InsertFields[tops, process];
-DoPaint[ins, "real"];
+(*exclude fermion higgs couplings. top pdfs = 0 \[Rule] no external tops \[Rule] no internal tops \[Rule] no fermion higgs coupling*)
+ins = DiagramSelect[ins,(FreeQ[FieldPoints[##],FieldPoint[_][_. F[3|4,_], _. F[3|4,_], _. S[n_/;n<=6]]])& ];
+
+DoPaint[ins, "born"];
 
 If[Not[$DiagramsOnly],
-  (*Uncomment the option ",InvSimplify\[Rule]False" for Mac OS X => *)
-  (*FormCalc fails to generate the Form code in function InvSimplify*)
-  real = CalcFeynAmp[CreateFeynAmp[ins](*, InvSimplify->False*)];
+  born = CalcFeynAmp[CreateFeynAmp[ins]];
+  born = born/.{Den[p2_,m2_]:>Den[p2,m2/.widths]};
+  born = born//.{Alfa2->0};
 
-  (*insert the particle widths*)
-  widths = {MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
-  real = real/.{Den[x_,y_]:>Den[x,y/.widths]};
+  Print["born = "];
+  Print[born];
 ];
 
 
+(* Write files *)
 If[Not[$DiagramsOnly],
-  (*Write files of non resonant reals*)
-  amps = {real};
-  {real} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
-
-  col = ColourME[All, real];
-
+  amps = {born};
+  {born} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
+  
+  col = ColourME[All,born];
+  
   abbr = OptimizeAbbr[Abbr[]];
-  subexpr = OptimizeAbbr[Subexpr[]];
-
-  (*fortran can't handle arrays with dimensionality greater than 7*)
+  subexpr = OptimizeAbbr[Subexpr[]]//.{Alfa2->0};
+  
+  (*fortran can\.b4t handle arrays with dimensionality greater than 7*)
   (*apply back the subexpressions with number of arguments greater than 6*)
   subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
          {i,1,Length[subexpr]}]/.Null->Sequence[];
-  real = real//.subexpr6;
+  born = born//.subexpr6;
   abbr = abbr//.subexpr6;
-
+  amps = {born};
+  
   (*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
   subexpr = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
          {i,1,Length[subexpr]}]/.Null->Sequence[];
   subexpr = subexpr//.subexpr6;
-
-  dir = SetupCodeDir[name<>"_real", Drivers -> name <> "_drivers"];
-  WriteSquaredME[real, {}, col, abbr, subexpr, dir];
+  
+  dir = SetupCodeDir[name <> "_born", Drivers -> name <> "_drivers"];
+  WriteSquaredME[born, {}, col, abbr, subexpr, dir];
 ];
 
 
-Print["time used: ", SessionTime[] - time1]
+Print["time used: ", SessionTime[] - time1];
 Exit[];

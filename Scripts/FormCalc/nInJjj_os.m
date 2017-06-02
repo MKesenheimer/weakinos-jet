@@ -96,7 +96,6 @@ Print["Process: ", process]
 (*Check if it is a process with gluino single resonances,*)
 (*gluino resonances can only occur in processes with same type*)
 (*of quarks in initial or final state*)
-(*If[Or[P[3] === F[11], P[3] === F[11,{1}]]*)
 $IsGluinoRes = And[P[1] === -P[2], P[5] === -P[6], Not[P[1] === V[5]], Not[P[5] === V[5]]];
 
 (*Check if it is a process with squark double resonances in two distinct pairs of legs (mandelstam s_ij and s_kl).*)

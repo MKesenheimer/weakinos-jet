@@ -43,7 +43,7 @@ c modifies the jacobian.
         logical verbose
         logical init_real
         data init_real/.true./
-#ifdef DEBUGQ
+#ifdef DEBUG
         double precision s35, s46, s356
         integer lstr
         character*50 str
@@ -158,7 +158,7 @@ c modifies the jacobian.
           print*, "on-shell resonant Real amplitude = ", amp
         endif
         
-#ifdef DEBUGQ
+#ifdef DEBUG
         ! fill histograms
         if(dsqrt(p(1,5)**2+p(2,5)**2).gt.10D0 .and. dsqrt(p(1,6)**2+p(2,6)**2).gt.10D0) then
           call process_name(nlegreal,rflav(1:nlegreal),str,lstr)

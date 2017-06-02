@@ -342,8 +342,7 @@ c     set process id using slepton types
         call remove_duplicates(flst_real,nlegreal,flst_nreal)
         
 #ifdef DEBUGQ
-        nflst_select = 1 ! already tested, and ok: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
-        ! 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 33, 34
+        nflst_select = 1
         ! Real process
         flst_nreal = 1
         flst_real(1,1) = flst_real(1,nflst_select)
@@ -367,20 +366,20 @@ c     set process id using slepton types
 #ifdef DEBUGQ
         ! Born process
         flst_nborn = 1
-        flst_born(1,1) = -2
-        flst_born(2,1) = 0
-        flst_born(3,1) = 1000022
-        flst_born(4,1) = 1000023
-        flst_born(5,1) = -2
+        flst_born(1,1) = 0
+        flst_born(2,1) = -1
+        flst_born(3,1) = 1000024
+        flst_born(4,1) = -1000024
+        flst_born(5,1) = -1
 
         ! Real process
         flst_nreal = 1
-        flst_real(1,1) = -2
-        flst_real(2,1) = 0
-        flst_real(3,1) = 1000022
-        flst_real(4,1) = 1000023
-        flst_real(5,1) = -2
-        flst_real(6,1) = 0
+        flst_real(1,1) = 1
+        flst_real(2,1) = -1
+        flst_real(3,1) = 1000024
+        flst_real(4,1) = -1000024
+        flst_real(5,1) = -1
+        flst_real(6,1) = 1
 #endif
 
 #ifdef DEBUG
@@ -398,12 +397,42 @@ c     set process id using slepton types
 #endif
 
         ! setup the flavor list of on-shell resonant diagrams
-        call init_processes_osres
-#ifdef DEBUGQ
+        ! reset the number of on-shell resonant diagrams
+        flst_nosres = 0
+        ! fill the flavor list with on-shell resonant diagrams
+        do i=1,flst_nreal
+          do j=1,nlegreal
+            ii(j) = flst_real(j,i)
+          enddo
+          ! gluino and squark resonances for nInJ and nIxJ
+          ! all combinations of d, dbar, u, ubar, but no gluon
+          if((isnIxJ.or.isnInJ).and.i5.ne.0.and.i6.ne.0) then
+            flst_nosres = flst_nosres+1 
+            do j=1,nlegreal
+              ! copy existing reals
+              flst_osres(j,flst_nosres) = flst_real(j,i)
+            enddo
+          endif
+          ! gluino and squark resonances for xIxJ
+          ! all combinations of d, dbar, u, ubar, but no gluons
+          ! and without d d, u u, dbar dbar, ubar ubar
+          if(isxIxJ.and.
+     &       ((.not.((i5.ge.0.and.i6.ge.0).or.(i5.le.0.and.i6.le.0))).or.
+     &       (((i5.gt.0.and.i6.gt.0).or.(i5.lt.0.and.i6.lt.0)).and.mod(i5+i6,2).ne.0))) then
+            flst_nosres = flst_nosres+1 
+            do j=1,nlegreal
+              ! copy existing reals
+              flst_osres(j,flst_nosres) = flst_real(j,i)
+            enddo
+          endif
+        enddo
+
+#ifdef DEBUG
         print*,' on-shell resonant real processes',flst_nosres
         do j=1,flst_nosres
           print*,(flst_osres(k,j),k=1,nlegreal)
         enddo
+        !stop
 #endif
 
         return
@@ -413,38 +442,3 @@ c     set process id using slepton types
         stop
       end      
 c############### end subroutine init_processes #########################
-
-c############### subroutine init_osres #################################
-c if the real-amplitudes are resonant split into a regular part and the 
-c IR-divergent parts: this routine provides the corresponding flavor 
-c lists and stores it in flst_osres
-c this list should not be confused with flst_realres.
-      subroutine init_processes_osres
-        implicit none
-#include "nlegborn.h"
-#include "pwhg_flst.h"
-#include "pwhg_flg.h"
-#include "pwhg_flst_add.h"
-#include "osres.h"
-        ! local variables
-        integer i1,i2
-        integer k,f(6)
-
-        ! reset the number of on-shell resonant diagrams
-        flst_nosres = 0
-        ! fill the flavor list with on-shell resonant diagrams
-        do i1=1,flst_nreal
-          do i2=1,nlegreal
-            f(i2) = flst_real(i2,i1)
-          enddo
-          ! gluino and squark resonances
-          if(f(5).ne.0 .and. f(6).ne.0) then
-            flst_nosres = flst_nosres+1 
-            do i2=1,nlegreal
-              ! copy existing reals
-              flst_osres(i2,flst_nosres) = flst_real(i2,i1)
-            enddo
-          endif
-        enddo
-      end
-c############### end subroutine init_osres #############################

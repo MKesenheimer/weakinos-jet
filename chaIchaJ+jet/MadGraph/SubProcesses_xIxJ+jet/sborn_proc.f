@@ -793,7 +793,7 @@
            lstring=lstring+2
            goto 31
          endif
-         if(final1.ne.final2) then
+         if(abs(final1).ne.abs(final2)) then
            if(i.eq.4) then
              string(lstring+1:lstring+2) = 'xJ'
              lstring=lstring+2

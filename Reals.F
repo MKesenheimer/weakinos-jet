@@ -19,6 +19,7 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
 #include "osres.h"
         double precision p(0:3,nlegreal)
         integer rflav(nlegreal)
+        integer f(nlegreal)
         double precision amp, ampreal, ampos
         ! status
         logical verbose
@@ -50,21 +51,37 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         if(dabs(amp-ampreal)/dabs(amp+ampreal).gt.1d-6) stop
         print*
 #endif
-        
+
 #if defined(DSUB_II) || defined(DSUB_II_TEST)
         ! subtract the resonant amplitudes (move the resonant contributions 
         ! to Reals_osres.F)
         ! check if gluino single resonances can occur (sum over nosres1 + nosres2)
         ! if not, sum over double squark resonances only (sum over nosres1)
-        if(rflav(1).eq.-rflav(2) .and. rflav(5).eq.-rflav(6) .and.
-     &     rflav(1).ne.0 .and. rflav(5).ne.0) then
+#if defined(NINJ_JET)
+        if(f(1).eq.-f(2).and.f(5).eq.-f(6).and.f(1).ne.0.and.f(5).ne.0) then
+#elif defined(NIXJ_JET)
+        if((f(1).lt.0.and.f(2).gt.0).or.(f(1).gt.0.and.f(2).lt.0)) then
+#elif defined(XIXJ_JET)
+        if((((f(5).gt.0.and.f(6).lt.0).or.(f(5).lt.0.and.f(6).gt.0))
+     &          .and.mod(f(5)+f(6),2).ne.0)) then
+#endif
           nos = nosres1 + nosres2
         else
           nos = nosres1
         endif
-        if(rflav(5).ne.0 .and. rflav(6).ne.0) then
+
+        f(:) = rflav(:)
+#if defined(NINJ_JET) || defined(NIXJ_JET)
+        if(f(5).ne.0.and.f(6).ne.0) then
+#elif defined(XIXJ_JET)
+          if(((.not.((f(5).ge.0.and.f(6).ge.0).or.(f(5).le.0.and.f(6).le.0))).or.
+     &       (((f(5).gt.0.and.f(6).gt.0).or.(f(5).lt.0.and.f(6).lt.0))
+     &          .and.mod(f(5)+f(6),2).ne.0))) then
+#endif
+          !if(f(1).eq.0) print*,f(:)
           do ichan=1,nos
             ampos = 0D0
+            !print*,ichan,nosres1,nosres2
             call getRealOSAmps(p,rflav,ichan,ampos)
 #ifdef DEBUGQ
             print*,"ichan: ",ichan
@@ -82,13 +99,19 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
 #ifdef DSUB_II_TEST
         ! test the DSUB_II scheme (here without the correct jacobian)
         ! this gives the same result as with flag DSUB_I set
-        if(rflav(1).eq.-rflav(2) .and. rflav(5).eq.-rflav(6) .and.
-     &     rflav(1).ne.0 .and. rflav(5).ne.0) then
+#if defined(NINJ_JET)
+        if(f(1).eq.-f(2).and.f(5).eq.-f(6).and.f(1).ne.0.and.f(5).ne.0) then
+#elif defined(NIXJ_JET)
+        if((f(1).lt.0.and.f(2).gt.0).or.(f(1).gt.0.and.f(2).lt.0)) then
+#elif defined(XIXJ_JET)
+        if((((f(5).gt.0.and.f(6).gt.0).or.(f(5).lt.0.and.f(6).lt.0))
+     &          .and.mod(f(5)+f(6),2).ne.0)) then
+#endif
           nos = nosres1 + nosres2
         else
           nos = nosres1
         endif
-        if(rflav(5).ne.0 .and. rflav(6).ne.0) then
+        if(f(5).ne.0.and.f(6).ne.0) then
          do ichan=1,nos
             ampos = 0D0
             call setosresreal(p,rflav,ichan,ampos)

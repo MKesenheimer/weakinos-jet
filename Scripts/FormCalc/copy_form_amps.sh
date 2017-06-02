@@ -62,15 +62,15 @@ if [[ $# == 0 ]]; then
   #PROCDIR="neuIchaJ+jet/FormCalc_Virtuals"
   #PROCDIR="neuIchaJ+jet/FormCalc_Reals"
   # xIxJ
-  #PROCDIR="chaIchaJ+jet/FormCalc_Virtuals"
-  PROCDIR="chaIchaJ+jet/FormCalc_Reals"
+  PROCDIR="chaIchaJ+jet/FormCalc_Virtuals"
+  #PROCDIR="chaIchaJ+jet/FormCalc_Reals"
 
   # where to copy the amplitudes to
   DEST=${PWD}/../../${PROCDIR}
 
   # number of particles (incoming + outgoing)
-  #NPART=5
-  NPART=6
+  NPART=5
+  #NPART=6
 
   # process list file
   # nInJ
@@ -84,8 +84,8 @@ if [[ $# == 0 ]]; then
   #PROCF="./proc_nIxJjj_os"
   #PROCF="./proc_nIxJjj_reg"
   # xIxJ
-  #PROCF="./proc_xIxJj"
-  PROCF="./proc_xIxJjj_nr"
+  PROCF="./proc_xIxJj"
+  #PROCF="./proc_xIxJjj_nr"
   #PROCF="./proc_xIxJjj_os"
   #PROCF="./proc_xIxJjj_reg"
 
@@ -101,16 +101,19 @@ if [[ $# == 0 ]]; then
   #MSCRIPT="./nIxJjj_os.m"
   #MSCRIPT=""
   # xIxJ
+  MSCRIPT="./xIxJj.m"
   #MSCRIPT="./xIxJj_virt.m"
-  MSCRIPT="./xIxJjj.m"
+  #MSCRIPT="./xIxJjj.m"
   #MSCRIPT="./xIxJjj_os.m"
   #MSCRIPT=""
 
   # the type of the amplitudes (born, virt, real, realOS)
+  TYPE="born"
   #TYPE="virt"
-  TYPE="real"
+  #TYPE="real"
   #TYPE="realOS"
   #TYPE="real"
+
 elif [[ $# == 5 ]]; then
   PROCDIR=$1
   DEST=${PWD}/../../${PROCDIR}
@@ -118,6 +121,7 @@ elif [[ $# == 5 ]]; then
   PROCF=$3
   MSCRIPT=$4
   TYPE=$5
+
 elif [[ $# == 4 ]]; then
   PROCDIR=$1
   DEST=${PWD}/../../${PROCDIR}
@@ -496,7 +500,7 @@ cd ${DEST}/temp/
 rename ${TYPE}_decl.h ""
 $SED -i -e '/^#include "distrib.h"/d' ${TYPE}_decl.h
 $SED -i -e '/^#include "extra.h"/d' ${TYPE}_decl.h
-if [[ $TYPE == "real" ]] || [[ $TYPE == "realOS" ]]; then
+if [[ $TYPE == "real" ]] || [[ $TYPE == "realOS" ]] || [[ $TYPE == "born" ]]; then
     $SED -i -e '/^#include "RenConst.h"/d' ${TYPE}_decl.h
     $SED -i -e '/^#include "looptools.h"/d' ${TYPE}_decl.h
 fi

@@ -24,16 +24,16 @@ chainB '1000023->1000022,23;23->13,-13;'
 
 ! physics
 ! name of the SLHA input-file, should not be longer than 100 signs
-SLHA 'input_p19MSSM1.slha'
-#SLHA 'input_orig.slha'
+#SLHA 'input_p19MSSM1.slha'   
+SLHA 'input_orig.slha'
 incomingflavors 4    ! (default 4) max number of incoming flavor
 outgoingflavors 4    ! (default 4) max number of outgoing flavor
 ih1     1            ! hadron 1 (1 for protons, -1 for antiprotons)
 ih2     1            ! hadron 2 (1 for protons, -1 for antiprotons)
 #ndns1  132          ! pdf set for hadron 1 (mlm numbering)
 #ndns2  132          ! pdf set for hadron 2 (mlm numbering)
-ebeam1  4000d0       ! energy of beam 1
-ebeam2  4000d0       ! energy of beam 2
+ebeam1  7000d0       ! energy of beam 1
+ebeam2  7000d0       ! energy of beam 2
 msbar   1            ! (default 1) use (=1) msbar mass for bottom quark or not (=0)
 
 ! To be set only if using LHA pdfs
@@ -72,7 +72,7 @@ xupbound 2d0         ! increase upper bound for radiation generation
 numevts  0           ! number of events to be generated
 
 ! OPTIONAL PARAMETERS
-runningscale   1     ! (default 0) use ref. scale=virtuality Q (default 0, use fixed scale)
+runningscale   0     ! (default 0) use ref. scale=virtuality Q (default 0, use fixed scale)
 #fakevirtuals  1     ! (default 0) generate the grid with fake virtuals
 softtest       1     ! (default 0) check soft singularities
 colltest       1     ! (default 0) check collinear singularities
@@ -81,7 +81,7 @@ facscfact      1d0   ! (default 1d0) fac scale factor: mufact = muref * facscfac
 #bornonly      1     ! (default 0) if 1 do Born only
 #LOevents      1     ! (default 0) only LO events
 #smartsig      1     ! (default 1) remember equal amplitudes (0 do not remember)
-#testplots     1     ! write data for gnuplot histograms to *.top
+testplots      1     ! write data for gnuplot histograms to *.top
 #bornsuppfact  1     ! (default 0, do not use) use Born suppression factor
 #withdamp      1     ! (default 0, do not use) use Born-zero damping factor
 #hfact         100d0 ! (default no damping factor) damp factor for high-pt radiation: > 0 dampfac=h**2/(pt2+h**2)
@@ -90,7 +90,7 @@ facscfact      1d0   ! (default 1d0) fac scale factor: mufact = muref * facscfac
 fastbtlbound   1     ! reduce the number of calls to the virtual routines 
 mintupbratlim  1000  ! accelerate the generation of btilde configuration
 ewi1           0d0   ! regulator for single on-shell resonances
-ewi2           1d10   ! regulator for double on-shell resonances
+ewi2           0d0   ! regulator for double on-shell resonances
 
 ! new POWHEG-BOX-V2 features (rev. >3306)
 compress_lhe 1       ! activate lhe compression 

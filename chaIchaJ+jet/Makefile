@@ -114,6 +114,7 @@ USRFLAGS += -D$(LOOPINT)
 ## -fbounds-check sometimes causes a weird error due to non-lazy
 ## evaluation of boolean in gfortran.
 #WARN += -fbounds-check
+#WARN += -fcheck=all
 ## gfortran 4.4.1 optimized with -O3 yields erroneous results
 ## Use -O2 to be on the safe side
 OPT = -O2
@@ -163,7 +164,7 @@ DEBUG = -ggdb -pg -DDEBUG=$(LEVEL)
 #   integrated seperately in sigosres.f and is included at a later point
 #   to the main result.
 #USRFLAGS += -DDSUB_II_TEST
-#USRFLAGS += -DDSUB_II
+USRFLAGS += -DDSUB_II
 
 ## SkipHel
 # skip the calculation of formcalc helicity amplitudes if the amplitude
@@ -195,7 +196,6 @@ SCRIPTS = $(WORKINGDIR)/Scripts
 
 # includes
 UINCLUDE    = $(WORKINGDIR)/include
-SINCLUDE    = $(SUBWORKINGDIR)/include
 PINCLUDE    = $(PWHGDIR)/include
 VINCLUDE    = $(FORMVIRTS)/include
 RENINCLUDE  = $(FORMVIRTS)/RenConst
@@ -409,7 +409,7 @@ LIBS += -lz
 
 ALL_FCFLAGS   = $(REC_FCFLAGS) $(OPT) $(WARN) $(CPP) $(DEBUG) $(USRFLAGS) $(CHANNEL)
 ALL_FCFLAGS  += -I$(UINCLUDE) -I$(PINCLUDE) -I$(MDINCLUDE)
-ALL_FCFLAGS  += -I$(SINCLUDE) -I$(WORKINGDIR) -I$(VINCLUDE) -I$(SLHAINCLUDE)
+ALL_FCFLAGS  += -I$(WORKINGDIR) -I$(VINCLUDE) -I$(SLHAINCLUDE)
 ALL_FCFLAGS  += -I$(FRINCLUDE) -I$(FRGINCLUDE) -I$(FVGINCLUDE) -I$(RENINCLUDE)
 ifeq ("$(LOOPINT)","collier")
   ALL_FCFLAGS  += -I$(CINCLUDE)
@@ -426,7 +426,7 @@ LINKER = $(CPPFLAGS) $(LIBS) $(LDFLAGS)
 
 HEADERS  = $(wildcard *.h $(UINCLUDE)/*.h  $(PINCLUDE)/*.h)
 HEADERS += $(wildcard *.h $(SLHAINCLUDE)/*.h)
-HEADERS += $(wildcard *.h $(MDINCLUDE)/*.h $(SINCLUDE)/*.h)
+HEADERS += $(wildcard *.h $(MDINCLUDE)/*.h)
 HEADERS += $(wildcard *.h $(VINCLUDE)/*.h $(FVGINCLUDE)/*.h)
 HEADERS += $(wildcard *.h $(FRINCLUDE)/*.h $(FRGINCLUDE)/*.h)
 HEADERS += $(wildcard *.h $(RENINCLUDE)/*.h)

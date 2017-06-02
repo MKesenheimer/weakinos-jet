@@ -39,7 +39,7 @@ If[$CommandLine[[2]] === "-script",
 
 CalcProcess = p[1]<>p[2]<>"_"<>p[3]<>p[4]<>p[5]<>p[6];
 name = StringReplace[CalcProcess, {"+" -> "", "-" -> ""}];
-Print[CalcProcess]
+Print[CalcProcess];
 
 $IsIOGluon = False;
 For[i=1, i<=6, i++,
@@ -87,7 +87,10 @@ If[p[i] === "x2+", P[i] = -F[12,{2}]
 ]
 
 process = {P[1], P[2]} -> {P[3], P[4], P[5], P[6]};
-Print[process]
+Print[process];
+
+(*Generate only diagrams without calculating anything*)
+$DiagramsOnly = False;
 
 
 (*Neglect Masses (URL)*)
@@ -155,50 +158,42 @@ tops = CreateTopologies[0, 2 -> 4];
 ins = InsertFields[tops, process];
 DoPaint[ins, "real"];
 
-(*sort the amplitude by powers of the coupling constants*)
-(*Uncomment the option ",InvSimplify\[Rule]False" for Mac OS X => *)
-(*FormCalc fails to generate the Form code in function InvSimplify*)
-real = CalcFeynAmp[CreateFeynAmp[ins](*/.{EL->EL PowerOf[EL], GS->GS PowerOf[GS]}*)(*, InvSimplify->False*)];
-(*Export["real."<>name<>".wdx",real,"WDX"]*)
-(*apply max coupling rules*)
-(*real = real/.{PowerOf[a_]^x_:>PowerOf[a][x]};
-real = real/.{PowerOf[a_]:>PowerOf[a][1]};*)
-(*Export["real0."<>name<>".wdx",real,"WDX"]*)
+If[Not[$DiagramsOnly],
+  (*Uncomment the option ",InvSimplify\[Rule]False" for Mac OS X => *)
+  (*FormCalc fails to generate the Form code in function InvSimplify*)
+  real = CalcFeynAmp[CreateFeynAmp[ins](*, InvSimplify->False*)];
 
-(*insert the particle widths*)
-widths = {MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
-real = real/.{Den[x_,y_]:>Den[x,y/.widths]}
+  (*insert the particle widths*)
+  widths = {MZ2->MZ2-I WZ MZ, MW2->MW2-I WW MW, MSf2[sfe_,n1_,n2_]:>MSf2[sfe,n1,n2]-I WSf[sfe,n1,n2] MSf[sfe,n1,n2], MGl2->MGl2-I MGl WGl};
+  real = real/.{Den[x_,y_]:>Den[x,y/.widths]};
+];
 
 
-(*Write files of non resonant reals*)
-amps = {real};
-{real} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
+If[Not[$DiagramsOnly],
+  (*Write files of non resonant reals*)
+  amps = {real};
+  {real} = Abbreviate[amps, 6, Preprocess -> OnSize[100, Simplify, 500, DenCollect]];
 
-col = ColourME[All, real];
+  col = ColourME[All, real];
 
-abbr = OptimizeAbbr[Abbr[]]
-subexpr = OptimizeAbbr[Subexpr[]]
+  abbr = OptimizeAbbr[Abbr[]];
+  subexpr = OptimizeAbbr[Subexpr[]];
 
-(*fortran can't handle arrays with dimensionality greater than 7*)
-(*apply back the subexpressions with number of arguments greater than 6*)
-subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-real = real//.subexpr6;
-abbr = abbr//.subexpr6;
+  (*fortran can't handle arrays with dimensionality greater than 7*)
+  (*apply back the subexpressions with number of arguments greater than 6*)
+  subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
+         {i,1,Length[subexpr]}]/.Null->Sequence[];
+  real = real//.subexpr6;
+  abbr = abbr//.subexpr6;
 
-(*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
-subexpr = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
-       {i,1,Length[subexpr]}]/.Null->Sequence[];
-subexpr = subexpr//.subexpr6;
+  (*delete the subexpressions with number of arguments greater than 6 from subexpr list*)
+  subexpr = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]<=6,subexpr[[i]]],
+         {i,1,Length[subexpr]}]/.Null->Sequence[];
+  subexpr = subexpr//.subexpr6;
 
-(*
-Export["real.wdx",real,"WDX"];
-Export["abbr.wdx",abbr,"WDX"];
-Export["subexpr.wdx",subexpr,"WDX"];
-*)
-
-dir = SetupCodeDir[name<>"_real", Drivers -> name <> "_drivers"];
-WriteSquaredME[real, {}, col, abbr, subexpr, dir];
+  dir = SetupCodeDir[name<>"_real", Drivers -> name <> "_drivers"];
+  WriteSquaredME[real, {}, col, abbr, subexpr, dir];
+];
 
 
 Print["time used: ", SessionTime[] - time1]

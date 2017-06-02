@@ -155,24 +155,24 @@ c
           select case(abs(flav(osres_l)))
             case(1)
               osres_ml = par_MD
-              osres_mkl = par_MSf(osres_sfekl,4,1)
-              osres_wkl = par_WSf(osres_sfekl,4,1)
+              osres_mkl = par_MSf(osres_sfekl,3,1) ! flavor change
+              osres_wkl = par_WSf(osres_sfekl,3,1)
             case(2)
               osres_ml = par_MU
-              osres_mkl = par_MSf(osres_sfekl,3,1)
-              osres_wkl = par_WSf(osres_sfekl,3,1)
+              osres_mkl = par_MSf(osres_sfekl,4,1) ! flavor change
+              osres_wkl = par_WSf(osres_sfekl,4,1)
             case(3)
               osres_ml = par_MS
-              osres_mkl = par_MSf(osres_sfekl,4,2)
-              osres_wkl = par_WSf(osres_sfekl,4,2)
+              osres_mkl = par_MSf(osres_sfekl,3,2) ! flavor change
+              osres_wkl = par_WSf(osres_sfekl,3,2)
             case(4)
               osres_ml = par_MC
-              osres_mkl = par_MSf(osres_sfekl,3,2)
-              osres_wkl = par_WSf(osres_sfekl,3,2)
+              osres_mkl = par_MSf(osres_sfekl,4,2) ! flavor change
+              osres_wkl = par_WSf(osres_sfekl,4,2)
             case(5)
               osres_ml = par_MB
-              osres_mkl = par_MSf(osres_sfekl,4,3)
-              osres_wkl = par_WSf(osres_sfekl,4,3)
+              osres_mkl = par_MSf(osres_sfekl,3,3) ! flavor change
+              osres_wkl = par_WSf(osres_sfekl,3,3)
             case default
               print*, "error in set_channel: flav(l)", flav(osres_l)
               stop
@@ -187,35 +187,60 @@ c
           if(ichan.ge.9 .and. ichan.le.12) then
             osres_mi = par_Fin1mass
             osres_ml = par_Fin2mass
+            select case(abs(flav(osres_j)))
+              case(1)
+                osres_mj = par_MD
+                osres_mij = par_MSf(osres_sfeij,4,1)
+                osres_wij = par_WSf(osres_sfeij,4,1)  
+              case(2)
+                osres_mj = par_MU
+                osres_mij = par_MSf(osres_sfeij,3,1)
+                osres_wij = par_WSf(osres_sfeij,3,1)
+              case(3)
+                osres_mj = par_MS
+                osres_mij = par_MSf(osres_sfeij,4,2)
+                osres_wij = par_WSf(osres_sfeij,4,2)
+              case(4)
+                osres_mj = par_MC
+                osres_mij = par_MSf(osres_sfeij,3,2)
+                osres_wij = par_WSf(osres_sfeij,3,2)
+              case(5)
+                osres_mj = par_MB
+                osres_mij = par_MSf(osres_sfeij,4,3)
+                osres_wij = par_WSf(osres_sfeij,4,3)
+              case default
+                print*, "error in set_channel: flav(j)", flav(osres_j)
+                stop
+            endselect
           elseif(ichan.ge.13 .and. ichan.le.16) then
             osres_mi = par_Fin2mass
             osres_ml = par_Fin1mass
+            select case(abs(flav(osres_j)))
+              case(1)
+                osres_mj = par_MD
+                osres_mij = par_MSf(osres_sfeij,3,1) ! flavor change
+                osres_wij = par_WSf(osres_sfeij,3,1)  
+              case(2)
+                osres_mj = par_MU
+                osres_mij = par_MSf(osres_sfeij,4,1) ! flavor change
+                osres_wij = par_WSf(osres_sfeij,4,1)
+              case(3)
+                osres_mj = par_MS
+                osres_mij = par_MSf(osres_sfeij,3,2) ! flavor change
+                osres_wij = par_WSf(osres_sfeij,3,2)
+              case(4)
+                osres_mj = par_MC
+                osres_mij = par_MSf(osres_sfeij,4,2) ! flavor change
+                osres_wij = par_WSf(osres_sfeij,4,2)
+              case(5)
+                osres_mj = par_MB
+                osres_mij = par_MSf(osres_sfeij,3,3) ! flavor change
+                osres_wij = par_WSf(osres_sfeij,3,3)
+              case default
+                print*, "error in set_channel: flav(j)", flav(osres_j)
+                stop
+            endselect
           endif
-          select case(abs(flav(osres_j)))
-            case(1)
-              osres_mj = par_MD
-              osres_mij = par_MSf(osres_sfeij,4,1)
-              osres_wij = par_WSf(osres_sfeij,4,1)  
-            case(2)
-              osres_mj = par_MU
-              osres_mij = par_MSf(osres_sfeij,3,1)
-              osres_wij = par_WSf(osres_sfeij,3,1)
-            case(3)
-              osres_mj = par_MS
-              osres_mij = par_MSf(osres_sfeij,4,2)
-              osres_wij = par_WSf(osres_sfeij,4,2)
-            case(4)
-              osres_mj = par_MC
-              osres_mij = par_MSf(osres_sfeij,3,2)
-              osres_wij = par_WSf(osres_sfeij,3,2)
-            case(5)
-              osres_mj = par_MB
-              osres_mij = par_MSf(osres_sfeij,4,3)
-              osres_wij = par_WSf(osres_sfeij,4,3)
-            case default
-              print*, "error in set_channel: flav(j)", flav(osres_j)
-              stop
-          endselect
           select case(abs(flav(osres_k)))
             case(1)
               osres_mk = par_MD

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 for x in $(ls *_SquaredME.F); do
     echo $x
@@ -10,10 +10,17 @@ cat > vars.txt << EOM
 * -------- MK: added -----------------------------------------------------------
 EOM
 
+    gsed -i 's/data MatSUN \/NaN(1)\//TAG/g' $x
+    gsed -i '/TAG/r vars.txt' $x
+    gsed -i "s/TAG/data MatSUN \/NaN(1)\//g" $x
+
     gsed -i 's/data MatSUN \/NaN(4)\//TAG/g' $x
     gsed -i '/TAG/r vars.txt' $x
     gsed -i "s/TAG/data MatSUN \/NaN(4)\//g" $x
 
+    gsed -i 's/data MatSUN \/NaN(9)\//TAG/g' $x
+    gsed -i '/TAG/r vars.txt' $x
+    gsed -i "s/TAG/data MatSUN \/NaN(9)\//g" $x
 
     cat > func.txt << EOM
 * -------- MK: added -----------------------------------------------------------
