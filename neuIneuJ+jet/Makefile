@@ -499,7 +499,9 @@ copy-scripts:
 	cp $(SCRIPTS)/reweight.sh     $(SUBWORKINGDIR) && \
 	cp $(SCRIPTS)/merge.sh        $(SUBWORKINGDIR)
 
-all: libs pwhg_main_ninj+jet copy-scripts merge-pwg-stat merge-data lhef_analysis main-PYTHIA-lhef
+all-libs: libs pwhg_main_ninj+jet copy-scripts merge-pwg-stat merge-data lhef_analysis main-PYTHIA-lhef
+
+all: pwhg_main_ninj+jet copy-scripts merge-pwg-stat merge-data lhef_analysis main-PYTHIA-lhef
 
 clean:
 	rm -f build/*.o pwhg_main_ninj+jet lhef_analysis main-PYTHIA-lhef merge-pwg-stat merge-data runparallel.sh clean_rundir.sh reweight.sh merge.sh
