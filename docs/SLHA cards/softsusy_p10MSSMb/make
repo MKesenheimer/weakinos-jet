@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [[ "$1" == "" ]]; then
+  softpoint.x leshouches < softsusy_in.slha > softsusy_out.slha
+  cp softsusy_out.slha ./SD_leshouches.in
+  sdecay
+  cp sdecay_slha.out input_p10MSSMb.slha
+elif [[ "$1" == "clean" ]]; then
+  find . ! \( -name 'softsusy_in.slha' -o -name 'sdecay.in' -o -name 'make' \) -type f -exec rm -f {} +
+fi
