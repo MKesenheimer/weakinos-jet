@@ -244,6 +244,9 @@ BLOCK MSOFT Q=  3.78137390E+03  # The soft SUSY breaking masses at the scale Q
 #
 # - The SUSY decays of the top quark are included.
 #
+##         PDG            Width
+DECAY        23     2.41143316E+00   # Z width (SM calculation)
+DECAY        24     2.00282196E+00   # W width (SM calculation)
 #
 #         PDG            Width
 DECAY         6     1.47403118E+00   # top decays
