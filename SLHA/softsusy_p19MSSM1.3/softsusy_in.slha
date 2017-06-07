@@ -1,0 +1,68 @@
+BLOCK MODSEL
+# 11   1               # One value of the renormalisation scale
+# 12   1.73400000E+02  # renormalisation scale
+# 12   2.46000000E+02  # input scale = ew scale = vev
+ 1    0               # general (19 parameter MSSM plane 1)
+BLOCK SOFTSUSY
+ 0    0               # Calculate decays in output (only for RPC (N)MSSM)
+ 1    1.00000000E-04  # desired fractional accuracy in output, common: 10^-2 to 10^-6
+ 2    2               # quark yukawa mixing option, 0=sets the quark mixing to zero, 1,2=sets all the mixing to be in u or d respectively
+ 3    0               # gives additional verbose output during calculation: 0=no additional information, >0=verbose informations
+ 4    1.00000000E+00  # change electroweak symmetry breaking scale, common: 0.5 to 2
+ 5    1               # Full 2-loop running in RGEs on (1) or off (0)
+ 6    1.00000000E-05  # Numerical precision
+ 7    2               # number of loops in REWSB/mh calculation, 2 (default) or 1
+ 8    0	              # Switch MSUSY scale RPV boundary condition on?
+ 9    0               # Use normal hierarchy(=0) or inverted (=1)
+ 10   0               # if =1, tries to force output into SLHA 1 format
+# 11   1.00000000E+19  # Gravitino mass
+ 12   1               # Prints spectrum even when point is theoretically excluded if=1
+ 13   0               # If =0 (default), sets tachyonic mA=0, otherwise mA=sqrt(|mA|^2)
+ 15   0               # NMSSMTools compatible output (default: 0)
+ 16   0               # Call micrOmegas (default: 0)
+ 17   0               # Sparticle decays via NMSDECAY (default: 0)
+ 18   0               # use soft Higgs masses as EWSB output
+# 19   1               # Include 3-loop SUSY RGEs
+# 20   31              # Include 2-loop gauge/Yukawa thresholds, 31 for all
+ 21   1               # If =1, provides an estimate of Higgs mass uncertainties
+# 22   1               # Include 2-loop sparticle mass thresholds
+# 23   0               # No expansion of 2-loop gluino terms
+ 24   1.00000000E-06  # If decay BR is below this number, don't output
+ 25   1               # If set to 0, don't calculate 3-body decays (1=default)
+BLOCK SMINPUTS
+ 1    1.27934000E+02  # alpha^(-1) SM MSbar(Mz)
+ 2    1.16637000E-05  # G_Fermi
+ 3    1.19000000E-01  # alpha_s(MZ) SM MSbar
+ 4    9.11880000E+01  # MZ(pole)
+ 5    4.25000000E+00  # mb(mb) SM MSbar
+ 6    1.73400000E+02  # Mt SM pole
+ 7    1.77700000E+00  # mtau pole
+BLOCK MINPAR
+ 3    10.0000000E+00  # tan(beta), DRbar, Feynman gauge
+ 4    1.00000000e+00  # sign(mu)
+BLOCK EXTPAR
+# 0   -1               # Mx = MEWSB := sqrt(m~t1*m~t2), ok
+ 0    2.50000000E+03  # Mx 
+ 1    5.00000000E+02  # M1, ok
+ 2    2.50000000E+03  # M2, ok
+ 3    6.00000000E+02  # M3, ok
+ 11   0.00000000E+00  # At, ok
+ 12   0.00000000E+00  # Ab, ok
+ 13   0.00000000E+00  # Atau, ok
+ 21   0.00000000E+00  # mHd^2, ok
+ 22   0.00000000E+00  # mHu^2, ok
+ 31   3.60000000E+02  # m~eL, ok
+ 32   3.60000000E+02  # m~muL, ok
+ 33   2.50000000E+03  # m~tauL, ok
+ 34   2.50000000E+03  # m~eR, ok
+ 35   2.50000000E+03  # m~muR, ok
+ 36   2.50000000E+03  # m~tauR, ok
+ 41   3.60000000E+02  # m~q1L, ok
+ 42   3.60000000E+02  # m~q2L, ok
+ 43   2.50000000E+03  # m~q3L, ok
+ 44   3.60000000E+02  # m~uR, ok
+ 45   3.60000000E+02  # m~cR, ok
+ 46   2.50000000E+03  # m~tR, ok
+ 47   3.60000000E+02  # m~dR, ok
+ 48   3.60000000E+02  # m~sR, ok
+ 49   2.50000000E+03  # m~bR, ok

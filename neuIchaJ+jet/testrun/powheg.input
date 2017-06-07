@@ -24,8 +24,8 @@ chainB '1000023->1000022,23;23->13,-13;'
 
 ! physics
 ! name of the SLHA input-file, should not be longer than 100 signs
-SLHA 'input_p10MSSM.slha'   
-#SLHA 'input.slha'
+#SLHA 'input_p10MSSM.slha'   
+SLHA 'input.slha'
 incomingflavors 4    ! (default 4) max number of incoming flavor
 outgoingflavors 4    ! (default 4) max number of outgoing flavor
 ih1     1            ! hadron 1 (1 for protons, -1 for antiprotons)
