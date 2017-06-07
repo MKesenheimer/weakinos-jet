@@ -14,7 +14,7 @@ cat $RUNDIR/pwg-st2-combined-stat.dat
 if [ "$(ls $RUNDIR/pwgevents-*.lhe 2>/dev/null)" != "" ]; then
   echo ""
   echo "Merging event files..."
-  cat $RUNDIR/pwgevents-*.lhe | grep -v "/LesHouchesEvents" > $RUNDIR/pwgevents.lhe
+  zcat $RUNDIR/pwgevents-*.lhe | grep -v "/LesHouchesEvents" > $RUNDIR/pwgevents.lhe
   echo "</LesHouchesEvents>" >> $RUNDIR/pwgevents.lhe
 fi
 #if [ -e "$RUNDIR/pwgevents.lhe" ]; then
@@ -26,4 +26,14 @@ echo ""
 echo "Merging top files..."
 rm -f $RUNDIR/pwg-NLO.top
 cd $RUNDIR && ../merge-data 1 $(ls $RUNDIR/pwg-*-NLO.top) && mv fort.12 pwg-NLO.top
+
+rm -f $RUNDIR/pwgpwhgalone.top
+cd $RUNDIR && ../merge-data 1 $(ls $RUNDIR/pwgpwhgalone*.top) && mv fort.12 pwgpwhgalone.top
+
+rm -f $RUNDIR/pwg-xg2-btlgrid.top
+cd $RUNDIR && ../merge-data 1 $(ls $RUNDIR/pwg-xg2-*-btlgrid.top) && mv fort.12 pwg-xg2-btlgrid.top
+
+rm -f $RUNDIR/pwg-xg2-osresgrid.top
+cd $RUNDIR && ../merge-data 1 $(ls $RUNDIR/pwg-xg2-*-osresgrid.top) && mv fort.12 pwg-xg2-osresgrid.top
+
 echo "done."
