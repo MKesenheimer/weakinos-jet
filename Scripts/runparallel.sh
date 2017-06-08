@@ -762,32 +762,34 @@ cat <<EOM > $WORKINGDIR/runmsub_${IDENT}.sh
 echo ""
 echo "Stage 1a: Generating Grids, iteration 1"
 echo "  submitting $JOBS job(s)..."
+dependIDs1a=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
   job[\$i]=\$(msub -N ${NAME}_st1a_\${NSEED} -l walltime=$WALLTIME1 -v ARG1=\$NSEED -o $RUNDIR/powheg_st1a_\${NSEED}.output -e $RUNDIR/powheg_st1a_\${NSEED}.error $WORKINGDIR/run_st1a_${IDENT}.sh | grep -v -e '^$')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
-  dependIDs1a="\$dependIDs1a:\${job[\$i]}"
-  #echo \$dependIDs
+  dependIDs1a[\$i]=\${job[\$i]}
 done
 
 echo ""
 echo "Stage 1b: Generating Grids, iteration 2"
 echo "  submitting $JOBS job(s)..."
+dependIDs1b=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(msub -N ${NAME}_st1b_\${NSEED} -l walltime=$WALLTIME1,depend=afterok\${dependIDs1a} -v ARG1=\$NSEED -o $RUNDIR/powheg_st1b_\${NSEED}.output -e $RUNDIR/powheg_st1b_\${NSEED}.error $WORKINGDIR/run_st1b_${IDENT}.sh | grep -v -e '^$')
+  job[\$i]=\$(msub -N ${NAME}_st1b_\${NSEED} -l walltime=$WALLTIME1,depend=afterok:\${dependIDs1a[\$i]} -v ARG1=\$NSEED -o $RUNDIR/powheg_st1b_\${NSEED}.output -e $RUNDIR/powheg_st1b_\${NSEED}.error $WORKINGDIR/run_st1b_${IDENT}.sh | grep -v -e '^$')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
-  dependIDs1b="\$dependIDs1b:\${job[\$i]}"
+  dependIDs1b[\$i]=\${job[\$i]}
 done
 
 echo ""
 echo "Stage 2: NLO run"
 echo "  submitting $JOBS job(s)..."
+dependIDs2=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(msub -N ${NAME}_st2_\${NSEED} -l walltime=$WALLTIME2,depend=afterok\${dependIDs1b} -v ARG1=\$NSEED -o $RUNDIR/powheg_st2_\${NSEED}.output -e $RUNDIR/powheg_st2_\${NSEED}.error $WORKINGDIR/run_st2_${IDENT}.sh | grep -v -e '^$')
+  job[\$i]=\$(msub -N ${NAME}_st2_\${NSEED} -l walltime=$WALLTIME2,depend=afterok:\${dependIDs1b[\$i]} -v ARG1=\$NSEED -o $RUNDIR/powheg_st2_\${NSEED}.output -e $RUNDIR/powheg_st2_\${NSEED}.error $WORKINGDIR/run_st2_${IDENT}.sh | grep -v -e '^$')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
-  dependIDs2="\$dependIDs2:\${job[\$i]}"
+  dependIDs2[\$i]=\${job[\$i]}
 done
 
 EOM
@@ -796,21 +798,23 @@ cat <<EOM >> $WORKINGDIR/runmsub_${IDENT}.sh
 echo ""
 echo "Stage 3: Upper bound"
 echo "  submitting $JOBS job(s)..."
+dependIDs3=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(msub -N ${NAME}_st3_\${NSEED} -l walltime=$WALLTIME3,depend=afterok\${dependIDs2} -v ARG1=\$NSEED -o $RUNDIR/powheg_st3_\${NSEED}.output -e $RUNDIR/powheg_st3_\${NSEED}.error $WORKINGDIR/run_st3_${IDENT}.sh | grep -v -e '^$')
+  job[\$i]=\$(msub -N ${NAME}_st3_\${NSEED} -l walltime=$WALLTIME3,depend=afterok:\${dependIDs2[\$i]} -v ARG1=\$NSEED -o $RUNDIR/powheg_st3_\${NSEED}.output -e $RUNDIR/powheg_st3_\${NSEED}.error $WORKINGDIR/run_st3_${IDENT}.sh | grep -v -e '^$')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
-  dependIDs3="\$dependIDs3:\${job[\$i]}"
+  dependIDs3[\$i]=\${job[\$i]}
 done
 
 echo ""
 echo "Stage 4: Events"
 echo "  submitting $JOBS job(s)..."
+dependIDs4=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(msub -N ${NAME}_st4_\${NSEED} -l walltime=$WALLTIME4,depend=afterok\${dependIDs3} -v ARG1=\$NSEED -o $RUNDIR/powheg_st4_\${NSEED}.output -e $RUNDIR/powheg_st4_\${NSEED}.error $WORKINGDIR/run_st4_${IDENT}.sh | grep -v -e '^$')
+  job[\$i]=\$(msub -N ${NAME}_st4_\${NSEED} -l walltime=$WALLTIME4,depend=afterok:\${dependIDs3[\$i]} -v ARG1=\$NSEED -o $RUNDIR/powheg_st4_\${NSEED}.output -e $RUNDIR/powheg_st4_\${NSEED}.error $WORKINGDIR/run_st4_${IDENT}.sh | grep -v -e '^$')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
-  dependIDs4="\$dependIDs4:\${job[\$i]}"
+  dependIDs4[\$i]=\${job[\$i]}
 done
 
 EOM
