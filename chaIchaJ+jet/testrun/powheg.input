@@ -102,8 +102,9 @@ rwl_file '-'
 </weightgroup>
 </initrwgt>
  
-iseed         5002   ! (default 5602) initialize random number sequence
-#pdfreweight    1    ! (default 0) write extra pdf infos on LHEF
-#manyseeds      1    ! (default 0) allow for the generation of different statistically independent samples (see Docs/Manyseeds.pdf) 
-#xgriditeration 1    ! identifier for grid generation
-#parallelstage  1    ! identifier for parallel running stages
+iseed           5602    ! (default 5602) initialize random number sequence
+#pdfreweight    1       ! (default 0) write extra pdf infos on LHEF
+#manyseeds      1       ! (default 0) allow for the generation of different statistically independent samples (see Docs/Manyseeds.pdf) 
+maxseeds        9999    ! (default 200) maximum of seeds in pwgseeds.dat
+#xgriditeration 1       ! identifier for grid generation
+#parallelstage  1       ! identifier for parallel running stages
