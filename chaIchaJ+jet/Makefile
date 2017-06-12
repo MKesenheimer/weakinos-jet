@@ -379,7 +379,7 @@ SOURCESMAIN = $(PWHG) $(PDFPACK) $(USER) $(PWHGANALYSIS) $(FUNC) \
 
 SOURCESLHEF = $(LHEF) $(PWHGANALYSIS) $(MADGRAPH) set_channel.o
 
-SOURCESPYTHIA = $(PYTHIA) $(PWHGANALYSIS) $(MADGRAPH)
+SOURCESPYTHIA = $(PYTHIA) $(PWHGANALYSIS) $(MADGRAPH) set_channel.o
 
 ########################################################################
 ## Libraries
@@ -469,10 +469,20 @@ endif
 ## Rules, link
 ## type make -j4 [rule] to speed up the compilation
 
+# we don't need the loop routines for lhef and PYTHIA
+# -> remove initialization of loop routines in init_couplings depending
+# on which program we want to compile
+pwhg-init_couplings:
+	-rm ./build/init_couplings.o
+
+analysis-init_couplings:
+	-rm ./build/init_couplings.o
+	$(eval ALL_FCFLAGS += -DANALYSIS)
+
 formcalc_reals.a: $(addprefix ./build/, $(REALS))
 	ar cru $@ $(patsubst %,build/%,$(REALS))
 	mv $@ $(FORMREALS)
-    
+
 formcalc_virtuals.a: $(addprefix ./build/, $(VIRTUALS))
 	ar cru $@ $(patsubst %,build/%,$(VIRTUALS))
 	mv $@ $(FORMVIRTS)
@@ -481,13 +491,13 @@ libs: formcalc_reals.a formcalc_virtuals.a
 reals: formcalc_reals.a
 virtuals: formcalc_virtuals.a
 
-pwhg_main_xixj+jet: $(addprefix ./build/, $(SOURCESMAIN))
+pwhg_main_xixj+jet: pwhg-init_couplings $(addprefix ./build/, $(SOURCESMAIN))
 	$(FC) $(ALL_FCFLAGS) $(patsubst %,build/%,$(SOURCESMAIN)) $(FORMREALS)/formcalc_reals.a $(FORMVIRTS)/formcalc_virtuals.a $(LINKER) -o $@
 
-lhef_analysis: $(addprefix ./build/, $(SOURCESLHEF))
+lhef_analysis: analysis-init_couplings $(addprefix ./build/, $(SOURCESLHEF))
 	$(FC) $(ALL_FCFLAGS) $(patsubst %,build/%,$(SOURCESLHEF)) $(LINKER) -o $@ 
 
-main-PYTHIA-lhef: $(addprefix ./build/, $(SOURCESPYTHIA))
+main-PYTHIA-lhef: analysis-init_couplings $(addprefix ./build/, $(SOURCESPYTHIA))
 	$(FC) $(ALL_FCFLAGS) $(patsubst %,build/%,$(SOURCESPYTHIA)) $(LINKER) -o $@
 
 merge-pwg-stat: 
@@ -502,9 +512,9 @@ copy-scripts:
 	cp $(SCRIPTS)/reweight.sh     $(SUBWORKINGDIR) && \
 	cp $(SCRIPTS)/merge.sh        $(SUBWORKINGDIR)
 
-all-libs: libs pwhg_main_ninj+jet copy-scripts merge-pwg-stat merge-data lhef_analysis main-PYTHIA-lhef
+all-libs: libs pwhg_main_xixj+jet copy-scripts merge-pwg-stat merge-data
 
-all: pwhg_main_ninj+jet copy-scripts merge-pwg-stat merge-data lhef_analysis main-PYTHIA-lhef
+all: pwhg_main_xixj+jet copy-scripts merge-pwg-stat merge-data
 
 clean:
 	rm -f build/*.o pwhg_main_xixj+jet lhef_analysis main-PYTHIA-lhef merge-pwg-stat merge-data runparallel.sh clean_rundir.sh reweight.sh merge.sh

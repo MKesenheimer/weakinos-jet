@@ -87,19 +87,19 @@ libs: libdhelas3.a libcollier.a libooptools.a libSLHA.a print-info
 all: libs pastegnudata
 
 libdhelas3.a:
-	cd $(DHELAS) && make FC="$(FC)" F77="$(FC)" XFFLAGS="$(ALL_FCFLAGS)"
+	cd $(DHELAS) && $(MAKE) FC="$(FC)" F77="$(FC)" XFFLAGS="$(ALL_FCFLAGS)"
 
 libooptools.a:
-	cd $(LT) && make FC="$(FC)" F77="$(FC)" FFLAGS="$(ALL_FCFLAGS)" CXXFLAGS="$(REC_CXXFLAGS)" CFLAGS="$(REC_CFLAGS)"
+	cd $(LT) && $(MAKE) FC="$(FC)" F77="$(FC)" FFLAGS="$(ALL_FCFLAGS)" CXXFLAGS="$(REC_CXXFLAGS)" CFLAGS="$(REC_CFLAGS)"
 	
 libSLHA.a:
-	cd $(SLHA) && make FC="$(FC)" F77="$(FC)" FFLAGS="$(ALL_FCFLAGS)" CXXFLAGS="$(REC_CXXFLAGS)" CFLAGS="$(REC_CFLAGS)"
+	cd $(SLHA) && $(MAKE) FC="$(FC)" F77="$(FC)" FFLAGS="$(ALL_FCFLAGS)" CXXFLAGS="$(REC_CXXFLAGS)" CFLAGS="$(REC_CFLAGS)"
 
 libpythia.a:
-	cd $(PYTHIA) && make CXX="$(CXX)" CXXFLAGS="$(REC_CXXFLAGS)" && make install
+	cd $(PYTHIA) && $(MAKE) CXX="$(CXX)" CXXFLAGS="$(REC_CXXFLAGS)" && $(MAKE) install
 
 libcollier.a:
-	cd $(COLLIER)/build && make
+	cd $(COLLIER)/build && $(MAKE)
 	mkdir -p $(COLLIERINTERFACE)/$(COLLIERMOD)
 	cp $(COLLIER)/modules/*.mod $(COLLIERINTERFACE)/$(COLLIERMOD)
 
@@ -108,22 +108,22 @@ pastegnudata:
 
 clean-libs:
 	rm -f $(TOOLS)/*.a
-	cd $(DHELAS) && make clean
-	cd $(SLHA) && make clean
-	cd $(PYTHIA) && make distclean
+	cd $(DHELAS) && $(MAKE) clean
+	cd $(SLHA) && $(MAKE) clean
+	cd $(PYTHIA) && $(MAKE) distclean
 	cd $(COLLIER) && rm -rf build/*
-	cd $(LT) && make clean
+	cd $(LT) && $(MAKE) clean
 
 clean clean-all: clean-libs
-	cd neuIneuJ+jet && make clean-all
-	cd neuIchaJ+jet && make clean-all
-	cd chaIchaJ+jet && make clean-all
+	cd ./neuIneuJ+jet && $(MAKE) clean-all
+	cd ./neuIchaJ+jet && $(MAKE) clean-all
+	cd ./chaIchaJ+jet && $(MAKE) clean-all
 	rm -f ./plot-aux/pastegnudata
 
 print-info:
 	$(info )
 	$(info --> Now change into directory neuIneuJ, neuIchaJ or chaIchaJ)
-	$(info     and type "make clean-results && make -j4 do" to run the program)
+	$(info     and type "$(MAKE) clean-results && $(MAKE) -j4 do" to run the program)
 	
 ########################################################################
 #                       -*- End of Makefile -*-                        #

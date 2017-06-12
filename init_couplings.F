@@ -164,6 +164,8 @@ c requires encoded process ID in lprup(1)
           stop
         endif
 
+
+#ifndef ANALYSIS
 #ifdef collier
         ! init COLLIER
         print*, "===================================================="
@@ -190,7 +192,8 @@ c requires encoded process ID in lprup(1)
         print*,"minmass: ", getminmass()
         print*, "===================================================="
         print*
-#endif 
+#endif
+#endif
       end
 c############### end subroutine init_couplings #########################
 

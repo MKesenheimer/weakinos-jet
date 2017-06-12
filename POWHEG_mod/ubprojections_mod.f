@@ -150,7 +150,7 @@ c looop over all possible singularities
      1              'with olddij is wrong; it may also imply ',
      2              'that kn_dijterm_soft() are incorrect.',
      3              'A dijterm_soft() function should be built instead'
-         call pwhg_exit(-1)
+         !call pwhg_exit(-1) ! MK: commented: give warning, but don't exit the program 
       endif
 c get average singularity from underlying Born
       avub=1
