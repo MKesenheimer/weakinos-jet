@@ -74,8 +74,8 @@ numevts  0           ! number of events to be generated
 ! OPTIONAL PARAMETERS
 runningscale   0     ! (default 0) use ref. scale=virtuality Q (default 0, use fixed scale)
 #fakevirtuals  1     ! (default 0) generate the grid with fake virtuals
-softtest       1     ! (default 0) check soft singularities
-colltest       1     ! (default 0) check collinear singularities
+#softtest      1     ! (default 0) check soft singularities
+#colltest      1     ! (default 0) check collinear singularities
 renscfact      1d0   ! (default 1d0) ren scale factor: muren  = muref * renscfact
 facscfact      1d0   ! (default 1d0) fac scale factor: mufact = muref * facscfact
 #bornonly      1     ! (default 0) if 1 do Born only
@@ -102,7 +102,7 @@ rwl_file '-'
 </weightgroup>
 </initrwgt>
  
-iseed           5602    ! (default 5602) initialize random number sequence
+iseed           5002    ! (default 5002) initialize random number sequence
 #pdfreweight    1       ! (default 0) write extra pdf infos on LHEF
 #manyseeds      1       ! (default 0) allow for the generation of different statistically independent samples (see Docs/Manyseeds.pdf) 
 maxseeds        9999    ! (default 200) maximum of seeds in pwgseeds.dat
