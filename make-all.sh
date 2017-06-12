@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# This scripts provides a faster and simpler way to compile all sub programs at once.
+
 make pastegnudata
 
 if [[ $1 != -j* ]]; then
