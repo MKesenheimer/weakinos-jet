@@ -58,8 +58,12 @@ Optional arguments:
   --genevents              generate events
   --nubound <n>            upper bound number
   --nevents <n>            number of events
-  --usemsub                use the submitting system msub (not implemented yet)
+  --usemsub                use the submitting system msub
+  --usecondor              use condor (experimental)
   -s, --slha <name>        name of the slha file you want to use
+  --lhapath <path,rd>      path of LHAPDF (in case condor can't access the file 
+                           system and needs a local copy of the LHA grid files)
+                           if "--lhapath rd" the current run directory will be used
   --lopdf <n>              only LO calculation with LO pdf and LHA number n
   -g, --genfolder          generate a new run directory with default input files 
                            (the directory "testrun_clean" is needed)
@@ -77,6 +81,7 @@ Optional arguments:
   --w[i] <n>               the walltime in seconds of the i-th stage (f.e. -w1 60)
   --fakevirt               use fake virtuals in all calculations
   --name <name>            job is identified with a name for msub
+  --time                   meassure execution time
 EOM
    exit 0
 }
@@ -120,6 +125,7 @@ CLEAN=false
 NSEEDOFFSET=0
 NICENESS=10
 USEMSUB=false
+USECONDOR=false
 GENEVENTS=false
 GENFOLGDER=false
 MERGE=false
@@ -131,6 +137,8 @@ WALLTIME3=1800
 WALLTIME4=43200
 FAKEVIRT=false
 NAME=""
+LHAPATH1=""
+TIME=""
 
 # go through the options
 while [[ $# -gt 0 ]]; do
@@ -213,6 +221,11 @@ case $KEY in
         shift
         shift
         ;;
+    --lhapath)
+        LHAPATH1="$2"
+        shift
+        shift
+        ;;
     --lopdf)
         LOPDF="$2"
         shift
@@ -283,6 +296,10 @@ case $KEY in
         USEMSUB=true
         shift
         ;;
+     --usecondor)
+        USECONDOR=true
+        shift
+        ;;
      --w1)
         WALLTIME1="$2"
         shift
@@ -322,6 +339,10 @@ case $KEY in
         ;;
     --fakevirt)
         FAKEVIRT=true
+        shift
+        ;;
+    --time)
+        TIME=time
         shift
         ;;
     *)
@@ -385,7 +406,7 @@ cd $RUNDIR
 
 # clean up the directory
 if [ "$CLEAN" = true ]; then
-   find $RUNDIR ! \( -name '*.slha' -o -name '*.input' -o -name 'pwgseeds.dat' \) -type f -exec rm -f {} +
+   find $RUNDIR ! \( -name '*.slha' -o -name '*.input' -o -name 'pwgseeds.dat' -o -name '*.LHgrid' \) -type f -exec rm -f {} +
    cp $RUNDIR/powheg_clean.input $RUNDIR/powheg.input
 fi
 #exit 0
@@ -487,9 +508,6 @@ fi
 # back up the old parameters
 NEVENTSOLD=$(read_powheg_var "numevts")
 NUBOUNDOLD=$(read_powheg_var "nubound")
-
-#echo "Note: numevts was $NEVENTSOLD"
-#echo "Note: nubound was $NUBOUNDOLD"
 
 # generate the scripts to start the POWHEG-main executable
 
@@ -593,10 +611,17 @@ EOM
 chmod +x $WORKINGDIR/run_st4_${IDENT}.sh
 fi
 
+# additional environmental variables
+if [ "$LHAPATH1" = "rd" ]; then
+  LHAPATH=$RUNDIR
+  export LHAPATH
+elif [ "$LHAPATH1" != "" ]; then
+  LHAPATH=$LHAPATH1
+  export LHAPATH
+fi
+
 # generate and run the run.sh script
-# nohup ./runparallel.sh -g -c -e pwhg_main_nixj -d run_nsusy_n2x1+ -p 4 --fin1 1000023 --fin2 1000024 --slha input_nsusy_1307.0782.slha --ncall1 20000 --ncall2 20000 --ncall1osres 2000000 --ncall2osres 2000000 --nevents 500000 --nubound 500000 --genevents --merge > log_run1_nsusy_n2x1+ &
-# nohup ./runparallel.sh -g -c -e pwhg_main_nixj -d run_mSUGRA_n2x1+ -p 4 --fin1 1000023 --fin2 1000024 --slha input_mSUGRA_1410.4999.slha --ncall1 20000 --ncall2 20000 --ncall1osres 2000000 --ncall2osres 2000000 --nevents 500000 --nubound 500000 --genevents --merge > log_run_mSUGRA_n2x1+ &
-if [ "$USEMSUB" = false ]; then
+if [ "$USEMSUB" = false ] && [ "$USECONDOR" = false ]; then
 cat <<EOM > $WORKINGDIR/run_${IDENT}.sh
 #!/bin/bash
 echo ""
@@ -605,7 +630,7 @@ echo "  starting $JOBS job(s)..."
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
   echo "  job \$i with nseed \$NSEED"
-  nohup time nice -n $NICENESS $WORKINGDIR/run_st1a_${IDENT}.sh \$NSEED > $RUNDIR/powheg_st1a_\${NSEED}.output 2>&1 &
+  nohup $TIME nice -n $NICENESS $WORKINGDIR/run_st1a_${IDENT}.sh \$NSEED > $RUNDIR/powheg_st1a_\${NSEED}.output 2>&1 &
 done
 for job in \`jobs -p\`; do
     wait \$job
@@ -618,7 +643,7 @@ echo "  starting $JOBS job(s)..."
 for i in \`seq 1 $JOBS\`; do
    NSEED=\$((i+$NSEEDOFFSET))
    echo "  job \$i with nseed \$NSEED"
-   nohup time nice -n $NICENESS $WORKINGDIR/run_st1b_${IDENT}.sh \$NSEED > $RUNDIR/powheg_st1b_\${NSEED}.output 2>&1 &
+   nohup $TIME nice -n $NICENESS $WORKINGDIR/run_st1b_${IDENT}.sh \$NSEED > $RUNDIR/powheg_st1b_\${NSEED}.output 2>&1 &
 done
 for job in \`jobs -p\`; do
     wait \$job
@@ -631,7 +656,7 @@ echo "  starting $JOBS job(s)..."
 for i in \`seq 1 $JOBS\`; do
    NSEED=\$((i+$NSEEDOFFSET))
    echo "  job \$i with nseed \$NSEED"
-   nohup time nice -n $NICENESS $WORKINGDIR/run_st2_${IDENT}.sh \$NSEED > $RUNDIR/powheg_st2_\${NSEED}.output 2>&1 &
+   nohup $TIME nice -n $NICENESS $WORKINGDIR/run_st2_${IDENT}.sh \$NSEED > $RUNDIR/powheg_st2_\${NSEED}.output 2>&1 &
 done
 for job in \`jobs -p\`; do
     wait \$job
@@ -647,7 +672,7 @@ echo "  starting $JOBS job(s)..."
 for i in \`seq 1 $JOBS\`; do
    NSEED=\$((i+$NSEEDOFFSET))
    echo "  job \$i with nseed \$NSEED"
-   nohup time nice -n $NICENESS $WORKINGDIR/run_st3_${IDENT}.sh \$NSEED > $RUNDIR/powheg_st3_\${NSEED}.output 2>&1 &
+   nohup $TIME nice -n $NICENESS $WORKINGDIR/run_st3_${IDENT}.sh \$NSEED > $RUNDIR/powheg_st3_\${NSEED}.output 2>&1 &
 done
 for job in \`jobs -p\`; do
     wait \$job
@@ -660,7 +685,7 @@ echo "  starting $JOBS job(s)..."
 for i in \`seq 1 $JOBS\`; do
    NSEED=\$((i+$NSEEDOFFSET))
    echo "  job \$i with nseed \$NSEED"
-   nohup time nice -n $NICENESS $WORKINGDIR/run_st4_${IDENT}.sh \$NSEED > $RUNDIR/powheg_st4_\${NSEED}.output 2>&1 &
+   nohup $TIME nice -n $NICENESS $WORKINGDIR/run_st4_${IDENT}.sh \$NSEED > $RUNDIR/powheg_st4_\${NSEED}.output 2>&1 &
 done
 for job in \`jobs -p\`; do
     wait \$job
@@ -711,51 +736,15 @@ rm -f $WORKINGDIR/run_${IDENT}.sh
 #rm -f $RUNDIR/powheg_st*.input
 fi
 
+# additional environmental variables for msub and condor
+ADDVAR=""
+if [ "$LHAPATH1" = "rd" ]; then
+  ADDVAR+=",LHAPATH=$RUNDIR"
+elif [ "$LHAPATH1" != "" ]; then
+  ADDVAR+=",LHAPATH=$LHAPATH1"
+fi
 
 # if the user wants to use msub:
-# the approximate runtime is determined with the following parameters for the nemo cluster in freiburg:
-# low precision job: 20 parallel jobs
-# ./runparallel.sh -g -c -e pwhg_main_nixj -d run_nsusy_n2x1+ -p 20 --fin1 1000023 --fin2 1000024 --slha input_nsusy_1307.0782.slha --nevents 50000 --nubound 50000 --genevents --usemsub
-# ncall1   20000
-# itmx1    4
-# ncall2   20000
-# itmx2    4
-# ncall1osres 2000000
-# itmx1osres  6
-# ncall2osres 2000000
-# itmx2osres  8 
-# nubound 50000
-# numevts 50000
-#
-# stage 1a: 8-12min
-# stage 1b: 8-12min
-# stage 2: 2-3h
-# stage 3: 20-30sec
-# stage 4: 15-25min
-# total: ~4h
-
-# high precision job: 20 parallel jobs
-# ./runparallel.sh -g -c -e pwhg_main_nixj -d run1_nsusy_n2x1+ -p 20 --fin1 1000023 --fin2 1000024 --slha input_nsusy_1307.0782.slha --ncall1 200000 --ncall2 300000 --nevents 100000 --nubound 100000 --genevents --usemsub > submit_run1_nsusy_n2x1+ &
-# ./runparallel.sh -g -c -e pwhg_main_nixj -d run2_nsusy_n2x1+ -p 20 --fin1 1000023 --fin2 1000024 --slha input_nsusy_1307.0782.slha --ncall1 200000 --ncall2 300000 --nevents 100000 --nubound 100000 --genevents --usemsub --offset 20 > submit_run2_nsusy_n2x1+ &
-# tail -f submit_run_old_nsusy_n2x1+
-# ncall1 200000
-# itmx1    4
-# ncall2 300000
-# itmx2    4
-# ncall1osres 2000000
-# itmx1osres  6
-# ncall2osres 2000000
-# itmx2osres  8 
-# nubound 100000
-# numevts 100000
-#
-# stage 1a: 10min
-# stage 1b: 15min
-# stage 2: 5h
-# stage 3: 3min
-# stage 4: 40min
-# total: ~6h
-
 if [ "$USEMSUB" = true ]; then
 cat <<EOM > $WORKINGDIR/runmsub_${IDENT}.sh
 #!/bin/bash
@@ -765,7 +754,7 @@ echo "  submitting $JOBS job(s)..."
 dependIDs1a=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(msub -N ${NAME}_st1a_\${NSEED} -l walltime=$WALLTIME1 -v ARG1=\$NSEED -o $RUNDIR/powheg_st1a_\${NSEED}.output -e $RUNDIR/powheg_st1a_\${NSEED}.error $WORKINGDIR/run_st1a_${IDENT}.sh | grep -v -e '^$')
+  job[\$i]=\$(msub -N ${NAME}_st1a_\${NSEED} -l walltime=$WALLTIME1 -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st1a_\${NSEED}.output -e $RUNDIR/powheg_st1a_\${NSEED}.error $WORKINGDIR/run_st1a_${IDENT}.sh | grep -v -e '^$')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs1a[\$i]=\${job[\$i]}
 done
@@ -776,7 +765,7 @@ echo "  submitting $JOBS job(s)..."
 dependIDs1b=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(msub -N ${NAME}_st1b_\${NSEED} -l walltime=$WALLTIME1,depend=afterok:\${dependIDs1a[\$i]} -v ARG1=\$NSEED -o $RUNDIR/powheg_st1b_\${NSEED}.output -e $RUNDIR/powheg_st1b_\${NSEED}.error $WORKINGDIR/run_st1b_${IDENT}.sh | grep -v -e '^$')
+  job[\$i]=\$(msub -N ${NAME}_st1b_\${NSEED} -l walltime=$WALLTIME1,depend=afterok:\${dependIDs1a[\$i]} -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st1b_\${NSEED}.output -e $RUNDIR/powheg_st1b_\${NSEED}.error $WORKINGDIR/run_st1b_${IDENT}.sh | grep -v -e '^$')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs1b[\$i]=\${job[\$i]}
 done
@@ -787,7 +776,7 @@ echo "  submitting $JOBS job(s)..."
 dependIDs2=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(msub -N ${NAME}_st2_\${NSEED} -l walltime=$WALLTIME2,depend=afterok:\${dependIDs1b[\$i]} -v ARG1=\$NSEED -o $RUNDIR/powheg_st2_\${NSEED}.output -e $RUNDIR/powheg_st2_\${NSEED}.error $WORKINGDIR/run_st2_${IDENT}.sh | grep -v -e '^$')
+  job[\$i]=\$(msub -N ${NAME}_st2_\${NSEED} -l walltime=$WALLTIME2,depend=afterok:\${dependIDs1b[\$i]} -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st2_\${NSEED}.output -e $RUNDIR/powheg_st2_\${NSEED}.error $WORKINGDIR/run_st2_${IDENT}.sh | grep -v -e '^$')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs2[\$i]=\${job[\$i]}
 done
@@ -801,7 +790,7 @@ echo "  submitting $JOBS job(s)..."
 dependIDs3=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(msub -N ${NAME}_st3_\${NSEED} -l walltime=$WALLTIME3,depend=afterok:\${dependIDs2[\$i]} -v ARG1=\$NSEED -o $RUNDIR/powheg_st3_\${NSEED}.output -e $RUNDIR/powheg_st3_\${NSEED}.error $WORKINGDIR/run_st3_${IDENT}.sh | grep -v -e '^$')
+  job[\$i]=\$(msub -N ${NAME}_st3_\${NSEED} -l walltime=$WALLTIME3,depend=afterok:\${dependIDs2[\$i]} -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st3_\${NSEED}.output -e $RUNDIR/powheg_st3_\${NSEED}.error $WORKINGDIR/run_st3_${IDENT}.sh | grep -v -e '^$')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs3[\$i]=\${job[\$i]}
 done
@@ -812,7 +801,7 @@ echo "  submitting $JOBS job(s)..."
 dependIDs4=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(msub -N ${NAME}_st4_\${NSEED} -l walltime=$WALLTIME4,depend=afterok:\${dependIDs3[\$i]} -v ARG1=\$NSEED -o $RUNDIR/powheg_st4_\${NSEED}.output -e $RUNDIR/powheg_st4_\${NSEED}.error $WORKINGDIR/run_st4_${IDENT}.sh | grep -v -e '^$')
+  job[\$i]=\$(msub -N ${NAME}_st4_\${NSEED} -l walltime=$WALLTIME4,depend=afterok:\${dependIDs3[\$i]} -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st4_\${NSEED}.output -e $RUNDIR/powheg_st4_\${NSEED}.error $WORKINGDIR/run_st4_${IDENT}.sh | grep -v -e '^$')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs4[\$i]=\${job[\$i]}
 done
@@ -822,4 +811,73 @@ fi #if GENEVENTS
 
 chmod +x $WORKINGDIR/runmsub_${IDENT}.sh
 $WORKINGDIR/runmsub_${IDENT}.sh
+fi
+
+# if the user wants to use condor:
+if [ "$USECONDOR" = true ]; then
+cat <<EOM > $WORKINGDIR/runcondor_${IDENT}.sh
+#!/bin/bash
+echo ""
+echo "Stage 1a: Generating Grids, iteration 1"
+echo "  submitting $JOBS job(s)..."
+dependIDs1a=()
+for i in \`seq 1 $JOBS\`; do
+  NSEED=\$((\$i+$NSEEDOFFSET))
+  job[\$i]=\$(condor_qsub -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st1a_\${NSEED}.output -e $RUNDIR/powheg_st1a_\${NSEED}.error $WORKINGDIR/run_st1a_${IDENT}.sh | sed -r 's/.* ([0-9]*) .*/\1/g')
+  echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
+  dependIDs1a[\$i]=\${job[\$i]}
+done
+
+echo ""
+echo "Stage 1b: Generating Grids, iteration 2"
+echo "  submitting $JOBS job(s)..."
+dependIDs1b=()
+for i in \`seq 1 $JOBS\`; do
+  NSEED=\$((\$i+$NSEEDOFFSET))
+  job[\$i]=\$(condor_qsub -hold_jid \${dependIDs1a[\$i]} -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st1b_\${NSEED}.output -e $RUNDIR/powheg_st1b_\${NSEED}.error $WORKINGDIR/run_st1b_${IDENT}.sh | sed -r 's/.* ([0-9]*) .*/\1/g')
+  echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
+  dependIDs1b[\$i]=\${job[\$i]}
+done
+
+echo ""
+echo "Stage 2: NLO run"
+echo "  submitting $JOBS job(s)..."
+dependIDs2=()
+for i in \`seq 1 $JOBS\`; do
+  NSEED=\$((\$i+$NSEEDOFFSET))
+  job[\$i]=\$(condor_qsub -hold_jid \${dependIDs1b[\$i]} -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st2_\${NSEED}.output -e $RUNDIR/powheg_st2_\${NSEED}.error $WORKINGDIR/run_st2_${IDENT}.sh | sed -r 's/.* ([0-9]*) .*/\1/g')
+  echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
+  dependIDs2[\$i]=\${job[\$i]}
+done
+
+EOM
+if [ "$GENEVENTS" = true ]; then
+cat <<EOM >> $WORKINGDIR/runcondor_${IDENT}.sh
+echo ""
+echo "Stage 3: Upper bound"
+echo "  submitting $JOBS job(s)..."
+dependIDs3=()
+for i in \`seq 1 $JOBS\`; do
+  NSEED=\$((\$i+$NSEEDOFFSET))
+  job[\$i]=\$(condor_qsub -hold_jid \${dependIDs2[\$i]} -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st3_\${NSEED}.output -e $RUNDIR/powheg_st3_\${NSEED}.error $WORKINGDIR/run_st3_${IDENT}.sh | sed -r 's/.* ([0-9]*) .*/\1/g')
+  echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
+  dependIDs3[\$i]=\${job[\$i]}
+done
+
+echo ""
+echo "Stage 4: Events"
+echo "  submitting $JOBS job(s)..."
+dependIDs4=()
+for i in \`seq 1 $JOBS\`; do
+  NSEED=\$((\$i+$NSEEDOFFSET))
+  job[\$i]=\$(condor_qsub -hold_jid \${dependIDs3[\$i]} -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st4_\${NSEED}.output -e $RUNDIR/powheg_st4_\${NSEED}.error $WORKINGDIR/run_st4_${IDENT}.sh | sed -r 's/.* ([0-9]*) .*/\1/g')
+  echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
+  dependIDs4[\$i]=\${job[\$i]}
+done
+
+EOM
+fi #if GENEVENTS
+
+chmod +x $WORKINGDIR/runcondor_${IDENT}.sh
+$WORKINGDIR/runcondor_${IDENT}.sh
 fi

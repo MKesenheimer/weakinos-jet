@@ -393,7 +393,6 @@ c version.
               case (1000021) ! gluino
                 par_WGl = width(channel)
 #ifndef NEGLECT_SWIDTH
-              print*, "warning: FormCalc does not use squark-widths."  
               case (1000001) ! sdown_L
                 par_WSf(1,4,1) = width(channel)
               case (2000001) ! sdown_R
@@ -423,6 +422,7 @@ c version.
           endif
         enddo
 #ifdef NEGLECT_SWIDTH
+        print*,"Warning: FormCalc does not use squark widths."
         do i=1,2 ! sfermion index s
           do j=3,4 ! type (u or d)
             do k=1,3 ! generation

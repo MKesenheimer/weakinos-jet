@@ -520,7 +520,7 @@ clean:
 	rm -f build/*.o pwhg_main_xixj+jet lhef_analysis main-PYTHIA-lhef merge-pwg-stat merge-data runparallel.sh clean_rundir.sh reweight.sh merge.sh
 
 clean-results:
-	find ./testrun ! \( -name '*.slha' -o -name '*.input' -o -name 'pwgseeds.dat' \) \
+	find ./testrun ! \( -name '*.slha' -o -name '*.input' -o -name 'pwgseeds.dat' -o -name '*.LHgrid' \) \
 	-type f -exec rm -f {} +
     
 clean-libs:
