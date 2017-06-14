@@ -388,7 +388,6 @@ if [ "$GENFOLGDER" = true ]; then
       exit 0
    fi
    cp -r testrun_clean/ $RUNDIR
-   cp $RUNDIR/powheg_clean.input $RUNDIR/powheg.input
 fi
 
 # check if EXE is set
@@ -414,11 +413,11 @@ cd $RUNDIR
 # clean up the directory
 if [ "$CLEAN" = true ]; then
    find $RUNDIR ! \( -name '*.slha' -o -name '*.input' -o -name 'pwgseeds.dat' -o -name '*.LHgrid' \) -type f -exec rm -f {} +
-   cp $RUNDIR/powheg_clean.input $RUNDIR/powheg.input
 fi
 #exit 0
 
 # append to powheg.input
+cp $RUNDIR/powheg_clean.input $RUNDIR/powheg.input
 echo "" >> $RUNDIR/powheg.input
 echo "" >> $RUNDIR/powheg.input
 echo "# Modified by runparallel.sh:" >> $RUNDIR/powheg.input
