@@ -660,8 +660,8 @@ elif [ "$LHAPATH1" != "" ]; then
 fi
 
 # generate and run the run.sh script
-echo "#!/bin/bash" > $WORKINGDIR/run_${IDENT}.sh
 if [ "$USEMSUB" = false ] && [ "$USECONDOR" = false ]; then
+echo "#!/bin/bash" > $WORKINGDIR/run_${IDENT}.sh
 if [ "$STAGE" != "1b" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
 cat <<EOM >> $WORKINGDIR/run_${IDENT}.sh
 echo ""
