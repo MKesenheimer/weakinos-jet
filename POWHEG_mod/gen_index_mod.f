@@ -166,11 +166,6 @@ c MK: added
       
       ran1 = random()
       ran2 = int(1+random()*(flst_nosres-1))
-#ifdef DEBUG
-      print*,"in gen_index_mod.f: check and uncommnet"  
-      print*,ran2,flst_osres(:,ran2)
-      stop
-#endif
       
 c which version is better?
 #define GENOSRES1
@@ -205,5 +200,14 @@ c which version is better?
         endif
       enddo
  10   continue
+#endif
+
+#ifdef DEBUG
+      print*,"in gen_index_mod.f: check and uncommnet"  
+      print*,ran1,ran2,flst_osres(:,ran2)
+      print*,rad_ubornidx,rad_realosres
+      print*,rad_totosres_sum,rad_totosres_frac_sum
+      print*,kn_emitter
+      print*,ichan,iret
 #endif
       end

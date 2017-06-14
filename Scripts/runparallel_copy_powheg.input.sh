@@ -82,23 +82,22 @@ Optional arguments:
   --fakevirt               use fake virtuals in all calculations
   --name <name>            job is identified with a name for msub
   --time                   meassure execution time
-  --st <1a,1b,2,3,4>       which stage should be performed
 EOM
    exit 0
 }
 
-function overwrite_var {
-  sed -i -e "s/$2 /#$2 /g" $1
-  echo "$2 $3" >> $1
+function overwrite_powheg_var {
+  sed -i -e "s/$1 /#$1 /g" powheg.input
+  echo "$1 $2" >> powheg.input
 }
 
-function comment_var {
-  sed -i -e "s/$2 /#$2 /g" $1
+function comment_powheg_var {
+  sed -i -e "s/$1 /#$1 /g" powheg.input
 }
 
 # make sure grep uses no other arguments (for example via aliases)
-function read_var {
-  grep "$2" $1 | sed 's/[^0-9]//g' | head -1
+function read_powheg_var {
+  grep "$1" powheg.input | sed 's/[^0-9]//g' | head -1
 }
 
 function checksum {
@@ -140,7 +139,6 @@ FAKEVIRT=false
 NAME=""
 LHAPATH1=""
 TIME=""
-STAGE=""
 
 # go through the options
 while [[ $# -gt 0 ]]; do
@@ -347,11 +345,6 @@ case $KEY in
         TIME=time
         shift
         ;;
-     --st)
-        STAGE="$2"
-        shift
-        shift
-        ;;
     *)
         usage    # unknown option
         ;;
@@ -419,159 +412,162 @@ fi
 #exit 0
 
 # append to powheg.input
-echo "" >> $RUNDIR/powheg.input
-echo "" >> $RUNDIR/powheg.input
-echo "# Modified by runparallel.sh:" >> $RUNDIR/powheg.input
+echo "" >> powheg.input
+echo "" >> powheg.input
+echo "# Modified by runparallel.sh:" >> powheg.input
 
 #default parameters in powheg.input
-overwrite_var "$RUNDIR/powheg.input" "use-old-grid" 1
-overwrite_var "$RUNDIR/powheg.input" "use-old-ubound" 1
-comment_var "$RUNDIR/powheg.input" "iseed"
-overwrite_var "$RUNDIR/powheg.input" "manyseeds" 1
-overwrite_var "$RUNDIR/powheg.input" "testplots" 1
-overwrite_var "$RUNDIR/powheg.input" "softtest" 0
-overwrite_var "$RUNDIR/powheg.input" "colltest" 0
+overwrite_powheg_var "use-old-grid" 1
+overwrite_powheg_var "use-old-ubound" 1
+comment_powheg_var "iseed"
+overwrite_powheg_var "manyseeds" 1
+overwrite_powheg_var "testplots" 1
+overwrite_powheg_var "softtest" 0
+overwrite_powheg_var "colltest" 0
 
 # sed magic
 if [ "$NCALL1" != "" ]; then
-   overwrite_var "$RUNDIR/powheg.input" "ncall1" $NCALL1
+   overwrite_powheg_var "ncall1" $NCALL1
 fi  
 
 if [ "$NCALL2" != "" ]; then
-   overwrite_var "$RUNDIR/powheg.input" "ncall2" $NCALL2
+   overwrite_powheg_var "ncall2" $NCALL2
 fi
 
 if [ "$NCALL1OSRES" != "" ]; then
-   overwrite_var "$RUNDIR/powheg.input" "ncall1osres" $NCALL1OSRES
+   overwrite_powheg_var "ncall1osres" $NCALL1OSRES
 fi  
 
 if [ "$NCALL2OSRES" != "" ]; then
-   overwrite_var "$RUNDIR/powheg.input" "ncall2osres" $NCALL2OSRES
+   overwrite_powheg_var "ncall2osres" $NCALL2OSRES
 fi
 
 if [ "$ITMX1" != "" ]; then
-   overwrite_var "$RUNDIR/powheg.input" "itmx1" $ITMX1
+   overwrite_powheg_var "itmx1" $ITMX1
 fi  
 
 if [ "$ITMX2" != "" ]; then
-   overwrite_var "$RUNDIR/powheg.input" "itmx2" $ITMX2
+   overwrite_powheg_var "itmx2" $ITMX2
 fi
 
 if [ "$ITMX1OSRES" != "" ]; then
-   overwrite_var "$RUNDIR/powheg.input" "itmx1osres" $ITMX1OSRES
+   overwrite_powheg_var "itmx1osres" $ITMX1OSRES
 fi  
 
 if [ "$ITMX2OSRES" != "" ]; then
-   overwrite_var "$RUNDIR/powheg.input" "itmx2osres" $ITMX2OSRES
+   overwrite_powheg_var "itmx2osres" $ITMX2OSRES
 fi
 
 if [ "$SLHA" != "" ]; then
-   overwrite_var "$RUNDIR/powheg.input" "SLHA" \'"$SLHA"\'
+   overwrite_powheg_var "SLHA" \'"$SLHA"\'
 fi
 
 if [ "$LOPDF" != "" ]; then
-   overwrite_var "$RUNDIR/powheg.input" "lhans1" $LOPDF
-   overwrite_var "$RUNDIR/powheg.input" "lhans2" $LOPDF
-   overwrite_var "$RUNDIR/powheg.input" "bornonly" 1
-   overwrite_var "$RUNDIR/powheg.input" "LOevents" 1
+   overwrite_powheg_var "lhans1" $LOPDF
+   overwrite_powheg_var "lhans2" $LOPDF
+   overwrite_powheg_var "bornonly" 1
+   overwrite_powheg_var "LOevents" 1
 fi
 
 if [ "$FIN1" != "" ]; then
-   overwrite_var "$RUNDIR/powheg.input" "fin1" "$FIN1"
+   overwrite_powheg_var "fin1" "$FIN1"
 fi
 
 if [ "$FIN2" != "" ]; then
-   overwrite_var "$RUNDIR/powheg.input" "fin2" "$FIN2"
+   overwrite_powheg_var "fin2" "$FIN2"
 fi
 
 if [ "$DEC1" != "" ]; then
-   overwrite_var "$RUNDIR/powheg.input" "dec1" "$DEC1"
+   overwrite_powheg_var "dec1" "$DEC1"
 fi
 
 if [ "$DEC2" != "" ]; then
-   overwrite_var "$RUNDIR/powheg.input" "dec2" "$DEC2"
+   overwrite_powheg_var "dec2" "$DEC2"
 fi
 
 if [ "$DEC3" != "" ]; then
-   overwrite_var "$RUNDIR/powheg.input" "dec3" "$DEC3"
+   overwrite_powheg_var "dec3" "$DEC3"
 fi
 
 if [ "$DEC4" != "" ]; then
-   overwrite_var "$RUNDIR/powheg.input" "dec4" "$DEC4"
+   overwrite_powheg_var "dec4" "$DEC4"
 fi
 
 if [ "$RENSCFACT" != "" ]; then
-   overwrite_var "$RUNDIR/powheg.input" "renscfact" "$RENSCFACT"
+   overwrite_powheg_var "renscfact" "$RENSCFACT"
 fi
 
 if [ "$FACSCFACT" != "" ]; then
-   overwrite_var "$RUNDIR/powheg.input" "facscfact" "$FACSCFACT"
+   overwrite_powheg_var "facscfact" "$FACSCFACT"
 fi
 
 if [ "$EWI" != "" ]; then
-   overwrite_var "$RUNDIR/powheg.input" "ewi" "$EWI"
+   overwrite_powheg_var "ewi" "$EWI"
 fi
 
 # back up the old parameters
-NEVENTSOLD=$(read_var "$RUNDIR/powheg.input" "numevts")
-NUBOUNDOLD=$(read_var "$RUNDIR/powheg.input" "nubound")
-
+NEVENTSOLD=$(read_powheg_var "numevts")
+NUBOUNDOLD=$(read_powheg_var "nubound")
 
 # generate the scripts to start the POWHEG-main executable
 
 # STEP 1a
-cp $RUNDIR/powheg.input $RUNDIR/powheg_st1a.input
-echo "" >> $RUNDIR/powheg_st1a.input
-echo "#Stage 1a: Generating Grids, iteration 1" >> $RUNDIR/powheg_st1a.input
-overwrite_var "$RUNDIR/powheg_st1a.input" "fakevirtuals" 1
-overwrite_var "$RUNDIR/powheg_st1a.input" "parallelstage" 1
-overwrite_var "$RUNDIR/powheg_st1a.input" "xgriditeration" 1
+echo "" >> $RUNDIR/powheg.input
+echo "#Stage 1a: Generating Grids, iteration 1" >> $RUNDIR/powheg.input
+overwrite_powheg_var "fakevirtuals" 1
+overwrite_powheg_var "parallelstage" 1
+overwrite_powheg_var "xgriditeration" 1
+cp $RUNDIR/powheg.input $RUNDIR/st1a-powheg.input
+cp $RUNDIR/pwgseeds.dat $RUNDIR/st1a-seeds.dat 
 
-# either \$1 or \$ARG1 is defined (msub sets ARG1)
+# at least \$1 or \$ARG1 is defined (msub sets ARG1)
 cat <<EOM > $WORKINGDIR/run_st1a_${IDENT}.sh
 #!/bin/bash
 cd $RUNDIR
-cp $RUNDIR/powheg_st1a.input $RUNDIR/powheg.input
-$EXEPATH < <(printf "%s\n" "\$1" "\$ARG1")
+#cp $RUNDIR/st1a-powheg.input $RUNDIR/powheg.input
+$EXEPATH < <(printf "%s\n%s\n" "st1a" "\$1" "\$ARG1")
 EOM
 chmod +x $WORKINGDIR/run_st1a_${IDENT}.sh
 
 # STEP 1b
-cp $RUNDIR/powheg.input $RUNDIR/powheg_st1b.input
-echo "" >> $RUNDIR/powheg_st1b.input
-echo "#Stage 1b: Generating Grids, iteration 2" >> $RUNDIR/powheg_st1b.input
-overwrite_var "$RUNDIR/powheg_st1b.input" "fakevirtuals" 1
-overwrite_var "$RUNDIR/powheg_st1b.input" "parallelstage" 1
-overwrite_var "$RUNDIR/powheg_st1b.input" "xgriditeration" 2
+echo "" >> $RUNDIR/powheg.input
+echo "#Stage 1b: Generating Grids, iteration 2" >> $RUNDIR/powheg.input
+overwrite_powheg_var "fakevirtuals" 1
+overwrite_powheg_var "parallelstage" 1
+overwrite_powheg_var "xgriditeration" 2
+cp $RUNDIR/powheg.input $RUNDIR/st1b-powheg.input
+cp $RUNDIR/pwgseeds.dat $RUNDIR/st1b-seeds.dat 
 
 cat <<EOM > $WORKINGDIR/run_st1b_${IDENT}.sh
 #!/bin/bash
 cd $RUNDIR
-cp $RUNDIR/powheg_st1b.input $RUNDIR/powheg.input
-$EXEPATH < <(printf "%s\n" "\$1" "\$ARG1")
+#cp $RUNDIR/st1b-powheg.input $RUNDIR/powheg.input
+$EXEPATH < <(printf "%s\n%s\n" "st1b" "\$1" "\$ARG1")
 EOM
 chmod +x $WORKINGDIR/run_st1b_${IDENT}.sh
 
 # STEP 2
-cp $RUNDIR/powheg.input $RUNDIR/powheg_st2.input
-echo "" >> $RUNDIR/powheg_st2.input
-echo "#Stage 2: NLO run" >> $RUNDIR/powheg_st2.input
+echo "" >> $RUNDIR/powheg.input
+echo "#Stage 2: NLO run" >> $RUNDIR/powheg.input
 if [ "$FAKEVIRT" = false ]; then
-  overwrite_var "$RUNDIR/powheg_st2.input" "fakevirtuals" 0
+  overwrite_powheg_var "fakevirtuals" 0
 fi
-overwrite_var "$RUNDIR/powheg_st2.input" "parallelstage" 2
-overwrite_var "$RUNDIR/powheg_st2.input" "numevts" 0
-overwrite_var "$RUNDIR/powheg_st2.input" "nubound" 0
+#overwrite_powheg_var "xgriditeration" 1
+overwrite_powheg_var "parallelstage" 2
+overwrite_powheg_var "numevts" 0
+overwrite_powheg_var "nubound" 0
 if [ "$CHECKLIM" = true ]; then
-  overwrite_var "$RUNDIR/powheg_st2.input" "softtest" 1
-  overwrite_var "$RUNDIR/powheg_st2.input" "colltest" 1
+  overwrite_powheg_var "softtest" 1
+  overwrite_powheg_var "colltest" 1
 fi
+cp $RUNDIR/powheg.input $RUNDIR/st2-powheg.input
+cp $RUNDIR/pwgseeds.dat $RUNDIR/st2-seeds.dat 
 
 cat <<EOM > $WORKINGDIR/run_st2_${IDENT}.sh
 #!/bin/bash
 cd $RUNDIR
-cp $RUNDIR/powheg_st2.input $RUNDIR/powheg.input
-$EXEPATH < <(printf "%s\n" "\$1" "\$ARG1")
+#cp $RUNDIR/st2-powheg.input $RUNDIR/powheg.input
+$EXEPATH < <(printf "%s\n%s\n" "st2" "\$1" "\$ARG1")
 EOM
 chmod +x $WORKINGDIR/run_st2_${IDENT}.sh
 
@@ -579,52 +575,42 @@ chmod +x $WORKINGDIR/run_st2_${IDENT}.sh
 if [ "$GENEVENTS" = true ]; then
 
 # STEP 3
-cp $RUNDIR/powheg.input $RUNDIR/powheg_st3.input
-echo "" >> $RUNDIR/powheg_st3.input
-echo "#Stage 3: Upper bound" >> $RUNDIR/powheg_st3.input
-if [ "$FAKEVIRT" = false ]; then
-  overwrite_var "$RUNDIR/powheg_st3.input" "fakevirtuals" 0
-fi
-overwrite_var "$RUNDIR/powheg_st3.input" "parallelstage" 3
+echo "" >> $RUNDIR/powheg.input
+echo "#Stage 3: Upper bound" >> $RUNDIR/powheg.input
 if [ "$NUBOUND" != "" ]; then
-  overwrite_var "$RUNDIR/powheg_st3.input" "nubound" $NUBOUND
+  overwrite_powheg_var "nubound" $NUBOUND
 else
-  overwrite_var "$RUNDIR/powheg_st3.input" "nubound" $NUBOUNDOLD
+  overwrite_powheg_var "nubound" $NUBOUNDOLD
 fi
-overwrite_var "$RUNDIR/powheg_st3.input" "numevts" 0
+overwrite_powheg_var "parallelstage" 3
+cp $RUNDIR/powheg.input $RUNDIR/st3-powheg.input
+cp $RUNDIR/pwgseeds.dat $RUNDIR/st3-seeds.dat 
 
 cat <<EOM > $WORKINGDIR/run_st3_${IDENT}.sh
 #!/bin/bash
 cd $RUNDIR
-cp $RUNDIR/powheg_st3.input $RUNDIR/powheg.input
-$EXEPATH < <(printf "%s\n" "\$1" "\$ARG1")
+#cp $RUNDIR/st3-powheg.input $RUNDIR/powheg.input
+$EXEPATH < <(printf "%s\n%s\n" "st3" "\$1" "\$ARG1")
 EOM
 chmod +x $WORKINGDIR/run_st3_${IDENT}.sh
 
 # STEP 4
-cp $RUNDIR/powheg.input $RUNDIR/powheg_st4.input
-echo "" >> $RUNDIR/powheg_st4.input
-echo "#Stage 4: Events" >> $RUNDIR/powheg_st4.input
-if [ "$FAKEVIRT" = false ]; then
-  overwrite_var "$RUNDIR/powheg_st4.input" "fakevirtuals" 0
-fi
-overwrite_var "$RUNDIR/powheg_st4.input" "parallelstage" 4
-if [ "$NUBOUND" != "" ]; then
-  overwrite_var "$RUNDIR/powheg_st4.input" "nubound" $NUBOUND
-else
-  overwrite_var "$RUNDIR/powheg_st4.input" "nubound" $NUBOUNDOLD
-fi
+echo "" >> $RUNDIR/powheg.input
+echo "#Stage 4: Events" >> $RUNDIR/powheg.input
 if [ "$NEVENTS" != "" ]; then
-  overwrite_var "$RUNDIR/powheg_st4.input" "numevts" $NEVENTS
+  overwrite_powheg_var "numevts" $NEVENTS
 else
-  overwrite_var "$RUNDIR/powheg_st4.input" "numevts" $NEVENTSOLD
+  overwrite_powheg_var "numevts" $NEVENTSOLD
 fi
+overwrite_powheg_var "parallelstage" 4
+cp $RUNDIR/powheg.input $RUNDIR/st4-powheg.input
+cp $RUNDIR/pwgseeds.dat $RUNDIR/st4-seeds.dat 
 
 cat <<EOM > $WORKINGDIR/run_st4_${IDENT}.sh
 #!/bin/bash
 cd $RUNDIR
-cp $RUNDIR/powheg_st4.input $RUNDIR/powheg.input
-$EXEPATH < <(printf "%s\n" "\$1" "\$ARG1")
+#cp $RUNDIR/st4-powheg.input $RUNDIR/powheg.input
+$EXEPATH < <(printf "%s\n%s\n" "st4" "\$1" "\$ARG1")
 EOM
 chmod +x $WORKINGDIR/run_st4_${IDENT}.sh
 fi
@@ -638,11 +624,13 @@ elif [ "$LHAPATH1" != "" ]; then
   export LHAPATH
 fi
 
+# now remove the powheg.input file
+rm $RUNDIR/powheg.input
+
 # generate and run the run.sh script
-echo "#!/bin/bash" > $WORKINGDIR/run_${IDENT}.sh
 if [ "$USEMSUB" = false ] && [ "$USECONDOR" = false ]; then
-if [ "$STAGE" != "1b" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
-cat <<EOM >> $WORKINGDIR/run_${IDENT}.sh
+cat <<EOM > $WORKINGDIR/run_${IDENT}.sh
+#!/bin/bash
 echo ""
 echo "Stage 1a: Generating Grids, iteration 1"
 echo "  starting $JOBS job(s)..."
@@ -655,10 +643,7 @@ for job in \`jobs -p\`; do
     wait \$job
     echo "  job with pid=\$job finished"
 done
-EOM
-fi
-if [ "$STAGE" != "1a" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
-cat <<EOM >> $WORKINGDIR/run_${IDENT}.sh
+
 echo ""
 echo "Stage 1b: Generating Grids, iteration 2"
 echo "  starting $JOBS job(s)..."
@@ -671,10 +656,7 @@ for job in \`jobs -p\`; do
     wait \$job
     echo "  job with pid=\$job finished"
 done
-EOM
-fi
-if [ "$STAGE" != "1a" ] && [ "$STAGE" != "1b" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
-cat <<EOM >> $WORKINGDIR/run_${IDENT}.sh
+
 echo ""
 echo "Stage 2: NLO run"
 echo "  starting $JOBS job(s)..."
@@ -688,10 +670,8 @@ for job in \`jobs -p\`; do
     echo "  job with pid=\$job finished"
 done
 EOM
-fi
 
 if [ "$GENEVENTS" = true ]; then
-if [ "$STAGE" != "1a" ] && [ "$STAGE" != "1b" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "4" ]; then
 cat <<EOM >> $WORKINGDIR/run_${IDENT}.sh
 echo ""
 echo "Stage 3: Upper bound"
@@ -705,10 +685,7 @@ for job in \`jobs -p\`; do
     wait \$job
     echo "  job with pid=\$job finished"
 done
-EOM
-fi
-if [ "$STAGE" != "1a" ] && [ "$STAGE" != "1b" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ]; then
-cat <<EOM >> $WORKINGDIR/run_${IDENT}.sh
+
 echo ""
 echo "Stage 4: Events"
 echo "  starting $JOBS job(s)..."
@@ -722,7 +699,6 @@ for job in \`jobs -p\`; do
     echo "  job with pid=\$job finished"
 done
 EOM
-fi
 fi #if GENEVENTS
 
 if [ "$MERGE" = true ]; then
@@ -777,9 +753,8 @@ fi
 
 # if the user wants to use msub:
 if [ "$USEMSUB" = true ]; then
-echo "#!/bin/bash" > $WORKINGDIR/runmsub_${IDENT}.sh
-if [ "$STAGE" != "1b" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
-cat <<EOM >> $WORKINGDIR/runmsub_${IDENT}.sh
+cat <<EOM > $WORKINGDIR/runmsub_${IDENT}.sh
+#!/bin/bash
 echo ""
 echo "Stage 1a: Generating Grids, iteration 1"
 echo "  submitting $JOBS job(s)..."
@@ -790,50 +765,31 @@ for i in \`seq 1 $JOBS\`; do
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs1a[\$i]=\${job[\$i]}
 done
-EOM
-fi
-DEPEND=""
-if [ "$STAGE" = "" ]; then
-  DEPEND=",depend=afterok:\${dependIDs1a[\$i]}"
-fi
-if [ "$STAGE" != "1a" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
-cat <<EOM >> $WORKINGDIR/runmsub_${IDENT}.sh
+
 echo ""
 echo "Stage 1b: Generating Grids, iteration 2"
 echo "  submitting $JOBS job(s)..."
 dependIDs1b=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(msub -N ${NAME}_st1b_\${NSEED} -l walltime=${WALLTIME1}$DEPEND -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st1b_\${NSEED}.output -e $RUNDIR/powheg_st1b_\${NSEED}.error $WORKINGDIR/run_st1b_${IDENT}.sh | grep -v -e '^$')
+  job[\$i]=\$(msub -N ${NAME}_st1b_\${NSEED} -l walltime=$WALLTIME1,depend=afterok:\${dependIDs1a[\$i]} -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st1b_\${NSEED}.output -e $RUNDIR/powheg_st1b_\${NSEED}.error $WORKINGDIR/run_st1b_${IDENT}.sh | grep -v -e '^$')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs1b[\$i]=\${job[\$i]}
 done
-EOM
-fi
-DEPEND=""
-if [ "$STAGE" = "" ]; then
-  DEPEND=",depend=afterok:\${dependIDs1b[\$i]}"
-fi
-if [ "$STAGE" != "1a" ] && [ "$STAGE" != "1b" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
-cat <<EOM >> $WORKINGDIR/runmsub_${IDENT}.sh
+
 echo ""
 echo "Stage 2: NLO run"
 echo "  submitting $JOBS job(s)..."
 dependIDs2=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(msub -N ${NAME}_st2_\${NSEED} -l walltime=${WALLTIME2}$DEPEND  -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st2_\${NSEED}.output -e $RUNDIR/powheg_st2_\${NSEED}.error $WORKINGDIR/run_st2_${IDENT}.sh | grep -v -e '^$')
+  job[\$i]=\$(msub -N ${NAME}_st2_\${NSEED} -l walltime=$WALLTIME2,depend=afterok:\${dependIDs1b[\$i]} -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st2_\${NSEED}.output -e $RUNDIR/powheg_st2_\${NSEED}.error $WORKINGDIR/run_st2_${IDENT}.sh | grep -v -e '^$')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs2[\$i]=\${job[\$i]}
 done
+
 EOM
-fi
 if [ "$GENEVENTS" = true ]; then
-DEPEND=""
-if [ "$STAGE" = "" ]; then
-  DEPEND=",depend=afterok:\${dependIDs2[\$i]}"
-fi
-if [ "$STAGE" != "1a" ] && [ "$STAGE" != "1b" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "4" ]; then
 cat <<EOM >> $WORKINGDIR/runmsub_${IDENT}.sh
 echo ""
 echo "Stage 3: Upper bound"
@@ -841,42 +797,33 @@ echo "  submitting $JOBS job(s)..."
 dependIDs3=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(msub -N ${NAME}_st3_\${NSEED} -l walltime=${WALLTIME3}$DEPEND -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st3_\${NSEED}.output -e $RUNDIR/powheg_st3_\${NSEED}.error $WORKINGDIR/run_st3_${IDENT}.sh | grep -v -e '^$')
+  job[\$i]=\$(msub -N ${NAME}_st3_\${NSEED} -l walltime=$WALLTIME3,depend=afterok:\${dependIDs2[\$i]} -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st3_\${NSEED}.output -e $RUNDIR/powheg_st3_\${NSEED}.error $WORKINGDIR/run_st3_${IDENT}.sh | grep -v -e '^$')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs3[\$i]=\${job[\$i]}
 done
-EOM
-fi
-DEPEND=""
-if [ "$STAGE" = "" ]; then
-  DEPEND=",depend=afterok:\${dependIDs3[\$i]}"
-fi
-if [ "$STAGE" != "1a" ] && [ "$STAGE" != "1b" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ]; then
-cat <<EOM >> $WORKINGDIR/runmsub_${IDENT}.sh
+
 echo ""
 echo "Stage 4: Events"
 echo "  submitting $JOBS job(s)..."
 dependIDs4=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(msub -N ${NAME}_st4_\${NSEED} -l walltime=${WALLTIME4}$DEPEND -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st4_\${NSEED}.output -e $RUNDIR/powheg_st4_\${NSEED}.error $WORKINGDIR/run_st4_${IDENT}.sh | grep -v -e '^$')
+  job[\$i]=\$(msub -N ${NAME}_st4_\${NSEED} -l walltime=$WALLTIME4,depend=afterok:\${dependIDs3[\$i]} -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st4_\${NSEED}.output -e $RUNDIR/powheg_st4_\${NSEED}.error $WORKINGDIR/run_st4_${IDENT}.sh | grep -v -e '^$')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs4[\$i]=\${job[\$i]}
 done
+
 EOM
-fi
 fi #if GENEVENTS
 
 chmod +x $WORKINGDIR/runmsub_${IDENT}.sh
 $WORKINGDIR/runmsub_${IDENT}.sh
 fi
 
-
 # if the user wants to use condor:
 if [ "$USECONDOR" = true ]; then
-echo "#!/bin/bash" > $WORKINGDIR/runcondor_${IDENT}.sh
-if [ "$STAGE" != "1b" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
-cat <<EOM >> $WORKINGDIR/runcondor_${IDENT}.sh
+cat <<EOM > $WORKINGDIR/runcondor_${IDENT}.sh
+#!/bin/bash
 echo ""
 echo "Stage 1a: Generating Grids, iteration 1"
 echo "  submitting $JOBS job(s)..."
@@ -887,50 +834,31 @@ for i in \`seq 1 $JOBS\`; do
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs1a[\$i]=\${job[\$i]}
 done
-EOM
-fi
-DEPEND=""
-if [ "$STAGE" = "" ]; then
-  DEPEND="-hold_jid \${dependIDs1a[\$i]}"
-fi
-if [ "$STAGE" != "1a" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
-cat <<EOM >> $WORKINGDIR/runcondor_${IDENT}.sh
+
 echo ""
 echo "Stage 1b: Generating Grids, iteration 2"
 echo "  submitting $JOBS job(s)..."
 dependIDs1b=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(condor_qsub $DEPEND -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st1b_\${NSEED}.output -e $RUNDIR/powheg_st1b_\${NSEED}.error $WORKINGDIR/run_st1b_${IDENT}.sh | sed -r 's/.* ([0-9]*) .*/\1/g')
+  job[\$i]=\$(condor_qsub -hold_jid \${dependIDs1a[\$i]} -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st1b_\${NSEED}.output -e $RUNDIR/powheg_st1b_\${NSEED}.error $WORKINGDIR/run_st1b_${IDENT}.sh | sed -r 's/.* ([0-9]*) .*/\1/g')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs1b[\$i]=\${job[\$i]}
 done
-EOM
-fi
-DEPEND=""
-if [ "$STAGE" = "" ]; then
-  DEPEND="-hold_jid \${dependIDs1b[\$i]}"
-fi
-if [ "$STAGE" != "1a" ] && [ "$STAGE" != "1b" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
-cat <<EOM >> $WORKINGDIR/runcondor_${IDENT}.sh
+
 echo ""
 echo "Stage 2: NLO run"
 echo "  submitting $JOBS job(s)..."
 dependIDs2=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(condor_qsub $DEPEND -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st2_\${NSEED}.output -e $RUNDIR/powheg_st2_\${NSEED}.error $WORKINGDIR/run_st2_${IDENT}.sh | sed -r 's/.* ([0-9]*) .*/\1/g')
+  job[\$i]=\$(condor_qsub -hold_jid \${dependIDs1b[\$i]} -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st2_\${NSEED}.output -e $RUNDIR/powheg_st2_\${NSEED}.error $WORKINGDIR/run_st2_${IDENT}.sh | sed -r 's/.* ([0-9]*) .*/\1/g')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs2[\$i]=\${job[\$i]}
 done
+
 EOM
-fi
 if [ "$GENEVENTS" = true ]; then
-DEPEND=""
-if [ "$STAGE" = "" ]; then
-  DEPEND="-hold_jid \${dependIDs2[\$i]}"
-fi
-if [ "$STAGE" != "1a" ] && [ "$STAGE" != "1b" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "4" ]; then
 cat <<EOM >> $WORKINGDIR/runcondor_${IDENT}.sh
 echo ""
 echo "Stage 3: Upper bound"
@@ -938,30 +866,23 @@ echo "  submitting $JOBS job(s)..."
 dependIDs3=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(condor_qsub $DEPEND -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st3_\${NSEED}.output -e $RUNDIR/powheg_st3_\${NSEED}.error $WORKINGDIR/run_st3_${IDENT}.sh | sed -r 's/.* ([0-9]*) .*/\1/g')
+  job[\$i]=\$(condor_qsub -hold_jid \${dependIDs2[\$i]} -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st3_\${NSEED}.output -e $RUNDIR/powheg_st3_\${NSEED}.error $WORKINGDIR/run_st3_${IDENT}.sh | sed -r 's/.* ([0-9]*) .*/\1/g')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs3[\$i]=\${job[\$i]}
 done
-EOM
-fi
-DEPEND=""
-if [ "$STAGE" = "" ]; then
-  DEPEND="-hold_jid \${dependIDs3[\$i]}"
-fi
-if [ "$STAGE" != "1a" ] && [ "$STAGE" != "1b" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ]; then
-cat <<EOM >> $WORKINGDIR/runcondor_${IDENT}.sh
+
 echo ""
 echo "Stage 4: Events"
 echo "  submitting $JOBS job(s)..."
 dependIDs4=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(condor_qsub $DEPEND -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st4_\${NSEED}.output -e $RUNDIR/powheg_st4_\${NSEED}.error $WORKINGDIR/run_st4_${IDENT}.sh | sed -r 's/.* ([0-9]*) .*/\1/g')
+  job[\$i]=\$(condor_qsub -hold_jid \${dependIDs3[\$i]} -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st4_\${NSEED}.output -e $RUNDIR/powheg_st4_\${NSEED}.error $WORKINGDIR/run_st4_${IDENT}.sh | sed -r 's/.* ([0-9]*) .*/\1/g')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs4[\$i]=\${job[\$i]}
 done
+
 EOM
-fi
 fi #if GENEVENTS
 
 chmod +x $WORKINGDIR/runcondor_${IDENT}.sh

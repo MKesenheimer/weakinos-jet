@@ -69,14 +69,6 @@ c conjugate their colours in the output, to make them outgoing.
             call colour_conj(icolup(1,rad))
             call colour_conj(icolup(1,em))
          endif
-#ifdef DEBUGQ
-         print*,"[DEBUG] in LesHouches_mod.f:73"
-         print*,"flst_alr(:,alr)",flst_alr(:,alr)
-         print*,"icolup(:,",1,")",icolup(:,1)
-         print*,"icolup(:,",2,")",icolup(:,2)
-         print*,"icolup(:,",5,")",icolup(:,5)
-         print*
-#endif
          ! MK: added gluon color checks
          if((flem.eq.0) .and. 
      &      ((icolup(1,em).eq.0) .or. (icolup(2,em).eq.0))) then

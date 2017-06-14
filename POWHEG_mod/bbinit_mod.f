@@ -532,12 +532,6 @@ c add finalized remnant contributions in histograms
      1        temparrosres(1,4),' +-',temparrosres(2,4)
       write(iunstat,*) 'real_osres total (pos.-|neg.|):', 
      1        temparrosres(1,1),' +-',temparrosres(2,1)
-#ifdef DEBUGQ
-      print*,"[DEBUG]: in bbinit_mod:596"
-      print*,"temparrosres(k,j)",temparrosres
-      print*,"rad_osres_totarr",rad_osres_totarr
-      !stop
-#endif 
 #endif
       !=================================================================
 
@@ -612,16 +606,6 @@ c negligible
         rad_totnegosres_sum   = rad_totnegosres_sum + 
      &                          rad_totnegosres(ichan)
       enddo
-
-#ifdef DEBUGQ
-      print*,"[DEBUG]: in bbinit_mod:678"
-      print*,"rad_totosresgen_sum",rad_totosresgen_sum
-      print*,"rad_etotosresgen_sum2",rad_etotosresgen_sum2
-      print*,"rad_totosres_sum",rad_totosres_sum
-      print*,"rad_etotosres_sum2",rad_etotosres_sum2
-      print*,"rad_totnegosres_sum",rad_totnegosres_sum
-      !stop
-#endif
       
       rad_totgen  = rad_totreggen + rad_totremgen + 
      &              rad_totosresgen_sum + rad_totbtlgen

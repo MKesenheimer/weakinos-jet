@@ -1230,12 +1230,6 @@ c do not come from the same resonance
 c in the isr case, 2 is the outgoing parton
          fl2=-fl2
       endif
-
-#ifdef DEBUGQ
-      print*,"in find_regions_mod.f:1236"
-      print*,fl1,fl2
-      stop
-#endif
       if (.not. flg_doubletags) then 
          iret=1
          if(fl1+fl2.eq.0.and.is_coloured(fl1).and.tag1.eq.tag2) then
@@ -1289,14 +1283,6 @@ c     cannot come from the same splitting
       else
          is_charged=.false.
       endif
-#ifdef DEBUGQ
-      print*,"in find_regions_mod.f:1279"
-      print*,"Uncomment to continue"
-      print*,fl
-      print*,flcp
-      print*,is_charged
-      stop
-#endif
       end
 
       function is_coloured(fl)
