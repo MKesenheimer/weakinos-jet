@@ -271,7 +271,7 @@ ifdef USE_FASTJET
   ifeq ($(FASTJET_CONFIG),)
     $(error cannot find fastjet-config (did you install fastjet?))
   endif
-  LIBS += $(shell $(FASTJET_CONFIG) --libs --plugins )
+  LIBS += $(shell $(FASTJET_CONFIG) --shared=no --libs --plugins )
   FJCXXFLAGS  += $(shell $(FASTJET_CONFIG) --cxxflags)
   PWHGANALYSIS+= fastjetfortran.o
 endif
