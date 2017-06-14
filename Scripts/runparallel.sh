@@ -419,7 +419,6 @@ fi
 # append to powheg.input
 cp $RUNDIR/powheg_clean.input $RUNDIR/powheg.input
 echo "" >> $RUNDIR/powheg.input
-echo "" >> $RUNDIR/powheg.input
 echo "# Modified by runparallel.sh:" >> $RUNDIR/powheg.input
 
 #default parameters in powheg.input
@@ -530,7 +529,11 @@ overwrite_var "$RUNDIR/powheg_st1a.input" "xgriditeration" 1
 cat <<EOM > $WORKINGDIR/run_st1a_${IDENT}.sh
 #!/bin/bash
 cd $RUNDIR
-cp $RUNDIR/powheg_st1a.input $RUNDIR/powheg.input
+EOM
+if [ "$STAGE" = "" ] && ( [ "$USEMSUB" = true ] || [ "$USECONDOR" = true ] ); then
+  echo "cp $RUNDIR/powheg_st1a.input $RUNDIR/powheg.input" >> $WORKINGDIR/run_st1a_${IDENT}.sh
+fi
+cat <<EOM >> $WORKINGDIR/run_st1a_${IDENT}.sh
 $EXEPATH < <(printf "%s\n" "\$1" "\$ARG1")
 EOM
 chmod +x $WORKINGDIR/run_st1a_${IDENT}.sh
@@ -546,7 +549,11 @@ overwrite_var "$RUNDIR/powheg_st1b.input" "xgriditeration" 2
 cat <<EOM > $WORKINGDIR/run_st1b_${IDENT}.sh
 #!/bin/bash
 cd $RUNDIR
-cp $RUNDIR/powheg_st1b.input $RUNDIR/powheg.input
+EOM
+if [ "$STAGE" = "" ] && ( [ "$USEMSUB" = true ] || [ "$USECONDOR" = true ] ); then
+  echo "cp $RUNDIR/powheg_st1b.input $RUNDIR/powheg.input" >> $WORKINGDIR/run_st1b_${IDENT}.sh
+fi
+cat <<EOM >> $WORKINGDIR/run_st1b_${IDENT}.sh
 $EXEPATH < <(printf "%s\n" "\$1" "\$ARG1")
 EOM
 chmod +x $WORKINGDIR/run_st1b_${IDENT}.sh
@@ -569,7 +576,11 @@ fi
 cat <<EOM > $WORKINGDIR/run_st2_${IDENT}.sh
 #!/bin/bash
 cd $RUNDIR
-cp $RUNDIR/powheg_st2.input $RUNDIR/powheg.input
+EOM
+if [ "$STAGE" = "" ] && ( [ "$USEMSUB" = true ] || [ "$USECONDOR" = true ] ); then
+  echo "cp $RUNDIR/powheg_st2.input $RUNDIR/powheg.input" >> $WORKINGDIR/run_st2_${IDENT}.sh
+fi
+cat <<EOM >> $WORKINGDIR/run_st2_${IDENT}.sh
 $EXEPATH < <(printf "%s\n" "\$1" "\$ARG1")
 EOM
 chmod +x $WORKINGDIR/run_st2_${IDENT}.sh
@@ -595,7 +606,11 @@ overwrite_var "$RUNDIR/powheg_st3.input" "numevts" 0
 cat <<EOM > $WORKINGDIR/run_st3_${IDENT}.sh
 #!/bin/bash
 cd $RUNDIR
-cp $RUNDIR/powheg_st3.input $RUNDIR/powheg.input
+EOM
+if [ "$STAGE" = "" ] && ( [ "$USEMSUB" = true ] || [ "$USECONDOR" = true ] ); then
+  echo "cp $RUNDIR/powheg_st3.input $RUNDIR/powheg.input" >> $WORKINGDIR/run_st3_${IDENT}.sh
+fi
+cat <<EOM >> $WORKINGDIR/run_st3_${IDENT}.sh
 $EXEPATH < <(printf "%s\n" "\$1" "\$ARG1")
 EOM
 chmod +x $WORKINGDIR/run_st3_${IDENT}.sh
@@ -619,10 +634,17 @@ else
   overwrite_var "$RUNDIR/powheg_st4.input" "numevts" $NEVENTSOLD
 fi
 
+# delete powheg.input, it is generated again before every stage
+rm $RUNDIR/powheg.input
+
 cat <<EOM > $WORKINGDIR/run_st4_${IDENT}.sh
 #!/bin/bash
 cd $RUNDIR
-cp $RUNDIR/powheg_st4.input $RUNDIR/powheg.input
+EOM
+if [ "$STAGE" = "" ] && ( [ "$USEMSUB" = true ] || [ "$USECONDOR" = true ] ); then
+  echo "cp $RUNDIR/powheg_st4.input $RUNDIR/powheg.input" >> $WORKINGDIR/run_st4_${IDENT}.sh
+fi
+cat <<EOM >> $WORKINGDIR/run_st4_${IDENT}.sh
 $EXEPATH < <(printf "%s\n" "\$1" "\$ARG1")
 EOM
 chmod +x $WORKINGDIR/run_st4_${IDENT}.sh
@@ -645,6 +667,7 @@ cat <<EOM >> $WORKINGDIR/run_${IDENT}.sh
 echo ""
 echo "Stage 1a: Generating Grids, iteration 1"
 echo "  starting $JOBS job(s)..."
+cp $RUNDIR/powheg_st1a.input $RUNDIR/powheg.input
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
   echo "  job \$i with nseed \$NSEED"
@@ -661,6 +684,7 @@ cat <<EOM >> $WORKINGDIR/run_${IDENT}.sh
 echo ""
 echo "Stage 1b: Generating Grids, iteration 2"
 echo "  starting $JOBS job(s)..."
+cp $RUNDIR/powheg_st1b.input $RUNDIR/powheg.input
 for i in \`seq 1 $JOBS\`; do
    NSEED=\$((i+$NSEEDOFFSET))
    echo "  job \$i with nseed \$NSEED"
@@ -677,6 +701,7 @@ cat <<EOM >> $WORKINGDIR/run_${IDENT}.sh
 echo ""
 echo "Stage 2: NLO run"
 echo "  starting $JOBS job(s)..."
+cp $RUNDIR/powheg_st2.input $RUNDIR/powheg.input
 for i in \`seq 1 $JOBS\`; do
    NSEED=\$((i+$NSEEDOFFSET))
    echo "  job \$i with nseed \$NSEED"
@@ -695,6 +720,7 @@ cat <<EOM >> $WORKINGDIR/run_${IDENT}.sh
 echo ""
 echo "Stage 3: Upper bound"
 echo "  starting $JOBS job(s)..."
+cp $RUNDIR/powheg_st3.input $RUNDIR/powheg.input
 for i in \`seq 1 $JOBS\`; do
    NSEED=\$((i+$NSEEDOFFSET))
    echo "  job \$i with nseed \$NSEED"
@@ -711,6 +737,7 @@ cat <<EOM >> $WORKINGDIR/run_${IDENT}.sh
 echo ""
 echo "Stage 4: Events"
 echo "  starting $JOBS job(s)..."
+cp $RUNDIR/powheg_st4.input $RUNDIR/powheg.input
 for i in \`seq 1 $JOBS\`; do
    NSEED=\$((i+$NSEEDOFFSET))
    echo "  job \$i with nseed \$NSEED"
@@ -766,6 +793,8 @@ rm -f $WORKINGDIR/run_${IDENT}.sh
 #rm -f $RUNDIR/powheg_st*.input
 fi
 
+
+
 # additional environmental variables for msub and condor
 ADDVAR=""
 if [ "$LHAPATH1" = "rd" ]; then
@@ -782,6 +811,7 @@ cat <<EOM >> $WORKINGDIR/runmsub_${IDENT}.sh
 echo ""
 echo "Stage 1a: Generating Grids, iteration 1"
 echo "  submitting $JOBS job(s)..."
+cp $RUNDIR/powheg_st1a.input $RUNDIR/powheg.input
 dependIDs1a=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
@@ -800,6 +830,7 @@ cat <<EOM >> $WORKINGDIR/runmsub_${IDENT}.sh
 echo ""
 echo "Stage 1b: Generating Grids, iteration 2"
 echo "  submitting $JOBS job(s)..."
+cp $RUNDIR/powheg_st1b.input $RUNDIR/powheg.input
 dependIDs1b=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
@@ -818,6 +849,7 @@ cat <<EOM >> $WORKINGDIR/runmsub_${IDENT}.sh
 echo ""
 echo "Stage 2: NLO run"
 echo "  submitting $JOBS job(s)..."
+cp $RUNDIR/powheg_st2.input $RUNDIR/powheg.input
 dependIDs2=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
@@ -837,6 +869,7 @@ cat <<EOM >> $WORKINGDIR/runmsub_${IDENT}.sh
 echo ""
 echo "Stage 3: Upper bound"
 echo "  submitting $JOBS job(s)..."
+cp $RUNDIR/powheg_st3.input $RUNDIR/powheg.input
 dependIDs3=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
@@ -855,6 +888,7 @@ cat <<EOM >> $WORKINGDIR/runmsub_${IDENT}.sh
 echo ""
 echo "Stage 4: Events"
 echo "  submitting $JOBS job(s)..."
+cp $RUNDIR/powheg_st4.input $RUNDIR/powheg.input
 dependIDs4=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
@@ -879,6 +913,7 @@ cat <<EOM >> $WORKINGDIR/runcondor_${IDENT}.sh
 echo ""
 echo "Stage 1a: Generating Grids, iteration 1"
 echo "  submitting $JOBS job(s)..."
+cp $RUNDIR/powheg_st1a.input $RUNDIR/powheg.input
 dependIDs1a=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
@@ -897,6 +932,7 @@ cat <<EOM >> $WORKINGDIR/runcondor_${IDENT}.sh
 echo ""
 echo "Stage 1b: Generating Grids, iteration 2"
 echo "  submitting $JOBS job(s)..."
+cp $RUNDIR/powheg_st1b.input $RUNDIR/powheg.input
 dependIDs1b=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
@@ -915,6 +951,7 @@ cat <<EOM >> $WORKINGDIR/runcondor_${IDENT}.sh
 echo ""
 echo "Stage 2: NLO run"
 echo "  submitting $JOBS job(s)..."
+cp $RUNDIR/powheg_st2.input $RUNDIR/powheg.input
 dependIDs2=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
@@ -934,6 +971,7 @@ cat <<EOM >> $WORKINGDIR/runcondor_${IDENT}.sh
 echo ""
 echo "Stage 3: Upper bound"
 echo "  submitting $JOBS job(s)..."
+cp $RUNDIR/powheg_st3.input $RUNDIR/powheg.input
 dependIDs3=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
@@ -952,6 +990,7 @@ cat <<EOM >> $WORKINGDIR/runcondor_${IDENT}.sh
 echo ""
 echo "Stage 4: Events"
 echo "  submitting $JOBS job(s)..."
+cp $RUNDIR/powheg_st4.input $RUNDIR/powheg.input
 dependIDs4=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
