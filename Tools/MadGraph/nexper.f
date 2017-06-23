@@ -51,38 +51,18 @@ c*******************************************************************************
       return
       end
 
-
-      subroutine switchmom(p1,p,ic,jc,nexternal)
-        implicit none
-        integer nexternal
-        integer jc(nexternal),ic(nexternal)
-        real*8 p1(0:3,nexternal),p(0:3,nexternal)
-        integer i,j
-        do i=1,nexternal
-          do j=0,3
-             p(j,ic(i))=p1(j,i)
-          enddo
-        enddo
-        do i=1,nexternal
-          jc(i)=1
-        enddo
-        jc(ic(1))=-1
-        jc(ic(2))=-1
+      subroutine switchmom(p,p1,ic,nexternal)
+      implicit none
+      integer nexternal
+      integer ic(nexternal)
+      real*8 p1(0:3,nexternal),p(0:3,nexternal)
+      integer i,j
+      do i=1,nexternal
+         do j=0,3
+            p1(j,ic(i))=p(j,i)
+         enddo
+      enddo
       end
-
-
-!       subroutine switchmom(p,p1,ic,nexternal)
-!       implicit none
-!       integer nexternal
-!       integer ic(nexternal)
-!       real*8 p1(0:3,nexternal),p(0:3,nexternal)
-!       integer i,j
-!       do i=1,nexternal
-!          do j=0,3
-!             p1(j,ic(i))=p(j,i)
-!          enddo
-!       enddo
-!       end
 
       subroutine switchlegs(legs,legs1,ic,nexternal)
       implicit none

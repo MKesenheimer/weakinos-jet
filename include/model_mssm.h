@@ -3,9 +3,6 @@ c############### model_mssm.h ##########################################
 * common blocks for the model parameters
 * this file is part of FormCalc
 * last modified 17 Dec 14 th by MK
-
-c#include "types.h"
-
         double complex UCha(2,2), VCha(2,2), ZNeu(4,4)
         double precision MNeu(4), MNeu2(4), MCha(2), MCha2(2)
         double complex USf(2,2,4,3)
@@ -57,5 +54,4 @@ c#include "types.h"
         common /mssmpara/ Mh0C, MHHC, MA0C, MHpC
         common /mssmpara/ Mh02C, MHH2C, MA02C, MHp2C
         common /mssmpara/ MSf2W, MGl2W
-
 c############### end model_mssm.h ######################################

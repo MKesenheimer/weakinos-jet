@@ -138,7 +138,6 @@ c keep this order
          print*,"sigosres_contr",sigosres_contr
          print*,"xjac",xjac
          print*
-         stop
 #endif
         ! -> return succes
         sigosres = 1

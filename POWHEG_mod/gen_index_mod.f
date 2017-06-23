@@ -122,7 +122,6 @@ c regular
       include 'pwhg_rad.h'
       include 'pwhg_flg.h'
 c MK: added
-#include "PhysPars.h"
 #include "osres.h"
 #include "pwhg_flst_add.h"
 #include "pwhg_rad_add.h"
@@ -202,7 +201,7 @@ c which version is better?
  10   continue
 #endif
 
-#ifdef DEBUG
+#ifdef DEBUGQ
       print*,"in gen_index_mod.f: check and uncommnet"  
       print*,ran1,ran2,flst_osres(:,ran2)
       print*,rad_ubornidx,rad_realosres

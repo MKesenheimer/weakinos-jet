@@ -564,10 +564,10 @@ c     for Majorana fermions, need right sign of width for HELAS
             wcr = lowwidth(14)
          end if
 
-         wb1 = lowwidth(17)
-         wb2 = lowwidth(18)
-         wt1 = lowwidth(19)
-         wt2 = lowwidth(20)
+         wbl = lowwidth(17)
+         wbr = lowwidth(18)
+         wtl = lowwidth(19)
+         wtr = lowwidth(20)
 
          wel = lowwidth(30)
          wer = lowwidth(31)

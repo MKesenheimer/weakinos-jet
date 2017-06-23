@@ -119,10 +119,10 @@ c     &   'm_cha(hmass)_MSbar           ', mc_h
       write(6,10) 'sr         ',msr,'sr        ',wsr
       write(6,10) 'cl         ',mcl,'cl        ',wcl
       write(6,10) 'cr         ',mcr,'cr        ',wcr
-      write(6,10) 'b1         ',mbl,'b1        ',wb1
-      write(6,10) 'b2         ',mbr,'b2        ',wb2
-      write(6,10) 't1         ',mtl,'t1        ',wt1
-      write(6,10) 't2         ',mtr,'t2        ',wt2
+      write(6,10) 'b1         ',mbl,'b1        ',wbl
+      write(6,10) 'b2         ',mbr,'b2        ',wbr
+      write(6,10) 't1         ',mtl,'t1        ',wtl
+      write(6,10) 't2         ',mtr,'t2        ',wtr
       write(6,10) 'el         ',mel,'el        ',wel
       write(6,10) 'er         ',mer,'er        ',wer
       write(6,10) 'ml         ',mml,'ml        ',wml

@@ -28,6 +28,10 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         integer ichan
         ! sum only over relevant on-shell channels
         integer nos
+#define CHECKMADFORM
+#ifdef CHECKMADFORM
+        double precision ampM
+#endif
 
         if (init_reals) then
           print*
@@ -43,6 +47,17 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
 
         ! get the formcalc real amplitudes
         call getRealAmps(p,rflav,amp)
+
+#ifdef CHECKMADFORM
+        call sreal_proc(p,rflav,ampM)
+        if(dsqrt(p(1,5)**2+p(2,5)**2).gt.10.and.(amp-ampM)/(amp+ampM).gt.1d-4) then
+          print*,rflav
+          print*,"FormCalc = ", amp
+          print*,"MadGraph = ", ampM
+          print*,(amp-ampM)/(amp+ampM)
+          print*
+        endif
+#endif
 
 #ifdef DEBUGQ
         print*,rflav,amp
@@ -149,11 +164,19 @@ c a (leading) color structure to an event.
           rflav(i)=idup(i)
           if (rflav(i).eq.21) rflav(i)=0
         enddo
-        !call real_color(rflav,color)
+        call real_color(rflav,color)
         do i=1,2
           do j=1,nlegreal
             icolup(i,j)=color(i,j)
           enddo
         enddo
+#ifdef DEBUG
+        print*,"[DEBUG] in real_colour_lh"
+        print*,"[DEBUG] rflav",rflav
+        do j=1,nlegreal
+          print*,"[DEBUG] icolup(",j,")",icolup(1,j),icolup(2,j)
+        enddo
+        !stop
+#endif
       end
 c############### end subroutine realcolour_lh ##########################

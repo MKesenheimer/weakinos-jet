@@ -1,6 +1,5 @@
 c############### PhysPars.h ############################################
 c last modified by MK, 18.12.2014
-
 c read from slha files:
 #include "SLHA.h"
 c formcalc model definitions
@@ -9,7 +8,6 @@ c formcalc model definitions
 c madgraph definitions
 #include "coupl.inc"
 #include "sm_read_values.inc"
-
 c common definitions
 c SM parameters needed for neutralino pair production
         double precision par_alpha,par_alphaMZ,par_gf
@@ -55,5 +53,4 @@ c pi
 c additional parameters
         double precision gcut
         common/addpars/ gcut        ! generation cut for soft jets
-
 c############### end PhysPars.h ########################################

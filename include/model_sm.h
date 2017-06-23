@@ -3,7 +3,6 @@ c############### model_sm.h ############################################
 * common blocks for the model parameters
 * this file is part of FormCalc
 * last modified 23 Dec 14 th by MK
-
         !Z mass, W mass, cos(theta_w), sin(theta_w)
         double precision MZ, MZ2, MW, MW2, CW, CW2, SW, SW2
         double precision WZ, WW
@@ -36,5 +35,4 @@ c############### model_sm.h ############################################
         common /smpara/ MDC, MD2C, MSC, MS2C, MBC, MB2C
         common /smpara/ MfC, Mf2C
         common /smpara/ MZ2W, MW2W
-
 c############### end model_sm.h ########################################

@@ -104,10 +104,10 @@ c requires encoded process ID in lprup(1)
      &      (WSf(2,4,2)         .ne. wsr          ) .or.
      &      (WSf(1,3,2)         .ne. wcl          ) .or.
      &      (WSf(2,3,2)         .ne. wcr          ) .or.
-     &      (WSf(1,4,3)         .ne. wb1          ) .or.
-     &      (WSf(2,4,3)         .ne. wb2          ) .or.
-     &      (WSf(1,3,3)         .ne. wt1          ) .or.
-     &      (WSf(2,3,3)         .ne. wt2          ) .or.
+     &      (WSf(1,4,3)         .ne. wbl          ) .or.
+     &      (WSf(2,4,3)         .ne. wbr          ) .or.
+     &      (WSf(1,3,3)         .ne. wtl          ) .or.
+     &      (WSf(2,3,3)         .ne. wtr          ) .or.
      &      (cdabs(ZNeu(1,1))   .ne. dabs(bwmix(1,1)) ) .or. ! check only if the absolute
      &      (cdabs(ZNeu(1,2))   .ne. dabs(bwmix(1,2)) ) .or. ! value is equal, since the
      &      (cdabs(ZNeu(1,3))   .ne. dabs(bwmix(1,3)) ) .or. ! FormCalc-mixing matrices

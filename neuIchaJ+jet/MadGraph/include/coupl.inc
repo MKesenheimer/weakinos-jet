@@ -128,6 +128,11 @@ c
 c======================================================================
 c
 
+c MK: renamed mb2 -> mbr, mb1 -> mbl, mt2 -> mtr, mt1 -> mtl...
+c to avoid variable clashes with FormCalc. Obviously, the physic
+c stays the same (these variables are just names), but now the
+c interaction eigenstate parameters can be confused with mass eigenstate 
+c parameters.
       double precision    mdl, mdr, mul, mur, msl, msr,
      &			  mcl, mcr, mbl, mbr, mtl, mtr,
      &			  mel, mer, mml, mmr, ml1, ml2,
@@ -144,14 +149,14 @@ c
      &                    mh1, mh2, mh3, mhc
 
       double precision    wdl, wdr, wul, wur, wsl, wsr,
-     &			  wcl, wcr, wb1, wb2, wt1, wt2,
+     &			  wcl, wcr, wbl, wbr, wtl, wtr,
      &			  wel, wer, wml, wmr, wl1, wl2,
      &			  wve, wvm, wvt, 
      &			  wn1, wn2, wn3, wn4, wx1, wx2,
      &			  wgo,
      &                    wh1, wh2, wh3, whc
       common /MSSM_WIDTH/ wdl, wdr, wul, wur, wsl, wsr,
-     &			  wcl, wcr, wb1, wb2, wt1, wt2,
+     &			  wcl, wcr, wbl, wbr, wtl, wtr,
      &			  wel, wer, wml, wmr, wl1, wl2,
      &			  wve, wvm, wvt, 
      &			  wn1, wn2, wn3, wn4, wx1, wx2,

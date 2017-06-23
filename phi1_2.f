@@ -1,3 +1,6 @@
+c
+c modified and heavily extended by M. Kesenheimer
+c
 c the definitions used here are according to Byckling & Kajantie,
 c ISBN 0 471 12885 6 (the best book for kinematics and phase space)
 c

@@ -917,7 +917,7 @@ cp $RUNDIR/powheg_st1a.input $RUNDIR/powheg.input
 dependIDs1a=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(condor_qsub -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st1a_\${NSEED}.output -e $RUNDIR/powheg_st1a_\${NSEED}.error $WORKINGDIR/run_st1a_${IDENT}.sh | sed -r 's/.* ([0-9]*) .*/\1/g')
+  job[\$i]=\$(condor_qsub -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st1a_\${NSEED}.output -e $RUNDIR/powheg_st1a_\${NSEED}.error $WORKINGDIR/run_st1a_${IDENT}.sh | sed -r 's/.*\s+([0-9]*)\s+.*/\1/g')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs1a[\$i]=\${job[\$i]}
 done
@@ -936,7 +936,7 @@ cp $RUNDIR/powheg_st1b.input $RUNDIR/powheg.input
 dependIDs1b=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(condor_qsub $DEPEND -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st1b_\${NSEED}.output -e $RUNDIR/powheg_st1b_\${NSEED}.error $WORKINGDIR/run_st1b_${IDENT}.sh | sed -r 's/.* ([0-9]*) .*/\1/g')
+  job[\$i]=\$(condor_qsub $DEPEND -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st1b_\${NSEED}.output -e $RUNDIR/powheg_st1b_\${NSEED}.error $WORKINGDIR/run_st1b_${IDENT}.sh | sed -r 's/.*\s+([0-9]*)\s+.*/\1/g')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs1b[\$i]=\${job[\$i]}
 done
@@ -955,7 +955,7 @@ cp $RUNDIR/powheg_st2.input $RUNDIR/powheg.input
 dependIDs2=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(condor_qsub $DEPEND -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st2_\${NSEED}.output -e $RUNDIR/powheg_st2_\${NSEED}.error $WORKINGDIR/run_st2_${IDENT}.sh | sed -r 's/.* ([0-9]*) .*/\1/g')
+  job[\$i]=\$(condor_qsub $DEPEND -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st2_\${NSEED}.output -e $RUNDIR/powheg_st2_\${NSEED}.error $WORKINGDIR/run_st2_${IDENT}.sh | sed -r 's/.*\s+([0-9]*)\s+.*/\1/g')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs2[\$i]=\${job[\$i]}
 done
@@ -975,7 +975,7 @@ cp $RUNDIR/powheg_st3.input $RUNDIR/powheg.input
 dependIDs3=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(condor_qsub $DEPEND -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st3_\${NSEED}.output -e $RUNDIR/powheg_st3_\${NSEED}.error $WORKINGDIR/run_st3_${IDENT}.sh | sed -r 's/.* ([0-9]*) .*/\1/g')
+  job[\$i]=\$(condor_qsub $DEPEND -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st3_\${NSEED}.output -e $RUNDIR/powheg_st3_\${NSEED}.error $WORKINGDIR/run_st3_${IDENT}.sh | sed -r 's/.*\s+([0-9]*)\s+.*/\1/g')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs3[\$i]=\${job[\$i]}
 done
@@ -994,7 +994,7 @@ cp $RUNDIR/powheg_st4.input $RUNDIR/powheg.input
 dependIDs4=()
 for i in \`seq 1 $JOBS\`; do
   NSEED=\$((\$i+$NSEEDOFFSET))
-  job[\$i]=\$(condor_qsub $DEPEND -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st4_\${NSEED}.output -e $RUNDIR/powheg_st4_\${NSEED}.error $WORKINGDIR/run_st4_${IDENT}.sh | sed -r 's/.* ([0-9]*) .*/\1/g')
+  job[\$i]=\$(condor_qsub $DEPEND -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_st4_\${NSEED}.output -e $RUNDIR/powheg_st4_\${NSEED}.error $WORKINGDIR/run_st4_${IDENT}.sh | sed -r 's/.*\s+([0-9]*)\s+.*/\1/g')
   echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
   dependIDs4[\$i]=\${job[\$i]}
 done

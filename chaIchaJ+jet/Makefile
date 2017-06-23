@@ -230,7 +230,6 @@ vpath %.F $(TOOLS)/DHELAS
 vpath %.f $(WORKINGDIR)
 vpath %.f $(PWHGDIR)
 vpath %.f $(MADREALS)/SubProcesses_xIxJ+jet
-vpath %.f $(MADREALS)/SubProcesses_xIxI+jet
 vpath %.f $(WORKINGDIR)/POWHEG_mod
 vpath %.f $(TOOLS)/pythia6425
 vpath %.f $(TOOLS)/DHELAS
@@ -369,13 +368,11 @@ REALS_F := $(wildcard $(FORMREALS)/squaredME/*.F)
 REALS := $(notdir $(REALS_F:.F=.o))
 
 # MadGraph amplitudes ###
-MREALS_F1 := $(wildcard $(MADREALS)/SubProcesses_xIxJ+jet/*.f)
-MREALS1 := $(notdir $(MREALS_F1:.f=.o))
-MREALS_F2 := $(wildcard $(MADREALS)/SubProcesses_xIxI+jet/*.f)
-MREALS2 := $(notdir $(MREALS_F2:.f=.o))
+MREALS_F := $(wildcard $(MADREALS)/SubProcesses_xIxJ+jet/*.f)
+MREALS := $(notdir $(MREALS_F:.f=.o))
 
 SOURCESMAIN = $(PWHG) $(PDFPACK) $(USER) $(PWHGANALYSIS) $(FUNC) \
-	$(FORMCALC) $(MADGRAPH) $(MREALS1) $(MREALS2)
+	$(FORMCALC) $(MADGRAPH) $(MREALS)
 
 SOURCESLHEF = $(LHEF) $(PWHGANALYSIS) $(MADGRAPH) set_channel.o
 
