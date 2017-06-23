@@ -138,7 +138,7 @@ C BEGIN CODE
 C ----------
       NTRY=NTRY+1
       DO IPROC=1,NCROSS
-      CALL SWITCHMOM(P1,P,IC(1,IPROC),JC,NEXTERNAL)
+      !CALL SWITCHMOM(P1,P,IC(1,IPROC),JC,NEXTERNAL)
       DO IHEL=1,NEXTERNAL
          JC(IHEL) = +1
       ENDDO
@@ -152,7 +152,7 @@ C ----------
       ANS(IPROC) = 0D0
           DO IHEL=1,NCOMB
              IF(GOODHEL(IHEL,IPROC) .OR. NTRY .LT. 2) THEN
-                 T=MATRIX_DDX_XIXIDDX(P,NHEL(1,IHEL),JC(1))            
+                 T=MATRIX_DDX_XIXIDDX(P1,NHEL(1,IHEL),JC(1))            
                ANS(IPROC)=ANS(IPROC)+T
                IF(T .NE. 0D0 .AND. .NOT.    GOODHEL(IHEL,IPROC)) THEN
                    GOODHEL(IHEL,IPROC)=.TRUE.
@@ -233,11 +233,6 @@ C ----------
       CALL JIOXXX(W(1,1),W(1,5),GG,ZERO,ZERO,W(1,8))     
       CALL HVSXXX(W(1,8),W(1,7),GC,MUL,WUL,W(1,9))     
       CALL IOSXXX(W(1,6),W(1,4),W(1,9),GULXIM,AMP(1))         
-#ifdef DEBUG
-      print*,GULXIP,MUL,WUL,GG,ZERO
-      print*,AMP,W(1,:) 
-      stop
-#endif
       CALL FSOXXX(W(1,4),W(1,7),GULXIM,ZERO,ZERO,W(1,10))                                                          
       CALL IOVXXX(W(1,6),W(1,10),W(1,8),GG,AMP(2))             
       CALL FVOXXX(W(1,2),W(1,8),GG,ZERO,ZERO,W(1,11))     

@@ -738,10 +738,6 @@
       endif
       
  20   continue
- 
-#ifdef DEBUG
-      print*,str,wgt
-#endif
       return
       end
       

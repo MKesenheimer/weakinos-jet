@@ -138,7 +138,7 @@ C BEGIN CODE
 C ----------
       NTRY=NTRY+1
       DO IPROC=1,NCROSS
-      CALL SWITCHMOM(P1,P,IC(1,IPROC),JC,NEXTERNAL)
+      !CALL SWITCHMOM(P1,P,IC(1,IPROC),JC,NEXTERNAL)
       DO IHEL=1,NEXTERNAL
          JC(IHEL) = +1
       ENDDO
@@ -152,7 +152,7 @@ C ----------
       ANS(IPROC) = 0D0
           DO IHEL=1,NCOMB
              IF(GOODHEL(IHEL,IPROC) .OR. NTRY .LT. 2) THEN
-                 T=MATRIX_DXU_NIXJTTX(P,NHEL(1,IHEL),JC(1))            
+                 T=MATRIX_DXU_NIXJTTX(P1,NHEL(1,IHEL),JC(1))            
                ANS(IPROC)=ANS(IPROC)+T
                IF(T .NE. 0D0 .AND. .NOT.    GOODHEL(IHEL,IPROC)) THEN
                    GOODHEL(IHEL,IPROC)=.TRUE.
