@@ -14,8 +14,11 @@ cat $RUNDIR/pwg-st2-combined-stat.dat
 if [ "$(ls $RUNDIR/pwgevents-*.lhe 2>/dev/null)" != "" ]; then
   echo ""
   echo "Merging event files..."
-  zcat $RUNDIR/pwgevents-*.lhe | grep -v "/LesHouchesEvents" > $RUNDIR/pwgevents.lhe
+  #for f in $(ls $RUNDIR/pwgevents-*.lhe); do
+  #  echo $f
+  zcat -f $RUNDIR/pwgevents-*.lhe | grep -v "/LesHouchesEvents" > $RUNDIR/pwgevents.lhe
   echo "</LesHouchesEvents>" >> $RUNDIR/pwgevents.lhe
+  #done
 fi
 #if [ -e "$RUNDIR/pwgevents.lhe" ]; then
 #  echo "merged event files succesfully, deleting old event files..."

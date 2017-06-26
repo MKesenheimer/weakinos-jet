@@ -28,7 +28,7 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         integer ichan
         ! sum only over relevant on-shell channels
         integer nos
-#define CHECKMADFORM
+c#define CHECKMADFORM
 #ifdef CHECKMADFORM
         double precision ampM
 #endif
@@ -170,7 +170,7 @@ c a (leading) color structure to an event.
             icolup(i,j)=color(i,j)
           enddo
         enddo
-#ifdef DEBUG
+#ifdef DEBUGQ
         print*,"[DEBUG] in real_colour_lh"
         print*,"[DEBUG] rflav",rflav
         do j=1,nlegreal
