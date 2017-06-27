@@ -382,7 +382,6 @@ c sets the PhysPars.h parameters
         endif
 
         par_MT = dreal(SMInputs_Mt)
-
 c particle widths from SLHA-file
 c NOTE: FormCalc does not use squark widths in the current software 
 c version.

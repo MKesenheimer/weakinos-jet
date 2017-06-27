@@ -195,8 +195,8 @@ c pick SUSY masses relevant for specific initial state
             M(i) = par_MB
             Gen(i) = 3
           case(6) ! t
-            print*, "top quarks not implemented yet."
-            stop
+            M(i) = par_MT
+            Gen(i) = 3
           case(0) ! gluon
             M(i) = 0D0
           case(1000022)
