@@ -41,12 +41,12 @@ msbar   1            ! (default 1) use (=1) msbar mass for bottom quark or not (
 #lhans1 10042        ! CTeQ6l1 PDF LO, pdf set for hadron 1 (LHA numbering)
 #lhans2 10042        ! CTeQ6l1 PDF LO, pdf set for hadron 2 (LHA numbering)
 ! NLO:
-lhans1 230000        ! NNPDF23_nlo_as_0119
-lhans2 230000        ! NNPDF23_nlo_as_0119
+#lhans1 230000       ! NNPDF23_nlo_as_0119
+#lhans2 230000       ! NNPDF23_nlo_as_0119
 #lhans1 10550        ! CTeQ6.6M PDF NLO, pdf set for hadron 1 (LHA numbering)
 #lhans2 10550        ! CTeQ6.6M PDF NLO, pdf set for hadron 2 (LHA numbering)
-#lhans1 90400        ! PDF4LHC15_nlo_30_pdfas
-#lhans2 90400        ! PDF4LHC15_nlo_30_pdfas   
+lhans1 90400         ! PDF4LHC15_nlo_30_pdfas
+lhans2 90400         ! PDF4LHC15_nlo_30_pdfas   
 ! To be set only if using different pdf sets for the two incoming hadrons
 #QCDLambda5  0.25    ! for not equal pdf sets 
 
