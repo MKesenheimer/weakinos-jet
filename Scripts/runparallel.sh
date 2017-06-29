@@ -82,6 +82,9 @@ Optional arguments:
   --merge                  merge the event files and delete the old ones
   --checklimits            check the soft and collinear limits during the NLO run
   --w[i] <n>               the walltime in seconds of the i-th stage (f.e. -w1 60)
+  --sleep                  sleep between submitting different stages (sleep duration 
+                           is equal to the walltime of the stage). Only used for msub
+                           or condor job submitting
   --fakevirt               use fake virtuals in all calculations
   --name <name>            job is identified with a name for msub
   --time                   meassure execution time
@@ -142,6 +145,7 @@ WALLTIME1=3600
 WALLTIME2=43200
 WALLTIME3=1800
 WALLTIME4=43200
+SLEEP=false
 FAKEVIRT=false
 NAME=""
 LHAPATH1=""
@@ -149,7 +153,7 @@ TIME=""
 STAGE=""
 GRIDITER=""
 
-# go through the options
+# argument parsing
 while [[ $# -gt 0 ]]; do
 KEY="$1"
 case $KEY in
@@ -332,6 +336,10 @@ case $KEY in
      --w4)
         WALLTIME4="$2"
         shift
+        shift
+        ;;
+    --sleep)
+        SLEEP=true
         shift
         ;;
      --name)
@@ -549,7 +557,7 @@ if [ "$GRIDITER" = "" ]; then
       overwrite_var "$RUNDIR/powheg_st1.${iter}.input" "parallelstage" 1
       overwrite_var "$RUNDIR/powheg_st1.${iter}.input" "xgriditeration" ${iter}
       echo -e "#!/bin/bash\ncd $RUNDIR" > $WORKINGDIR/run_st1.${iter}_${IDENT}.sh
-      if [ "$USEMSUB" = true ] || [ "$USECONDOR" = true ]; then
+      if [ "$SLEEP" = false ] && ( [ "$USEMSUB" = true ] || [ "$USECONDOR" = true ] ); then
         echo "cp $RUNDIR/powheg_st1.${iter}.input $RUNDIR/powheg.input" >> $WORKINGDIR/run_st1.${iter}_${IDENT}.sh
       fi
       # either \$1 or \$ARG1 is defined (msub sets ARG1)
@@ -588,7 +596,7 @@ if [ "$STAGE" != "1" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
     overwrite_var "$RUNDIR/powheg_st2.input" "colltest" 1
   fi
   echo -e "#!/bin/bash\ncd $RUNDIR" > $WORKINGDIR/run_st2_${IDENT}.sh
-  if [ "$STAGE" = "" ] && ( [ "$USEMSUB" = true ] || [ "$USECONDOR" = true ] ); then
+  if [ "$SLEEP" = false ] && [ "$STAGE" = "" ] && ( [ "$USEMSUB" = true ] || [ "$USECONDOR" = true ] ); then
     echo "cp $RUNDIR/powheg_st2.input $RUNDIR/powheg.input" >> $WORKINGDIR/run_st2_${IDENT}.sh
   fi
   # either \$1 or \$ARG1 is defined (msub sets ARG1)
@@ -614,7 +622,7 @@ if [ "$GENEVENTS" = true ]; then
     fi
     overwrite_var "$RUNDIR/powheg_st3.input" "numevts" 0
     echo -e "#!/bin/bash\ncd $RUNDIR" > $WORKINGDIR/run_st3_${IDENT}.sh
-    if [ "$STAGE" = "" ] && ( [ "$USEMSUB" = true ] || [ "$USECONDOR" = true ] ); then
+    if [ "$SLEEP" = false ] && [ "$STAGE" = "" ] && ( [ "$USEMSUB" = true ] || [ "$USECONDOR" = true ] ); then
       echo "cp $RUNDIR/powheg_st3.input $RUNDIR/powheg.input" >> $WORKINGDIR/run_st3_${IDENT}.sh
     fi
     # either \$1 or \$ARG1 is defined (msub sets ARG1)
@@ -642,7 +650,7 @@ if [ "$GENEVENTS" = true ]; then
       overwrite_var "$RUNDIR/powheg_st4.input" "numevts" $NEVENTSOLD
     fi
     echo -e "#!/bin/bash\ncd $RUNDIR" > $WORKINGDIR/run_st4_${IDENT}.sh
-    if [ "$STAGE" = "" ] && ( [ "$USEMSUB" = true ] || [ "$USECONDOR" = true ] ); then
+    if [ "$SLEEP" = false ] && [ "$STAGE" = "" ] && ( [ "$USEMSUB" = true ] || [ "$USECONDOR" = true ] ); then
       echo "cp $RUNDIR/powheg_st4.input $RUNDIR/powheg.input" >> $WORKINGDIR/run_st4_${IDENT}.sh
     fi
     # either \$1 or \$ARG1 is defined (msub sets ARG1)
@@ -829,7 +837,7 @@ echo "#!/bin/bash" > $WORKINGDIR/runmsub_${IDENT}.sh
 if [ "$GRIDITER" = "" ]; then
 for iter in `seq 1 ${MAXGRIDIT}`; do
 DEPEND=""
-if [ "$iter" != "1" ]; then
+if [ "$iter" != "1" ] && [ "$SLEEP" = false ]; then
   DEPEND=",depend=afterok:\${dependIDs1$((iter-1))[\$i]}"
 fi
 if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
@@ -846,6 +854,10 @@ for i in \`seq 1 $JOBS\`; do
   dependIDs1${iter}[\$i]=\${job[\$i]}
 done
 EOM
+# sleep during job submission (alternative to 'depend' parameter of msub)
+if [ "$SLEEP" = true ]; then
+  echo "sleep $WALLTIME1" >> $WORKINGDIR/runmsub_${IDENT}.sh
+fi
 fi
 done
 else
@@ -868,7 +880,7 @@ fi
 
 # stage 2
 DEPEND=""
-if [ "$STAGE" = "" ]; then
+if [ "$STAGE" = "" ] && [ "$SLEEP" = false ]; then
   DEPEND=",depend=afterok:\${dependIDs1$((iter-1))[\$i]}"
 fi
 if [ "$STAGE" != "1" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
@@ -885,12 +897,16 @@ for i in \`seq 1 $JOBS\`; do
   dependIDs2[\$i]=\${job[\$i]}
 done
 EOM
+# sleep during job submission (alternative to 'depend' parameter of msub)
+if [ "$SLEEP" = true ]; then
+  echo "sleep $WALLTIME2" >> $WORKINGDIR/runmsub_${IDENT}.sh
+fi
 fi
 
 if [ "$GENEVENTS" = true ]; then
 # stage 3
 DEPEND=""
-if [ "$STAGE" = "" ]; then
+if [ "$STAGE" = "" ] && [ "$SLEEP" = false ]; then
   DEPEND=",depend=afterok:\${dependIDs2[\$i]}"
 fi
 if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "4" ]; then
@@ -907,11 +923,15 @@ for i in \`seq 1 $JOBS\`; do
   dependIDs3[\$i]=\${job[\$i]}
 done
 EOM
+# sleep during job submission (alternative to 'depend' parameter of msub)
+if [ "$SLEEP" = true ]; then
+  echo "sleep $WALLTIME3" >> $WORKINGDIR/runmsub_${IDENT}.sh
+fi
 fi
 
 # stage 4
 DEPEND=""
-if [ "$STAGE" = "" ]; then
+if [ "$STAGE" = "" ] && [ "$SLEEP" = false ]; then
   DEPEND=",depend=afterok:\${dependIDs3[\$i]}"
 fi
 if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ]; then
@@ -928,6 +948,10 @@ for i in \`seq 1 $JOBS\`; do
   dependIDs4[\$i]=\${job[\$i]}
 done
 EOM
+# sleep during job submission (alternative to 'depend' parameter of msub)
+if [ "$SLEEP" = true ]; then
+  echo "sleep $WALLTIME4" >> $WORKINGDIR/runmsub_${IDENT}.sh
+fi
 fi
 fi #if GENEVENTS
 
@@ -945,7 +969,7 @@ echo "#!/bin/bash" > $WORKINGDIR/runcondor_${IDENT}.sh
 if [ "$GRIDITER" = "" ]; then
 for iter in `seq 1 ${MAXGRIDIT}`; do
 DEPEND=""
-if [ "$iter" != "1" ]; then
+if [ "$iter" != "1" ] && [ "$SLEEP" = false ]; then
   DEPEND="-hold_jid \${dependIDs1$((iter-1))[\$i]}"
 fi
 if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
@@ -962,6 +986,10 @@ for i in \`seq 1 $JOBS\`; do
   dependIDs1${iter}[\$i]=\${job[\$i]}
 done
 EOM
+# sleep during job submission (alternative to 'hold_jid' parameter of condor_qsub)
+if [ "$SLEEP" = true ]; then
+  echo "sleep $WALLTIME1" >> $WORKINGDIR/runcondor_${IDENT}.sh
+fi
 fi
 done
 else
@@ -984,7 +1012,7 @@ fi
 
 # stage 2
 DEPEND=""
-if [ "$STAGE" = "" ]; then
+if [ "$STAGE" = "" ] && [ "$SLEEP" = false ]; then
   DEPEND="-hold_jid \${dependIDs1$((iter-1))[\$i]}"
 fi
 if [ "$STAGE" != "1" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
@@ -1001,12 +1029,16 @@ for i in \`seq 1 $JOBS\`; do
   dependIDs2[\$i]=\${job[\$i]}
 done
 EOM
+# sleep during job submission (alternative to 'hold_jid' parameter of condor_qsub)
+if [ "$SLEEP" = true ]; then
+  echo "sleep $WALLTIME2" >> $WORKINGDIR/runcondor_${IDENT}.sh
+fi
 fi
 
 if [ "$GENEVENTS" = true ]; then
 # stage 3
 DEPEND=""
-if [ "$STAGE" = "" ]; then
+if [ "$STAGE" = "" ] && [ "$SLEEP" = false ]; then
   DEPEND="-hold_jid \${dependIDs2[\$i]}"
 fi
 if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "4" ]; then
@@ -1023,11 +1055,15 @@ for i in \`seq 1 $JOBS\`; do
   dependIDs3[\$i]=\${job[\$i]}
 done
 EOM
+# sleep during job submission (alternative to 'hold_jid' parameter of condor_qsub)
+if [ "$SLEEP" = true ]; then
+  echo "sleep $WALLTIME3" >> $WORKINGDIR/runcondor_${IDENT}.sh
+fi
 fi
 
 # stage 4
 DEPEND=""
-if [ "$STAGE" = "" ]; then
+if [ "$STAGE" = "" ] && [ "$SLEEP" = false ]; then
   DEPEND="-hold_jid \${dependIDs3[\$i]}"
 fi
 if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ]; then
@@ -1044,6 +1080,10 @@ for i in \`seq 1 $JOBS\`; do
   dependIDs4[\$i]=\${job[\$i]}
 done
 EOM
+# sleep during job submission (alternative to 'hold_jid' parameter of condor_qsub)
+if [ "$SLEEP" = true ]; then
+  echo "sleep $WALLTIME4" >> $WORKINGDIR/runcondor_${IDENT}.sh
+fi
 fi
 fi #if GENEVENTS
 
