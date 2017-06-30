@@ -164,7 +164,7 @@ DEBUG = -ggdb -pg -DDEBUG=$(LEVEL)
 #   integrated seperately in sigosres.f and is included at a later point
 #   to the main result.
 #USRFLAGS += -DDSUB_II_TEST
-#USRFLAGS += -DDSUB_II
+USRFLAGS += -DDSUB_II
 
 ## SkipHel
 # skip the calculation of formcalc helicity amplitudes if the amplitude

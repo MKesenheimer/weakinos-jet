@@ -2,6 +2,8 @@
 # Usage: ./merge.sh <directory>
 WORKINGDIR=${PWD}
 RUNDIR=$WORKINGDIR/$1
+# grid iteration
+IT=4
 
 # combined results for stage 2
 echo ""
@@ -33,10 +35,10 @@ cd $RUNDIR && ../merge-data 1 $(ls $RUNDIR/pwg-*-NLO.top) && mv fort.12 pwg-NLO.
 rm -f $RUNDIR/pwgpwhgalone.top
 cd $RUNDIR && ../merge-data 1 $(ls $RUNDIR/pwgpwhgalone*.top) && mv fort.12 pwgpwhgalone.top
 
-rm -f $RUNDIR/pwg-xg2-btlgrid.top
-cd $RUNDIR && ../merge-data 1 $(ls $RUNDIR/pwg-xg2-*-btlgrid.top) && mv fort.12 pwg-xg2-btlgrid.top
+rm -f $RUNDIR/pwg-xg$IT-btlgrid.top
+cd $RUNDIR && ../merge-data 1 $(ls $RUNDIR/pwg-xg$IT-*-btlgrid.top) && mv fort.12 pwg-xg$IT-btlgrid.top
 
-rm -f $RUNDIR/pwg-xg2-osresgrid.top
-cd $RUNDIR && ../merge-data 1 $(ls $RUNDIR/pwg-xg2-*-osresgrid.top) && mv fort.12 pwg-xg2-osresgrid.top
+rm -f $RUNDIR/pwg-xg$IT-osresgrid.top
+cd $RUNDIR && ../merge-data 1 $(ls $RUNDIR/pwg-xg$IT-*-osresgrid.top) && mv fort.12 pwg-xg$IT-osresgrid.top
 
 echo "done."
