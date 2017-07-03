@@ -139,7 +139,7 @@ DoPaint[diags_, type_, opt___] := Paint[diags, opt,
   DisplayFunction -> (Export[ToFileName[$PaintSE, name <> "_" <> type <> ".pdf"], #]&)];
 
 (*faster code generation without boxes and pentagons, could be used for debugging*)
-$FastCode = False;
+$FastCode = True;
 (*Generate only diagrams without calculating anything*)
 $DiagramsOnly = False;
 

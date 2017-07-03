@@ -171,6 +171,10 @@ USRFLAGS += -DDSUB_II
 # is zero 'NSKIP'-times during the initialisation process.
 USRFLAGS += -DNSKIP=50
 
+## faster Virtuals without Boxes and Pentagons
+# only for debugging, can be switched on here
+FASTVIRTS = yes
+
 ########################################################################
 #           -*- no editing is required below this line -*-             #
 ########################################################################
@@ -191,7 +195,11 @@ SUBWORKINGDIR = $(shell pwd)
 TOOLS = $(WORKINGDIR)/Tools
 MADREALS = $(SUBWORKINGDIR)/MadGraph
 FORMREALS = $(SUBWORKINGDIR)/FormCalc_Reals
-FORMVIRTS = $(SUBWORKINGDIR)/FormCalc_Virtuals
+ifeq ("$(FASTVIRTS)","yes")
+  FORMVIRTS = $(SUBWORKINGDIR)/FormCalc_Virtuals_fast
+else
+  FORMVIRTS = $(SUBWORKINGDIR)/FormCalc_Virtuals
+endif
 SCRIPTS = $(WORKINGDIR)/Scripts
 
 # includes
