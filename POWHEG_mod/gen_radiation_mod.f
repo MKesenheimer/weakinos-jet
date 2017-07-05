@@ -180,7 +180,7 @@ c CH, MK: new part here:
          ! this is in full analogy with disquark
          call gen_osres(iret)
          ! MK: changed the following lines
-         ! if negative weight, flip the sign of xwgtup
+         ! if negative weight, flip the sign
          if( (iret.ge.3) .and. (iret.le.(nosres+2)) ) then
            if(rad_osres_sign(rad_realosres,iret-2).eq.-1) then
              weight = -weight

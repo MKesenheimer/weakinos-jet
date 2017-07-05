@@ -173,7 +173,7 @@ USRFLAGS += -DNSKIP=50
 
 ## faster Virtuals without Boxes and Pentagons
 # only for debugging, can be switched on here
-FASTVIRTS = yes
+#FASTVIRTS = yes
 
 ########################################################################
 #           -*- no editing is required below this line -*-             #
@@ -511,18 +511,21 @@ merge-pwg-stat:
 merge-data: 
 	$(FC) $(TOOLS)/programs/merge-data.f -o $@
 
+topintegrator:
+	$(FC) $(TOOLS)/programs/topintegrator.f -o $@
+
 copy-scripts:
 	cp $(SCRIPTS)/runparallel.sh  $(SUBWORKINGDIR) && \
 	cp $(SCRIPTS)/clean_rundir.sh $(SUBWORKINGDIR) && \
 	cp $(SCRIPTS)/reweight.sh     $(SUBWORKINGDIR) && \
 	cp $(SCRIPTS)/merge.sh        $(SUBWORKINGDIR)
 
-all-libs: libs pwhg_main_ninj+jet copy-scripts merge-pwg-stat merge-data
+all-libs: libs pwhg_main_ninj+jet copy-scripts merge-pwg-stat merge-data topintegrator
 
-all: pwhg_main_ninj+jet copy-scripts merge-pwg-stat merge-data
+all: pwhg_main_ninj+jet copy-scripts merge-pwg-stat merge-data topintegrator
 
 clean:
-	rm -f build/*.o pwhg_main_ninj+jet lhef_analysis main-PYTHIA-lhef merge-pwg-stat merge-data runparallel.sh clean_rundir.sh reweight.sh merge.sh
+	rm -f build/*.o pwhg_main_ninj+jet lhef_analysis main-PYTHIA-lhef merge-pwg-stat merge-data topintegrator runparallel.sh clean_rundir.sh reweight.sh merge.sh
 
 clean-results:
 	find ./testrun ! \( -name '*.slha' -o -name '*.input' -o -name 'pwgseeds.dat' -o -name '*.LHgrid' \) \
@@ -533,7 +536,7 @@ clean-libs:
 
 clean-all: clean clean-results clean-libs
 
-do-pwhg do: pwhg_main_ninj+jet copy-scripts merge-pwg-stat merge-data
+do-pwhg do: pwhg_main_ninj+jet copy-scripts merge-pwg-stat merge-data topintegrator
 	cd testrun && ../pwhg_main_ninj+jet
 
 do-lhef: lhef_analysis
