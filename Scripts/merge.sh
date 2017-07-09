@@ -1,9 +1,14 @@
 #!/bin/bash
-# Usage: ./merge.sh <directory>
+# Usage: ./merge.sh <directory> [<grid iteration>]
 WORKINGDIR=${PWD}
 RUNDIR=$WORKINGDIR/$1
+
 # grid iteration
-IT=4
+if [ "$2" = "" ]; then
+  IT=4
+else
+  IT=$2
+fi
 
 # combined results for stage 2
 echo ""

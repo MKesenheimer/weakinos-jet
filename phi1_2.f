@@ -70,6 +70,9 @@ c psgen=3:     flat in tan tau with arbitrary exponent
         integer psgen
         ! choose the exponent for logarithmic sampling
         double precision xexp
+        ! output control
+        integer warncount1
+        data warncount1/0/
 
         ! reset jacobian
         jac = 1D0
@@ -98,7 +101,7 @@ c psgen=3:     flat in tan tau with arbitrary exponent
           tau = taumax*dexp(dlog(taumin/taumax)*(1-xx(1)**xexp))
           jac = -jac*tau*xexp*xx(1)**(xexp-1)*dlog(taumin/taumax)
         else
-         print*, 'Wrong psgen in Born_phsp.F'
+         print*, 'Wrong psgen in ph1_2.f:x1x2phspace'
          stop
         endif        
         
@@ -116,7 +119,16 @@ c psgen=3:     flat in tan tau with arbitrary exponent
       
         ! check if NaN occured
         if(isnan(x1) .or. isnan(x2) .or. isnan(s) .or. isnan(jac)) then
-          print*,"warning in phi1_2:142: NaN occured"
+          if(warncount1.lt.10) then
+            warncount1 = warncount1 + 1
+            print*,"warning in phi1_2:x1x2phspace: NaN occured"
+            print*,"x1",x1
+            print*,"x2",x2
+            print*,"s",s
+            print*,"jac",jac
+          elseif(warncount1.eq.10) then
+            print*, "Further output will be suppressed."
+          endif
           jac = 0D0
           return
         endif
@@ -164,21 +176,28 @@ c just set xphi to zero - the jacobian will still be correct.
         double precision tiny, tiny2
         parameter (tiny = 1d-6)
         parameter (tiny2 = 1d-8)
+        ! output control
+        integer warncount1, warncount2, warncount3
+        data warncount1/0/, warncount2/0/, warncount3/0/
 
         ! reset the jacobian
         jac = 1D0
 
         s = dotp(p0,p0)
         ! sort out bad phase space points
-        if ( s .le. ((1D0-tiny2)*(m1+m2)**2) ) then
-          print*, "warning: s is less than the sum of provided masses "//
-     &            "m1 and m2"
-          print*, "s, (m1+m2)**2 =",s,(m1+m2)**2
+        if( s .le. ((1D0-tiny2)*(m1+m2)**2) ) then
+          if(warncount1.lt.10) then
+            warncount1 = warncount1 + 1
+            print*, "warning:R2phsp: s < (m1 + m2)^2"
+            print*, "s, (m1+m2)**2 =",s,(m1+m2)**2
+          elseif(warncount1.eq.10) then
+            print*, "Further output will be suppressed."
+          endif
           jac = 0D0
           return
         ! no warning if not so bad phase space point
         ! but sort out to avoid NaNs
-        else if ( (s .le. (m1+m2)**2) .and.
+        elseif( (s .le. (m1+m2)**2) .and.
      &            (s .ge. ((1D0-tiny2)*(m1+m2)**2)) ) then
           jac = 0D0
           return
@@ -229,33 +248,41 @@ c just set xphi to zero - the jacobian will still be correct.
         jac = jac*Pabs/(4D0*sqrts)
 
         ! filter unphysical momenta configurations
-        if ( p2(0) .lt. 0D0 .and. p2(0) .gt. -tiny ) jac = 0D0  
-        if ( p1(0) .lt. 0D0 .and. p1(0) .gt. -tiny ) jac = 0D0 
+        if( p2(0) .lt. 0D0 .and. p2(0) .gt. -tiny ) jac = 0D0  
+        if( p1(0) .lt. 0D0 .and. p1(0) .gt. -tiny ) jac = 0D0 
         
         ! tests
-        if (((p0(0).lt.0D0).or.(p1(0).lt.0D0).or.(p2(0).lt.0D0))
+        if(((p0(0).lt.0D0).or.(p1(0).lt.0D0).or.(p2(0).lt.0D0))
      &       .and.jac.ne.0D0 ) then
-          print*,"warning: one of E1,E2,E3 is less than zero"
-          print*,"p0",p0(0),p0(0)**2-p0(1)**2-p0(2)**2-p0(3)**2,s
-          print*,"p1",p1(0),p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2
-          print*,"p2",p2(0),p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2
+          if(warncount2.lt.10) then
+            warncount2 = warncount2 + 1
+            print*,"warning in phi1_2:R2phsp: E1,E2 or E3 < 0"
+            print*,"p0",p0(0),p0(0)**2-p0(1)**2-p0(2)**2-p0(3)**2,s
+            print*,"p1",p1(0),p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2
+            print*,"p2",p2(0),p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2
+          elseif(warncount2.eq.10) then
+            print*, "Further output will be suppressed."
+          endif
           jac = 0D0
           return
         endif
         
         ! check if NaN occured
-        if(isnan(jac)) then
-          print*,"warning in phi1_2:271: NaN occured"
+        if(isnan(jac).or.isnan(p1(0)).or.isnan(p1(1)).or.
+     &     isnan(p1(2)).or.isnan(p1(3)).or.isnan(p2(0)).or.
+     &     isnan(p2(1)).or.isnan(p1(2)).or.isnan(p1(3))) then
+          if(warncount3.lt.10) then
+            warncount3 = warncount3 + 1
+            print*,"warning in phi1_2:R2phsp: nan occured"
+            print*,"p1",p1(:)
+            print*,"p2",p2(:)
+            print*,"jac",jac
+          elseif(warncount3.eq.10) then
+            print*, "Further output will be suppressed."
+          endif
           jac = 0D0
           return
         endif
-        do i=0,3
-          if(isnan(p1(i)) .or. isnan(p2(i))) then
-            print*,"warning in phi1_2:277: NaN occured"
-            jac = 0D0
-            return
-          endif
-        enddo
       end
 c############### end subroutine R2phsp #################################
 
@@ -309,8 +336,12 @@ c psgen=2:     breit wigner in s2 and flat below resonance
         ! constants
         double precision m_pi
         parameter (m_pi = 4.D0*datan(1.D0))
-        double precision tiny
+        double precision tiny, tiny2
         parameter (tiny = 1d-6)
+        parameter (tiny2 = 1d-8)
+        ! output control
+        integer warncount1, warncount2, warncount3, warncount4
+        data warncount1/0/, warncount2/0/, warncount3/0/, warncount4/0/
 
         ! reset the jacobian
         jac = 1D0
@@ -318,12 +349,21 @@ c psgen=2:     breit wigner in s2 and flat below resonance
 
         s = dotp(p0,p0)
         ! sort out bad phase space points
-        if (s .le. 0D0) then
-         print*, "warning: s is less than zero"
-         print*, "s =",s
-         print*, " => set jacobian  to 0"
-         jac = 0D0
-         return
+        if(s.lt.-tiny2) then
+          if(warncount1.lt.10) then
+            warncount1 = warncount1 + 1
+            print*, "warning in phi1_2:R2phsp_s2: s < 0"
+            print*, "s",s
+          elseif(warncount1.eq.10) then
+            print*, "Further output will be suppressed."
+          endif
+          jac = 0D0
+          return
+        ! no warning if not so bad phase space point
+        ! but sort out to avoid NaNs
+        elseif(s.ge.-tiny2.and.s.le.0D0) then
+          jac = 0D0
+          return
         endif
         sqrts = dsqrt(s)
 
@@ -340,8 +380,15 @@ c psgen=2:     breit wigner in s2 and flat below resonance
         s2max = (sqrts-m1)**2
 
         ! sort out bad phase space points
-        if (s2min .gt. s2max) then 
-          print*,"warning: s2min should be smaller than s2max"
+        if(s2min .gt. s2max) then 
+          if(warncount2.lt.10) then
+            warncount2 = warncount2 + 1
+            print*,"warning in phi1_2:R2phsp_s2: s2min > s2max"
+            print*,"s2min",s2min
+            print*,"s2max",s2max
+          elseif(warncount2.eq.10) then
+            print*, "Further output will be suppressed."
+          endif
           s2min = s2max 
           jac   = 0D0
           return
@@ -399,33 +446,41 @@ c psgen=2:     breit wigner in s2 and flat below resonance
         jac = jac*Pabs/(4D0*sqrts)
 
         ! filter unphysical momenta configurations
-        if ( p2(0) .lt. 0D0 .and. p2(0) .gt. -tiny ) jac = 0D0  
-        if ( p1(0) .lt. 0D0 .and. p1(0) .gt. -tiny ) jac = 0D0 
+        if( p2(0) .lt. 0D0 .and. p2(0) .gt. -tiny ) jac = 0D0  
+        if( p1(0) .lt. 0D0 .and. p1(0) .gt. -tiny ) jac = 0D0 
         
         ! tests
-        if (((p0(0).lt.0D0).or.(p1(0).lt.0D0).or.(p2(0).lt.0D0))
+        if(((p0(0).lt.0D0).or.(p1(0).lt.0D0).or.(p2(0).lt.0D0))
      &       .and.jac.ne.0D0 ) then
-          print*,"warning: one of E1,E2,E3 is less than zero"
-          print*,"p0",p0(0),p0(0)**2-p0(1)**2-p0(2)**2-p0(3)**2,s
-          print*,"p1",p1(0),p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2
-          print*,"p2",p2(0),p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2
+          if(warncount3.lt.10) then
+            warncount3 = warncount3 + 1
+            print*,"warning in phi1_2:R2phsp_s2: E1,E2 or E3 < 0"
+            print*,"p0",p0(0),p0(0)**2-p0(1)**2-p0(2)**2-p0(3)**2,s
+            print*,"p1",p1(0),p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2
+            print*,"p2",p2(0),p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2
+          elseif(warncount3.eq.10) then
+            print*, "Further output will be suppressed."
+          endif
           jac = 0D0
           return
         endif
         
         ! check if NaN occured
-        if(isnan(jac)) then
-          print*,"warning in phi1_2:440: NaN occured"
+        if(isnan(jac).or.isnan(p1(0)).or.isnan(p1(1)).or.
+     &     isnan(p1(2)).or.isnan(p1(3)).or.isnan(p2(0)).or.
+     &     isnan(p2(1)).or.isnan(p1(2)).or.isnan(p1(3))) then
+          if(warncount4.lt.10) then
+            warncount4 = warncount4 + 1
+            print*,"warning in phi1_2:R2phsp_s2: nan occured"
+            print*,"p1",p1(:)
+            print*,"p2",p2(:)
+            print*,"jac",jac
+          elseif(warncount4.eq.10) then
+            print*, "Further output will be suppressed."
+          endif
           jac = 0D0
           return
         endif
-        do i=0,3
-          if(isnan(p1(i)) .or. isnan(p2(i))) then
-            print*,"warning in phi1_2:446: NaN occured"
-            jac = 0D0
-            return
-          endif
-        enddo  
       end
 c############### end subroutine R2phsp_s2 ##############################
 
@@ -479,8 +534,14 @@ c psgen=2:     breit wigner in s1 and s2 and flat below resonance
         ! constants
         double precision m_pi
         parameter (m_pi = 4.D0*datan(1.D0))
-        double precision tiny
+        double precision tiny, tiny2
         parameter (tiny = 1d-6)
+        parameter (tiny2 = 1d-8)
+        ! output control
+        integer warncount1, warncount2, warncount3, warncount4
+        integer warncount5
+        data warncount1/0/, warncount2/0/, warncount3/0/, warncount4/0/
+        data warncount5/0/
 
         ! reset the jacobian
         jac = 1D0
@@ -488,12 +549,21 @@ c psgen=2:     breit wigner in s1 and s2 and flat below resonance
 
         s = dotp(p0,p0)
         ! sort out bad phase space points
-        if (s .le. 0D0) then
-         print*, "warning: s is less than zero"
-         print*, "s =",s
-         print*, " => set jacobian  to 0"
-         jac = 0D0
-         return
+        if(s.lt.-tiny2) then
+          if(warncount1.lt.10) then
+            warncount1 = warncount1 + 1
+            print*, "warning in phi1_2:R2phsp_s1s2: s < 0"
+            print*, "s",s
+          elseif(warncount1.eq.10) then
+            print*, "Further output will be suppressed."
+          endif
+          jac = 0D0
+          return
+        ! no warning if not so bad phase space point
+        ! but sort out to avoid NaNs
+        elseif(s.ge.-tiny2.and.s.le.0D0) then
+          jac = 0D0
+          return
         endif
         sqrts = dsqrt(s)
 
@@ -506,9 +576,16 @@ c psgen=2:     breit wigner in s1 and s2 and flat below resonance
         jac   = jac*2D0*m_pi
 
         ! sort out bad phase space points
-        if (s1min .gt. s1max) then 
-          print*,"warning: s1min should be smaller than s1max"
-          s1min = s1max 
+        if(s1min .gt. s1max) then
+          if(warncount2.lt.10) then
+            warncount2 = warncount2 + 1
+            print*,"warning in phi1_2:R2phsp_s1s2: s1min > s1max"
+            print*,"s1min",s1min
+            print*,"s1max",s1max
+          elseif(warncount2.eq.10) then
+            print*, "Further output will be suppressed."
+          endif
+          s1min = s1max
           jac   = 0D0
           return
         endif
@@ -517,7 +594,7 @@ c psgen=2:     breit wigner in s1 and s2 and flat below resonance
         ! 1 = breit wigner
         ! 2 = breit wigner and flat below resonance
         if( psgen .lt. 0 .or. psgen .gt. 2) then
-          print*,"error in R2phsp_s2: unknown psgen: ", psgen
+          print*,"error in R2phsp_s1s2: unknown psgen: ", psgen
           stop
         endif
         if( (psgen.ne.0) .and. ((psgen.eq.1) .or. 
@@ -534,9 +611,16 @@ c psgen=2:     breit wigner in s1 and s2 and flat below resonance
         s2max = (sqrts-m1)**2
         
         ! sort out bad phase space points
-        if (s2min .gt. s2max) then 
-          print*,"warning: s2min should be smaller than s2max"
-          s2min = s2max 
+        if(s2min .gt. s2max) then
+          if(warncount3.lt.10) then
+            warncount3 = warncount3 + 1
+            print*,"warning in phi1_2:R2phsp_s1s2: s2min > s2max"
+            print*,"s2min",s2min
+            print*,"s2max",s2max
+          elseif(warncount3.eq.10) then
+            print*, "Further output will be suppressed."
+          endif
+          s2min = s2max
           jac   = 0D0
           return
         endif
@@ -586,33 +670,41 @@ c psgen=2:     breit wigner in s1 and s2 and flat below resonance
         jac = jac*Pabs/(4D0*sqrts)
 
         ! filter unphysical momenta configurations
-        if ( p2(0) .lt. 0D0 .and. p2(0) .gt. -tiny ) jac = 0D0  
-        if ( p1(0) .lt. 0D0 .and. p1(0) .gt. -tiny ) jac = 0D0 
+        if( p2(0) .lt. 0D0 .and. p2(0) .gt. -tiny ) jac = 0D0  
+        if( p1(0) .lt. 0D0 .and. p1(0) .gt. -tiny ) jac = 0D0 
         
         ! tests
-        if (((p0(0).lt.0D0).or.(p1(0).lt.0D0).or.(p2(0).lt.0D0))
+        if(((p0(0).lt.0D0).or.(p1(0).lt.0D0).or.(p2(0).lt.0D0))
      &       .and.jac.ne.0D0 ) then
-          print*,"warning: one of E1,E2,E3 is less than zero"
-          print*,"p0",p0(0),p0(0)**2-p0(1)**2-p0(2)**2-p0(3)**2,s
-          print*,"p1",p1(0),p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2
-          print*,"p2",p2(0),p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2
-          jac = 0D0
-          return
-        endif
-        
-        ! check if NaN occured
-        if(isnan(jac)) then
-          print*,"warning in phi1_2:440: NaN occured"
-          jac = 0D0
-          return
-        endif
-        do i=0,3
-          if(isnan(p1(i)) .or. isnan(p2(i))) then
-            print*,"warning in phi1_2:446: NaN occured"
-            jac = 0D0
-            return
+          if(warncount4.lt.10) then
+            warncount4 = warncount4 + 1
+            print*,"warning in phi1_2:R2phsp_s1s2: E1,E2 or E3 < 0"
+            print*,"p0",p0(0),p0(0)**2-p0(1)**2-p0(2)**2-p0(3)**2,s
+            print*,"p1",p1(0),p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2
+            print*,"p2",p2(0),p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2
+          elseif(warncount4.eq.10) then
+            print*, "Further output will be suppressed."
           endif
-        enddo  
+          jac = 0D0
+          return
+        endif
+ 
+        ! check if NaN occured
+        if(isnan(jac).or.isnan(p1(0)).or.isnan(p1(1)).or.
+     &     isnan(p1(2)).or.isnan(p1(3)).or.isnan(p2(0)).or.
+     &     isnan(p2(1)).or.isnan(p1(2)).or.isnan(p1(3))) then
+          if(warncount5.lt.10) then
+            warncount5 = warncount5 + 1
+            print*,"warning in phi1_2:R2phsp_s1s2: nan occured"
+            print*,"p1",p1(:)
+            print*,"p2",p2(:)
+            print*,"jac",jac
+          elseif(warncount5.eq.10) then
+            print*, "Further output will be suppressed."
+          endif
+          jac = 0D0
+          return
+        endif
       end
 c############### end subroutine R2phsp_s1s2 ############################
 

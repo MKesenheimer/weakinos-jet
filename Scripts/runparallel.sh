@@ -26,6 +26,9 @@
 #    Copies the folder testrun_clean (and renames it to testrun_1) and proceeds to
 #    calculate the LO cross section on 4 cores.
 
+# log executed command
+COMMAND="$0 $@"
+
 # kill all POWHEG instances on interrupt
 trap "pkill -f pwhg_main" INT
 
@@ -434,6 +437,8 @@ else
    NAME=${NAME}
 fi
 echo ""
+echo "Command is $COMMAND"
+echo "$COMMAND" > $RUNDIR/command
 echo "Identifier is $IDENT"
 echo "Name is $NAME"
 
@@ -442,7 +447,7 @@ cd $RUNDIR
 
 # clean up the directory
 if [ "$CLEAN" = true ]; then
-   find $RUNDIR ! \( -name '*.slha' -o -name '*.input' -o -name 'pwgseeds.dat' -o -name '*.LHgrid' \) -type f -exec rm -f {} +
+   find $RUNDIR ! \( -name '*.slha' -o -name '*.input' -o -name 'pwgseeds.dat' -o -name '*.LHgrid' -o -name 'command' \) -type f -exec rm -f {} +
 fi
 
 # append to powheg.input
@@ -587,6 +592,8 @@ if [ "$STAGE" != "1" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
   echo "#Stage 2: NLO run" >> $RUNDIR/powheg_st2.input
   if [ "$FAKEVIRT" = false ]; then
     overwrite_var "$RUNDIR/powheg_st2.input" "fakevirtuals" 0
+  else
+    overwrite_var "$RUNDIR/powheg_st2.input" "fakevirtuals" 1
   fi
   overwrite_var "$RUNDIR/powheg_st2.input" "parallelstage" 2
   overwrite_var "$RUNDIR/powheg_st2.input" "numevts" 0
@@ -613,6 +620,8 @@ if [ "$GENEVENTS" = true ]; then
     echo "#Stage 3: Upper bound" >> $RUNDIR/powheg_st3.input
     if [ "$FAKEVIRT" = false ]; then
       overwrite_var "$RUNDIR/powheg_st3.input" "fakevirtuals" 0
+    else
+      overwrite_var "$RUNDIR/powheg_st2.input" "fakevirtuals" 1
     fi
     overwrite_var "$RUNDIR/powheg_st3.input" "parallelstage" 3
     if [ "$NUBOUND" != "" ]; then
@@ -637,6 +646,8 @@ if [ "$GENEVENTS" = true ]; then
     echo "#Stage 4: Events" >> $RUNDIR/powheg_st4.input
     if [ "$FAKEVIRT" = false ]; then
       overwrite_var "$RUNDIR/powheg_st4.input" "fakevirtuals" 0
+    else
+      overwrite_var "$RUNDIR/powheg_st2.input" "fakevirtuals" 1
     fi
     overwrite_var "$RUNDIR/powheg_st4.input" "parallelstage" 4
     if [ "$NUBOUND" != "" ]; then
@@ -676,6 +687,7 @@ fi
 # generate and run the run.sh script
 if [ "$USEMSUB" = false ] && [ "$USECONDOR" = false ]; then
 echo "#!/bin/bash" > $WORKINGDIR/run_${IDENT}.sh
+echo "# Command is $COMMAND" > $WORKINGDIR/run_${IDENT}.sh
 
 # stage 1
 if [ "$GRIDITER" = "" ]; then
@@ -832,6 +844,7 @@ fi
 # if the user wants to use msub:
 if [ "$USEMSUB" = true ]; then
 echo "#!/bin/bash" > $WORKINGDIR/runmsub_${IDENT}.sh
+echo "# Command is $COMMAND" > $WORKINGDIR/runmsub_${IDENT}.sh
 
 # stage 1
 if [ "$GRIDITER" = "" ]; then
@@ -964,6 +977,7 @@ fi
 # if the user wants to use condor:
 if [ "$USECONDOR" = true ]; then
 echo "#!/bin/bash" > $WORKINGDIR/runcondor_${IDENT}.sh
+echo "# Command is $COMMAND" > $WORKINGDIR/runcondor_${IDENT}.sh
 
 # stage 1
 if [ "$GRIDITER" = "" ]; then
