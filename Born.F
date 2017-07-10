@@ -19,33 +19,42 @@ c parton parton -> weakino weakino
         logical init_born
         data init_born/.true./
         integer i
+        ! output control
+        integer warncount1
+        data warncount1/0/
 #ifdef DEBUGQ
         double precision momsum2sq
         external momsum2sq
         double precision s35, s45
 #endif
 
-        if (init_born) then
-           print*
-           print*, "=== Init born... ==="
-           verbose = .true.
-           init_born = .false.
+        if(init_born) then
+          print*
+          print*, "=== Init born... ==="
+          verbose = .true.
+          init_born = .false.
         else
-           verbose = .false.
+          verbose = .false.
         endif
     
         ! calculate the couplings for this PS point
         call set_ebe_couplings
         call getBornAmps(p,bflav,born,bornjk,bmunu)
         
-        if (verbose) then
+        if(verbose) then
           print*, "process: ", bflav
           print*, "born = ", born
           print*
         endif
 
         if(isnan(born)) then
-          !print*,"got strange value for born amplitude...",born
+          if(warncount1.lt.10) then
+            warncount1 = warncount1 + 1
+            print*,"got strange value for born amplitude...",born
+          elseif(warncount1.eq.10) then
+            warncount1 = 11
+            print*, "setborn: Further output will be suppressed."
+          endif
           born = 0D0
         endif
 

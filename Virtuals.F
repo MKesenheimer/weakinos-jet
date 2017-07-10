@@ -26,6 +26,9 @@ c#include "decl.h"
         logical verbose
         logical init_virtual
         data init_virtual/.true./
+        ! output control
+        integer warncount1
+        data warncount1/0/
 
         if (init_virtual) then
           print*
@@ -64,7 +67,13 @@ c#include "decl.h"
         endif
 
         if(isnan(virt)) then
-          print*,"got strange value for virtual amplitude...", virt
+          if(warncount1.lt.10) then
+            warncount1 = warncount1 + 1
+            print*,"got strange value for virtual amplitude...", virt
+          elseif(warncount1.eq.10) then
+            warncount1 = 11
+            print*, "setvirtual: Further output will be suppressed."
+          endif
           virt = 0D0
         endif
       end

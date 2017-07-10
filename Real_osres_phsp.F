@@ -171,15 +171,8 @@ c fixed-values if flg_osres is set!)
       double precision function pt2max_osres()
         implicit none
 #include "pwhg_st.h"
-
         ! per default: use the scale of the hard process 
         ! (so far a "running" scale is not supported here!)
         pt2max_osres = dabs(st_mufact2)
-#ifdef DEBUGQ
-        print*
-        print*,"DEBUG, real_osres_phsp.F"
-        print*,"pt2max_osres",pt2max_osres
-#endif
-        return
       end
 c############### end function pt2max_osres #############################

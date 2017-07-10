@@ -33,6 +33,9 @@ c and the Jacobi factor for the phase space volume
         external dotp, momsq, momsum2sq, momsum3sq
         ! pseudorapidity and pt
         double precision ptjet
+        ! output control
+        integer warncount1
+        data warncount1/0/
 
         ! final state arrangement
         ! (the order how the phase space is generated)
@@ -126,9 +129,15 @@ c and the Jacobi factor for the phase space volume
           do nu=0,3
             if(isnan(kn_pborn(nu,ind)) .or. 
      &         isnan(kn_cmpborn(nu,ind))) then
-              print*, "Warning in Born_phsp: NaN occured."
-              print*,"kn_pborn(",nu,",",ind,")   = ",kn_pborn(nu,ind)
-              print*,"kn_cmpborn(",nu,",",ind,") = ",kn_cmpborn(nu,ind)
+              if(warncount1.lt.10) then
+                warncount1 = warncount1 + 1
+                print*, "Warning in Born_phsp: NaN occured."
+                print*,"kn_pborn(",nu,",",ind,")   = ",kn_pborn(nu,ind)
+                print*,"kn_cmpborn(",nu,",",ind,") = ",kn_cmpborn(nu,ind)
+              elseif(warncount1.eq.10) then
+                warncount1 = 11
+                print*, "born_phsp: Further output will be suppressed."
+              endif
               kn_jacborn = 0D0
               return
             endif
@@ -172,21 +181,18 @@ c############### end subroutine born_phsp ##############################
 c############### subroutine born_suppression ###########################
       subroutine born_suppression(fact)
         implicit none
-
 #include "nlegborn.h"
-
         double precision fact
         double precision powheginput
         external powheginput
         logical init
         data init/.true./
         save init
-        
-        if (init) then
+        if(init) then
            if(powheginput("#bornsuppfact").gt.0) then
               fact = powheginput("bornsuppfact")
               print*, "Using Born suppression factor ", fact
-           else if(powheginput("#ptsupp").gt.0) then
+           elseif(powheginput("#ptsupp").gt.0) then
               fact = powheginput("ptsupp")
               print*, "WARNING: ptsupp is deprecated"
               print*, "Replace it with bornsuppfact"
@@ -226,32 +232,32 @@ c############### subroutine set_fac_ren_scales #########################
         external powheginput
 
         if(init) then
-           if(powheginput("#runningscale").gt.0) then
-              if(powheginput("runningscale").ne.1) then
-                 print*, "you set runningscale to ", runningscale
-                 print*, "this runningscale value is not allowed"
-                 stop
-              endif
-              runningscale = .true.
-           else
-              runningscale = .false.
-           endif
+          if(powheginput("#runningscale").gt.0) then
+            if(powheginput("runningscale").ne.1) then
+              print*, "you set runningscale to ", runningscale
+              print*, "this runningscale value is not allowed"
+              stop
+            endif
+            runningscale = .true.
+          else
+            runningscale = .false.
+          endif
         endif
        
 #ifdef DEBUGQ
-       print*,"p born:"
-       print*,kn_pborn(:,1)
-       print*,kn_pborn(:,2)
-       print*,kn_pborn(:,3)
-       print*,kn_pborn(:,4)
-       print*,kn_pborn(:,5)
-       print*,"p real:"
-       print*,kn_preal(:,1)
-       print*,kn_preal(:,2)
-       print*,kn_preal(:,3)
-       print*,kn_preal(:,4)
-       print*,kn_preal(:,5)
-       print*,kn_preal(:,6)
+        print*,"p born:"
+        print*,kn_pborn(:,1)
+        print*,kn_pborn(:,2)
+        print*,kn_pborn(:,3)
+        print*,kn_pborn(:,4)
+        print*,kn_pborn(:,5)
+        print*,"p real:"
+        print*,kn_preal(:,1)
+        print*,kn_preal(:,2)
+        print*,kn_preal(:,3)
+        print*,kn_preal(:,4)
+        print*,kn_preal(:,5)
+        print*,kn_preal(:,6)
 #endif
 
 c choose the running scale
@@ -313,3 +319,4 @@ c 2: sum of transverse energy of final states
         mur1 = muref
       end
 c############### end subroutine set_fac_ren_scales #####################
+

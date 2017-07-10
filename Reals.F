@@ -28,6 +28,9 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
         integer ichan
         ! sum only over relevant on-shell channels
         integer nos
+        ! output control
+        integer warncount1
+        data warncount1/0/
 c#define CHECKMADFORM
 #ifdef CHECKMADFORM
         double precision ampM
@@ -145,7 +148,13 @@ c#define CHECKMADFORM
         endif
 
         if(isnan(ampreal)) then
-          !print*,"got strange value for real amplitude...", ampreal
+          if(warncount1.lt.10) then
+            warncount1 = warncount1 + 1
+            print*,"got strange value for real amplitude...", ampreal
+          elseif(warncount1.eq.10) then
+            warncount1 = 11
+            print*, "setreal: Further output will be suppressed."
+          endif
           ampreal = 0D0
         endif
       end

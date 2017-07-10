@@ -127,7 +127,8 @@ c psgen=3:     flat in tan tau with arbitrary exponent
             print*,"s",s
             print*,"jac",jac
           elseif(warncount1.eq.10) then
-            print*, "Further output will be suppressed."
+            warncount1 = 11
+            print*, "x1x2phspace: Further output will be suppressed."
           endif
           jac = 0D0
           return
@@ -191,7 +192,8 @@ c just set xphi to zero - the jacobian will still be correct.
             print*, "warning:R2phsp: s < (m1 + m2)^2"
             print*, "s, (m1+m2)**2 =",s,(m1+m2)**2
           elseif(warncount1.eq.10) then
-            print*, "Further output will be suppressed."
+            warncount1 = 11
+            print*, "R2phsp: Further output will be suppressed."
           endif
           jac = 0D0
           return
@@ -261,7 +263,8 @@ c just set xphi to zero - the jacobian will still be correct.
             print*,"p1",p1(0),p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2
             print*,"p2",p2(0),p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2
           elseif(warncount2.eq.10) then
-            print*, "Further output will be suppressed."
+            warncount2 = 11
+            print*, "R2phsp: Further output will be suppressed."
           endif
           jac = 0D0
           return
@@ -278,7 +281,8 @@ c just set xphi to zero - the jacobian will still be correct.
             print*,"p2",p2(:)
             print*,"jac",jac
           elseif(warncount3.eq.10) then
-            print*, "Further output will be suppressed."
+            warncount3 = 11
+            print*, "R2phsp: Further output will be suppressed."
           endif
           jac = 0D0
           return
@@ -355,7 +359,8 @@ c psgen=2:     breit wigner in s2 and flat below resonance
             print*, "warning in phi1_2:R2phsp_s2: s < 0"
             print*, "s",s
           elseif(warncount1.eq.10) then
-            print*, "Further output will be suppressed."
+            warncount1 = 11
+            print*, "R2phsp_s2: Further output will be suppressed."
           endif
           jac = 0D0
           return
@@ -387,7 +392,8 @@ c psgen=2:     breit wigner in s2 and flat below resonance
             print*,"s2min",s2min
             print*,"s2max",s2max
           elseif(warncount2.eq.10) then
-            print*, "Further output will be suppressed."
+            warncount2 = 11
+            print*, "R2phsp_s2: Further output will be suppressed."
           endif
           s2min = s2max 
           jac   = 0D0
@@ -459,7 +465,8 @@ c psgen=2:     breit wigner in s2 and flat below resonance
             print*,"p1",p1(0),p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2
             print*,"p2",p2(0),p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2
           elseif(warncount3.eq.10) then
-            print*, "Further output will be suppressed."
+            warncount3 = 11
+            print*, "R2phsp_s2: Further output will be suppressed."
           endif
           jac = 0D0
           return
@@ -476,7 +483,8 @@ c psgen=2:     breit wigner in s2 and flat below resonance
             print*,"p2",p2(:)
             print*,"jac",jac
           elseif(warncount4.eq.10) then
-            print*, "Further output will be suppressed."
+            warncount4 = 11
+            print*, "R2phsp_s2: Further output will be suppressed."
           endif
           jac = 0D0
           return
@@ -555,7 +563,8 @@ c psgen=2:     breit wigner in s1 and s2 and flat below resonance
             print*, "warning in phi1_2:R2phsp_s1s2: s < 0"
             print*, "s",s
           elseif(warncount1.eq.10) then
-            print*, "Further output will be suppressed."
+            warncount1 = 11
+            print*, "R2phsp_s1s2: Further output will be suppressed."
           endif
           jac = 0D0
           return
@@ -583,7 +592,8 @@ c psgen=2:     breit wigner in s1 and s2 and flat below resonance
             print*,"s1min",s1min
             print*,"s1max",s1max
           elseif(warncount2.eq.10) then
-            print*, "Further output will be suppressed."
+            warncount2 = 11
+            print*, "R2phsp_s1s2: Further output will be suppressed."
           endif
           s1min = s1max
           jac   = 0D0
@@ -618,7 +628,8 @@ c psgen=2:     breit wigner in s1 and s2 and flat below resonance
             print*,"s2min",s2min
             print*,"s2max",s2max
           elseif(warncount3.eq.10) then
-            print*, "Further output will be suppressed."
+            warncount3 = 11
+            print*, "R2phsp_s1s2: Further output will be suppressed."
           endif
           s2min = s2max
           jac   = 0D0
@@ -683,7 +694,8 @@ c psgen=2:     breit wigner in s1 and s2 and flat below resonance
             print*,"p1",p1(0),p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2
             print*,"p2",p2(0),p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2
           elseif(warncount4.eq.10) then
-            print*, "Further output will be suppressed."
+            warncount4 = 11
+            print*, "R2phsp_s1s2: Further output will be suppressed."
           endif
           jac = 0D0
           return
@@ -700,7 +712,8 @@ c psgen=2:     breit wigner in s1 and s2 and flat below resonance
             print*,"p2",p2(:)
             print*,"jac",jac
           elseif(warncount5.eq.10) then
-            print*, "Further output will be suppressed."
+            warncount5 = 11
+            print*, "R2phsp_s1s2: Further output will be suppressed."
           endif
           jac = 0D0
           return

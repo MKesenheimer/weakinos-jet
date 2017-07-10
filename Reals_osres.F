@@ -43,6 +43,9 @@ c modifies the jacobian.
         logical verbose
         logical init_real
         data init_real/.true./
+        ! output control
+        integer warncount1
+        data warncount1/0/
 #ifdef DEBUGQ
         double precision s35, s46, s356
         integer lstr
@@ -156,6 +159,17 @@ c modifies the jacobian.
           print*, "chan = ", ichan
           print*, "s12  = ", s12
           print*, "on-shell resonant Real amplitude = ", amp
+        endif
+
+        if(isnan(amp)) then
+          if(warncount1.lt.10) then
+            warncount1 = warncount1 + 1
+            print*,"got strange value for on-shell Real amplitude...", amp
+          elseif(warncount1.eq.10) then
+            warncount1 = 11
+            print*, "setosresreal: Further output will be suppressed."
+          endif
+          amp = 0D0
         endif
         
 #ifdef DEBUGQ

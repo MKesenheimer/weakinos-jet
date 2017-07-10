@@ -69,8 +69,9 @@ c verbose = 4: No output at all, but set the variable lresult
         parameter (eps=1d-6)
         logical lresult
         integer verbose
-        logical first
-        data first/.true./
+        ! output control
+        integer warncount1, warncount2
+        data warncount1/0/, warncount2/0/
 
         ! reset lresult
         lresult = .true.
@@ -79,14 +80,21 @@ c verbose = 4: No output at all, but set the variable lresult
         do i=1,nleg
           do j=0,3
             if( isnan(p(j,i)) ) then
-              if(verbose.ge.2) then
-                print*,"warning: Nan occured"
-                print*,"p1 = ", p(:,1)
-                print*,"p2 = ", p(:,2)
-                print*,"p3 = ", p(:,3)
-                print*,"p4 = ", p(:,4)
-                if(nleg.eq.5 .or. nleg.eq.6) print*,"p5 = ", p(:,5)
-                if(nleg.eq.6) print*,"p6 = ", p(:,6)
+              if(verbose.ge.2.and.verbose.lt.4) then
+                if(warncount1.lt.10) then
+                  warncount1 = warncount1 + 1
+                  print*,"warning: Nan occured"
+                  print*,"p1 = ", p(:,1)
+                  print*,"p2 = ", p(:,2)
+                  print*,"p3 = ", p(:,3)
+                  print*,"p4 = ", p(:,4)
+                  if(nleg.eq.5 .or. nleg.eq.6) print*,"p5 = ", p(:,5)
+                  if(nleg.eq.6) print*,"p6 = ", p(:,6)
+                elseif(warncount1.eq.10) then
+                  warncount1 = 11
+                  print*, "check_4conservation: Further output "//
+     &                    "will be suppressed."
+                endif
               endif
               p(j,i) = 0D0 ! overwrite NaN with 0
             endif  
@@ -106,15 +114,11 @@ c verbose = 4: No output at all, but set the variable lresult
           enddo  
         enddo
         
-        if(.not. (verbose.le.3 .and. verbose.ge.0) ) then
-          print*, "Error: wrong verbose level ", verbose
+        if(.not. (verbose.le.4 .and. verbose.ge.0) ) then
+          print*, "Error: not supported verbosity level ", verbose
           stop
         endif
         
-        ! reset the variable "first" if this routine gets called with
-        ! a higher verbosity level
-        if(verbose.gt.0) first = .true.
-
         ! calculate the relative error
         do i=0,3
           if(pi(i).lt.eps) then
@@ -129,34 +133,39 @@ c verbose = 4: No output at all, but set the variable lresult
           !print*,rel(i)
         enddo
 
-        if( first .and.(
-     &      rel(0) .gt. eps .or.
-     &      rel(1) .gt. eps .or.
-     &      rel(2) .gt. eps .or.
-     &      rel(3) .gt. eps) ) then
-          ! show the output only once (could be dangerous)
-          if(verbose.eq.0) first = .false.
-          if(verbose.eq.3) then
-            print*, "Error: four momentum not conserved."
+        if(rel(0) .gt. eps .or.
+     &     rel(1) .gt. eps .or.
+     &     rel(2) .gt. eps .or.
+     &     rel(3) .gt. eps)  then
+          if(warncount2.lt.10) then
+            warncount2 = warncount2 + 1
+            if(verbose.eq.0) warncount2 = 10 ! show the output only once (could be dangerous)
+            if(verbose.eq.3) then
+              print*, "Error: four momentum not conserved."
+            else
+              print*, "Warning: four momentum not conserved."
+            endif
+            print*, "Sum p in  = ", pi(:)
+            print*, "Sum p out = ", pf(:)
+            print*, "rel. err. = ",rel(:)
+            if(verbose.eq.3) then
+              print*,"p1, m1 = ", p(:,1), dsqrt(dabs(dotp(p(:,1),p(:,1))))
+              print*,"p2, m2 = ", p(:,2), dsqrt(dabs(dotp(p(:,2),p(:,2))))
+              print*,"p3, m3 = ", p(:,3), dsqrt(dabs(dotp(p(:,3),p(:,3))))
+              print*,"p4, m4 = ", p(:,4), dsqrt(dabs(dotp(p(:,4),p(:,4))))
+              if(nleg.eq.5 .or. nleg.eq.6) then
+                print*,"p5, m5 = ", p(:,5), dsqrt(dabs(dotp(p(:,5),p(:,5))))
+              endif  
+              if(nleg.eq.6) then
+                print*,"p6, m6 = ", p(:,6), dsqrt(dabs(dotp(p(:,6),p(:,6))))
+              endif  
+            endif
+            if(verbose.eq.3) stop
           else
-            print*, "Warning: four momentum not conserved."
+            warncount2 = 11
+            print*,"check_4conservation: Further output will"//
+     &             " be suppressed."
           endif
-          print*, "Sum p in  = ", pi(:)
-          print*, "Sum p out = ", pf(:)
-          print*, "rel. err. = ",rel(:)
-          if(verbose.ge.2) then
-            print*,"p1, m1 = ", p(:,1), dsqrt(dabs(dotp(p(:,1),p(:,1))))
-            print*,"p2, m2 = ", p(:,2), dsqrt(dabs(dotp(p(:,2),p(:,2))))
-            print*,"p3, m3 = ", p(:,3), dsqrt(dabs(dotp(p(:,3),p(:,3))))
-            print*,"p4, m4 = ", p(:,4), dsqrt(dabs(dotp(p(:,4),p(:,4))))
-            if(nleg.eq.5 .or. nleg.eq.6) then
-              print*,"p5, m5 = ", p(:,5), dsqrt(dabs(dotp(p(:,5),p(:,5))))
-            endif  
-            if(nleg.eq.6) then
-              print*,"p6, m6 = ", p(:,6), dsqrt(dabs(dotp(p(:,6),p(:,6))))
-            endif  
-          endif
-          if(verbose.eq.3) stop
           lresult = .false.
         endif
       end

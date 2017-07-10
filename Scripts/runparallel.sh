@@ -52,11 +52,15 @@ Optional arguments:
   -p, --parallel <n>       number of parallel jobs to submit
   --ncall1 <n>             overwrite the parameter ncall1 in powheg.input
   --ncall2 <n>             overwrite the parameter ncall2 in powheg.input
+  --ncall1rm <n>           overwrite the parameter ncall1rm in powheg.input
+  --ncall2rm <n>           overwrite the parameter ncall2rm in powheg.input
   --ncall1osres <n>        overwrite the parameter ncall1osres in powheg.input
   --ncall2osres <n>        overwrite the parameter ncall1osres in powheg.input
   --maxgridit <n>          how many iterations of grid generations should be performed
   --itmx1 <n>              overwrite the parameter itmx1 in powheg.input
   --itmx2 <n>              overwrite the parameter itmx2 in powheg.input
+  --itmx1rm <n>            overwrite the parameter itmx1rm in powheg.input
+  --itmx2rm <n>            overwrite the parameter itmx2rm in powheg.input
   --itmx1osres <n>         overwrite the parameter itmx1osres in powheg.input
   --itmx2osres <n>         overwrite the parameter itmx2osres in powheg.input
   -c, --clean              clean directory before running POWHEG
@@ -202,6 +206,16 @@ case $KEY in
         shift
         shift
         ;;
+    --ncall1rm)
+        NCALL1RM="$2"
+        shift
+        shift
+        ;;
+    --ncall2rm)
+        NCALL2RM="$2"
+        shift
+        shift
+        ;;
     --ncall1osres)
         NCALL1OSRES="$2"
         shift
@@ -224,6 +238,16 @@ case $KEY in
         ;;
     --itmx2)
         ITMX2="$2"
+        shift
+        shift
+        ;;
+    --itmx1rm)
+        ITMX1RM="$2"
+        shift
+        shift
+        ;;
+    --itmx2rm)
+        ITMX2RM="$2"
         shift
         shift
         ;;
@@ -473,6 +497,14 @@ if [ "$NCALL2" != "" ]; then
    overwrite_var "$RUNDIR/powheg.input" "ncall2" $NCALL2
 fi
 
+if [ "$NCALL1RM" != "" ]; then
+   overwrite_var "$RUNDIR/powheg.input" "ncall1rm" $NCALL1RM
+fi
+
+if [ "$NCALL2RM" != "" ]; then
+   overwrite_var "$RUNDIR/powheg.input" "ncall2rm" $NCALL2RM
+fi
+
 if [ "$NCALL1OSRES" != "" ]; then
    overwrite_var "$RUNDIR/powheg.input" "ncall1osres" $NCALL1OSRES
 fi  
@@ -487,6 +519,14 @@ fi
 
 if [ "$ITMX2" != "" ]; then
    overwrite_var "$RUNDIR/powheg.input" "itmx2" $ITMX2
+fi
+
+if [ "$ITMX1RM" != "" ]; then
+   overwrite_var "$RUNDIR/powheg.input" "itmx1rm" $ITMX1RM
+fi
+
+if [ "$ITMX2RM" != "" ]; then
+   overwrite_var "$RUNDIR/powheg.input" "itmx2rm" $ITMX2RM
 fi
 
 if [ "$ITMX1OSRES" != "" ]; then
