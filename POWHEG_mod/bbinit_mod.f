@@ -654,7 +654,7 @@ c      endif
       totneg=rad_totnegreg+rad_totnegrem+rad_totnegosres_sum+
      &          rad_totnegbtl ! CH, MK: added
       write(iunstat,*) ' negative weight fraction:',
-     1              totneg/(2*totneg+rad_tot)
+     1              totneg/(2*totneg+rad_tot) !CH: modified
 c     1     rad_totnegbtl/(2*rad_totnegbtl+rad_tot)
       
 c      if(flg_withreg.or.flg_withdamp) then
@@ -1184,7 +1184,7 @@ c
       logical, allocatable :: goodentries(:)
       logical firsttime
       logical, save :: check_bad_st2
-      real * 8 rjfound, rncall2
+      real * 8 rjfound, rncall2, rncall2osres
       real * 8 powheginput
       external powheginput
       if(powheginput('use-old-grid').eq.0) then
@@ -1373,8 +1373,9 @@ c random seeds
             enddo
             do j=1,ntot
 c turn these to reals; very large integer can overflow in fortran
-c               rjfound = jfound
-c               rncall2 = ncall2
+              rjfound = real(jfound) ! MK: added cast
+              rncall2 = real(ncall2)
+              rncall2osres = real(ncall2osres)
 c               rtot(2,j)=sqrt((rtot(2,j)**2*(rjfound-1)**2+tot(2,j)**2)
 c     1              /rjfound**2+(rjfound-1)*(rtot(1,j)-tot(1,j))**2/
 c     2              (rjfound**3*rncall2))
@@ -1385,31 +1386,31 @@ c if we use different VEGAS-parameters for the osres-terms: make sure to take th
 c appropriate ncall2 here (this is not possible for rad_tot(gen), as here btilde and
 c osres. parts are naturally "mixed"-> simply recalculate these 2 entries at the end
               if(j.le.15) then! CH, MK: these are the btilde/remnant-entries
-                rad_totarr(2,j)=dsqrt((rad_totarr(2,j)**2*(jfound-1)**2+
-     &                          tot(2,j)**2)/jfound**2+(jfound-1)*
+                rad_totarr(2,j)=dsqrt((rad_totarr(2,j)**2*(rjfound-1)**2+
+     &                          tot(2,j)**2)/rjfound**2+(rjfound-1)*
      &                          (rad_totarr(1,j)-tot(1,j))**2/
-     &                          (jfound**3*ncall2))
+     &                          (rjfound**3*rncall2))
               else
-                rad_totarr(2,j)=dsqrt((rad_totarr(2,j)**2*(jfound-1)**2+
-     &                          tot(2,j)**2)/jfound**2+(jfound-1)*
+                rad_totarr(2,j)=dsqrt((rad_totarr(2,j)**2*(rjfound-1)**2+
+     &                          tot(2,j)**2)/rjfound**2+(rjfound-1)*
      &                          (rad_totarr(1,j)-tot(1,j))**2/
-     &                          (jfound**3*ncall2osres))
+     &                          (rjfound**3*rncall2osres))
               endif
-              rad_totarr(1,j)=(rad_totarr(1,j)*(jfound-1)+tot(1,j))/
-     &                         jfound
+              rad_totarr(1,j)=(rad_totarr(1,j)*(rjfound-1)+tot(1,j))/
+     &                         rjfound
             enddo
 
             ! MK: added the on-shell contributions
             do j=1,ntot_osres
               do ichan=1,nosres
                 rad_osres_totarr(2,j,ichan)=
-     &            dsqrt((rad_osres_totarr(2,j,ichan)**2*(jfound-1)**2+
-     &            tot_osres(2,j,ichan)**2)/jfound**2+(jfound-1)*
+     &            dsqrt((rad_osres_totarr(2,j,ichan)**2*(rjfound-1)**2+
+     &            tot_osres(2,j,ichan)**2)/rjfound**2+(rjfound-1)*
      &            (rad_osres_totarr(1,j,ichan)-tot_osres(1,j,ichan))**2/
-     &            (jfound**3*ncall2osres))
+     &            (rjfound**3*rncall2osres))
                 rad_osres_totarr(1,j,ichan)=
-     &            (rad_osres_totarr(1,j,ichan)*(jfound-1)+
-     &            tot_osres(1,j,ichan))/jfound
+     &            (rad_osres_totarr(1,j,ichan)*(rjfound-1)+
+     &            tot_osres(1,j,ichan))/rjfound
               enddo
             enddo
          endif

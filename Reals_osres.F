@@ -30,8 +30,8 @@ c modifies the jacobian.
         double precision momsum2sq, momsum3sq
         external momsum2sq, momsum3sq
         ! jacobian for the on-shell terms
-        double precision corrfac
-        external corrfac
+        double precision corrfac_ijkl, corrfac_ijk
+        external corrfac_ijkl, corrfac_ijk
         ! kinematics
         double precision s12, sij, skl, sijk
         ! mass at resonance, mass of particle i,j,k,l
@@ -128,13 +128,11 @@ c modifies the jacobian.
           call off_to_on_ijkl(p,rflav,ichan,.true.,.true.,p_os)
           call getRealOSAmps(p_os,rflav,ichan,ampOS)
           ampCT = bwratio*ampOS
-          ! rescale the counter term to fit into the new PS, TODO
-          !ampCT = corrfac(s12,mi,mj,mk,ml,mij,mkl,sij,skl)*ampCT
+          ! rescale the counter term to fit into the new PS
+          ampCT = corrfac_ijkl(s12,mi,mj,mk,ml,mij,mkl,sij,skl)*ampCT
           amp = amp - ampCT
-          !print*,"ampCt",ichan,ampCT
         endif
-        !print*,"amp-ampCT",amp
-        
+
         ! subtraction scheme for single resonant gluino contributions
         if(ichan.ge.9 .and. ichan.le.16 .and. 
      &     (s12.ge.(mijk+ml)**2) .and. (mijk.ge.(mi+mj+mk))) then
@@ -143,17 +141,12 @@ c modifies the jacobian.
           call off_to_on_ijk(p,rflav,ichan,p_os)
           call getRealOSAmps(p_os,rflav,ichan,ampOS)
           ampCT = bwratio*ampOS
-          ! rescale the counter term to fit into the new PS, TODO
-          !ampCT = corrfac(s12,mi,mj,mk,ml,mij,mkl,sij,skl)*ampCT
+          ! rescale the counter term to fit into the new PS
+          ampCT = corrfac_ijk(s12,mi,mj,mk,ml,mij,mkl,sij,skl)*ampCT
           amp = amp - ampCT
         endif
 #endif
 
-        if(isnan(amp)) then
-          !print*,"got strange value for ampreal amplitude...",ampreal
-          amp = 0D0
-        endif
- 
         if(verbose) then
           print*, "process = ", rflav
           print*, "chan = ", ichan

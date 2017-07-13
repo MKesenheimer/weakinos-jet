@@ -11,14 +11,13 @@ c |M_NR|**2 + 2 M_R* M_NR.
 c The remaining terms and the on-shell counter terms are added back
 c in subroutine setosresreal:
 c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
-      subroutine setreal(p,rflav,ampreal)
+      subroutine setreal(p,f,ampreal)
         implicit none
 #include "PhysPars.h"
 #include "pwhg_st.h"
 #include "nlegborn.h"
 #include "osres.h"
         double precision p(0:3,nlegreal)
-        integer rflav(nlegreal)
         integer f(nlegreal)
         double precision amp, ampreal, ampos
         ! status
@@ -49,12 +48,12 @@ c#define CHECKMADFORM
         call set_ebe_couplings
 
         ! get the formcalc real amplitudes
-        call getRealAmps(p,rflav,amp)
+        call getRealAmps(p,f,amp)
 
 #ifdef CHECKMADFORM
-        call sreal_proc(p,rflav,ampM)
+        call sreal_proc(p,f,ampM)
         if(dsqrt(p(1,5)**2+p(2,5)**2).gt.10.and.(amp-ampM)/(amp+ampM).gt.1d-4) then
-          print*,rflav
+          print*,f
           print*,"FormCalc = ", amp
           print*,"MadGraph = ", ampM
           print*,(amp-ampM)/(amp+ampM)
@@ -63,9 +62,9 @@ c#define CHECKMADFORM
 #endif
 
 #ifdef DEBUGQ
-        print*,rflav,amp
-        call getRealAmps_new(p,rflav,ampreal)
-        print*,rflav,ampreal
+        print*,f,amp
+        call getRealAmps_new(p,f,ampreal)
+        print*,f,ampreal
         if(dabs(amp-ampreal)/dabs(amp+ampreal).gt.1d-6) stop
         print*
 #endif
@@ -75,6 +74,8 @@ c#define CHECKMADFORM
         ! to Reals_osres.F)
         ! check if gluino single resonances can occur (sum over nosres1 + nosres2)
         ! if not, sum over double squark resonances only (sum over nosres1)
+        ! NOTE: if you change the following if-statements, you should change them in
+        ! sigosres.f, too.
 #if defined(NINJ_JET)
         if(f(1).eq.-f(2).and.f(5).eq.-f(6).and.f(1).ne.0.and.f(5).ne.0) then
 #elif defined(NIXJ_JET)
@@ -88,7 +89,6 @@ c#define CHECKMADFORM
           nos = nosres1
         endif
 
-        f(:) = rflav(:)
 #if defined(NINJ_JET) || defined(NIXJ_JET)
         if(f(5).ne.0.and.f(6).ne.0) then
 #elif defined(XIXJ_JET)
@@ -96,18 +96,9 @@ c#define CHECKMADFORM
      &       (((f(5).gt.0.and.f(6).gt.0).or.(f(5).lt.0.and.f(6).lt.0))
      &          .and.mod(f(5)+f(6),2).ne.0))) then
 #endif
-          !if(f(1).eq.0) print*,f(:)
           do ichan=1,nos
             ampos = 0D0
-            !print*,ichan,nosres1,nosres2
-            call getRealOSAmps(p,rflav,ichan,ampos)
-#ifdef DEBUGQ
-            print*,"ichan: ",ichan
-            print*,"amp  : ",amp
-            print*,"ampos: ",ampos
-            print*,"amp-ampos: ",amp-ampos
-            print*
-#endif
+            call getRealOSAmps(p,f,ichan,ampos)
             amp = amp - ampos
           enddo
         endif
@@ -132,7 +123,7 @@ c#define CHECKMADFORM
         if(f(5).ne.0.and.f(6).ne.0) then
          do ichan=1,nos
             ampos = 0D0
-            call setosresreal(p,rflav,ichan,ampos)
+            call setosresreal(p,f,ichan,ampos)
             amp = amp + ampos
           enddo
         endif  
@@ -142,7 +133,7 @@ c#define CHECKMADFORM
         
         ! Print informations
         if(verbose) then
-          print*, "process: ", rflav
+          print*, "process: ", f
           print*, "real = ", ampreal
           print*
         endif
@@ -167,13 +158,13 @@ c a (leading) color structure to an event.
         implicit none
 #include "nlegborn.h"
 #include "LesHouches.h"
-        integer rflav(nlegreal),color(2,nlegreal)
+        integer f(nlegreal),color(2,nlegreal)
         integer i,j
         do i=1,nlegreal
-          rflav(i)=idup(i)
-          if (rflav(i).eq.21) rflav(i)=0
+          f(i)=idup(i)
+          if (f(i).eq.21) f(i)=0
         enddo
-        call real_color(rflav,color)
+        call real_color(f,color)
         do i=1,2
           do j=1,nlegreal
             icolup(i,j)=color(i,j)
@@ -181,7 +172,7 @@ c a (leading) color structure to an event.
         enddo
 #ifdef DEBUGQ
         print*,"[DEBUG] in real_colour_lh"
-        print*,"[DEBUG] rflav",rflav
+        print*,"[DEBUG] f",f
         do j=1,nlegreal
           print*,"[DEBUG] icolup(",j,")",icolup(1,j),icolup(2,j)
         enddo

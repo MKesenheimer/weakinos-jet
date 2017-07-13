@@ -8,11 +8,11 @@ c############### subroutine setborn ####################################
 c sets Born cross section
 c Born contribution:
 c parton parton -> weakino weakino
-      subroutine setborn(p,bflav,born,bornjk,bmunu)
+      subroutine setborn(p,f,born,bornjk,bmunu)
         implicit none
 #include "nlegborn.h"
         double precision p(0:3,nlegborn), bornjk(nlegborn,nlegborn)
-        integer bflav(nlegborn)
+        integer f(nlegborn)
         double precision bmunu(0:3,0:3,nlegborn), born
         ! initialization variables
         logical verbose
@@ -39,10 +39,10 @@ c parton parton -> weakino weakino
     
         ! calculate the couplings for this PS point
         call set_ebe_couplings
-        call getBornAmps(p,bflav,born,bornjk,bmunu)
+        call getBornAmps(p,f,born,bornjk,bmunu)
         
         if(verbose) then
-          print*, "process: ", bflav
+          print*, "process: ", f
           print*, "born = ", born
           print*
         endif
@@ -77,13 +77,13 @@ c a (leading) color structure to an event.
         implicit none
 #include "nlegborn.h"
 #include "LesHouches.h"
-        integer bflav(nlegborn),color(2,nlegborn)
+        integer f(nlegborn),color(2,nlegborn)
         integer i,j
         do i=1,nlegborn
-          bflav(i)=idup(i)
-          if (bflav(i).eq.21) bflav(i)=0
+          f(i)=idup(i)
+          if (f(i).eq.21) f(i)=0
         enddo
-        call born_color(bflav,color)
+        call born_color(f,color)
         do i=1,2
           do j=1,nlegborn
             icolup(i,j)=color(i,j)
@@ -91,7 +91,7 @@ c a (leading) color structure to an event.
         enddo
 #ifdef DEBUGQ
         print*,"[DEBUG] in borncolour_lh"
-        print*,"[DEBUG] bflav",bflav
+        print*,"[DEBUG] f",f
         do j=1,nlegborn
           print*,"[DEBUG] icolup(",j,")",icolup(1,j),icolup(2,j)
         enddo

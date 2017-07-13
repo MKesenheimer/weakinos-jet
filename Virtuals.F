@@ -10,7 +10,7 @@ c where M_B is the Born amplitude and
 c M_V is the finite part of the virtual amplitude
 c The as/(2pi) factor is attached at a later point
 c A factor (4 Pi)^ep/Gamma(1-ep) with ep=(4-d)/2 is implied.
-      subroutine setvirtual(p,vflav,virt)
+      subroutine setvirtual(p,f,virt)
         implicit none
 #include "PhysPars.h"
 #include "pwhg_st.h"
@@ -19,7 +19,7 @@ c#include "looptools.h"
 c#include "decl.h"
 #include "Flags.h"
         double precision p(0:3,nlegborn)
-        integer vflav(nlegborn)
+        integer f(nlegborn)
         double precision virt, amps(2)
         double precision momsum2sq
         ! status
@@ -43,7 +43,7 @@ c#include "decl.h"
         endif
 
         call set_ebe_couplings
-        call getVirtAmps(p,vflav,amps)
+        call getVirtAmps(p,f,amps)
         
         ! fake virtuals
         if(flg_fakevirtuals) then
@@ -58,7 +58,7 @@ c#include "decl.h"
         
         ! Print informations
         if (verbose) then
-          print*, "process: ", vflav
+          print*, "process: ", f
           print*, "s  = ", momsum2sq(p(0:3,1), p(0:3,2))
           print*, "t  = ", momsum2sq(p(0:3,1),-p(0:3,3))
           print*, "u  = ", momsum2sq(p(0:3,2),-p(0:3,3))
