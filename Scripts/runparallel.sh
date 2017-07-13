@@ -63,6 +63,9 @@ Optional arguments:
   --itmx2rm <n>            overwrite the parameter itmx2rm in powheg.input
   --itmx1osres <n>         overwrite the parameter itmx1osres in powheg.input
   --itmx2osres <n>         overwrite the parameter itmx2osres in powheg.input
+  --foldcsi <n>            overwrite foldcsi
+  --foldy <n>              overwrite foldy
+  --foldphi <n>            overwrite foldphi
   -c, --clean              clean directory before running POWHEG
   -o, --offset <n>         supply an offset for extracting the seeds from seeds.dat
   --genevents              generate events
@@ -223,6 +226,21 @@ case $KEY in
         ;;
     --ncall2osres)
         NCALL2OSRES="$2"
+        shift
+        shift
+        ;;
+    --foldcsi)
+        FOLDCSI="$2"
+        shift
+        shift
+        ;;
+    --foldy)
+        FOLDY="$2"
+        shift
+        shift
+        ;;
+    --foldphi)
+        FOLDPHI="$2"
         shift
         shift
         ;;
@@ -535,6 +553,18 @@ fi
 
 if [ "$ITMX2OSRES" != "" ]; then
    overwrite_var "$RUNDIR/powheg.input" "itmx2osres" $ITMX2OSRES
+fi
+
+if [ "$FOLDCSI" != "" ]; then
+   overwrite_var "$RUNDIR/powheg.input" "foldcsi" $FOLDCSI
+fi
+
+if [ "$FOLDY" != "" ]; then
+   overwrite_var "$RUNDIR/powheg.input" "foldy" $FOLDY
+fi
+
+if [ "$FOLDPHI" != "" ]; then
+   overwrite_var "$RUNDIR/powheg.input" "foldphi" $FOLDPHI
 fi
 
 if [ "$SLHA" != "" ]; then

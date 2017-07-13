@@ -45,9 +45,9 @@ ncall1   2        ! number of calls for initializing the integration grid
 itmx1    1           ! number of iterations for initializing the integration grid
 ncall2   2        ! number of calls for computing the integral and finding upper bound
 itmx2    1           ! number of iterations for computing the integral and finding upper bound
-call1rm  2      ! number of calls for initializing the integration grid for remnants
+ncall1rm 2      ! number of calls for initializing the integration grid for remnants
 itmx1rm  1          ! number of iterations for initializing the integration grid
-call2rm  2      ! number of calls for computing the integral and finding upper bound for remnants
+ncall2rm 2      ! number of calls for computing the integral and finding upper bound for remnants
 itmx2rm  1          ! number of iterations for computing the integral and finding upper bound for remnants
 ncall1osres 30    ! number of calls for initializing the integration grid of on-shell resonances (only required for DSUB_II)
 itmx1osres  1        ! number of iterations for initializing the integration grid of on-shell resonances (only required for DSUB_II)
