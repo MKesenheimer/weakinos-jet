@@ -417,6 +417,22 @@ case $KEY in
         shift
         shift
         ;;
+     --st1)
+        STAGE=1
+        shift
+        ;;
+     --st2)
+        STAGE=2
+        shift
+        ;;
+     --st3)
+        STAGE=3
+        shift
+        ;;
+     --st4)
+        STAGE=4
+        shift
+        ;;
      --it)
         GRIDITER="$2"
         shift
@@ -437,6 +453,9 @@ fi
 # additional checks
 if [ "$GRIDITER" != "" ] && [ "$STAGE" = "" ]; then
    STAGE=1
+fi
+if [ "$STAGE" = "3" ] || [ "$STAGE" = "4" ]; then
+   GENEVENTS=true
 fi
 
 # directories
@@ -617,6 +636,17 @@ fi
 # back up the old parameters
 NEVENTSOLD=$(read_var "$RUNDIR/powheg.input" "numevts")
 NUBOUNDOLD=$(read_var "$RUNDIR/powheg.input" "nubound")
+
+if [ "$GENEVENTS" = true ]; then
+  if [ "$STAGE" != 3 ] && [ "$NEVENTS" = "" ] && [ "$NEVENTSOLD" = "0" ]; then
+    echo "number of events not defined: use --nevents <n>"
+    exit 0
+  fi
+  if [ "$STAGE" != 4 ] && [ "$NUBOUND" = "" ] && [ "$NUBOUNDOLD" = "0" ]; then
+    echo "upper bound not defined: use --nubound <n>"
+    exit 0
+  fi
+fi
 
 
 # generate the scripts to start the POWHEG-main executable

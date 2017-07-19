@@ -63,25 +63,23 @@ ifeq ($(UNAME), Darwin)
   REC_CXXFLAGS += -stdlib=libstdc++ -mmacosx-version-min=10.6 -Qunused-arguments
 endif
 
+## choose analysis: none, default, decay
+ANALYSIS = default
+
 ## PDF
 ## choose PDF: native,lhapdf
 ## LHAPDF package has to be installed separately
-## wheter to link precompiled LHAPDF library statically or compile it 
-## from source (static, none)
 PDF = lhapdf
-PDFSTATIC = none
-
-## path to static lhapdf library
-#STATICLIBSLHAPDF = /opt/lib/libLHAPDF.a
-
-## choose analysis: none, default
-ANALYSIS = default
-
-## path to LHAPDF config executable
+## path or name of LHAPDF config executable
 LHAPDF_CONFIG = lhapdf-config
+## static linking? yes, no
+STATIC_LHAPDF = no
 
-## path to fastjet config executable
+## FASTJET
+## path or name of fastjet config executable
 FASTJET_CONFIG = fastjet-config
+## static linking? yes, no
+STATIC_FJ = no
 
 ## choose LoopTools or Collier to evaluate loop integrals (Collier is slower
 ## but can handle particle widths). (looptools, collier)
@@ -91,22 +89,12 @@ USRFLAGS += -D$(LOOPINT)
 ## Pythia8
 # if you want to use Pythia8 instead of Pythia6 uncomment the following
 #USE_PYTHIA8 = yes
-# path to pythia8-config executable
-# (uncomment only if you want to use a locally installed Pythia8)
+## static lingking? yes, no
+#STATIC_PYT8 = no
+# path or name of pythia8-config executable
+# (uncomment only if you want to use a locally installed Pythia8 and not
+# the pythia8 library in ../Tools)
 #PYTHIA8_CONFIG = pythia8-config
-
-# (not necessary anymore)
-## path to fortran and c++ libraries
-# (use $locate libstdc++.a to find the library)
-#ifeq ($(UNAME), Darwin)
-#  #Mac OSX
-#  LIBGFORTRANPATH = /usr/local/lib
-#  LIBSTDCPPPATH   = /usr/local/lib
-#else
-#  #Linux 
-#  LIBGFORTRANPATH = /usr/lib/gcc/x86_64-linux-gnu/4.8
-#  LIBSTDCPPPATH   = /usr/lib/gcc/x86_64-linux-gnu/4.8
-#endif
 
 ## warning for type-conversions -> basically useless, as those occur in
 ## too many places
@@ -252,19 +240,6 @@ vpath %.o $(SUBWORKINGDIR)/build
 ########################################################################
 ## Source files
 
-### PDFs ###
-ifeq ("$(PDF)","lhapdf")
-  PDFPACK       = lhapdfif.o
-  LIBSLHAPDF    = -Wl,-rpath,$(shell $(LHAPDF_CONFIG) --libdir)		\
-                  -L$(shell $(LHAPDF_CONFIG) --libdir) -lLHAPDF
-ifeq  ("$(PDFSTATIC)","static")
-  LIBSLHAPDF += $(STATICLIBSLHAPDF)
-endif
-  LIBS += $(LIBSLHAPDF) 
-else
-  PDFPACK = mlmpdfif.o hvqpdfpho.o
-endif
-
 ### ANALYSIS ###
 ifeq ("$(ANALYSIS)","default")
   USE_FASTJET  = yes
@@ -273,26 +248,57 @@ endif
 ifeq ("$(ANALYSIS)","none")
   PWHGANALYSIS = Analysis-dummy.o
 endif
+ifeq ("$(ANALYSIS)","decay")
+  PWHGANALYSIS = Analysis-decay.o
+endif
 
+### PDFs ###
+ifeq ("$(PDF)","lhapdf")
+  ifeq ($(LHAPDF_CONFIG),)
+    $(error cannot find lhapdf-config (did you install lhapdf?))
+  endif
+  PDFPACK = lhapdfif.o
+  ifeq  ("$(STATIC_LHAPDF)","yes")
+    LHAPATH = $(shell $(LHAPDF_CONFIG) --libdir)
+    LIBS += $(LHAPATH)/libLHAPDF.a
+  else
+    LIBS += -Wl,-rpath,$(shell $(LHAPDF_CONFIG) --libdir) \
+            $(shell $(LHAPDF_CONFIG) --libs)
+  endif
+else
+  PDFPACK = mlmpdfif.o hvqpdfpho.o
+endif
+
+### FASTJET ###
 ifdef USE_FASTJET
   ifeq ($(FASTJET_CONFIG),)
     $(error cannot find fastjet-config (did you install fastjet?))
   endif
-  LIBS += $(shell $(FASTJET_CONFIG) --shared=no --libs --plugins )
+  ifeq  ("$(STATIC_FJ)","yes")
+    LIBS += $(shell $(FASTJET_CONFIG) --shared=no --libs --plugins)
+  else
+    LIBS += $(shell $(FASTJET_CONFIG) --libs --plugins)
+  endif
   FJCXXFLAGS  += $(shell $(FASTJET_CONFIG) --cxxflags)
   PWHGANALYSIS+= fastjetfortran.o
 endif
 
 # the user choosed to use Pythia8
 ifeq ("$(USE_PYTHIA8)","yes")
-# the user choosed to use a locally installed Pythia8
-ifdef PYTHIA8_CONFIG
-  LIBS += $(shell $(PYTHIA8_CONFIG) --libs --plugins )
-  PYCXXFLAGS  += $(shell $(PYTHIA8_CONFIG) --cxxflags)
-else
-  LIBS += $(TOOLS)/libpythia8.a
-  PYCXXFLAGS += -I$(PY8INCLUDE)
-endif
+  # the user choosed to use a locally installed Pythia8
+  ifdef PYTHIA8_CONFIG
+    ifeq ("$(STATIC_PYT8)","yes")
+      PYT8PATH = $(shell $(PYTHIA8_CONFIG) --libdir)
+      LIBS += $(PYT8PATH)/libpythia8.a
+      PYCXXFLAGS  += $(shell $(PYTHIA8_CONFIG) --cxxflags)
+    else
+      LIBS += $(shell $(PYTHIA8_CONFIG) --libs --plugins )
+      PYCXXFLAGS  += $(shell $(PYTHIA8_CONFIG) --cxxflags)
+    endif
+  else
+    LIBS += $(TOOLS)/libpythia8.a
+    PYCXXFLAGS += -I$(PY8INCLUDE)
+  endif
   PWHGANALYSIS+= pythiafortran.o
 endif
 

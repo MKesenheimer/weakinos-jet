@@ -112,6 +112,9 @@ c Now the transverse boost
       save ini,olddij
       real * 8 powheginput
       external powheginput
+      !MK: output control
+      integer warncount1
+      data warncount1/0/
       if(ini) then
          if(powheginput("#olddij").eq.1) then
             olddij=.true.
@@ -145,12 +148,19 @@ c invalidater rad parton with impossible pdg code
 c looop over all possible singularities
       dalr=getdistance(em,rad,res,kn_cmpreal)
       if(abs(dalr/kn_dijterm(em,rad)-1).gt.1d-4) then ! MK: 1d-6 -> 1d-4
-         write(*,*) 'dalr', dalr/kn_dijterm(em,rad)
-         write(*,*) 'This may imply that running the program ',
-     1              'with olddij is wrong; it may also imply ',
-     2              'that kn_dijterm_soft() are incorrect.',
-     3              'A dijterm_soft() function should be built instead'
-         !call pwhg_exit(-1) ! MK: commented: give warning, but don't exit the program 
+         if(warncount1.lt.10) then
+            warncount1 = warncount1 + 1
+            write(*,*) 'dalr', dalr/kn_dijterm(em,rad)
+            write(*,*) 'This may imply that running the program ',
+     1                 'with olddij is wrong; it may also imply ',
+     2                 'that kn_dijterm_soft() are incorrect.',
+     3                 'A dijterm_soft() function should be built',
+     4                 'instead.'
+            !call pwhg_exit(-1) ! MK: commented: give warning, but don't exit the program 
+         elseif(warncount1.eq.10) then
+            warncount1 = 11
+            print*, "findubisr: Further output will be suppressed."
+         endif
       endif
 c get average singularity from underlying Born
       avub=1

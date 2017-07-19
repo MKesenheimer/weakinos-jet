@@ -27,6 +27,7 @@ c one per line, to be merged. An empty lines terminates the list.
       double precision realospos(maxfiles), realosposerr(maxfiles)
       double precision realosneg(maxfiles), realosnegerr(maxfiles)
       double precision realostot(maxfiles), realostoterr(maxfiles)
+      double precision remnants(maxfiles), remnantserr(maxfiles)
       double precision tot(maxfiles), toterr(maxfiles)
 
       double precision cbtildepos, cbtildeposerr
@@ -35,6 +36,7 @@ c one per line, to be merged. An empty lines terminates the list.
       double precision crealospos, crealosposerr
       double precision crealosneg, crealosnegerr
       double precision crealostot, crealostoterr
+      double precision cremnants, cremnantserr
       double precision ctot, ctoterr
 
 
@@ -45,6 +47,7 @@ c one per line, to be merged. An empty lines terminates the list.
       crealospos = 0D0; crealosposerr = 0D0
       crealosneg = 0D0; crealosnegerr = 0D0
       crealostot = 0D0; crealostoterr = 0D0
+      cremnants = 0D0; cremnantserr = 0D0
       ctot = 0D0; ctoterr = 0D0
 
       do ifile=1,maxfiles
@@ -103,6 +106,9 @@ c one per line, to be merged. An empty lines terminates the list.
         searchstr = "real_osres total (pos.-|neg.|):"
         call getnumber(nlines(1),line(:,ifile),searchstr,
      &                 realostot(ifile),realostoterr(ifile))
+        searchstr = "Remnant cross section in pb"
+        call getnumber(nlines(1),line(:,ifile),searchstr,
+     &                 remnants(ifile),remnantserr(ifile))
         searchstr = "total (btilde+remnants+regulars+osresR) cross "//
      &              "section in pb"
         call getnumber(nlines(1),line(:,ifile),searchstr,
@@ -138,6 +144,9 @@ c one per line, to be merged. An empty lines terminates the list.
         crealostot = crealostot + realostot(ifile)
         crealostoterr = crealostoterr + realostoterr(ifile)**2
 
+        cremnants = cremnants + remnants(ifile)
+        cremnantserr = cremnantserr + remnantserr(ifile)**2
+
         ctot = ctot + tot(ifile)
         ctoterr = ctoterr + toterr(ifile)**2
       enddo
@@ -149,6 +158,7 @@ c one per line, to be merged. An empty lines terminates the list.
       crealospos = crealospos/nfiles
       crealosneg = crealosneg/nfiles
       crealostot = crealostot/nfiles
+      cremnants = cremnants/nfiles
 
       cbtildeposerr = dsqrt(cbtildeposerr/nfiles**2)
       cbtildenegerr = dsqrt(cbtildenegerr/nfiles**2)
@@ -157,6 +167,7 @@ c one per line, to be merged. An empty lines terminates the list.
       crealosposerr = dsqrt(crealosposerr/nfiles**2)
       crealosnegerr = dsqrt(crealosnegerr/nfiles**2)
       crealostoterr = dsqrt(crealostoterr/nfiles**2)
+      cremnantserr = dsqrt(cremnantserr/nfiles**2)
 
       ctot = ctot/nfiles
       ctoterr = dsqrt(ctoterr/nfiles**2)
@@ -171,6 +182,8 @@ c one per line, to be merged. An empty lines terminates the list.
      &       crealosnegerr
       print*,"real_osres total (pos.-|neg.|): ",crealostot," +- ",
      &       crealostoterr
+      print*,"Remnant cross section in pb: ",cremnants," +- ",
+     &       cremnantserr
       print*,"total (btilde+remnants+regulars+osresR) cross section "//
      &       "in pb ",ctot," +- ", ctoterr
 

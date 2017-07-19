@@ -46,4 +46,7 @@ cd $RUNDIR && ../merge-data 1 $(ls $RUNDIR/pwg-xg$IT-*-btlgrid.top) && mv fort.1
 rm -f $RUNDIR/pwg-xg$IT-osresgrid.top
 cd $RUNDIR && ../merge-data 1 $(ls $RUNDIR/pwg-xg$IT-*-osresgrid.top) && mv fort.12 pwg-xg$IT-osresgrid.top
 
+rm -f $RUNDIR/pwg-xg$IT-rmngrid.top
+cd $RUNDIR && ../merge-data 1 $(ls $RUNDIR/pwg-xg$IT-*-rmngrid.top) && mv fort.12 pwg-xg$IT-rmngrid.top
+
 echo "done."
