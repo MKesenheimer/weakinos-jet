@@ -182,7 +182,7 @@ c calculate quantities that shall be plotted and fill histograms
         double precision ptjmintech, etaJmax, R
         common /jetcuts/ptjmintech, etaJmax, R
         ! physical Jet Cuts
-        double precision ptjmin1,ptjmissmin
+        double precision ptjmin1,ptjmin2,ptjmissmin
         double precision ptjminM1, ptjmaxM2
         double precision ptmissmin
         logical JcutsPassed, McutsPassed
@@ -244,6 +244,7 @@ c calculate quantities that shall be plotted and fill histograms
         
         ! physical pt_Jet cuts
         ptjmin1 = 10D0
+        ptjmin2 = 10D0
         etaJmax = 4.5D0
         R       = 0.4D0
         
@@ -268,6 +269,8 @@ c calculate quantities that shall be plotted and fill histograms
           print*, "cuts (jet):"
           print*, "hardest jet p_t >",ptjmin1," GeV"
           print*, "hardest jet |eta| <",etaJmax
+          print*, "second hardest jet p_t >",ptjmin2," GeV"
+          print*, "second hardest jet |eta| <",etaJmax
           print*, "radius parameter R = ",R
           print*
           print*, "cuts (missing Pt):"
@@ -400,6 +403,7 @@ c calculate quantities that shall be plotted and fill histograms
         if(kt(1).lt.ptjmin1) JcutsPassed = .false.
         if(dabs(eta(1)).gt.etaJmax) JcutsPassed = .false.
         if(.not.flg_bornonly) then
+          if(kt(2).lt.ptjmin2) JcutsPassed = .false.
           if(dabs(eta(2)).gt.etaJmax) JcutsPassed = .false.
         endif
 
@@ -418,9 +422,11 @@ c calculate quantities that shall be plotted and fill histograms
         ! cuts for missing energy search
         McutsPassed = .true.
         if(mjets.lt.mJmin) McutsPassed = .false.
+        if(kt(1).lt.ptjmissmin) McutsPassed = .false.
         if(kt(1).lt.ptjminM1) McutsPassed = .false.
         if(dabs(eta(1)).gt.etaJmax) McutsPassed = .false.
         if(.not.flg_bornonly) then
+          if(kt(2).lt.ptjmissmin) McutsPassed = .false.
           if(ptjmaxM2.ne.0D0.and.kt(2).gt.ptjmaxM2) McutsPassed = .false.
           if(dabs(eta(2)).gt.etaJmax) McutsPassed = .false.
         endif
