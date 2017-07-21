@@ -71,7 +71,7 @@ c book all histograms, will be filled later
         ptj2m = 0D0
         ptj2p = ptj2m + 400D0
         ! Pt miss
-        ptmm = 90D0
+        ptmm = 100D0
         ptmp = ptmm + 300D0
         
         ! number of bins
