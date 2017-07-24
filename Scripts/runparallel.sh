@@ -98,9 +98,13 @@ Optional arguments:
   --fakevirt               use fake virtuals in all calculations
   --name <name>            job is identified with a name for msub
   --time                   meassure execution time
-  --st <1,2,3,4>           which stage should only be performed
+  --st <1,2,3,4,RW>        which stage should only be performed. RW = reweighting
   --it <n>                 if "--st 1" one can choose which grid iteration should
                            only be calculated
+  --reweight               submit jobs to reweight the events. Note to edit powheg.input
+                           by hand and to back up the event files pwgevents-*.lhe.
+                           Reweighting should be carried out sperately and only after
+                           the event files were merged.
 EOM
    exit 0
 }
@@ -149,12 +153,14 @@ USECONDOR=false
 GENEVENTS=false
 GENFOLGDER=false
 MERGE=false
+REWEIGHT=false
 ARG1=""
 CHECKLIM=false
 WALLTIME1=3600
 WALLTIME2=43200
 WALLTIME3=1800
 WALLTIME4=43200
+WALLTIMERW=43200
 SLEEP=false
 FAKEVIRT=false
 NAME=""
@@ -383,6 +389,11 @@ case $KEY in
         shift
         shift
         ;;
+     --wrw)
+        WALLTIMERW="$2"
+        shift
+        shift
+        ;;
     --sleep)
         SLEEP=true
         shift
@@ -433,9 +444,17 @@ case $KEY in
         STAGE=4
         shift
         ;;
+     --strw)
+        STAGE="RW"
+        shift
+        ;;
      --it)
         GRIDITER="$2"
         shift
+        shift
+        ;;
+     --reweight)
+        REWEIGHT=true
         shift
         ;;
     *)
@@ -457,11 +476,33 @@ fi
 if [ "$STAGE" = "3" ] || [ "$STAGE" = "4" ]; then
    GENEVENTS=true
 fi
+if [ "$STAGE" = "RW" ] || [ "$STAGE" = "rw" ]; then
+   STAGE="RW"
+   REWEIGHT=true
+   GENEVENTS=true
+   # only one job necessary
+   JOBS=1
+fi
+if [ "$REWEIGHT" = true ]; then
+   STAGE="RW"
+   GENEVENTS=true
+   # only one job necessary
+   JOBS=1
+fi
 
 # directories
 WORKINGDIR=${PWD}
 RUNDIR=$WORKINGDIR/$RUNDIR
 EXEPATH=$WORKINGDIR/$EXE
+
+# additional environmental variables
+if [ "$LHAPATH1" = "rd" ]; then
+  LHAPATH=$RUNDIR
+  export LHAPATH
+elif [ "$LHAPATH1" != "" ]; then
+  LHAPATH=$LHAPATH1
+  export LHAPATH
+fi
 
 #generate a new run directory
 if [ "$GENFOLGDER" = true ]; then
@@ -512,9 +553,13 @@ if [ "$CLEAN" = true ]; then
 fi
 
 # append to powheg.input
-cp $RUNDIR/powheg_clean.input $RUNDIR/powheg.input
-echo "" >> $RUNDIR/powheg.input
-echo "# Modified by runparallel.sh:" >> $RUNDIR/powheg.input
+if [ "$REWEIGHT" = false ]; then
+   cp $RUNDIR/powheg_clean.input $RUNDIR/powheg.input
+   echo "" >> $RUNDIR/powheg.input
+   echo "# Modified by runparallel.sh:" >> $RUNDIR/powheg.input
+else
+   cp $RUNDIR/powheg.input $RUNDIR/powheg_rwgt.input
+fi
 
 #default parameters in powheg.input
 overwrite_var "$RUNDIR/powheg.input" "use-old-grid" 1
@@ -637,7 +682,7 @@ fi
 NEVENTSOLD=$(read_var "$RUNDIR/powheg.input" "numevts")
 NUBOUNDOLD=$(read_var "$RUNDIR/powheg.input" "nubound")
 
-if [ "$GENEVENTS" = true ]; then
+if [ "$REWEIGHT" = false ] && [ "$GENEVENTS" = true ]; then
   if [ "$STAGE" != 3 ] && [ "$NEVENTS" = "" ] && [ "$NEVENTSOLD" = "0" ]; then
     echo "number of events not defined: use --nevents <n>"
     exit 0
@@ -654,7 +699,7 @@ fi
 # STEP 1
 if [ "$GRIDITER" = "" ]; then
   for iter in `seq 1 ${MAXGRIDIT}`; do
-    if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
+    if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
       cp $RUNDIR/powheg.input $RUNDIR/powheg_st1.${iter}.input
       echo "" >> $RUNDIR/powheg_st1.${iter}.input
       echo "#Stage 1.${iter}: Generating Grids, iteration ${iter}" >> $RUNDIR/powheg_st1.${iter}.input
@@ -671,7 +716,7 @@ if [ "$GRIDITER" = "" ]; then
     fi
   done
 else
-  if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
+  if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
     cp $RUNDIR/powheg.input $RUNDIR/powheg_st1.${GRIDITER}.input
     echo "" >> $RUNDIR/powheg_st1.${GRIDITER}.input
     echo "#Stage 1.${GRIDITER}: Generating Grids, iteration ${GRIDITER}" >> $RUNDIR/powheg_st1.${GRIDITER}.input
@@ -686,7 +731,7 @@ else
 fi
 
 # STEP 2
-if [ "$STAGE" != "1" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
+if [ "$STAGE" != "1" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
   cp $RUNDIR/powheg.input $RUNDIR/powheg_st2.input
   echo "" >> $RUNDIR/powheg_st2.input
   echo "#Stage 2: NLO run" >> $RUNDIR/powheg_st2.input
@@ -714,7 +759,7 @@ fi
 # if the user wants to generate events
 if [ "$GENEVENTS" = true ]; then
   # STEP 3
-  if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "4" ]; then
+  if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
     cp $RUNDIR/powheg.input $RUNDIR/powheg_st3.input
     echo "" >> $RUNDIR/powheg_st3.input
     echo "#Stage 3: Upper bound" >> $RUNDIR/powheg_st3.input
@@ -740,7 +785,7 @@ if [ "$GENEVENTS" = true ]; then
   fi
 
   # STEP 4
-  if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ]; then
+  if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ]  && [ "$STAGE" != "RW" ]; then
     cp $RUNDIR/powheg.input $RUNDIR/powheg_st4.input
     echo "" >> $RUNDIR/powheg_st4.input
     echo "#Stage 4: Events" >> $RUNDIR/powheg_st4.input
@@ -768,18 +813,20 @@ if [ "$GENEVENTS" = true ]; then
     echo -e "$EXEPATH < <(printf \"%s\\\n\" \"\$1\" \"\$ARG1\")" >> $WORKINGDIR/run_st4_${IDENT}.sh
     chmod +x $WORKINGDIR/run_st4_${IDENT}.sh
   fi
+
+  # REWEIGHTING
+  if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ]  && [ "$STAGE" != "4" ]; then
+    cp $RUNDIR/powheg_rwgt.input $RUNDIR/powheg.input
+    echo -e "#!/bin/bash\ncd $RUNDIR" > $WORKINGDIR/run_rwgt_${IDENT}.sh
+    # either \$1 or \$ARG1 is defined (msub sets ARG1)
+    echo -e "$EXEPATH < <(printf \"%s\\\n\" \"\$1\" \"\$ARG1\")" >> $WORKINGDIR/run_rwgt_${IDENT}.sh
+    chmod +x $WORKINGDIR/run_rwgt_${IDENT}.sh
+  fi
 fi
 
-# delete powheg.input, it is generated again before every stage
-rm $RUNDIR/powheg.input
-
-# additional environmental variables
-if [ "$LHAPATH1" = "rd" ]; then
-  LHAPATH=$RUNDIR
-  export LHAPATH
-elif [ "$LHAPATH1" != "" ]; then
-  LHAPATH=$LHAPATH1
-  export LHAPATH
+# delete powheg.input when reweighting is not requested, it is generated again before every stage
+if [ "$REWEIGHT" = false ]; then
+  rm $RUNDIR/powheg.input
 fi
 
 # sorry for the ugly idention, but this is the price one has to pay when working with EOM.
@@ -792,7 +839,7 @@ echo "# Command is $COMMAND" > $WORKINGDIR/run_${IDENT}.sh
 # stage 1
 if [ "$GRIDITER" = "" ]; then
 for iter in `seq 1 ${MAXGRIDIT}`; do
-if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
+if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/run_${IDENT}.sh
 echo ""
 echo "Stage 1.${iter}: Generating Grids, iteration ${iter}"
@@ -811,7 +858,7 @@ EOM
 fi
 done
 else
-if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
+if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/run_${IDENT}.sh
 echo ""
 echo "Stage 1.${GRIDITER}: Generating Grids, iteration ${GRIDITER}"
@@ -831,7 +878,7 @@ fi
 fi
 
 # stage 2
-if [ "$STAGE" != "1" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
+if [ "$STAGE" != "1" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/run_${IDENT}.sh
 echo ""
 echo "Stage 2: NLO run"
@@ -851,7 +898,7 @@ fi
 
 if [ "$GENEVENTS" = true ]; then
 # stage 3
-if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "4" ]; then
+if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/run_${IDENT}.sh
 echo ""
 echo "Stage 3: Upper bound"
@@ -870,7 +917,7 @@ EOM
 fi
 
 # stage 4
-if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ]; then
+if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/run_${IDENT}.sh
 echo ""
 echo "Stage 4: Events"
@@ -880,6 +927,24 @@ for i in \`seq 1 $JOBS\`; do
    NSEED=\$((i+$NSEEDOFFSET))
    echo "  job \$i with nseed \$NSEED"
    nohup $TIME nice -n $NICENESS $WORKINGDIR/run_st4_${IDENT}.sh \$NSEED > $RUNDIR/powheg_st4_\${NSEED}.output 2>&1 &
+done
+for job in \`jobs -p\`; do
+    wait \$job
+    echo "  job with pid=\$job finished"
+done
+EOM
+fi
+
+# reweighting
+if [ "$REWEIGHT" = true ] || [ "$STAGE" = "RW" ]; then
+cat <<EOM >> $WORKINGDIR/run_${IDENT}.sh
+echo ""
+echo "Reweighting Events"
+echo "  starting $JOBS job(s)..."
+for i in \`seq 1 $JOBS\`; do
+   NSEED=\$((i+$NSEEDOFFSET))
+   echo "  job \$i with nseed \$NSEED"
+   nohup $TIME nice -n $NICENESS $WORKINGDIR/run_rwgt_${IDENT}.sh \$NSEED > $RUNDIR/powheg_rwgt_\${NSEED}.output 2>&1 &
 done
 for job in \`jobs -p\`; do
     wait \$job
@@ -953,7 +1018,7 @@ DEPEND=""
 if [ "$iter" != "1" ] && [ "$SLEEP" = false ]; then
   DEPEND=",depend=afterok:\${dependIDs1$((iter-1))[\$i]}"
 fi
-if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
+if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/runmsub_${IDENT}.sh
 echo ""
 echo "Stage 1.${iter}: Generating Grids, iteration ${iter}"
@@ -974,7 +1039,7 @@ fi
 fi
 done
 else
-if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
+if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/runmsub_${IDENT}.sh
 echo ""
 echo "Stage 1.${GRIDITER}: Generating Grids, iteration ${GRIDITER}"
@@ -996,7 +1061,7 @@ DEPEND=""
 if [ "$STAGE" = "" ] && [ "$SLEEP" = false ]; then
   DEPEND=",depend=afterok:\${dependIDs1$((iter-1))[\$i]}"
 fi
-if [ "$STAGE" != "1" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
+if [ "$STAGE" != "1" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/runmsub_${IDENT}.sh
 echo ""
 echo "Stage 2: NLO run"
@@ -1022,7 +1087,7 @@ DEPEND=""
 if [ "$STAGE" = "" ] && [ "$SLEEP" = false ]; then
   DEPEND=",depend=afterok:\${dependIDs2[\$i]}"
 fi
-if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "4" ]; then
+if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/runmsub_${IDENT}.sh
 echo ""
 echo "Stage 3: Upper bound"
@@ -1047,7 +1112,7 @@ DEPEND=""
 if [ "$STAGE" = "" ] && [ "$SLEEP" = false ]; then
   DEPEND=",depend=afterok:\${dependIDs3[\$i]}"
 fi
-if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ]; then
+if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/runmsub_${IDENT}.sh
 echo ""
 echo "Stage 4: Events"
@@ -1065,6 +1130,20 @@ EOM
 if [ "$SLEEP" = true ]; then
   echo "sleep $WALLTIME4" >> $WORKINGDIR/runmsub_${IDENT}.sh
 fi
+fi
+
+# reweighting
+if [ "$REWEIGHT" = true ] || [ "$STAGE" = RW ]; then
+cat <<EOM >> $WORKINGDIR/runmsub_${IDENT}.sh
+echo ""
+echo "Reweighting Events"
+echo "  submitting $JOBS job(s)..."
+for i in \`seq 1 $JOBS\`; do
+  NSEED=\$((\$i+$NSEEDOFFSET))
+  job[\$i]=\$(msub -N ${NAME}_rwgt_\${NSEED} -l walltime=${WALLTIMERW} -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_rwgt_\${NSEED}.output -e $RUNDIR/powheg_rwgt_\${NSEED}.error $WORKINGDIR/run_rwgt_${IDENT}.sh | grep -v -e '^$')
+  echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
+done
+EOM
 fi
 fi #if GENEVENTS
 
@@ -1086,7 +1165,7 @@ DEPEND=""
 if [ "$iter" != "1" ] && [ "$SLEEP" = false ]; then
   DEPEND="-hold_jid \${dependIDs1$((iter-1))[\$i]}"
 fi
-if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
+if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/runcondor_${IDENT}.sh
 echo ""
 echo "Stage 1.${iter}: Generating Grids, iteration ${iter}"
@@ -1107,7 +1186,7 @@ fi
 fi
 done
 else
-if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
+if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/runcondor_${IDENT}.sh
 echo ""
 echo "Stage 1.${GRIDITER}: Generating Grids, iteration ${GRIDITER}"
@@ -1129,7 +1208,7 @@ DEPEND=""
 if [ "$STAGE" = "" ] && [ "$SLEEP" = false ]; then
   DEPEND="-hold_jid \${dependIDs1$((iter-1))[\$i]}"
 fi
-if [ "$STAGE" != "1" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]; then
+if [ "$STAGE" != "1" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/runcondor_${IDENT}.sh
 echo ""
 echo "Stage 2: NLO run"
@@ -1155,7 +1234,7 @@ DEPEND=""
 if [ "$STAGE" = "" ] && [ "$SLEEP" = false ]; then
   DEPEND="-hold_jid \${dependIDs2[\$i]}"
 fi
-if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "4" ]; then
+if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/runcondor_${IDENT}.sh
 echo ""
 echo "Stage 3: Upper bound"
@@ -1180,7 +1259,7 @@ DEPEND=""
 if [ "$STAGE" = "" ] && [ "$SLEEP" = false ]; then
   DEPEND="-hold_jid \${dependIDs3[\$i]}"
 fi
-if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ]; then
+if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/runcondor_${IDENT}.sh
 echo ""
 echo "Stage 4: Events"
@@ -1198,6 +1277,20 @@ EOM
 if [ "$SLEEP" = true ]; then
   echo "sleep $WALLTIME4" >> $WORKINGDIR/runcondor_${IDENT}.sh
 fi
+fi
+
+# Reweighting
+if [ "$REWEIGHT" = true ] || [ "$STAGE" = RW ]; then
+cat <<EOM >> $WORKINGDIR/runcondor_${IDENT}.sh
+echo ""
+echo "Reweighting Events"
+echo "  submitting $JOBS job(s)..."
+for i in \`seq 1 $JOBS\`; do
+  NSEED=\$((\$i+$NSEEDOFFSET))
+  job[\$i]=\$(condor_qsub -v ARG1=\${NSEED}$ADDVAR -o $RUNDIR/powheg_rwgt_\${NSEED}.output -e $RUNDIR/powheg_rwgt_\${NSEED}.error $WORKINGDIR/run_rwgt_${IDENT}.sh | sed -r 's/.* ([0-9]*) .*/\1/g')
+  echo "  job \$i with nseed \$NSEED and ID \${job[\$i]}"
+done
+EOM
 fi
 fi #if GENEVENTS
 
