@@ -515,7 +515,6 @@ topintegrator:
 copy-scripts:
 	cp $(SCRIPTS)/runparallel.sh  $(SUBWORKINGDIR) && \
 	cp $(SCRIPTS)/clean_rundir.sh $(SUBWORKINGDIR) && \
-	cp $(SCRIPTS)/reweight.sh     $(SUBWORKINGDIR) && \
 	cp $(SCRIPTS)/merge.sh        $(SUBWORKINGDIR)
 
 all-libs: libs pwhg_main_xixj+jet copy-scripts merge-pwg-stat merge-data topintegrator
@@ -523,7 +522,7 @@ all-libs: libs pwhg_main_xixj+jet copy-scripts merge-pwg-stat merge-data topinte
 all: pwhg_main_xixj+jet copy-scripts merge-pwg-stat merge-data topintegrator
 
 clean:
-	rm -f build/*.o pwhg_main_xixj+jet lhef_analysis main-PYTHIA-lhef merge-pwg-stat merge-data topintegrator runparallel.sh clean_rundir.sh reweight.sh merge.sh
+	rm -f build/*.o pwhg_main_xixj+jet lhef_analysis main-PYTHIA-lhef merge-pwg-stat merge-data topintegrator runparallel.sh clean_rundir.sh merge.sh
 
 clean-results:
 	find ./testrun ! \( -name '*.slha' -o -name '*.input' -o -name 'pwgseeds.dat' -o -name '*.LHgrid' \) \
