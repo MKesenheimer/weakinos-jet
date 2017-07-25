@@ -102,9 +102,7 @@ Optional arguments:
   --it <n>                 if "--st 1" one can choose which grid iteration should
                            only be calculated
   --reweight               submit jobs to reweight the events. Note to edit powheg.input
-                           by hand and to back up the event files pwgevents-*.lhe.
-                           Reweighting should be carried out sperately and only after
-                           the event files were merged.
+                           by hand.
 EOM
    exit 0
 }
@@ -480,14 +478,10 @@ if [ "$STAGE" = "RW" ] || [ "$STAGE" = "rw" ]; then
    STAGE="RW"
    REWEIGHT=true
    GENEVENTS=true
-   # only one job necessary
-   JOBS=1
 fi
 if [ "$REWEIGHT" = true ]; then
    STAGE="RW"
    GENEVENTS=true
-   # only one job necessary
-   JOBS=1
 fi
 
 # directories
@@ -710,8 +704,8 @@ if [ "$GRIDITER" = "" ]; then
       if [ "$SLEEP" = false ] && ( [ "$USEMSUB" = true ] || [ "$USECONDOR" = true ] ); then
         echo "cp $RUNDIR/powheg_st1.${iter}.input $RUNDIR/powheg.input" >> $WORKINGDIR/run_st1.${iter}_${IDENT}.sh
       fi
-      # either \$1 or \$ARG1 is defined (msub sets ARG1)
-      echo -e "$EXEPATH < <(printf \"%s\\\n\" \"\$1\" \"\$ARG1\")" >> $WORKINGDIR/run_st1.${iter}_${IDENT}.sh
+      # either \$1 or \$ARG1 is defined (msub and condor set ARG1)
+      echo -e "$EXEPATH < <(printf \"%s\\\n\" \"\$1\$ARG1\")" >> $WORKINGDIR/run_st1.${iter}_${IDENT}.sh
       chmod +x $WORKINGDIR/run_st1.${iter}_${IDENT}.sh
     fi
   done
@@ -724,8 +718,8 @@ else
     overwrite_var "$RUNDIR/powheg_st1.${GRIDITER}.input" "parallelstage" 1
     overwrite_var "$RUNDIR/powheg_st1.${GRIDITER}.input" "xgriditeration" ${GRIDITER}
     echo -e "#!/bin/bash\ncd $RUNDIR" > $WORKINGDIR/run_st1.${GRIDITER}_${IDENT}.sh
-    # either \$1 or \$ARG1 is defined (msub sets ARG1)
-    echo -e "$EXEPATH < <(printf \"%s\\\n\" \"\$1\" \"\$ARG1\")" >> $WORKINGDIR/run_st1.${GRIDITER}_${IDENT}.sh
+    # either \$1 or \$ARG1 is defined (msub and condor set ARG1)
+    echo -e "$EXEPATH < <(printf \"%s\\\n\" \"\$1\$ARG1\")" >> $WORKINGDIR/run_st1.${GRIDITER}_${IDENT}.sh
     chmod +x $WORKINGDIR/run_st1.${GRIDITER}_${IDENT}.sh
   fi
 fi
@@ -751,8 +745,8 @@ if [ "$STAGE" != "1" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STA
   if [ "$SLEEP" = false ] && [ "$STAGE" = "" ] && ( [ "$USEMSUB" = true ] || [ "$USECONDOR" = true ] ); then
     echo "cp $RUNDIR/powheg_st2.input $RUNDIR/powheg.input" >> $WORKINGDIR/run_st2_${IDENT}.sh
   fi
-  # either \$1 or \$ARG1 is defined (msub sets ARG1)
-  echo -e "$EXEPATH < <(printf \"%s\\\n\" \"\$1\" \"\$ARG1\")" >> $WORKINGDIR/run_st2_${IDENT}.sh
+  # either \$1 or \$ARG1 is defined (msub and condor set ARG1)
+  echo -e "$EXEPATH < <(printf \"%s\\\n\" \"\$1\$ARG1\")" >> $WORKINGDIR/run_st2_${IDENT}.sh
   chmod +x $WORKINGDIR/run_st2_${IDENT}.sh
 fi
 
@@ -779,8 +773,8 @@ if [ "$GENEVENTS" = true ]; then
     if [ "$SLEEP" = false ] && [ "$STAGE" = "" ] && ( [ "$USEMSUB" = true ] || [ "$USECONDOR" = true ] ); then
       echo "cp $RUNDIR/powheg_st3.input $RUNDIR/powheg.input" >> $WORKINGDIR/run_st3_${IDENT}.sh
     fi
-    # either \$1 or \$ARG1 is defined (msub sets ARG1)
-    echo -e "$EXEPATH < <(printf \"%s\\\n\" \"\$1\" \"\$ARG1\")" >> $WORKINGDIR/run_st3_${IDENT}.sh
+    # either \$1 or \$ARG1 is defined (msub and condor set ARG1)
+    echo -e "$EXEPATH < <(printf \"%s\\\n\" \"\$1\$ARG1\")" >> $WORKINGDIR/run_st3_${IDENT}.sh
     chmod +x $WORKINGDIR/run_st3_${IDENT}.sh
   fi
 
@@ -809,8 +803,8 @@ if [ "$GENEVENTS" = true ]; then
     if [ "$SLEEP" = false ] && [ "$STAGE" = "" ] && ( [ "$USEMSUB" = true ] || [ "$USECONDOR" = true ] ); then
       echo "cp $RUNDIR/powheg_st4.input $RUNDIR/powheg.input" >> $WORKINGDIR/run_st4_${IDENT}.sh
     fi
-    # either \$1 or \$ARG1 is defined (msub sets ARG1)
-    echo -e "$EXEPATH < <(printf \"%s\\\n\" \"\$1\" \"\$ARG1\")" >> $WORKINGDIR/run_st4_${IDENT}.sh
+    # either \$1 or \$ARG1 is defined (msub and condor set ARG1)
+    echo -e "$EXEPATH < <(printf \"%s\\\n\" \"\$1\$ARG1\")" >> $WORKINGDIR/run_st4_${IDENT}.sh
     chmod +x $WORKINGDIR/run_st4_${IDENT}.sh
   fi
 
@@ -818,8 +812,8 @@ if [ "$GENEVENTS" = true ]; then
   if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ]  && [ "$STAGE" != "4" ]; then
     cp $RUNDIR/powheg_rwgt.input $RUNDIR/powheg.input
     echo -e "#!/bin/bash\ncd $RUNDIR" > $WORKINGDIR/run_rwgt_${IDENT}.sh
-    # either \$1 or \$ARG1 is defined (msub sets ARG1)
-    echo -e "$EXEPATH < <(printf \"%s\\\n\" \"\$1\" \"\$ARG1\")" >> $WORKINGDIR/run_rwgt_${IDENT}.sh
+    # either \$1 or \$ARG1 is defined (msub and condor set ARG1)
+    echo -e "$EXEPATH < <(printf \"%s\\\npwgevents-%04d.lhe\\\n\" \"\$1\$ARG1\" \"\$1\$ARG1\")" >> $WORKINGDIR/run_rwgt_${IDENT}.sh
     chmod +x $WORKINGDIR/run_rwgt_${IDENT}.sh
   fi
 fi
