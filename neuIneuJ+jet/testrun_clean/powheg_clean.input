@@ -86,12 +86,7 @@ ewi2           0d0   ! regulator for double on-shell resonances
 ! new POWHEG-BOX-V2 features (rev. >3306)
 compress_lhe 1       ! activate lhe compression 
 #rwl_add 1           ! uncomment if you want to reweight the events
-rwl_file '-'
-<initrwgt>
-<weightgroup name='FAC'>
-<weight id='1'>renscfact=1 facscfact=1</weight>
-</weightgroup>
-</initrwgt>
+rwl_file 'rwgt.xml'
  
 iseed           5002    ! (default 5002) initialize random number sequence
 #pdfreweight    1       ! (default 0) write extra pdf infos on LHEF

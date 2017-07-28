@@ -338,7 +338,7 @@ PWHG += cernroutines_mod.o find_regions_mod.o gen_real_phsp_mod.o	\
 	sigborn_mod.o sigreal_mod.o sigsoftvirt_mod.o			\
 	sigvirtual_mod.o bbinit_mod.o LesHouches_mod.o 			\
 	LesHouchesreg_mod.o gen_index_mod.o lhefwrite_mod.o		\
-	gen_radiation_mod.o sigremnants_mod.o pwhgreweight_mod.o 	\
+	gen_radiation_mod.o sigremnants_mod.o pwhgreweight_mod.o  	\
 	pdfcalls_mod.o newunit_mod.o pwhg_main_mod.o \
 	ubprojections_mod.o
 
@@ -533,7 +533,7 @@ clean:
 	rm -f build/*.o pwhg_main_ninj+jet lhef_analysis main-PYTHIA-lhef merge-pwg-stat merge-data topintegrator runparallel.sh clean_rundir.sh merge.sh
 
 clean-results:
-	find ./testrun ! \( -name '*.slha' -o -name '*.input' -o -name 'pwgseeds.dat' -o -name '*.LHgrid' \) \
+	find ./testrun ! \( -name '*.slha' -o -name '*.input' -o -name 'pwgseeds.dat' -o -name '*.xml' \) \
 	-type f -exec rm -f {} +
     
 clean-libs:

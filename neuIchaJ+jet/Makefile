@@ -525,7 +525,7 @@ clean:
 	rm -f build/*.o pwhg_main_nixj+jet lhef_analysis main-PYTHIA-lhef merge-pwg-stat merge-data topintegrator runparallel.sh clean_rundir.sh merge.sh
 
 clean-results:
-	find ./testrun ! \( -name '*.slha' -o -name '*.input' -o -name 'pwgseeds.dat' -o -name '*.LHgrid' \) \
+	find ./testrun ! \( -name '*.slha' -o -name '*.input' -o -name 'pwgseeds.dat' -o -name '*.xml' \) \
 	-type f -exec rm -f {} +
     
 clean-libs:

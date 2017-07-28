@@ -348,7 +348,7 @@ c     point to reach faster subsequent random number.
 c copy stored event to LH common block
                call rwl_handle_lhe('get',count_stored_evt,k_stored_evt)
 c     Write event and weights
-               rwl_weights(:) = int(weights(:,k_stored_evt)) ! MK: added cast
+               rwl_weights(:) = weights(:,k_stored_evt)
                call lhefwritev(iunout)
 c               write(iunout,*) '# new weight ',weights(:,k_stored_evt)
                call dotestplots

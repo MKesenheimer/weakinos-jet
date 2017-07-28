@@ -543,7 +543,7 @@ cd $RUNDIR
 
 # clean up the directory
 if [ "$CLEAN" = true ]; then
-   find $RUNDIR ! \( -name '*.slha' -o -name '*.input' -o -name 'pwgseeds.dat' -o -name '*.LHgrid' -o -name 'command' \) -type f -exec rm -f {} +
+   find $RUNDIR ! \( -name '*.slha' -o -name '*.input' -o -name 'pwgseeds.dat' -o -name '*.xml' -o -name 'command' \) -type f -exec rm -f {} +
 fi
 
 # append to powheg.input
