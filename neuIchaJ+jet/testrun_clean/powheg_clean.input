@@ -77,20 +77,21 @@ testplots      1     ! write data for gnuplot histograms to *.top
 withdamp       1     ! (default 0, do not use) use Born-zero damping factor
 hfact          100d0 ! (default no damping factor) damp factor for high-pt radiation: > 0 dampfac=h**2/(pt2+h**2)
 hdamp          100d0 ! damping factor h**2/(pt2+h**2) to separate real contributions between Sudakov and remnants
-#storemintupb  0     ! whether to save btilde calls to set up upper bounding envelope
+storemintupb   1     ! whether to save btilde calls to set up upper bounding envelope
 fastbtlbound   1     ! reduce the number of calls to the virtual routines 
 mintupbratlim  1000  ! accelerate the generation of btilde configuration
 ewi1           0d0   ! regulator for single on-shell resonances
 ewi2           0d0   ! regulator for double on-shell resonances
 
 ! new POWHEG-BOX-V2 features (rev. >3306)
-compress_lhe 1       ! activate lhe compression 
-#rwl_add 1           ! uncomment if you want to reweight the events
-rwl_file 'rwgt.xml'
- 
-iseed           5002    ! (default 5002) initialize random number sequence
-#pdfreweight    1       ! (default 0) write extra pdf infos on LHEF
-#manyseeds      1       ! (default 0) allow for the generation of different statistically independent samples (see Docs/Manyseeds.pdf) 
-maxseeds        9999    ! (default 200) maximum of seeds in pwgseeds.dat
-#xgriditeration 1       ! identifier for grid generation
-#parallelstage  1       ! identifier for parallel running stages
+compress_lhe 1           ! activate lhe compression
+#rwl_add 1               ! uncomment if you want to add new weights to the events
+rwl_file 'wgts.xml'      ! file with weights information, do not comment
+#rwl_file 'rwgt_fac.xml' ! file with reweighting information
+
+iseed           5002     ! (default 5002) initialize random number sequence
+#pdfreweight    1        ! (default 0) write extra pdf infos on LHEF
+#manyseeds      1        ! (default 0) allow for the generation of different statistically independent samples (see Docs/Manyseeds.pdf)
+maxseeds        9999     ! (default 200) maximum of seeds in pwgseeds.dat
+#xgriditeration 1        ! identifier for grid generation
+#parallelstage  1        ! identifier for parallel running stages

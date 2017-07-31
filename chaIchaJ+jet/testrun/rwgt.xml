@@ -1,6 +1,0 @@
-<initrwgt>
-<weight id='1'> No variations here, nominal weight </weight>
-<weightgroup name='FAC' combine=’envelope’>
-<weight id='2'>renscfact=1 facscfact=1</weight>
-</weightgroup>
-</initrwgt>
