@@ -98,7 +98,7 @@ c this subroutine uses subroutines defined in phi1_2.f (with boosts).
           ! phase space for splitting p12 -> pij + pkl
           ! R2phsp_s1s2(psgen,x1,x2,xth,xphi,s1min,s1max,s2min,bwmass1,bwwidth1,bwmass2,bwwidth2,p0,p1,p2,jac)
           ! without phi integration
-          call R2phsp_s1s2(1,xx(3),xx(4),xx(5),0D0,sijmin,sijmax,sklmin,
+          call R2phsp_s1s2(2,xx(3),xx(4),xx(5),0D0,sijmin,sijmax,sklmin,
      &                     mij,wij,mkl,wkl,p12(:),pij(:),pkl(:),jac)
           kn_jacreal = kn_jacreal*jac
         
