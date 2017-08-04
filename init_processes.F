@@ -363,25 +363,6 @@ c     set process id using slepton types
         flst_real(6,1) = -2
 #endif
 
-#ifdef DEBUGQ
-        ! Born process
-        flst_nborn = 1
-        flst_born(1,1) = 0
-        flst_born(2,1) = -1
-        flst_born(3,1) = 1000024
-        flst_born(4,1) = -1000024
-        flst_born(5,1) = -1
-
-        ! Real process
-        flst_nreal = 1
-        flst_real(1,1) = 1
-        flst_real(2,1) = -1
-        flst_real(3,1) = 1000024
-        flst_real(4,1) = -1000024
-        flst_real(5,1) = -1
-        flst_real(6,1) = 1
-#endif
-
 #ifdef DEBUG
         print*,' born processes',flst_nborn
         do j=1,flst_nborn
@@ -396,6 +377,7 @@ c     set process id using slepton types
         enddo
 #endif
 
+#if defined(DSUB_I) || defined(DSUB_II) || defined(DR_II)
         ! setup the flavor list of on-shell resonant diagrams
         ! reset the number of on-shell resonant diagrams
         flst_nosres = 0
@@ -433,6 +415,7 @@ c     set process id using slepton types
           print*,(flst_osres(k,j),k=1,nlegreal)
         enddo
         !stop
+#endif
 #endif
 
         return

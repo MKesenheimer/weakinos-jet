@@ -142,26 +142,24 @@ DEBUG = -ggdb -pg -DDEBUG=$(LEVEL)
 # - Diagram Removal type I, implemented with preprocessor flag -DDR_I
 # - Diagram Removal type II, implemented with preprocessor flag -DDR_II
 # - Diagram Subtraction, implemented with preprocessor flag -DDSUB_I,
-#   no correction of the jacobian, which is in principal not ok, but 
-#   could be used for testing the convergence.
+#   with no separate integration.
 # - Diagram Subtraction with corrected jacobian, flag -DDSUB_II.
 #   With this flag defined, the real amplitude is split into two parts.
 #   In Reals.f the matrix element |M_NR|**2 + 2 M_R* M_NR is calculated,
 #   in Reals_osres.f the remaining terms and the on-shell counter terms
 #   are added: |M_R|**2 - BW*corrfac*|M_R^OS|**2. The latter gets 
-#   integrated seperately in sigosres.f and is included at a later point
+#   integrated separately in sigosres.f and is included at a later point
 #   to the main result.
-#USRFLAGS += -DDSUB_II_TEST
+#USRFLAGS += -DDR_II
+#USRFLAGS += -DDSUB_I
 USRFLAGS += -DDSUB_II
+# use the POWHEG modified files (yes, no)
+POWMOD = yes
 
 ## SkipHel
 # skip the calculation of formcalc helicity amplitudes if the amplitude
 # is zero 'NSKIP'-times during the initialisation process.
 USRFLAGS += -DNSKIP=50
-
-## faster Virtuals without Boxes and Pentagons
-# only for debugging, can be switched on here
-#FASTVIRTS = yes
 
 ########################################################################
 #           -*- no editing is required below this line -*-             #
@@ -183,11 +181,7 @@ SUBWORKINGDIR = $(shell pwd)
 TOOLS = $(WORKINGDIR)/Tools
 MADREALS = $(SUBWORKINGDIR)/MadGraph
 FORMREALS = $(SUBWORKINGDIR)/FormCalc_Reals
-ifeq ("$(FASTVIRTS)","yes")
-  FORMVIRTS = $(SUBWORKINGDIR)/FormCalc_Virtuals_fast
-else
-  FORMVIRTS = $(SUBWORKINGDIR)/FormCalc_Virtuals
-endif
+FORMVIRTS = $(SUBWORKINGDIR)/FormCalc_Virtuals
 SCRIPTS = $(WORKINGDIR)/Scripts
 
 # includes
@@ -322,32 +316,42 @@ MADGRAPH = couplings.o hardstop.o printout.o read_slha.o \
 FORMCALC = VecSet.o
 
 ### PWHG FILES in ../ ###
-PWHG = pwhg_init.o btilde.o utils.o gen_Born_phsp.o		\
-	test_Sudakov.o pt2maxreg.o maxrat.o Bornzerodamp.o		\
-	random.o boostrot.o bra_ket_subroutines.o			\
-	init_phys.o powheginput.o sigcollremn.o				\
-	pwhg_bookhist-multi.o pwhg_analysis_driver.o checkmomzero.o	\
-	setstrongcoupl.o integrator.o mwarn.o				\
-	sigcollsoft.o validflav.o decidemerging.o          		\
+PWHG = pwhg_init.o btilde.o utils.o gen_Born_phsp.o	\
+	test_Sudakov.o pt2maxreg.o maxrat.o Bornzerodamp.o \
+	random.o boostrot.o bra_ket_subroutines.o \
+	init_phys.o powheginput.o sigcollremn.o \
+	pwhg_bookhist-multi.o pwhg_analysis_driver.o checkmomzero.o \
+	setstrongcoupl.o integrator.o mwarn.o \
+	sigcollsoft.o validflav.o decidemerging.o \
 	loadstorenlo.o setlocalscales.o \
 	mint_upb.o reshufflemoms.o opencount.o \
 	lhefread.o pwhg_io_interface.o rwl_weightlists.o rwl_setup_param_weights.o
 
 # modified POWHEG-files
-PWHG += cernroutines_mod.o find_regions_mod.o gen_real_phsp_mod.o	\
-	sigborn_mod.o sigreal_mod.o sigsoftvirt_mod.o			\
-	sigvirtual_mod.o bbinit_mod.o LesHouches_mod.o 			\
-	LesHouchesreg_mod.o gen_index_mod.o lhefwrite_mod.o		\
-	gen_radiation_mod.o sigremnants_mod.o pwhgreweight_mod.o  	\
+ifeq ("$(POWMOD)","no")
+  PWHG += cernroutines.o find_regions.o gen_real_phsp.o\
+	sigborn.o sigreal.o sigsoftvirt.o \
+	sigvirtual.o bbinit.o LesHouches.o \
+	LesHouchesreg.o gen_index.o lhefwrite.o \
+	gen_radiation.o sigremnants.o pwhgreweight.o \
+	pdfcalls.o newunit.o pwhg_main.o \
+	ubprojections.o
+else
+  PWHG += cernroutines_mod.o find_regions_mod.o gen_real_phsp_mod.o \
+	sigborn_mod.o sigreal_mod.o sigsoftvirt_mod.o \
+	sigvirtual_mod.o bbinit_mod.o LesHouches_mod.o \
+	LesHouchesreg_mod.o gen_index_mod.o lhefwrite_mod.o \
+	gen_radiation_mod.o sigremnants_mod.o pwhgreweight_mod.o \
 	pdfcalls_mod.o newunit_mod.o pwhg_main_mod.o \
 	ubprojections_mod.o
+endif
 
 ### LHEF ###
 # analyze LHEF output
-LHEF = lhef_analysis.o boostrot.o random.o cernroutines_mod.o		\
-	opencount.o powheginput.o pwhg_bookhist-multi.o 			\
-	lhefread.o newunit_mod.o pwhg_analysis_driver.o 			\
-	funcprocess.o init_couplings.o Print.o				\
+LHEF = lhef_analysis.o boostrot.o random.o cernroutines_mod.o \
+	opencount.o powheginput.o pwhg_bookhist-multi.o \
+	lhefread.o newunit_mod.o pwhg_analysis_driver.o \
+	funcprocess.o init_couplings.o Print.o \
 	bra_ket_subroutines.o off_to_on.o funcbasic.o \
 	pwhg_io_interface.o rwl_weightlists.o
 

@@ -809,7 +809,7 @@ if [ "$GENEVENTS" = true ]; then
   fi
 
   # REWEIGHTING
-  if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ]  && [ "$STAGE" != "4" ]; then
+  if [ "$REWEIGHT" = true ] && [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ]  && [ "$STAGE" != "4" ]; then
     cp $RUNDIR/powheg_rwgt.input $RUNDIR/powheg.input
     echo -e "#!/bin/bash\ncd $RUNDIR" > $WORKINGDIR/run_rwgt_${IDENT}.sh
     # either \$1 or \$ARG1 is defined (msub and condor set ARG1)

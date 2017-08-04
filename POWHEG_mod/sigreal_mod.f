@@ -193,11 +193,9 @@ c     to avoid divergent integral (25 is an ad hoc value)
          if(flg_nlotest) then
             out0=out0*www
             out1=out1*www
-            if(flg_analysisextrainfo) then ! MK: added: call only if array is allocated
-              call analysis_extrainfo('realct',flst_nalr,out0arr,www)
-              if(out0.ne.0d0) call analysis_driver(out0,0)
-              call analysis_extrainfo('real',flst_nalr,out1arr,www)
-            endif
+            call analysis_extrainfo('realct',flst_nalr,out0arr,www)
+            if(out0.ne.0d0) call analysis_driver(out0,0)
+            call analysis_extrainfo('real',flst_nalr,out1arr,www)
             if(out1.ne.0d0) call analysis_driver(out1,1)
          endif
       enddo

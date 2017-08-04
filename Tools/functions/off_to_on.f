@@ -557,7 +557,6 @@ c############### subroutine check_on_shell #############################
       end
 c############### end subroutine check_on_shell #########################
 
-c TODO
 c############### function corrfac_ijkl #################################
 c the remapping requires a change in the PS integration
 c and every counter term which uses the on-shell momenta should be
@@ -578,14 +577,6 @@ c rescaled by this correction factor
      &                    *kaellenSqrt(sij,mi**2,mj**2)
      &                    *kaellenSqrt(skl,mk**2,ml**2))
      
-#ifdef DSUB_II_TEST
-        corrfac_ijkl = 1D0
-#endif
-
-#ifdef DEBUGQ
-        corrfac_ijkl = 1D0
-#endif
-
 #ifdef DEBUGQ
         print*,"corrfac_ijkl",corrfac_ijkl
 #endif
@@ -608,14 +599,6 @@ c rescaled by this correction factor
      &                   *kaellenSqrt(mij**2,mi**2,mj**2))
      &                /(mij**2*kaellenSqrt(shat,sij,mk**2)
      &                   *kaellenSqrt(sij,mi**2,mj**2))
-
-#ifdef DSUB_II_TEST
-        corrfac_ijk = 1D0
-#endif
-
-#ifdef DEBUGQ
-        corrfac_ijk = 1D0
-#endif
 
 #ifdef DEBUGQ
         print*,"corrfac_ijk",corrfac_ijk

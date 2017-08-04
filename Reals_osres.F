@@ -52,7 +52,7 @@ c modifies the jacobian.
         character*50 str
 #endif
         
-#if defined(DSUB_II) || defined(DSUB_II_TEST)
+#if defined(DSUB_I) || defined(DSUB_II)
         if(init_real) then
            print*
            print*, "=== Init resonant real... ==="
@@ -67,7 +67,7 @@ c modifies the jacobian.
            verbose = .false.
         endif
         
-#ifndef DSUB_II_TEST
+#ifdef DSUB_II
         if(flg_btilde) then
           print*, "the realresonant-routine should not cald for Btilde."
           stop
@@ -99,10 +99,13 @@ c modifies the jacobian.
         sij = momsum2sq(p(0:3,i),p(0:3,j)) ! invariant mass of particle i + j
         skl = momsum2sq(p(0:3,k),p(0:3,l)) ! invariant mass of particle k + l
         sijk = momsum3sq(p(0:3,i),p(0:3,j),p(0:3,k))
-        
+
+#ifdef DSUB_II
         ! this is |M_R(res)|**2 (still with on-shell resonances)
         call getRealOSAmps(p,rflav,ichan,amp)
-        !print*,"amp",amp
+#else
+        amp = 0D0
+#endif
 
 #define SUBTRACTION
 #ifdef SUBTRACTION        
@@ -130,7 +133,11 @@ c modifies the jacobian.
           ampCT = bwratio*ampOS
           ! rescale the counter term to fit into the new PS
           ampCT = corrfac_ijkl(s12,mi,mj,mk,ml,mij,mkl,sij,skl)*ampCT
+#ifdef DSUB_II
           amp = amp - ampCT
+#else
+          amp = amp + ampCT
+#endif
         endif
 
         ! subtraction scheme for single resonant gluino contributions
@@ -143,7 +150,11 @@ c modifies the jacobian.
           ampCT = bwratio*ampOS
           ! rescale the counter term to fit into the new PS
           ampCT = corrfac_ijk(s12,mi,mj,mk,ml,mij,mkl,sij,skl)*ampCT
+#ifdef DSUB_II
           amp = amp - ampCT
+#else
+          amp = amp + ampCT
+#endif
         endif
 #endif
 

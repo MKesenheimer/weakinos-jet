@@ -19,7 +19,7 @@ c |M_R|**2 - BW*corrfac*|M_R^OS|**2.
 #include "osres.h"
         double precision p(0:3,nlegreal)
         integer f(nlegreal)
-        double precision amp, ampreal, ampos
+        double precision amp, ampreal, ampos, amposCT
         ! status
         logical verbose
         logical init_reals
@@ -61,17 +61,7 @@ c#define CHECKMADFORM
         endif
 #endif
 
-#ifdef DEBUGQ
-        print*,f,amp
-        call getRealAmps_new(p,f,ampreal)
-        print*,f,ampreal
-        if(dabs(amp-ampreal)/dabs(amp+ampreal).gt.1d-6) stop
-        print*
-#endif
-
-#if defined(DSUB_II) || defined(DSUB_II_TEST)
-        ! subtract the resonant amplitudes (move the resonant contributions 
-        ! to Reals_osres.F)
+#if defined(DSUB_I) || defined(DSUB_II) || defined(DR_II)
         ! check if gluino single resonances can occur (sum over nosres1 + nosres2)
         ! if not, sum over double squark resonances only (sum over nosres1)
         ! NOTE: if you change the following if-statements, you should change them in
@@ -88,7 +78,6 @@ c#define CHECKMADFORM
         else
           nos = nosres1
         endif
-
 #if defined(NINJ_JET) || defined(NIXJ_JET)
         if(f(5).ne.0.and.f(6).ne.0) then
 #elif defined(XIXJ_JET)
@@ -98,36 +87,21 @@ c#define CHECKMADFORM
 #endif
           do ichan=1,nos
             ampos = 0D0
+#ifndef DSUB_I
+            ! common for DSUB_II and DR_II: subtract all resonant amplitudes
+            ! DSUB_II: move the resonant amplitudes with a special CT to a separate phase space
             call getRealOSAmps(p,f,ichan,ampos)
             amp = amp - ampos
+#else
+            ! DSUB_I scheme: subtract the CT without integrating over separate phase space
+            ! this should give nearly the same result as with flag DSUB_II set
+            call setosresreal(p,f,ichan,amposCT)
+            amp = amp - amposCT
+#endif
           enddo
         endif
-#endif
-        
+#endif        
 
-#ifdef DSUB_II_TEST
-        ! test the DSUB_II scheme (here without the correct jacobian)
-        ! this gives the same result as with flag DSUB_I set
-#if defined(NINJ_JET)
-        if(f(1).eq.-f(2).and.f(5).eq.-f(6).and.f(1).ne.0.and.f(5).ne.0) then
-#elif defined(NIXJ_JET)
-        if((f(1).lt.0.and.f(2).gt.0).or.(f(1).gt.0.and.f(2).lt.0)) then
-#elif defined(XIXJ_JET)
-        if((((f(5).gt.0.and.f(6).gt.0).or.(f(5).lt.0.and.f(6).lt.0))
-     &          .and.mod(f(5)+f(6),2).ne.0)) then
-#endif
-          nos = nosres1 + nosres2
-        else
-          nos = nosres1
-        endif
-        if(f(5).ne.0.and.f(6).ne.0) then
-         do ichan=1,nos
-            ampos = 0D0
-            call setosresreal(p,f,ichan,ampos)
-            amp = amp + ampos
-          enddo
-        endif  
-#endif
         ! Cancel as/(2pi) associated with amp2. It will be put back by real_ampsq
         ampreal = amp/(st_alpha/(2d0*m_pi))
         

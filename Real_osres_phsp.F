@@ -68,7 +68,7 @@ c this subroutine uses subroutines defined in phi1_2.f (with boosts).
         minmass = mi+mj+mk+ml
         ! generate the x1-x2-phase space
         ! x1x2phspace(psgen,sbeams,minmass,xx,x1,x2,s,jac)
-        call x1x2phspace(2,kn_sbeams,minmass,xx(1:2),kn_x1,kn_x2,
+        call x1x2phspace(1,kn_sbeams,minmass,xx(1:2),kn_x1,kn_x2,
      &                   kn_sreal,jac)
         kn_jacreal = kn_jacreal*jac
         ! for convenience
