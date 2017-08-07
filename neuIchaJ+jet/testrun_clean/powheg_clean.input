@@ -70,15 +70,18 @@ bornktmin      10d0  ! generation cut; minimmum kt in underlying born
 ewi1           0d0   ! regulator for single on-shell resonances
 ewi2           0d0   ! regulator for double on-shell resonances
 
-! new POWHEG-BOX-V2 features (rev. >3306)
-compress_lhe 1           ! activate lhe compression
-#rwl_add 1               ! uncomment if you want to add new weights to the events
-rwl_file 'wgts.xml'      ! file with weights information, do not comment
-#rwl_file 'rwgt_fac.xml' ! file with reweighting information
-
+! parallelization
 iseed           5002     ! (default 5002) initialize random number sequence
 #pdfreweight    1        ! (default 0) write extra pdf infos on LHEF
 #manyseeds      1        ! (default 0) allow for the generation of different statistically independent samples (see Docs/Manyseeds.pdf)
 maxseeds        9999     ! (default 200) maximum of seeds in pwgseeds.dat
 #xgriditeration 1        ! identifier for grid generation
 #parallelstage  1        ! identifier for parallel running stages
+
+! new POWHEG-BOX-V2 features (rev. >3306)
+#compress_lhe 1           ! activate lhe compression
+#rwl_add 1                ! uncomment if you want to add new weights to the events
+rwl_file 'wgts.xml'       ! file with weights information, do not comment
+#rwl_file 'rwgt_fac.xml'  ! file with scale reweighting information
+#rwl_file 'rwgt_ewi1.xml' ! file with regulator reweighting information
+#rwl_file 'rwgt_ewi2.xml' ! file with regulator reweighting information

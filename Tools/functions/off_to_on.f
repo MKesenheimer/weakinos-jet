@@ -264,7 +264,7 @@ c
           call check_on_shell(pkl_OS(:),mkl)
         endif
         ! check four momentum conservation
-        call check_4conservation(p_OS,nlegreal,3,lresult)
+        call check_4conservation(p_OS,nlegreal,2,lresult)
       end
 c############### end subroutine off_to_on_ijkl #########################
 
@@ -460,7 +460,7 @@ c
         pijk_OS(:) = p_OS(:,i) + p_OS(:,j) + p_OS(:,k)
         call check_on_shell(pijk_OS(:),mijk)
         ! check four momentum conservation
-        call check_4conservation(p_OS,nlegreal,3,lresult)
+        call check_4conservation(p_OS,nlegreal,2,lresult)
       end
 c############### end subroutine off_to_on_ijk ##########################
 
