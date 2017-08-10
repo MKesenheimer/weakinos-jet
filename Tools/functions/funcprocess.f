@@ -161,7 +161,7 @@ c verbose = 4: No output at all, but set the variable lresult
               endif  
             endif
             if(verbose.eq.3) stop
-          else
+          elseif(warncount2.eq.10) then
             warncount2 = 11
             print*,"check_4conservation: Further output will"//
      &             " be suppressed."
