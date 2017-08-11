@@ -43,6 +43,8 @@ c modifies the jacobian.
         logical verbose
         logical init_real
         data init_real/.true./
+        ! checks
+        logical check
         ! output control
         integer warncount1
         data warncount1/0/
@@ -128,7 +130,7 @@ c modifies the jacobian.
      &              (wij + wreg2)**2) + 
      &              mkl**2*(-2*sij - 2*skl + (wkl + wreg2)**2)))
           ! off_to_on the momenta p to on-shell momenta p_os
-          call off_to_on_ijkl(p,rflav,ichan,.true.,.true.,p_os)
+          call off_to_on_ijkl(p,rflav,ichan,.true.,.true.,p_os,check)
           call getRealOSAmps(p_os,rflav,ichan,ampOS)
           ampCT = bwratio*ampOS
           ! rescale the counter term to fit into the new PS
@@ -145,7 +147,7 @@ c modifies the jacobian.
      &     (s12.ge.(mijk+ml)**2) .and. (mijk.ge.(mi+mj+mk))) then
           bwratio = (mijk*(wijk+wreg1))**2/((sijk-mijk**2)**2+(mijk*(wijk+wreg1))**2)
           ! off_to_on the momenta p to on-shell momenta p_os
-          call off_to_on_ijk(p,rflav,ichan,p_os)
+          call off_to_on_ijk(p,rflav,ichan,p_os,check)
           call getRealOSAmps(p_os,rflav,ichan,ampOS)
           ampCT = bwratio*ampOS
           ! rescale the counter term to fit into the new PS
@@ -175,7 +177,7 @@ c modifies the jacobian.
           endif
           amp = 0D0
         endif
-        
+
 #ifdef DEBUGQ
         ! fill histograms
         if(dsqrt(p(1,5)**2+p(2,5)**2).gt.10D0 .and. dsqrt(p(1,6)**2+p(2,6)**2).gt.10D0) then

@@ -80,6 +80,7 @@ Optional arguments:
   --lopdf <n>              only LO calculation with LO pdf and LHA number n
   -g, --genfolder          generate a new run directory with default input files 
                            (the directory "testrun_clean" is needed)
+  -t, --template           the folder which is used as template (defaul testrun_clean)
   --fin1 <n>               PDG number of first final particle
   --fin2 <n>               PDG number of second final particle
   --dec1 <n>               PDG number of first decay particle
@@ -166,6 +167,7 @@ LHAPATH1=""
 TIME=""
 STAGE=""
 GRIDITER=""
+TEMPLATE=""
 
 # argument parsing
 while [[ $# -gt 0 ]]; do
@@ -409,6 +411,11 @@ case $KEY in
         GENFOLGDER=true
         shift
         ;;
+     -t|--template)
+        TEMPLATE="$2"
+        shift
+        shift
+        ;;
     --checklimits)
         CHECKLIM=true
         shift
@@ -483,6 +490,9 @@ if [ "$REWEIGHT" = true ]; then
    STAGE="RW"
    GENEVENTS=true
 fi
+if [ "$TEMPLATE" = "" ]; then
+   TEMPLATE="testrun_clean"
+fi
 
 # directories
 WORKINGDIR=${PWD}
@@ -511,12 +521,12 @@ if [ "$GENFOLGDER" = true ]; then
          exit 0
       fi  
    fi
-   if [ ! -d "testrun_clean" ]; then
+   if [ ! -d $TEMPLATE ]; then
       echo ""
-      echo "Error: directory 'testrun_clean' does not exist."
+      echo "Error: directory $TEMPLATE does not exist."
       exit 0
    fi
-   cp -r testrun_clean/ $RUNDIR
+   cp -r $TEMPLATE $RUNDIR
 fi
 
 # check if EXE is set
@@ -760,7 +770,7 @@ if [ "$GENEVENTS" = true ]; then
     if [ "$FAKEVIRT" = false ]; then
       overwrite_var "$RUNDIR/powheg_st3.input" "fakevirtuals" 0
     else
-      overwrite_var "$RUNDIR/powheg_st2.input" "fakevirtuals" 1
+      overwrite_var "$RUNDIR/powheg_st3.input" "fakevirtuals" 1
     fi
     overwrite_var "$RUNDIR/powheg_st3.input" "parallelstage" 3
     if [ "$NUBOUND" != "" ]; then
@@ -786,7 +796,7 @@ if [ "$GENEVENTS" = true ]; then
     if [ "$FAKEVIRT" = false ]; then
       overwrite_var "$RUNDIR/powheg_st4.input" "fakevirtuals" 0
     else
-      overwrite_var "$RUNDIR/powheg_st2.input" "fakevirtuals" 1
+      overwrite_var "$RUNDIR/powheg_st4.input" "fakevirtuals" 1
     fi
     overwrite_var "$RUNDIR/powheg_st4.input" "parallelstage" 4
     if [ "$NUBOUND" != "" ]; then

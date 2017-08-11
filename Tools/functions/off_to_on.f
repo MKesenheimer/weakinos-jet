@@ -57,7 +57,7 @@ c        /   \
 c       /     \
 c      pk     pl
 c
-      subroutine off_to_on_ijkl(p,flav,ichan,flag_ij,flag_kl,p_OS)
+      subroutine off_to_on_ijkl(p,flav,ichan,flag_ij,flag_kl,p_OS,check)
         implicit none
 #include "nlegborn.h"
 #include "osres.h"
@@ -65,9 +65,10 @@ c
         double precision p(0:3,nlegreal),p_OS(0:3,nlegreal)
         integer ichan, flav(nlegreal)
         logical flag_ij, flag_kl
+        logical check
         ! mass at resonance
         double precision mij,mkl,mi,mj,mk,ml
-        integer i,j,k,l
+        integer i,j,k,l,nu
         ! external functions
         double precision kaellenSqrt
         external kaellenSqrt
@@ -93,6 +94,9 @@ c
         double precision norm
         ! check 4-momentum conservation
         logical lresult
+        ! output control
+        integer warncount1
+        data warncount1/0/
         
         ! set the channel-related indices i,j,k,l and masses mi,mj,mk,ml,mij
         call set_channel(flav,ichan)
@@ -257,14 +261,36 @@ c
         ! check on-shell condition
         if(flag_ij) then
           pij_OS(:) = p_OS(:,i) + p_OS(:,j)
-          call check_on_shell(pij_OS(:),mij)
+          call check_on_shell(pij_OS(:),mij,lresult)
+          check = lresult
         endif
         if(flag_kl) then
           pkl_OS(:) = p_OS(:,k) + p_OS(:,l)
-          call check_on_shell(pkl_OS(:),mkl)
+          call check_on_shell(pkl_OS(:),mkl,lresult)
+          check = check .and. lresult
         endif
         ! check four momentum conservation
         call check_4conservation(p_OS,nlegreal,2,lresult)
+        check = check .and. lresult
+
+        ! check for NaNs
+        do i=1,nlegreal
+          do nu=0,3
+            if(isnan(p_OS(nu,i))) then
+              if(warncount1.lt.10) then
+                warncount1 = warncount1 + 1
+                print*, "Warning in off_to_on_ijkl: NaN occured."
+                print*,"p_OS(",nu,",",i,")   = ",p_OS(nu,i)
+              elseif(warncount1.eq.10) then
+                warncount1 = 11
+                print*, "off_to_on_ijkl: Further output will be "//
+     &                  "suppressed."
+              endif
+              check = .false.
+              return
+            endif
+          enddo
+        enddo
       end
 c############### end subroutine off_to_on_ijkl #########################
 
@@ -324,16 +350,17 @@ c        /   \
 c       /     \
 c      pk     pl
 c
-      subroutine off_to_on_ijk(p,flav,ichan,p_OS)
+      subroutine off_to_on_ijk(p,flav,ichan,p_OS,check)
         implicit none
 #include "nlegborn.h"
 #include "osres.h"
         ! momenta from PS-generator, on-shell momenta
         double precision p(0:3,nlegreal),p_OS(0:3,nlegreal)
         integer ichan, flav(nlegreal)
+        logical check
         ! mass at resonance
         double precision ml,mijk
-        integer i,j,k,l
+        integer i,j,k,l,nu
         ! external functions
         double precision kaellenSqrt
         external kaellenSqrt
@@ -360,6 +387,9 @@ c
         double precision norm
         ! check 4-momentum conservation
         logical lresult
+        ! output control
+        integer warncount1
+        data warncount1/0/
         
         ! set the channel-related indices i,j,k,l and masses ml,mijk
         call set_channel(flav,ichan)
@@ -458,9 +488,30 @@ c
         ! - checks -
         ! check on-shell condition
         pijk_OS(:) = p_OS(:,i) + p_OS(:,j) + p_OS(:,k)
-        call check_on_shell(pijk_OS(:),mijk)
+        call check_on_shell(pijk_OS(:),mijk,lresult)
+        check = lresult
         ! check four momentum conservation
         call check_4conservation(p_OS,nlegreal,2,lresult)
+        check = check .and. lresult
+
+        ! check for NaNs
+        do i=1,nlegreal
+          do nu=0,3
+            if(isnan(p_OS(nu,i))) then
+              if(warncount1.lt.10) then
+                warncount1 = warncount1 + 1
+                print*, "Warning in off_to_on_ijk: NaN occured."
+                print*,"p_OS(",nu,",",i,")   = ",p_OS(nu,i)
+              elseif(warncount1.eq.10) then
+                warncount1 = 11
+                print*, "off_to_on_ijkl: Further output will be "//
+     &                  "suppressed."
+              endif
+              check = .false.
+              return
+            endif
+          enddo
+        enddo
       end
 c############### end subroutine off_to_on_ijk ##########################
 
@@ -539,12 +590,14 @@ c The direction of particle i is kept.
 c############### end subroutine mom_in_Rij #############################
 
 c############### subroutine check_on_shell #############################
-      subroutine check_on_shell(p_os,m)
+      subroutine check_on_shell(p_os,m,lresult)
         implicit none
         double precision p_os(0:3),m
         double precision relerror
         double precision momsq
         external momsq
+        logical lresult
+        lresult = .true.
         relerror = (momsq(p_OS(:))-m**2)
      &             /(momsq(p_OS(:))+m**2) 
         if( dabs(relerror) .gt. 1D-6 ) then
@@ -552,7 +605,7 @@ c############### subroutine check_on_shell #############################
           print*,"|p_OS| = ",dsqrt(momsq(p_OS(:)))
           print*,"m      = ", m
           print*,"relerror = ", relerror
-          stop
+          lresult = .false.
         endif
       end
 c############### end subroutine check_on_shell #########################

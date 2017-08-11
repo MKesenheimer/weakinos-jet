@@ -2,13 +2,6 @@
 fin1  1000022   ! neu10 = 1000022, neu20 = 1000023, neu30 = 1000025,
 fin2  1000024   ! neu40 = 1000035, cha1+ = 1000024, cha2+ = 1000037
 
-! Analysis
-! for which particle pair do we want to calculate correlations?
-! (e.g. difference in azimuthal angle dphi or invariant mass) 
-! corI and corJ should be different and a number between 1 and 5
-corI  1
-corJ  2
-
 ! physics
 ! name of the SLHA input-file, should not be longer than 100 signs
 SLHA 'input_p10MSSMd.slha'   

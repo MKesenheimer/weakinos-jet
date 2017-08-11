@@ -27,7 +27,7 @@ c this subroutine uses subroutines defined in phi1_2.f (with boosts).
         double precision sijkmin, sijmin, sijmax, sklmin
         ! mass at resonance, mass of particle i,j,k,l
         double precision mijk, mij, mkl, mi, mj, mk, ml, wijk, wij, wkl
-        integer i,j,k,l
+        integer i,j,k,l,nu
         ! jacobian
         double precision jac
         double precision minmass
@@ -37,6 +37,9 @@ c this subroutine uses subroutines defined in phi1_2.f (with boosts).
         double precision vec(3),beta
         ! check 4-momentum conservation
         logical lresult
+        ! output control
+        integer warncount1
+        data warncount1/0/
         
         ! check the channel identifier
         if( ichan.gt.nosres .or. ichan.lt.0) then
@@ -161,6 +164,27 @@ c this subroutine uses subroutines defined in phi1_2.f (with boosts).
           if(.not.lresult) kn_jacreal = 0D0
           return
         endif
+
+       ! check for NaNs
+        do i=1,nlegreal
+          do nu=0,3
+            if(isnan(kn_preal(nu,i)) .or.
+     &         isnan(kn_cmpreal(nu,i))) then
+              if(warncount1.lt.10) then
+                warncount1 = warncount1 + 1
+                print*, "Warning in Real_osres_phsp: NaN occured."
+                print*,"kn_preal(",nu,",",i,")   = ",kn_preal(nu,i)
+                print*,"kn_cmpreal(",nu,",",i,") = ",kn_cmpreal(nu,i)
+              elseif(warncount1.eq.10) then
+                warncount1 = 11
+                print*, "Real_osres_phsp: Further output will be"//
+     &                  " suppressed."
+              endif
+              kn_jacreal = 0D0
+              return
+            endif
+          enddo
+        enddo
       end
 c############### end subroutine real_osres_phsp ########################
 

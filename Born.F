@@ -89,14 +89,6 @@ c a (leading) color structure to an event.
             icolup(i,j)=color(i,j)
           enddo
         enddo
-#ifdef DEBUGQ
-        print*,"[DEBUG] in borncolour_lh"
-        print*,"[DEBUG] f",f
-        do j=1,nlegborn
-          print*,"[DEBUG] icolup(",j,")",icolup(1,j),icolup(2,j)
-        enddo
-        !stop
-#endif
       end
 c############### end subroutine finalize_lh ############################
 

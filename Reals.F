@@ -95,6 +95,7 @@ c#define CHECKMADFORM
 #else
             ! DSUB_I scheme: subtract the CT without integrating over separate phase space
             ! this should give nearly the same result as with flag DSUB_II set
+            ! but with a higher negative weight fraction
             call setosresreal(p,f,ichan,amposCT)
             amp = amp - amposCT
 #endif
@@ -144,13 +145,5 @@ c a (leading) color structure to an event.
             icolup(i,j)=color(i,j)
           enddo
         enddo
-#ifdef DEBUGQ
-        print*,"[DEBUG] in real_colour_lh"
-        print*,"[DEBUG] f",f
-        do j=1,nlegreal
-          print*,"[DEBUG] icolup(",j,")",icolup(1,j),icolup(2,j)
-        enddo
-        !stop
-#endif
       end
 c############### end subroutine realcolour_lh ##########################
