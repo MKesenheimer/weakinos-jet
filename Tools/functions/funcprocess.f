@@ -66,7 +66,8 @@ c verbose = 4: No output at all, but set the variable lresult
         double precision momsq, momsum2sq, momsum3sq, dotp
         external momsq, momsum2sq, momsum3sq, dotp
         double precision eps, rel(0:3) ! rel. err.
-        parameter (eps=1d-6)
+        double precision xi ! regulator for comparing small values
+        parameter (eps=1D-4, xi=1D2)
         logical lresult
         integer verbose
         ! output control
@@ -120,17 +121,14 @@ c verbose = 4: No output at all, but set the variable lresult
         endif
         
         ! calculate the relative error
+        ! we have to introduce a regulator xi here if we want to
+        ! compare a value with the true value zero.
+        ! In this case the rel. error would be rel = 2*(0-10^-5)/(0+10^-5) = 2
+        ! With the regulator xi = 1: rel = 2*(0-10^-5)/(0+10^-5+xi) = 10^-5
+        ! The regulator defines a range where comparing small values should give small
+        ! relative errors.
         do i=0,3
-          if(pi(i).lt.eps) then
-            rel(i) = pf(i)/pf(0)
-          elseif(pf(i).lt.eps) then
-            rel(i) = pi(i)/pi(0)
-          elseif(pi(i).lt.eps .and. pf(i).lt.eps) then
-            rel(i) = 0D0
-          else
-            rel(i) = 2D0*dabs(pi(i)-pf(i))/dabs(pi(i)+pf(i))
-          endif
-          !print*,rel(i)
+          rel(i) = 2D0*dabs(pi(i)-pf(i))/dabs(pi(i)+pf(i)+xi)
         enddo
 
         if(rel(0) .gt. eps .or.

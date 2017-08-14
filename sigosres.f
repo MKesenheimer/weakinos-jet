@@ -130,25 +130,6 @@ c keep this order
         enddo
 #endif
 
-#ifdef DEBUGQ
-        do lset=1,flst_nosres
-          if(flst_osres(1,lset).eq.-flst_osres(2,lset) .and.
-     &       flst_osres(5,lset).eq.-flst_osres(6,lset) .and.
-     &       flst_osres(1,lset).ne.0 .and. flst_osres(5,lset).ne.0) then
-            nos = nosres1 + nosres2
-          else
-            nos = nosres1
-          endif
-          print*,flst_osres(:,lset)
-          do ichan=1,nos
-            print*,ichan,lset,rad_osres_arr(lset,ichan),rad_osres_sign(lset,ichan)
-          enddo
-        enddo
-         print*,"retval",retval
-         print*,"sigosres_contr",sigosres_contr
-         print*,"xjac",xjac
-         print*
-#endif
         ! -> return succes
         sigosres = 1
       end
@@ -312,10 +293,6 @@ c keep this order
 
           sigosres = sigosres + dtotabsosres(j)
         enddo
-
-#ifdef DEBUGQ
-        print*,"sigosres",sigosres
-#endif
       end
 c############### end subroutine addupweightsosres ######################
 

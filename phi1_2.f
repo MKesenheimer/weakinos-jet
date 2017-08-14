@@ -175,7 +175,7 @@ c just set xphi to zero - the jacobian will still be correct.
         double precision m_pi
         parameter (m_pi = 4.D0*datan(1.D0))
         double precision tiny, tiny2
-        parameter (tiny = 1d-6)
+        parameter (tiny = 1d-4)
         parameter (tiny2 = 1d-8)
         ! output control
         integer warncount1, warncount2, warncount3
@@ -341,7 +341,7 @@ c psgen=2:     breit wigner in s2 and flat below resonance
         double precision m_pi
         parameter (m_pi = 4.D0*datan(1.D0))
         double precision tiny, tiny2
-        parameter (tiny = 1d-6)
+        parameter (tiny = 1d-4)
         parameter (tiny2 = 1d-8)
         ! output control
         integer warncount1, warncount2, warncount3, warncount4
@@ -543,7 +543,7 @@ c psgen=2:     breit wigner in s1 and s2 and flat below resonance
         double precision m_pi
         parameter (m_pi = 4.D0*datan(1.D0))
         double precision tiny, tiny2
-        parameter (tiny = 1d-6)
+        parameter (tiny = 1d-4)
         parameter (tiny2 = 1d-8)
         ! output control
         integer warncount1, warncount2, warncount3, warncount4

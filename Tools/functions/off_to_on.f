@@ -619,17 +619,24 @@ c rescaled by this correction factor
         implicit none
         !input variables
         double precision shat,mi,mj,mk,ml,mkl,mij,sij,skl
+        double precision denom
         ! external functions
         double precision kaellenSqrt
         external kaellenSqrt
         
-        corrfac_ijkl = (sij*skl*kaellenSqrt(shat,mij**2,mkl**2)
+        denom = mij**2*mkl**2*kaellenSqrt(shat,sij,skl)
+     &          *kaellenSqrt(sij,mi**2,mj**2)
+     &          *kaellenSqrt(skl,mk**2,ml**2)
+
+        if(denom.ne.0D0) then
+          corrfac_ijkl = (sij*skl*kaellenSqrt(shat,mij**2,mkl**2)
      &                    *kaellenSqrt(mij**2,mi**2,mj**2)
      &                    *kaellenSqrt(mkl**2,mk**2,ml**2))
-     &                 /(mij**2*mkl**2*kaellenSqrt(shat,sij,skl)
-     &                    *kaellenSqrt(sij,mi**2,mj**2)
-     &                    *kaellenSqrt(skl,mk**2,ml**2))
-     
+     &                    /denom
+        else
+          corrfac_ijkl = 0D0
+        endif
+
 #ifdef DEBUGQ
         print*,"corrfac_ijkl",corrfac_ijkl
 #endif
@@ -644,14 +651,21 @@ c rescaled by this correction factor
         implicit none
         !input variables
         double precision shat,mi,mj,mk,sij,mij
+        double precision denom
         ! external functions
         double precision kaellenSqrt
         external kaellenSqrt
         
-        corrfac_ijk = (sij*kaellenSqrt(shat,mij**2,mk**2)
+        denom = mij**2*kaellenSqrt(shat,sij,mk**2)
+     &          *kaellenSqrt(sij,mi**2,mj**2)
+
+        if(denom.ne.0D0) then
+          corrfac_ijk = (sij*kaellenSqrt(shat,mij**2,mk**2)
      &                   *kaellenSqrt(mij**2,mi**2,mj**2))
-     &                /(mij**2*kaellenSqrt(shat,sij,mk**2)
-     &                   *kaellenSqrt(sij,mi**2,mj**2))
+     &                   /denom
+        else
+          corrfac_ijk = 0D0
+        endif
 
 #ifdef DEBUGQ
         print*,"corrfac_ijk",corrfac_ijk

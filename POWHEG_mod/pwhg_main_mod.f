@@ -386,7 +386,7 @@ c in the powheg.input file; useful to catch mispelled keywords
          call lhtohep
          call analysis(xwgtup)
          call pwhgaccumup
-         if (mod(j,5000).eq.0) then
+         if (mod(j,1000).eq.0) then ! MK: more frequent write out: 5000 -> 1000
             if(rnd_cwhichseed.eq.'none') then
                filename=pwgprefix(1:lprefix)//
      1              'pwhgalone-output'
