@@ -5,7 +5,7 @@ RUNDIR=$WORKINGDIR/$1
 
 # grid iteration
 if [ "$2" = "" ]; then
-  IT=4
+  IT=5
 else
   IT=$2
 fi
@@ -21,11 +21,8 @@ cat $RUNDIR/pwg-st2-combined-stat.dat
 if [ "$(ls $RUNDIR/pwgevents-*.lhe 2>/dev/null)" != "" ]; then
   echo ""
   echo "Merging event files..."
-  #for f in $(ls $RUNDIR/pwgevents-*.lhe); do
-  #  echo $f
   zcat -f $RUNDIR/pwgevents-*.lhe | grep -v "/LesHouchesEvents" > $RUNDIR/pwgevents.lhe
   echo "</LesHouchesEvents>" >> $RUNDIR/pwgevents.lhe
-  #done
 fi
 #if [ -e "$RUNDIR/pwgevents.lhe" ]; then
 #  echo "merged event files succesfully, deleting old event files..."
@@ -34,19 +31,34 @@ fi
 # merge the NLO top files
 echo ""
 echo "Merging top files..."
+
 rm -f $RUNDIR/pwg-NLO.top
-cd $RUNDIR && ../merge-data 1 $(ls $RUNDIR/pwg-*-NLO.top) && mv fort.12 pwg-NLO.top
+if [ "$(ls $RUNDIR/pwg-*-NLO.top 2>/dev/null)" != "" ]; then
+  echo "-> pwg-NLO.top"
+  cd $RUNDIR && ../merge-data 1 $(ls $RUNDIR/pwg-*-NLO.top) && mv fort.12 pwg-NLO.top
+fi
 
 rm -f $RUNDIR/pwgpwhgalone.top
-cd $RUNDIR && ../merge-data 1 $(ls $RUNDIR/pwgpwhgalone*.top) && mv fort.12 pwgpwhgalone.top
+if [ "$(ls $RUNDIR/pwgpwhgalone*.top 2>/dev/null)" != "" ]; then
+  echo "-> pwgpwhgalone.top"
+  cd $RUNDIR && ../merge-data 1 $(ls $RUNDIR/pwgpwhgalone*.top) && mv fort.12 pwgpwhgalone.top
+fi
 
 rm -f $RUNDIR/pwg-xg$IT-btlgrid.top
-cd $RUNDIR && ../merge-data 1 $(ls $RUNDIR/pwg-xg$IT-*-btlgrid.top) && mv fort.12 pwg-xg$IT-btlgrid.top
+if [ "$(ls $RUNDIR/pwg-xg$IT-*-btlgrid.top 2>/dev/null)" != "" ]; then
+  echo "-> pwg-xg$IT-btlgrid.top"
+  cd $RUNDIR && ../merge-data 1 $(ls $RUNDIR/pwg-xg$IT-*-btlgrid.top) && mv fort.12 pwg-xg$IT-btlgrid.top
+fi
 
 rm -f $RUNDIR/pwg-xg$IT-osresgrid.top
-cd $RUNDIR && ../merge-data 1 $(ls $RUNDIR/pwg-xg$IT-*-osresgrid.top) && mv fort.12 pwg-xg$IT-osresgrid.top
+if [ "$(ls $RUNDIR/pwg-xg$IT-*-osresgrid.top 2>/dev/null)" != "" ]; then
+  echo "-> pwg-xg$IT-osresgrid.top"
+  cd $RUNDIR && ../merge-data 1 $(ls $RUNDIR/pwg-xg$IT-*-osresgrid.top) && mv fort.12 pwg-xg$IT-osresgrid.top
+fi
 
 rm -f $RUNDIR/pwg-xg$IT-rmngrid.top
-cd $RUNDIR && ../merge-data 1 $(ls $RUNDIR/pwg-xg$IT-*-rmngrid.top) && mv fort.12 pwg-xg$IT-rmngrid.top
-
+if [ "$(ls $RUNDIR/pwg-xg$IT-*-rmngrid.top 2>/dev/null)" != "" ]; then
+  echo "-> pwg-xg$IT-rmngrid.top"
+  cd $RUNDIR && ../merge-data 1 $(ls $RUNDIR/pwg-xg$IT-*-rmngrid.top) && mv fort.12 pwg-xg$IT-rmngrid.top
+fi
 echo "done."

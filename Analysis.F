@@ -12,7 +12,7 @@ c book all histograms, will be filled later
         character*6 WHCPRG
         common/cWHCPRG/WHCPRG
         ! parameters
-        integer n
+        integer n,m
         double precision mm, mp, ptm, ptp
         double precision em, ep
         double precision phim, phip
@@ -41,6 +41,7 @@ c book all histograms, will be filled later
         ! global parameters
         ! number of bins
         n = 40
+        m = 100
         ! mass(A+B)
         mm = dabs(par_Fin1mass) + dabs(par_Fin2mass)
         mp = 4D0*mm
@@ -58,7 +59,7 @@ c book all histograms, will be filled later
         call bookupeqbins("xsec",1D0,-0.5D0,0.5D0)
 
         ! Jcuts, scenario 1:
-        ! ptj > 30GeV, eta < 4.5
+        ! ptj > 20GeV, eta < 4.5
         call bookupeqbins("xsec(Jcuts1)",1D0,-0.5D0,0.5D0)
         call bookupeqbins("mass(A+B,Jcuts1)",(mp-mm)/n,mm,mp)
         call bookupeqbins("Pt(A,Jcuts1)",(ptp-ptm)/n,ptm,ptp)
@@ -66,10 +67,16 @@ c book all histograms, will be filled later
         call bookupeqbins("eta(A,Jcuts1)",(ep-em)/n,em,ep)
         call bookupeqbins("eta(B,Jcuts1)",(ep-em)/n,em,ep)
         call bookupeqbins("N(J,Jcuts1)",1D0,-0.5D0,3.5D0)
-        call bookupeqbins("Pt(J1,Jcuts1)",400D0/n,30D0,430D0)
+        call bookupeqbins("Pt(J1,Jcuts1)",400D0/n,20D0,420D0)
+        call bookupeqbins("Pt(J1,Jcuts1,fine)",200D0/n,20D0,220D0)
         call bookupeqbins("eta(J1,Jcuts1)",10D0/n,-5D0,5D0)
         call bookupeqbins("Pt(J2,Jcuts1)",400D0/n,0D0,400D0)
+        call bookupeqbins("Pt(J2,Jcuts1,fine)",200D0/m,0D0,200D0)
         call bookupeqbins("eta(J2,Jcuts1)",10D0/n,-5D0,5D0)
+        call bookupeqbins("eta(J2,Jcuts1,10)",10D0/n,-5D0,5D0)
+        call bookupeqbins("eta(J2,Jcuts1,20)",10D0/n,-5D0,5D0)
+        call bookupeqbins("Pt(Miss,Jcuts1)",400D0/n,0D0,400D0)
+        call bookupeqbins("dphi(pMiss,J1,Jcuts1)",(phip-phim)/n,phim,phip)
 
         ! Jcuts, scenario 2:
         ! ptj > 30GeV, eta < 2.8
@@ -81,9 +88,15 @@ c book all histograms, will be filled later
         call bookupeqbins("eta(B,Jcuts2)",(ep-em)/n,em,ep)
         call bookupeqbins("N(J,Jcuts2)",1D0,-0.5D0,3.5D0)
         call bookupeqbins("Pt(J1,Jcuts2)",400D0/n,30D0,430D0)
+        call bookupeqbins("Pt(J1,Jcuts2,fine)",200D0/n,30D0,230D0)
         call bookupeqbins("eta(J1,Jcuts2)",6D0/n,-3D0,3D0)
         call bookupeqbins("Pt(J2,Jcuts2)",400D0/n,0D0,400D0)
+        call bookupeqbins("Pt(J2,Jcuts2,fine)",200D0/m,0D0,200D0)
         call bookupeqbins("eta(J2,Jcuts2)",10D0/n,-5D0,5D0)
+        call bookupeqbins("eta(J2,Jcuts2,10)",10D0/n,-5D0,5D0)
+        call bookupeqbins("eta(J2,Jcuts2,20)",10D0/n,-5D0,5D0)
+        call bookupeqbins("Pt(Miss,Jcuts2)",400D0/n,0D0,400D0)
+        call bookupeqbins("dphi(pMiss,J1,Jcuts2)",(phip-phim)/n,phim,phip)
 
         ! Mcuts, scenario 1: 
         ! all jets ptj > 30GeV, eta < 4.5
@@ -92,7 +105,13 @@ c book all histograms, will be filled later
         call bookupeqbins("xsec(Mcuts1)",1D0,-0.5D0,0.5D0)
         call bookupeqbins("N(J,Mcuts1)",1D0,-0.5D0,3.5D0)
         call bookupeqbins("Pt(J1,Mcuts1)",400D0/n,120D0,520D0)
+        call bookupeqbins("Pt(J1,Mcuts1,fine)",200D0/n,20D0,220D0)
         call bookupeqbins("eta(J1,Mcuts1)",5D0/n,-2.5D0,2.5D0)
+        call bookupeqbins("Pt(J2,Mcuts1)",400D0/n,0D0,400D0)
+        call bookupeqbins("Pt(J2,Mcuts1,fine)",200D0/m,0D0,200D0)
+        call bookupeqbins("eta(J2,Mcuts1)",10D0/n,-5D0,5D0)
+        call bookupeqbins("eta(J2,Mcuts1,10)",10D0/n,-5D0,5D0)
+        call bookupeqbins("eta(J2,Mcuts1,20)",10D0/n,-5D0,5D0)
         call bookupeqbins("Pt(Miss,Mcuts1)",400D0/n,120D0,520D0)
         call bookupeqbins("dphi(pMiss,J1,Mcuts1)",(phip-phim)/n,phim,phip)
 
@@ -103,7 +122,13 @@ c book all histograms, will be filled later
         call bookupeqbins("xsec(Mcuts2)",1D0,-0.5D0,0.5D0)
         call bookupeqbins("N(J,Mcuts2)",1D0,-0.5D0,3.5D0)
         call bookupeqbins("Pt(J1,Mcuts2)",400D0/n,80D0,480D0)
+        call bookupeqbins("Pt(J1,Mcuts2,fine)",200D0/n,80D0,280D0)
         call bookupeqbins("eta(J1,Mcuts2)",6D0/n,-3D0,3D0)
+        call bookupeqbins("Pt(J2,Mcuts2)",400D0/n,0D0,400D0)
+        call bookupeqbins("Pt(J2,Mcuts2,fine)",200D0/m,0D0,200D0)
+        call bookupeqbins("eta(J2,Mcuts2)",10D0/n,-5D0,5D0)
+        call bookupeqbins("eta(J2,Mcuts2,10)",10D0/n,-5D0,5D0)
+        call bookupeqbins("eta(J2,Mcuts2,20)",10D0/n,-5D0,5D0)
         call bookupeqbins("Pt(Miss,Mcuts2)",400D0/n,100D0,500D0)
         call bookupeqbins("dphi(pMiss,J1,Mcuts2)",(phip-phim)/n,phim,phip)
 
@@ -114,9 +139,49 @@ c book all histograms, will be filled later
         call bookupeqbins("xsec(Mcuts3)",1D0,-0.5D0,0.5D0)
         call bookupeqbins("N(J,Mcuts3)",1D0,-0.5D0,3.5D0)
         call bookupeqbins("Pt(J1,Mcuts3)",400D0/n,150D0,550D0)
+        call bookupeqbins("Pt(J1,Mcuts3,fine)",200D0/n,150D0,350D0)
         call bookupeqbins("eta(J1,Mcuts3)",6D0/n,-3D0,3D0)
+        call bookupeqbins("Pt(J2,Mcuts3)",400D0/n,0D0,400D0)
+        call bookupeqbins("Pt(J2,Mcuts3,fine)",200D0/m,0D0,200D0)
+        call bookupeqbins("eta(J2,Mcuts3)",10D0/n,-5D0,5D0)
+        call bookupeqbins("eta(J2,Mcuts3,10)",10D0/n,-5D0,5D0)
+        call bookupeqbins("eta(J2,Mcuts3,20)",10D0/n,-5D0,5D0)
         call bookupeqbins("Pt(Miss,Mcuts3)",400D0/n,100D0,500D0)
         call bookupeqbins("dphi(pMiss,J1,Mcuts3)",(phip-phim)/n,phim,phip)
+
+        ! Mcuts, scenario 4: 
+        ! leading jet pt > 100GeV, eta < 4.5
+        ! veto on second jet with pt < 30GeV
+        ! pt_miss > 85GeV
+        call bookupeqbins("xsec(Mcuts4)",1D0,-0.5D0,0.5D0)
+        call bookupeqbins("N(J,Mcuts4)",1D0,-0.5D0,3.5D0)
+        call bookupeqbins("Pt(J1,Mcuts4)",400D0/n,150D0,550D0)
+        call bookupeqbins("Pt(J1,Mcuts4,fine)",200D0/n,30D0,230D0)
+        call bookupeqbins("eta(J1,Mcuts4)",10D0/n,-5D0,5D0)
+        call bookupeqbins("Pt(J2,Mcuts4)",400D0/n,0D0,400D0)
+        call bookupeqbins("Pt(J2,Mcuts4,fine)",200D0/m,0D0,200D0)
+        call bookupeqbins("eta(J2,Mcuts4)",10D0/n,-5D0,5D0)
+        call bookupeqbins("eta(J2,Mcuts4,10)",10D0/n,-5D0,5D0)
+        call bookupeqbins("eta(J2,Mcuts4,20)",10D0/n,-5D0,5D0)
+        call bookupeqbins("Pt(Miss,Mcuts4)",400D0/n,85D0,485D0)
+        call bookupeqbins("dphi(pMiss,J1,Mcuts4)",(phip-phim)/n,phim,phip)
+
+        ! Mcuts, scenario 5:
+        ! all jets ptj > 20GeV, eta < 4.5 
+        ! leading jet pt > 100GeV, eta < 4.5
+        ! pt_miss > 85GeV
+        call bookupeqbins("xsec(Mcuts5)",1D0,-0.5D0,0.5D0)
+        call bookupeqbins("N(J,Mcuts5)",1D0,-0.5D0,3.5D0)
+        call bookupeqbins("Pt(J1,Mcuts5)",400D0/n,100D0,500D0)
+        call bookupeqbins("Pt(J1,Mcuts5,fine)",200D0/n,100D0,300D0)
+        call bookupeqbins("eta(J1,Mcuts5)",10D0/n,-5D0,5D0)
+        call bookupeqbins("Pt(J2,Mcuts5)",400D0/n,0D0,400D0)
+        call bookupeqbins("Pt(J2,Mcuts5,fine)",200D0/m,0D0,200D0)
+        call bookupeqbins("eta(J2,Mcuts5)",10D0/n,-5D0,5D0)
+        call bookupeqbins("eta(J2,Mcuts5,10)",10D0/n,-5D0,5D0)
+        call bookupeqbins("eta(J2,Mcuts5,20)",10D0/n,-5D0,5D0)
+        call bookupeqbins("Pt(Miss,Mcuts5)",400D0/n,85D0,485D0)
+        call bookupeqbins("dphi(pMiss,J1,Mcuts5)",(phip-phim)/n,phim,phip)
       end
 c############### end subroutine init_hist ##############################
 
@@ -267,18 +332,17 @@ c calculate quantities that shall be plotted and fill histograms
 
         ! --------------------------------------------------------------
         ! Jcuts, scenario 1: 
-        ! ptj > 30GeV, eta < 4.5
+        ! ptj > 20GeV, eta < 4.5
         ! --------------------------------------------------------------
-        num_vis_jets = 0
-        do i = 1,mjets
-          if((kt(i).gt.30D0).and.(dabs(eta(i)).lt.4.5D0)) then
-            num_vis_jets=num_vis_jets+1
-          endif
-        enddo
+        call get_num_vis_jets(kt(:),eta(:),mjets,20D0,4.5D0,num_vis_jets)
+        if((.not.isdetectable(id_finA)).and.(.not.isdetectable(id_finB))) then
+          call obs_miss(p_jet(:,:),mjets,20D0,4.5D0,p_miss(:),pt_miss)
+          call angle_sep(p_miss(:),p_jet(:,1),dphi)
+        endif
         ! fill histograms
         JcutsPassed = .true.
         if(mjets.lt.1) JcutsPassed = .false.
-        if(kt(1).lt.30D0) JcutsPassed = .false.
+        if(kt(1).lt.20D0) JcutsPassed = .false.
         if(dabs(eta(1)).gt.4.5D0) JcutsPassed = .false.
         if(JcutsPassed) then
           call filld("xsec(Jcuts1)",0D0,dsig)
@@ -289,21 +353,26 @@ c calculate quantities that shall be plotted and fill histograms
           call filld("eta(B,Jcuts1)",eta_finB,dsig)
           call filld("N(J,Jcuts1)",dble(num_vis_jets),dsig)
           call filld("Pt(J1,Jcuts1)",kt(1),dsig)
+          call filld("Pt(J1,Jcuts1,fine)",kt(1),dsig)
           call filld("eta(J1,Jcuts1)",eta(1),dsig)
           call filld("Pt(J2,Jcuts1)",kt(2),dsig)
+          call filld("Pt(J2,Jcuts1,fine)",kt(2),dsig)
           call filld("eta(J2,Jcuts1)",eta(2),dsig)
+          if(kt(2).gt.10D0) call filld("eta(J2,Jcuts1,10)",eta(2),dsig)
+          if(kt(2).gt.20D0) call filld("eta(J2,Jcuts1,20)",eta(2),dsig)
+          call filld("Pt(Miss,Jcuts1)",pt_miss,dsig)
+          call filld("dphi(pMiss,J1,Jcuts1)",dphi,dsig)
         endif
 
         ! --------------------------------------------------------------
         ! Jcuts, scenario 2: 
         ! ptj > 30GeV, eta < 2.8
         ! --------------------------------------------------------------
-        num_vis_jets = 0
-        do i = 1,mjets
-          if((kt(i).gt.30D0).and.(dabs(eta(i)).lt.2.8D0)) then
-            num_vis_jets=num_vis_jets+1
-          endif
-        enddo
+        call get_num_vis_jets(kt(:),eta(:),mjets,30D0,2.8D0,num_vis_jets)
+        if((.not.isdetectable(id_finA)).and.(.not.isdetectable(id_finB))) then
+          call obs_miss(p_jet(:,:),mjets,30D0,2.8D0,p_miss(:),pt_miss)
+          call angle_sep(p_miss(:),p_jet(:,1),dphi)
+        endif
         ! fill histograms
         JcutsPassed = .true.
         if(mjets.lt.1) JcutsPassed = .false.
@@ -318,9 +387,15 @@ c calculate quantities that shall be plotted and fill histograms
           call filld("eta(B,Jcuts2)",eta_finB,dsig)
           call filld("N(J,Jcuts2)",dble(num_vis_jets),dsig)
           call filld("Pt(J1,Jcuts2)",kt(1),dsig)
+          call filld("Pt(J1,Jcuts2,fine)",kt(1),dsig)
           call filld("eta(J1,Jcuts2)",eta(1),dsig)
           call filld("Pt(J2,Jcuts2)",kt(2),dsig)
+          call filld("Pt(J2,Jcuts2,fine)",kt(2),dsig)
           call filld("eta(J2,Jcuts2)",eta(2),dsig)
+          if(kt(2).gt.10D0) call filld("eta(J2,Jcuts2,10)",eta(2),dsig)
+          if(kt(2).gt.20D0) call filld("eta(J2,Jcuts2,20)",eta(2),dsig)
+          call filld("Pt(Miss,Jcuts2)",pt_miss,dsig)
+          call filld("dphi(pMiss,J1,Jcuts2)",dphi,dsig)
         endif
 
         ! --------------------------------------------------------------
@@ -329,24 +404,9 @@ c calculate quantities that shall be plotted and fill histograms
         ! leading jet pt > 120GeV, eta < 2.0
         ! pt_miss > 120GeV
         ! --------------------------------------------------------------
-        p_miss(:) = 0D0
-        pt_miss = 0D0
         if((.not.isdetectable(id_finA)).and.(.not.isdetectable(id_finB))) then
-          do i=1,mjets
-            if((kt(i).gt.30D0).and.(dabs(eta(i)).lt.4.5D0)) then
-              p_miss(:) = p_miss(:) - p_jet(:,i)
-            endif
-          enddo
-          pt_miss = pt(p_miss(:))
-          ! angle seperation
-          dphi = 0D0
-          if(pt_miss.ne.0D0.and.kt(1).ne.0D0) then ! cuts are applied later
-            call getazimuth(p_miss(:),phi_miss)
-            call getazimuth(p_jet(:,1),phi_jet)
-            dphi = phi_jet - phi_miss
-            if(dphi.lt.0) dphi = 2*pi + dphi ! redefine [-2pi,2pi] -> [0,2pi]
-            if(dphi.gt.pi) dphi = 2*pi - dphi ! redefine [0,2pi] -> [0,pi]
-          endif
+          call obs_miss(p_jet(:,:),mjets,30D0,4.5D0,p_miss(:),pt_miss)
+          call angle_sep(p_miss(:),p_jet(:,1),dphi)
         endif
         ! fill histograms
         McutsPassed = .true.
@@ -358,7 +418,13 @@ c calculate quantities that shall be plotted and fill histograms
           call filld("xsec(Mcuts1)",0D0,dsig)
           call filld("N(J,Mcuts1)",dble(num_vis_jets),dsig)
           call filld("Pt(J1,Mcuts1)",kt(1),dsig)
+          call filld("Pt(J1,Mcuts1,fine)",kt(1),dsig)
           call filld("eta(J1,Mcuts1)",eta(1),dsig)
+          call filld("Pt(J2,Mcuts1)",kt(2),dsig)
+          call filld("Pt(J2,Mcuts1,fine)",kt(2),dsig)
+          call filld("eta(J2,Mcuts1)",eta(2),dsig)
+          if(kt(2).gt.10D0) call filld("eta(J2,Mcuts1,10)",eta(2),dsig)
+          if(kt(2).gt.20D0) call filld("eta(J2,Mcuts1,20)",eta(2),dsig)
           call filld("Pt(Miss,Mcuts1)",pt_miss,dsig)
           call filld("dphi(pMiss,J1,Mcuts1)",dphi,dsig)
         endif
@@ -369,24 +435,9 @@ c calculate quantities that shall be plotted and fill histograms
         ! leading jet pt > 80GeV
         ! pt_miss > 100GeV
         ! --------------------------------------------------------------
-        p_miss(:) = 0D0
-        pt_miss = 0D0
         if((.not.isdetectable(id_finA)).and.(.not.isdetectable(id_finB))) then
-          do i=1,mjets
-            if((kt(i).gt.30D0).and.(dabs(eta(i)).lt.2.8D0)) then
-              p_miss(:) = p_miss(:) - p_jet(:,i)
-            endif
-          enddo
-          pt_miss = pt(p_miss(:))
-          ! angle seperation
-          dphi = 0D0
-          if(pt_miss.ne.0D0.and.kt(1).ne.0D0) then ! cuts are applied later
-            call getazimuth(p_miss(:),phi_miss)
-            call getazimuth(p_jet(:,1),phi_jet)
-            dphi = phi_jet - phi_miss
-            if(dphi.lt.0) dphi = 2*pi + dphi ! redefine [-2pi,2pi] -> [0,2pi]
-            if(dphi.gt.pi) dphi = 2*pi - dphi ! redefine [0,2pi] -> [0,pi]
-          endif
+          call obs_miss(p_jet(:,:),mjets,30D0,2.8D0,p_miss(:),pt_miss)
+          call angle_sep(p_miss(:),p_jet(:,1),dphi)
         endif
         ! fill histograms
         McutsPassed = .true.
@@ -398,7 +449,13 @@ c calculate quantities that shall be plotted and fill histograms
           call filld("xsec(Mcuts2)",0D0,dsig)
           call filld("N(J,Mcuts2)",dble(num_vis_jets),dsig)
           call filld("Pt(J1,Mcuts2)",kt(1),dsig)
+          call filld("Pt(J1,Mcuts2,fine)",kt(1),dsig)
           call filld("eta(J1,Mcuts2)",eta(1),dsig)
+          call filld("Pt(J2,Mcuts2)",kt(2),dsig)
+          call filld("Pt(J2,Mcuts2,fine)",kt(2),dsig)
+          call filld("eta(J2,Mcuts2)",eta(2),dsig)
+          if(kt(2).gt.10D0) call filld("eta(J2,Mcuts2,10)",eta(2),dsig)
+          if(kt(2).gt.20D0) call filld("eta(J2,Mcuts2,20)",eta(2),dsig)
           call filld("Pt(Miss,Mcuts2)",pt_miss,dsig)
           call filld("dphi(pMiss,J1,Mcuts2)",dphi,dsig)
         endif
@@ -409,24 +466,9 @@ c calculate quantities that shall be plotted and fill histograms
         ! leading jet pt > 150GeV
         ! pt_miss > 100GeV
         ! --------------------------------------------------------------
-        p_miss(:) = 0D0
-        pt_miss = 0D0
         if((.not.isdetectable(id_finA)).and.(.not.isdetectable(id_finB))) then
-          do i=1,mjets
-            if((kt(i).gt.30D0).and.(dabs(eta(i)).lt.2.8D0)) then
-              p_miss(:) = p_miss(:) - p_jet(:,i)
-            endif
-          enddo
-          pt_miss = pt(p_miss(:))
-          ! angle seperation
-          dphi = 0D0
-          if(pt_miss.ne.0D0.and.kt(1).ne.0D0) then ! cuts are applied later
-            call getazimuth(p_miss(:),phi_miss)
-            call getazimuth(p_jet(:,1),phi_jet)
-            dphi = phi_jet - phi_miss
-            if(dphi.lt.0) dphi = 2*pi + dphi ! redefine [-2pi,2pi] -> [0,2pi]
-            if(dphi.gt.pi) dphi = 2*pi - dphi ! redefine [0,2pi] -> [0,pi]
-          endif
+          call obs_miss(p_jet(:,:),mjets,30D0,2.8D0,p_miss(:),pt_miss)
+          call angle_sep(p_miss(:),p_jet(:,1),dphi)
         endif
         ! fill histograms
         McutsPassed = .true.
@@ -438,12 +480,132 @@ c calculate quantities that shall be plotted and fill histograms
           call filld("xsec(Mcuts3)",0D0,dsig)
           call filld("N(J,Mcuts3)",dble(num_vis_jets),dsig)
           call filld("Pt(J1,Mcuts3)",kt(1),dsig)
+          call filld("Pt(J1,Mcuts3,fine)",kt(1),dsig)
           call filld("eta(J1,Mcuts3)",eta(1),dsig)
+          call filld("Pt(J2,Mcuts3)",kt(2),dsig)
+          call filld("Pt(J2,Mcuts3,fine)",kt(2),dsig)
+          call filld("eta(J2,Mcuts3)",eta(2),dsig)
+          if(kt(2).gt.10D0) call filld("eta(J2,Mcuts3,10)",eta(2),dsig)
+          if(kt(2).gt.20D0) call filld("eta(J2,Mcuts3,20)",eta(2),dsig)
           call filld("Pt(Miss,Mcuts3)",pt_miss,dsig)
           call filld("dphi(pMiss,J1,Mcuts3)",dphi,dsig)
         endif
+
+        ! --------------------------------------------------------------
+        ! Mcuts, scenario 4: 
+        ! leading jet pt > 100GeV, eta < 4.5
+        ! veto on second jet with pt < 30GeV
+        ! pt_miss > 85GeV
+        ! --------------------------------------------------------------
+        if((.not.isdetectable(id_finA)).and.(.not.isdetectable(id_finB))) then
+          call obs_miss(p_jet(:,:),mjets,100D0,4.5D0,p_miss(:),pt_miss)
+          call angle_sep(p_miss(:),p_jet(:,1),dphi)
+        endif
+        ! fill histograms
+        McutsPassed = .true.
+        if(mjets.lt.1) McutsPassed = .false.
+        if(kt(1).lt.100d0) McutsPassed = .false.
+        if(kt(2).gt.30d0) McutsPassed = .false.
+        if(dabs(eta(1)).gt.4.5d0) McutsPassed = .false.
+        if(pt_miss.lt.85d0) McutsPassed = .false.
+        if(McutsPassed) then
+          call filld("xsec(Mcuts4)",0D0,dsig)
+          call filld("N(J,Mcuts4)",dble(num_vis_jets),dsig)
+          call filld("Pt(J1,Mcuts4)",kt(1),dsig)
+          call filld("Pt(J1,Mcuts4,fine)",kt(1),dsig)
+          call filld("eta(J1,Mcuts4)",eta(1),dsig)
+          call filld("Pt(J2,Mcuts4)",kt(2),dsig)
+          call filld("Pt(J2,Mcuts4,fine)",kt(2),dsig)
+          call filld("eta(J2,Mcuts4)",eta(2),dsig)
+          if(kt(2).gt.10D0) call filld("eta(J2,Mcuts4,10)",eta(2),dsig)
+          if(kt(2).gt.20D0) call filld("eta(J2,Mcuts4,20)",eta(2),dsig)
+          call filld("Pt(Miss,Mcuts4)",pt_miss,dsig)
+          call filld("dphi(pMiss,J1,Mcuts4)",dphi,dsig)
+        endif
+
+        ! --------------------------------------------------------------
+        ! Mcuts, scenario 5:
+        ! all jets ptj > 20GeV, eta < 4.5 
+        ! leading jet pt > 100GeV, eta < 4.5
+        ! pt_miss > 85GeV
+        ! --------------------------------------------------------------
+        if((.not.isdetectable(id_finA)).and.(.not.isdetectable(id_finB))) then
+          call obs_miss(p_jet(:,:),mjets,20D0,4.5D0,p_miss(:),pt_miss)
+          call angle_sep(p_miss(:),p_jet(:,1),dphi)
+        endif
+        ! fill histograms
+        McutsPassed = .true.
+        if(mjets.lt.1) McutsPassed = .false.
+        if(kt(1).lt.100d0) McutsPassed = .false.
+        if(dabs(eta(1)).gt.4.5d0) McutsPassed = .false.
+        if(pt_miss.lt.85d0) McutsPassed = .false.
+        if(McutsPassed) then
+          call filld("xsec(Mcuts5)",0D0,dsig)
+          call filld("N(J,Mcuts5)",dble(num_vis_jets),dsig)
+          call filld("Pt(J1,Mcuts5)",kt(1),dsig)
+          call filld("Pt(J1,Mcuts5,fine)",kt(1),dsig)
+          call filld("eta(J1,Mcuts5)",eta(1),dsig)
+          call filld("Pt(J2,Mcuts5)",kt(2),dsig)
+          call filld("Pt(J2,Mcuts5,fine)",kt(2),dsig)
+          call filld("eta(J2,Mcuts5)",eta(2),dsig)
+          if(kt(2).gt.10D0) call filld("eta(J2,Mcuts5,10)",eta(2),dsig)
+          if(kt(2).gt.20D0) call filld("eta(J2,Mcuts5,20)",eta(2),dsig)
+          call filld("Pt(Miss,Mcuts5)",pt_miss,dsig)
+          call filld("dphi(pMiss,J1,Mcuts5)",dphi,dsig)
+        endif
       end
 c############### end subroutine analysis ###############################
+
+c############### subroutine get_num_vis_jets ###########################
+      subroutine get_num_vis_jets(kt,eta,mjets,ktmin,etamax,n)
+        implicit none
+        integer i, mjets, n, maxjet
+        parameter (maxjet=2048)
+        double precision kt(maxjet), eta(maxjet)
+        double precision ktmin, etamax
+        n = 0
+        do i = 1,mjets
+          if((kt(i).gt.ktmin).and.(dabs(eta(i)).lt.etamax)) then
+            n = n+1
+          endif
+        enddo
+      end
+c############### end subroutine get_num_vis_jets #######################
+
+c############### subroutine obs_miss ###################################
+      subroutine obs_miss(p_detect,m,ptmin,etamax,p_miss,pt_miss)
+        implicit none
+        integer m,i
+        double precision p_detect(0:3,m)
+        double precision pt,eta,ptmin,etamax
+        double precision p_miss(0:3),pt_miss
+        p_miss(:) = 0D0
+        do i=1,m
+          call getpseudorap(p_detect(:,i),eta)
+          call get_pt(p_detect(:,i),pt)
+          if((pt.gt.ptmin).and.(dabs(eta).lt.etamax)) then
+            p_miss(:) = p_miss(:) - p_detect(:,i)
+          endif
+        enddo
+        call get_pt(p_miss(:),pt_miss)
+      end
+c############### end subroutine obs_miss ###############################
+
+c############### subroutine angle_sep ##################################
+      subroutine angle_sep(p1,p2,dphi)
+        implicit none
+        double precision p1(0:3),p2(0:3),dphi
+        double precision phi1,phi2
+        ! constants
+        double precision pi
+        parameter (pi = 4.D0*datan(1.D0))
+        call getazimuth(p1(:),phi1)
+        call getazimuth(p2(:),phi2)
+        dphi = phi2 - phi1
+        if(dphi.lt.0) dphi = 2*pi + dphi ! redefine [-2pi,2pi] -> [0,2pi]
+        if(dphi.gt.pi) dphi = 2*pi - dphi ! redefine [0,2pi] -> [0,pi]
+      end
+c############### end subroutine angle_sep ##############################
 
 c############### subroutine getihep ####################################
 c takes PDG ID and returns the index of this particle in the HEPEVT-list
@@ -646,6 +808,11 @@ c calculate Pt, it is assumed p(0) = E, p(1:3) = vec{p}
       double precision function pt(p)
         implicit none
         double precision p(0:3)
+        pt = dsqrt(p(1)**2+p(2)**2)
+      end
+      subroutine get_pt(p,pt)
+        implicit none
+        double precision p(0:3),pt
         pt = dsqrt(p(1)**2+p(2)**2)
       end
 c############### end subroutine getPt ##################################
@@ -864,9 +1031,7 @@ c jets are orderd by decreasing pt
       subroutine buildjets(mjets,kt,eta,rap,phi,pjet,ptrel)
         implicit none
 #include "hepevt.h"
-        ! input
         integer mjets
-        ! output
         double precision kt(mjets),eta(mjets),rap(mjets),phi(mjets)
         double precision pjet(4,mjets),ptrel(mjets)
         integer   maxtrack,maxjet
