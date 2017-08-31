@@ -104,6 +104,8 @@ Optional arguments:
                            only be calculated
   --reweight               submit jobs to reweight the events. Note to edit powheg.input
                            by hand.
+  --force                  force using ncall and itmx parameters from command line
+                           for the 3rd and 4th stage.
 EOM
    exit 0
 }
@@ -168,6 +170,7 @@ TIME=""
 STAGE=""
 GRIDITER=""
 TEMPLATE=""
+FORCE=""
 
 # argument parsing
 while [[ $# -gt 0 ]]; do
@@ -462,6 +465,10 @@ case $KEY in
         REWEIGHT=true
         shift
         ;;
+     --force)
+        FORCE=true
+        shift
+        ;;
     *)
         usage    # unknown option
         ;;
@@ -575,6 +582,10 @@ overwrite_var "$RUNDIR/powheg.input" "softtest" 0
 overwrite_var "$RUNDIR/powheg.input" "colltest" 0
 
 # sed magic
+if [ "$FORCE" != "" ]; then
+   overwrite_var "$RUNDIR/powheg.input" "ncallfrominput" 1
+fi
+
 if [ "$NCALL1" != "" ]; then
    overwrite_var "$RUNDIR/powheg.input" "ncall1" $NCALL1
 fi  
