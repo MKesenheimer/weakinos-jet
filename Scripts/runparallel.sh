@@ -104,8 +104,8 @@ Optional arguments:
                            only be calculated
   --reweight               submit jobs to reweight the events. Note to edit powheg.input
                            by hand.
-  --force                  force using ncall and itmx parameters from command line
-                           for the 3rd and 4th stage.
+  --ncallfrominput         force using ncall and itmx parameters from command line
+                           for merging grids for the 2nd stage.
 EOM
    exit 0
 }
@@ -170,7 +170,7 @@ TIME=""
 STAGE=""
 GRIDITER=""
 TEMPLATE=""
-FORCE=""
+NCALLFROMINPUT=""
 
 # argument parsing
 while [[ $# -gt 0 ]]; do
@@ -465,8 +465,8 @@ case $KEY in
         REWEIGHT=true
         shift
         ;;
-     --force)
-        FORCE=true
+     --ncallfrominput)
+        NCALLFROMINPUT=true
         shift
         ;;
     *)
@@ -582,7 +582,7 @@ overwrite_var "$RUNDIR/powheg.input" "softtest" 0
 overwrite_var "$RUNDIR/powheg.input" "colltest" 0
 
 # sed magic
-if [ "$FORCE" != "" ]; then
+if [ "$NCALLFROMINPUT" != "" ]; then
    overwrite_var "$RUNDIR/powheg.input" "ncallfrominput" 1
 fi
 
@@ -698,10 +698,12 @@ NEVENTSOLD=$(read_var "$RUNDIR/powheg.input" "numevts")
 NUBOUNDOLD=$(read_var "$RUNDIR/powheg.input" "nubound")
 
 if [ "$REWEIGHT" = false ] && [ "$GENEVENTS" = true ]; then
-  if [ "$STAGE" != 3 ] && [ "$NEVENTS" = "" ] && [ "$NEVENTSOLD" = "0" ]; then
+  # nevents and nubound necessary for stage 4
+  if [ "$STAGE" != 3 ] && ( [ "$NEVENTS" = "" ] && [ "$NEVENTSOLD" = "0" ] ) || ( [ "$NUBOUND" = "" ] && [ "$NUBOUNDOLD" = "0" ] ); then
     echo "number of events not defined: use --nevents <n>"
     exit 0
   fi
+  # nubound necessary for stage 3
   if [ "$STAGE" != 4 ] && [ "$NUBOUND" = "" ] && [ "$NUBOUNDOLD" = "0" ]; then
     echo "upper bound not defined: use --nubound <n>"
     exit 0
