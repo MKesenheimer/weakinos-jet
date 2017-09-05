@@ -84,9 +84,7 @@
 
         call qdg_nInJqd_self
         call qdg_nInJqd_vert
-        if(.not.flg_fastv) then
-          call qdg_nInJqd_box
-        endif
+        call qdg_nInJqd_box
 
         LOOP(Gen6, 1,3,1)
         call qdg_nInJqd_vert_Gen6
@@ -95,10 +93,8 @@
         LOOP(Sfe6, 1,2,1)
         call qdg_nInJqd_self_Sfe6
         call qdg_nInJqd_vert_Sfe6
-        if(.not.flg_fastv) then
-          call qdg_nInJqd_box_Sfe6
-          call qdg_nInJqd_pent_Sfe6
-        endif
+        call qdg_nInJqd_box_Sfe6
+        call qdg_nInJqd_pent_Sfe6
         ENDLOOP(Sfe6)
 
         LOOP(Sfe7, 1,2,1)
@@ -108,9 +104,7 @@
         LOOP(Sfe6, 1,2,1)
         LOOP(Gen6, 1,3,1)
         call qdg_nInJqd_vert_Gen6_Sfe6
-        if(.not.flg_fastv) then
-          call qdg_nInJqd_box_Gen6_Sfe6
-        endif
+        call qdg_nInJqd_box_Gen6_Sfe6
         ENDLOOP(Gen6)
         ENDLOOP(Sfe6)
 
@@ -118,10 +112,8 @@
         LOOP(Sfe6, 1,2,1)
         call qdg_nInJqd_self_Sfe6_Sfe7
         call qdg_nInJqd_vert_Sfe6_Sfe7
-        if(.not.flg_fastv) then
-          call qdg_nInJqd_box_Sfe6_Sfe7
-          call qdg_nInJqd_pent_Sfe6_Sfe7
-        endif
+        call qdg_nInJqd_box_Sfe6_Sfe7
+        call qdg_nInJqd_pent_Sfe6_Sfe7
         ENDLOOP(Sfe6)
         ENDLOOP(Sfe7)
 

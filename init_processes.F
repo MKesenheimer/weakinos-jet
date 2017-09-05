@@ -56,16 +56,6 @@ c     set process id using slepton types
           flg_fakevirtuals = .false.
         endif
 
-        ! whether to neglect box and pentagon diagrams or not
-        if(powheginput("#fastvirtuals").gt.0) then
-           if(int(powheginput("fastvirtuals")).gt.0) then
-             print*,"Neglecting box and pentagon diagrams."
-             flg_fastv = .true.
-           endif
-        else
-          flg_fastv = .false.
-        endif
-        
         ! number of light quarks
         ! this number is used for computation of pwhg_alphas
         st_nlight = 5

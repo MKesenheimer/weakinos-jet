@@ -15,12 +15,7 @@ c store here the flags which are necessary for this process
         ! -> cut around the resonant squark-mass
         logical flg_rad
 
-        ! flg_fastv: neglect box and pentagon diagrams, which
-        ! speeds up the calculation of virtuals significantly.
-        logical flg_fastv
-        
         common/flags/ flg_fakevirtuals, flg_btilde, flg_rad
-        common/flags/ flg_fastv
         save /flags/
 
 c############### end Flags.h ###########################################

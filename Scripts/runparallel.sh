@@ -700,6 +700,8 @@ NUBOUNDOLD=$(read_var "$RUNDIR/powheg.input" "nubound")
 if [ "$REWEIGHT" = false ] && [ "$GENEVENTS" = true ]; then
   # nevents and nubound necessary for stage 4
   if [ "$STAGE" != 3 ] && ( [ "$NEVENTS" = "" ] && [ "$NEVENTSOLD" = "0" ] ) || ( [ "$NUBOUND" = "" ] && [ "$NUBOUNDOLD" = "0" ] ); then
+    echo "upper bound not defined: use --nubound <n>"
+    echo "or"
     echo "number of events not defined: use --nevents <n>"
     exit 0
   fi
