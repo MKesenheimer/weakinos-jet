@@ -47,6 +47,8 @@ iymax    1           ! <= 100, number of y subdivision when computing the upper 
 xupbound 2d0         ! increase upper bound for radiation generation
 nubound  0           ! number of bbarra calls to setup norm of upper bounding function
 numevts  0           ! number of events to be generated
+fastbtlbound 1       ! faster event generation with time consuming virtuals
+ubexcess_correct 1   ! use correction factor when upper bound failures occur
 
 ! OPTIONAL PARAMETERS
 runningscale   0     ! (default 0) use ref. scale=virtuality Q (default 0, use fixed scale)
