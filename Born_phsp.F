@@ -93,7 +93,7 @@ c and the Jacobi factor for the phase space volume
         ! for the particles produced in the Born process,
         ! calculates the Jacobi factor for the phase space volume
         ! we don't want to integrate over phi, so we provide 0 for xphi
-        ! (see phi1_2.f)
+        ! (see phsp_routines.f)
         call R2phsp_s2(0,xborn(3),xborn(4),0D0,sijmin,kn_masses(k),
      &                 0D0,0D0,p12(:),kn_cmpborn(:,k),pij(:),jac)
         kn_jacborn = kn_jacborn*jac

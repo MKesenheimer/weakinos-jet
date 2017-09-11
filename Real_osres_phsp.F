@@ -12,7 +12,7 @@ c The numer "ichan" is an additional channel identifier "ichan" which
 c selects the resonance specified in init_processes.F.
 c Only perform a tan-mapping if there is a (possible) resonance, 
 c otherwise: flat sampling in sij
-c this subroutine uses subroutines defined in phi1_2.f (with boosts).
+c this subroutine uses subroutines defined in phsp_routines.f (with boosts).
       subroutine real_osres_phsp(xx,flav,ichan)
         implicit none
 #include "PhysPars.h"
@@ -31,7 +31,7 @@ c this subroutine uses subroutines defined in phi1_2.f (with boosts).
         ! jacobian
         double precision jac
         double precision minmass
-        ! variables for pwg routines phi1_2
+        ! variables for pwg routines phsp_routines
         double precision pijk(0:3),pij(0:3),pkl(0:3),p12(0:3)
         ! boost
         double precision vec(3),beta

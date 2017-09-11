@@ -299,7 +299,7 @@ endif
 ### USER Files ###
 USER = Born.o Born_phsp.o Reals.o Virtuals.o 	\
        init_processes.o init_couplings.o Reals_osres.o 		\
-       Real_osres_phsp.o phi1_2.o sigosres.o version.o FormCalc.o \
+       Real_osres_phsp.o phsp_routines.o sigosres.o version.o FormCalc.o \
        set_channel.o Histogram.o
 
 ### Functions in Tools/functions/

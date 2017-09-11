@@ -121,7 +121,7 @@ c psgen=3:     flat in tan tau with arbitrary exponent
         if(isnan(x1) .or. isnan(x2) .or. isnan(s) .or. isnan(jac)) then
           if(warncount1.lt.10) then
             warncount1 = warncount1 + 1
-            print*,"warning in phi1_2:x1x2phspace: NaN occured"
+            print*,"warning in phsp_routines:x1x2phspace: NaN occured"
             print*,"x1",x1
             print*,"x2",x2
             print*,"s",s
@@ -258,7 +258,7 @@ c just set xphi to zero - the jacobian will still be correct.
      &       .and.jac.ne.0D0 ) then
           if(warncount2.lt.10) then
             warncount2 = warncount2 + 1
-            print*,"warning in phi1_2:R2phsp: E1,E2 or E3 < 0"
+            print*,"warning in phsp_routines:R2phsp: E1,E2 or E3 < 0"
             print*,"p0",p0(0),p0(0)**2-p0(1)**2-p0(2)**2-p0(3)**2,s
             print*,"p1",p1(0),p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2
             print*,"p2",p2(0),p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2
@@ -276,7 +276,7 @@ c just set xphi to zero - the jacobian will still be correct.
      &     isnan(p2(1)).or.isnan(p1(2)).or.isnan(p1(3))) then
           if(warncount3.lt.10) then
             warncount3 = warncount3 + 1
-            print*,"warning in phi1_2:R2phsp: nan occured"
+            print*,"warning in phsp_routines:R2phsp: nan occured"
             print*,"p1",p1(:)
             print*,"p2",p2(:)
             print*,"jac",jac
@@ -356,7 +356,7 @@ c psgen=2:     breit wigner in s2 and flat below resonance
         if(s.lt.-tiny2) then
           if(warncount1.lt.10) then
             warncount1 = warncount1 + 1
-            print*, "warning in phi1_2:R2phsp_s2: s < 0"
+            print*, "warning in phsp_routines:R2phsp_s2: s < 0"
             print*, "s",s
           elseif(warncount1.eq.10) then
             warncount1 = 11
@@ -388,7 +388,7 @@ c psgen=2:     breit wigner in s2 and flat below resonance
         if(s2min .gt. s2max) then 
           if(warncount2.lt.10) then
             warncount2 = warncount2 + 1
-            print*,"warning in phi1_2:R2phsp_s2: s2min > s2max"
+            print*,"warning in phsp_routines:R2phsp_s2: s2min > s2max"
             print*,"s2min",s2min
             print*,"s2max",s2max
           elseif(warncount2.eq.10) then
@@ -460,7 +460,7 @@ c psgen=2:     breit wigner in s2 and flat below resonance
      &       .and.jac.ne.0D0 ) then
           if(warncount3.lt.10) then
             warncount3 = warncount3 + 1
-            print*,"warning in phi1_2:R2phsp_s2: E1,E2 or E3 < 0"
+            print*,"warning in phsp_routines:R2phsp_s2: E1,E2 or E3 < 0"
             print*,"p0",p0(0),p0(0)**2-p0(1)**2-p0(2)**2-p0(3)**2,s
             print*,"p1",p1(0),p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2
             print*,"p2",p2(0),p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2
@@ -478,7 +478,7 @@ c psgen=2:     breit wigner in s2 and flat below resonance
      &     isnan(p2(1)).or.isnan(p1(2)).or.isnan(p1(3))) then
           if(warncount4.lt.10) then
             warncount4 = warncount4 + 1
-            print*,"warning in phi1_2:R2phsp_s2: nan occured"
+            print*,"warning in phsp_routines:R2phsp_s2: nan occured"
             print*,"p1",p1(:)
             print*,"p2",p2(:)
             print*,"jac",jac
@@ -560,7 +560,7 @@ c psgen=2:     breit wigner in s1 and s2 and flat below resonance
         if(s.lt.-tiny2) then
           if(warncount1.lt.10) then
             warncount1 = warncount1 + 1
-            print*, "warning in phi1_2:R2phsp_s1s2: s < 0"
+            print*, "warning in phsp_routines:R2phsp_s1s2: s < 0"
             print*, "s",s
           elseif(warncount1.eq.10) then
             warncount1 = 11
@@ -588,7 +588,7 @@ c psgen=2:     breit wigner in s1 and s2 and flat below resonance
         if(s1min .gt. s1max) then
           if(warncount2.lt.10) then
             warncount2 = warncount2 + 1
-            print*,"warning in phi1_2:R2phsp_s1s2: s1min > s1max"
+            print*,"warning in phsp_routines:R2phsp_s1s2: s1min > s1max"
             print*,"s1min",s1min
             print*,"s1max",s1max
           elseif(warncount2.eq.10) then
@@ -624,7 +624,7 @@ c psgen=2:     breit wigner in s1 and s2 and flat below resonance
         if(s2min .gt. s2max) then
           if(warncount3.lt.10) then
             warncount3 = warncount3 + 1
-            print*,"warning in phi1_2:R2phsp_s1s2: s2min > s2max"
+            print*,"warning in phsp_routines:R2phsp_s1s2: s2min > s2max"
             print*,"s2min",s2min
             print*,"s2max",s2max
           elseif(warncount3.eq.10) then
@@ -689,7 +689,7 @@ c psgen=2:     breit wigner in s1 and s2 and flat below resonance
      &       .and.jac.ne.0D0 ) then
           if(warncount4.lt.10) then
             warncount4 = warncount4 + 1
-            print*,"warning in phi1_2:R2phsp_s1s2: E1,E2 or E3 < 0"
+            print*,"warning in phsp_rout.:R2phsp_s1s2: E1,E2 or E3 < 0"
             print*,"p0",p0(0),p0(0)**2-p0(1)**2-p0(2)**2-p0(3)**2,s
             print*,"p1",p1(0),p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2
             print*,"p2",p2(0),p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2
@@ -707,7 +707,7 @@ c psgen=2:     breit wigner in s1 and s2 and flat below resonance
      &     isnan(p2(1)).or.isnan(p1(2)).or.isnan(p1(3))) then
           if(warncount5.lt.10) then
             warncount5 = warncount5 + 1
-            print*,"warning in phi1_2:R2phsp_s1s2: nan occured"
+            print*,"warning in phsp_rout.:R2phsp_s1s2: nan occured"
             print*,"p1",p1(:)
             print*,"p2",p2(:)
             print*,"jac",jac
