@@ -5,7 +5,7 @@ RUNDIR=$WORKINGDIR/$1
 
 # grid iteration
 if [ "$2" = "" ]; then
-  IT=5
+  IT=4
 else
   IT=$2
 fi

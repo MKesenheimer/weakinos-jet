@@ -316,7 +316,7 @@ MADGRAPH = couplings.o hardstop.o printout.o read_slha.o \
 FORMCALC = VecSet.o
 
 ### PWHG FILES in ../ ###
-PWHG = pwhg_init.o btilde.o utils.o gen_Born_phsp.o	\
+PWHG = btilde.o utils.o gen_Born_phsp.o	\
 	test_Sudakov.o pt2maxreg.o maxrat.o Bornzerodamp.o \
 	random.o boostrot.o bra_ket_subroutines.o \
 	init_phys.o powheginput.o sigcollremn.o \
@@ -329,7 +329,7 @@ PWHG = pwhg_init.o btilde.o utils.o gen_Born_phsp.o	\
 
 # modified POWHEG-files
 ifeq ("$(POWMOD)","no")
-  PWHG += cernroutines.o find_regions.o gen_real_phsp.o\
+  PWHG += pwhg_init.o cernroutines.o find_regions.o gen_real_phsp.o\
 	sigborn.o sigreal.o sigsoftvirt.o \
 	sigvirtual.o bbinit.o LesHouches.o \
 	LesHouchesreg.o gen_index.o lhefwrite.o \
@@ -337,13 +337,13 @@ ifeq ("$(POWMOD)","no")
 	pdfcalls.o newunit.o pwhg_main.o \
 	ubprojections.o rwl_setup_param_weights.o
 else
-  PWHG += cernroutines_mod.o find_regions_mod.o gen_real_phsp_mod.o \
+  PWHG += pwhg_init_mod.o cernroutines_mod.o find_regions_mod.o gen_real_phsp_mod.o \
 	sigborn_mod.o sigreal_mod.o sigsoftvirt_mod.o \
 	sigvirtual_mod.o bbinit_mod.o LesHouches_mod.o \
 	LesHouchesreg_mod.o gen_index_mod.o lhefwrite_mod.o \
 	gen_radiation_mod.o sigremnants_mod.o pwhgreweight_mod.o \
 	pdfcalls_mod.o newunit_mod.o pwhg_main_mod.o \
-	ubprojections_mod.o rwl_setup_param_weights_mod.o
+	ubprojections_mod.o rwl_setup_param_weights_mod.o rwl_setup_param_weights_user.o
 endif
 
 ### LHEF ###

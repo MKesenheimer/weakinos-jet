@@ -15,7 +15,11 @@ c store here the flags which are necessary for this process
         ! -> cut around the resonant squark-mass
         logical flg_rad
 
+        ! flg for subsequent reweighting
+        logical flg_for_reweighting
+
         common/flags/ flg_fakevirtuals, flg_btilde, flg_rad
+        common/flags/ flg_for_reweighting
         save /flags/
 
 c############### end Flags.h ###########################################

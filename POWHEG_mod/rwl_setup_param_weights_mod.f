@@ -6,7 +6,6 @@
       include 'pwhg_rwl.h'
       include 'pwhg_pdf.h'
       include 'pwhg_st.h'
-#include "osres.h"
       logical rwl_keypresent
       real * 8 val
       character * 5 scheme
@@ -42,11 +41,6 @@ c for safety, we convert the real val to the nearest integer
          if(rwl_keypresent(count,'renscfact',val)) then
             st_renfact = val
          endif
-         if(rwl_keypresent(count,'wreg1',val)) then
-            wreg1 = val
-         endif
-         if(rwl_keypresent(count,'wreg2',val)) then
-            wreg2 = val
-         endif
       endif
+      call rwl_setup_params_weights_user(count)
       end

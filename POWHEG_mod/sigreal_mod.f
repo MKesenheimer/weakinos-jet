@@ -10,6 +10,7 @@ c bigger changes over a whole section are marked with !===...
       include 'pwhg_kn.h'
       include 'pwhg_flg.h'
       include 'pwhg_par.h'
+#include "Flags.h"
       real * 8 xrad(3),resreal(maxprocborn),www
       real * 8 rr(maxalr),rc(maxalr),rp(maxalr),rm(maxalr),
      # rs(maxalr),rcs(maxalr),rps(maxalr),rms(maxalr),xl,xlp,xlm,
@@ -74,6 +75,16 @@ c     in final state radiation csimax is independent of y
      #                 *jac_over_csi_coll/(1-kn_y)/kn_csitilde
                      rrrs=rs(j)*kn_jacborn
      #                 *jac_over_csi_soft/(1-kn_y)/kn_csitilde
+c MK: copied from POWHEG-RES code
+c     In case of massive (fermion) emitter, the subtraction term is very large.
+c     If we are generating events for subsequent reweighting, we reduce it in size
+c     by making it closer to the AP splitting, and neglecting logs (xl) arising
+c     from the limit in csitilde.
+                     if(flg_for_reweighting. and.
+     1                    kn_masses(kn_emitter) > 0) then
+                        rrrs = rrrs*(1+(1-kn_csitilde)**2)/2
+                        xl=0
+                     endif
                      rrrcs=rcs(j)*kn_jacborn
      #                 *jac_over_csi_soft/(1-kn_y)/kn_csitilde
                      remnant=(rrrs-rrrcs)*xl*kn_csitilde
