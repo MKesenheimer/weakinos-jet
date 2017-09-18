@@ -323,7 +323,7 @@ PWHG = btilde.o utils.o gen_Born_phsp.o	\
 	pwhg_bookhist-multi.o pwhg_analysis_driver.o checkmomzero.o \
 	setstrongcoupl.o integrator.o mwarn.o \
 	sigcollsoft.o validflav.o decidemerging.o \
-	loadstorenlo.o setlocalscales.o \
+	loadstorenlo.o setlocalscales.o multi_plot.o \
 	mint_upb.o reshufflemoms.o opencount.o \
 	lhefread.o pwhg_io_interface.o rwl_weightlists.o
 
@@ -353,7 +353,7 @@ LHEF = lhef_analysis.o boostrot.o random.o cernroutines_mod.o \
 	lhefread.o newunit_mod.o pwhg_analysis_driver.o \
 	funcprocess.o init_couplings.o Print.o \
 	bra_ket_subroutines.o off_to_on.o funcbasic.o \
-	pwhg_io_interface.o rwl_weightlists.o
+	pwhg_io_interface.o rwl_weightlists.o multi_plot.o 
 
 ### PYTHIA ###
 # target to read event file, shower events with PYTHIA + analysis
@@ -364,7 +364,7 @@ PYTHIA = boostrot.o powheginput.o init_couplings.o funcprocess.o 	\
 	pwhg_bookhist-multi.o lhefread.o newunit_mod.o pdfdummies.o	\
 	pwhg_analysis_driver.o random.o cernroutines_mod.o opencount.o	\
 	bra_ket_subroutines.o off_to_on.o funcbasic.o Print.o \
-	pwhg_io_interface.o rwl_weightlists.o
+	pwhg_io_interface.o rwl_weightlists.o multi_plot.o 
 ifeq ("$(USE_PYTHIA8)","yes")
   # TODO:
   PYTHIA += main-PYTHIA_mod.o

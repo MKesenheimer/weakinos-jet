@@ -99,11 +99,12 @@ Optional arguments:
   --fakevirt               use fake virtuals in all calculations
   --name <name>            job is identified with a name for msub
   --time                   meassure execution time
-  --st <1,2,3,4,RW>        which stage should only be performed. RW = reweighting
+  --st <1,2,3,4>           which stage should only be performed
   --it <n>                 if "--st 1" one can choose which grid iteration should
                            only be calculated
   --reweight               submit jobs to reweight the events. Note to edit powheg.input
                            by hand.
+  --wrw                    walltime for reweighting
   --ncallfrominput         force using ncall and itmx parameters from command line
                            for merging grids for the 2nd stage.
 EOM

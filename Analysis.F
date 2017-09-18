@@ -196,7 +196,9 @@ c calculate quantities that shall be plotted and fill histograms
 #include "Flags.h"
 #include "pwhg_flg.h"
 #include "PhysPars.h"
-        double precision dsig(7), dsig0 ! total cross section
+        integer  dsigdim
+        parameter (dsigdim = 10)
+        double precision dsig(dsigdim), dsig0 ! total cross section
         ! tells if subroutine is called for the first time
         logical ini
         data ini/.true./
@@ -243,13 +245,6 @@ c calculate quantities that shall be plotted and fill histograms
 
         ! at first call
         if(ini) then
-          ! check if multiple weights are present
-          if(weights_num.eq.0) then
-            call setupmulti(1)
-          else
-            call setupmulti(weights_num)
-          endif
-          
           ! extract final state types from process id
           call decode_pair(lprup(1),id_finA,id_finB)
           ! check final state
@@ -273,13 +268,9 @@ c calculate quantities that shall be plotted and fill histograms
         ! from pico to femto
         dsig0 = dsig0*1000D0
 
-        ! multiple weights analysis
-        dsig(:) = 0D0
-        if(weights_num.eq.0) then
-          dsig(1) = dsig0
-        else
-          dsig(1:weights_num) = weights_val(1:weights_num)
-        endif
+        ! setup mutliple weights analysis
+        call multi_plot_setup(dsig0,dsig,dsigdim)
+        
         ! return if no entries in dsig
         if(sum(abs(dsig)).eq.0) return
 
