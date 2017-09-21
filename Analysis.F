@@ -266,7 +266,7 @@ c calculate quantities that shall be plotted and fill histograms
         endif
 
         ! from pico to femto
-        dsig0 = dsig0*1000D0
+        !dsig0 = dsig0*1000D0
 
         ! setup mutliple weights analysis
         call multi_plot_setup(dsig0,dsig,dsigdim)
