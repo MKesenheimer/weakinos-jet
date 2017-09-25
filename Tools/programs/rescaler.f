@@ -8,16 +8,18 @@
         double precision int, interr
         double precision rescale
 
-        if(iargc().eq.0) name = 'pwg-NLO.top'
-        if(iargc().eq.1) rescale = 1D3
+        if(iargc().lt.2) then
+          print*,"Usage: ./rescaler <pwg-NLO.top> <factor>"
+          stop
+        endif
         do i=1,iargc()
           call getarg(i, arg)
           if(i.eq.1.and.len(trim(arg)).lt.cle) name = arg
           if(i.eq.2) read(arg,*) rescale
         enddo
-        print*,'Integrated cross section obtained from distributions in'
+        print*,'Rescaling the distributions in'
         print*,trim(name)
-        print*,"rescale factor: ",rescale
+        print*,"by factor: ",rescale
         print*
 
 
@@ -58,4 +60,5 @@
  111    continue
         
         close(iun1)
+        close(iun2)
       end
