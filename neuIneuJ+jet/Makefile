@@ -325,7 +325,7 @@ PWHG = btilde.o utils.o gen_Born_phsp.o	\
 	sigcollsoft.o validflav.o decidemerging.o \
 	loadstorenlo.o setlocalscales.o multi_plot.o \
 	mint_upb.o reshufflemoms.o opencount.o \
-	lhefread.o pwhg_io_interface.o rwl_weightlists.o
+	lhefread.o pwhg_io_interface.o
 
 # modified POWHEG-files
 ifeq ("$(POWMOD)","no")
@@ -334,7 +334,7 @@ ifeq ("$(POWMOD)","no")
 	sigvirtual.o bbinit.o LesHouches.o \
 	LesHouchesreg.o gen_index.o lhefwrite.o \
 	gen_radiation.o sigremnants.o pwhgreweight.o \
-	pdfcalls.o newunit.o pwhg_main.o \
+	pdfcalls.o newunit.o pwhg_main.o rwl_weightlists.o \
 	ubprojections.o rwl_setup_param_weights.o
 else
   PWHG += pwhg_init_mod.o cernroutines_mod.o find_regions_mod.o gen_real_phsp_mod.o \
@@ -342,7 +342,7 @@ else
 	sigvirtual_mod.o bbinit_mod.o LesHouches_mod.o \
 	LesHouchesreg_mod.o gen_index_mod.o lhefwrite_mod.o \
 	gen_radiation_mod.o sigremnants_mod.o pwhgreweight_mod.o \
-	pdfcalls_mod.o newunit_mod.o pwhg_main_mod.o \
+	pdfcalls_mod.o newunit_mod.o pwhg_main_mod.o rwl_weightlists_mod.o \
 	ubprojections_mod.o rwl_setup_param_weights_mod.o rwl_setup_param_weights_user.o
 endif
 
