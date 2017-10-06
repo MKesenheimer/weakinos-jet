@@ -1,5 +1,5 @@
 <initrwgt>
-<weightgroup name='PDF/FAC' combine=’envelope’>
+<weightgroup name='PDF/FAC' combine='envelope'>
 <weight id='3'>lhapdf=92000 renscfact=0.5 facscfact=0.5</weight>
 <weight id='4'>lhapdf=92000 renscfact=0.5 facscfact=1</weight>
 <weight id='5'>lhapdf=92000 renscfact=0.5 facscfact=2</weight>

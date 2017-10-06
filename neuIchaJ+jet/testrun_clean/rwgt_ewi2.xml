@@ -1,5 +1,5 @@
 <initrwgt>
-<weightgroup name='EWI2' combine=’envelope’>
+<weightgroup name='EWI2' combine='envelope'>
 <weight id='3'>wreg2=1.83D-5</weight>
 <weight id='4'>wreg2=6.04D-5</weight>
 <weight id='5'>wreg2=1.83D-4</weight>
