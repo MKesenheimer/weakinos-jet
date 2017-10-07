@@ -197,7 +197,7 @@ c calculate quantities that shall be plotted and fill histograms
 #include "pwhg_flg.h"
 #include "PhysPars.h"
         integer  dsigdim
-        parameter (dsigdim = 10)
+        parameter (dsigdim = 20)
         double precision dsig(dsigdim), dsig0 ! total cross section
         ! tells if subroutine is called for the first time
         logical ini
