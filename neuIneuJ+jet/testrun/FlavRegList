@@ -1,0 +1,240 @@
+(u~ )u~   ==>  n1    n1    u~    u~       | mult=  2
+ g   u~   ==>  n1    n1    u~       | uborn, mult=  1
+   1  5   2  5   1  6   2  6
+ u~ (u~ ) ==>  n1    n1    u~    u~       | mult=  2
+ u~  g    ==>  n1    n1    u~       | uborn, mult=  1
+   1  5   2  5   1  6   2  6
+ u~ (d~ ) ==>  n1    n1    u~    d~       | mult=  1
+ u~  g    ==>  n1    n1    u~       | uborn, mult=  1
+   1  5   2  6
+(u~ )d~   ==>  n1    n1    d~    u~       | mult=  1
+ g   d~   ==>  n1    n1    d~       | uborn, mult=  1
+   2  5   1  6
+ u~  g    ==>  n1    n1   (u~  ) g        | mult=  1
+ u~  g    ==>  n1    n1    u~       | uborn, mult=  1
+   5  6   2  5   0  6
+ u~ (g  ) ==>  n1    n1    g     u~       | mult=  1
+ u~  u    ==>  n1    n1    g        | uborn, mult=  1
+   5  6   0  5   2  6
+(u~  g  ) ==>  n1    n1    u~    g        | mult=  1
+ u~  g    ==>  n1    n1    u~       | uborn, mult=  1
+   5  6   2  5   0  6
+ u~ (d  ) ==>  n1    n1    u~    d        | mult=  1
+ u~  g    ==>  n1    n1    u~       | uborn, mult=  1
+   1  5   2  6
+(u~ )d    ==>  n1    n1    d     u~       | mult=  1
+ g   d    ==>  n1    n1    d        | uborn, mult=  1
+   2  5   1  6
+ u~  u    ==>  n1    n1   (u   ) u~       | mult=  1
+ u~  u    ==>  n1    n1    g        | uborn, mult=  1
+   5  6   2  5   1  6
+ u~ (u  ) ==>  n1    n1    u~    u        | mult=  1
+ u~  g    ==>  n1    n1    u~       | uborn, mult=  1
+   5  6   1  5   2  6
+(u~ )u    ==>  n1    n1    u     u~       | mult=  1
+ g   u    ==>  n1    n1    u        | uborn, mult=  1
+   5  6   2  5   1  6
+ u~  u    ==>  n1    n1   (g   ) g        | mult=  1
+ u~  u    ==>  n1    n1    g        | uborn, mult=  1
+   5  6   0  5   0  6
+(u~  u  ) ==>  n1    n1    g     g        | mult=  2
+ u~  u    ==>  n1    n1    g        | uborn, mult=  1
+   5  6   0  5   0  6
+ u~  u    ==>  n1    n1   (d   ) d~       | mult=  1
+ u~  u    ==>  n1    n1    g        | uborn, mult=  1
+   5  6
+(d~ )u~   ==>  n1    n1    u~    d~       | mult=  1
+ g   u~   ==>  n1    n1    u~       | uborn, mult=  1
+   2  5   1  6
+ d~ (u~ ) ==>  n1    n1    d~    u~       | mult=  1
+ d~  g    ==>  n1    n1    d~       | uborn, mult=  1
+   1  5   2  6
+(d~ )d~   ==>  n1    n1    d~    d~       | mult=  2
+ g   d~   ==>  n1    n1    d~       | uborn, mult=  1
+   1  5   2  5   1  6   2  6
+ d~ (d~ ) ==>  n1    n1    d~    d~       | mult=  2
+ d~  g    ==>  n1    n1    d~       | uborn, mult=  1
+   1  5   2  5   1  6   2  6
+ d~  g    ==>  n1    n1   (d~  ) g        | mult=  1
+ d~  g    ==>  n1    n1    d~       | uborn, mult=  1
+   5  6   2  5   0  6
+ d~ (g  ) ==>  n1    n1    g     d~       | mult=  1
+ d~  d    ==>  n1    n1    g        | uborn, mult=  1
+   5  6   0  5   2  6
+(d~  g  ) ==>  n1    n1    d~    g        | mult=  1
+ d~  g    ==>  n1    n1    d~       | uborn, mult=  1
+   5  6   2  5   0  6
+ d~  d    ==>  n1    n1   (d   ) d~       | mult=  1
+ d~  d    ==>  n1    n1    g        | uborn, mult=  1
+   5  6   2  5   1  6
+ d~ (d  ) ==>  n1    n1    d~    d        | mult=  1
+ d~  g    ==>  n1    n1    d~       | uborn, mult=  1
+   5  6   1  5   2  6
+(d~ )d    ==>  n1    n1    d     d~       | mult=  1
+ g   d    ==>  n1    n1    d        | uborn, mult=  1
+   5  6   2  5   1  6
+ d~  d    ==>  n1    n1   (g   ) g        | mult=  1
+ d~  d    ==>  n1    n1    g        | uborn, mult=  1
+   5  6   0  5   0  6
+(d~  d  ) ==>  n1    n1    g     g        | mult=  2
+ d~  d    ==>  n1    n1    g        | uborn, mult=  1
+   5  6   0  5   0  6
+ d~  d    ==>  n1    n1   (u   ) u~       | mult=  1
+ d~  d    ==>  n1    n1    g        | uborn, mult=  1
+   5  6
+ d~ (u  ) ==>  n1    n1    d~    u        | mult=  1
+ d~  g    ==>  n1    n1    d~       | uborn, mult=  1
+   1  5   2  6
+(d~ )u    ==>  n1    n1    u     d~       | mult=  1
+ g   u    ==>  n1    n1    u        | uborn, mult=  1
+   2  5   1  6
+ g   u~   ==>  n1    n1   (u~  ) g        | mult=  1
+ g   u~   ==>  n1    n1    u~       | uborn, mult=  1
+   5  6   1  5   0  6
+(g  )u~   ==>  n1    n1    g     u~       | mult=  1
+ u   u~   ==>  n1    n1    g        | uborn, mult=  1
+   5  6   0  5   1  6
+(g   u~ ) ==>  n1    n1    u~    g        | mult=  1
+ g   u~   ==>  n1    n1    u~       | uborn, mult=  1
+   5  6   1  5   0  6
+ g   d~   ==>  n1    n1   (d~  ) g        | mult=  1
+ g   d~   ==>  n1    n1    d~       | uborn, mult=  1
+   5  6   1  5   0  6
+(g  )d~   ==>  n1    n1    g     d~       | mult=  1
+ d   d~   ==>  n1    n1    g        | uborn, mult=  1
+   5  6   0  5   1  6
+(g   d~ ) ==>  n1    n1    d~    g        | mult=  1
+ g   d~   ==>  n1    n1    d~       | uborn, mult=  1
+   5  6   1  5   0  6
+(g  )g    ==>  n1    n1    d~    d        | mult=  1
+ d~  g    ==>  n1    n1    d~       | uborn, mult=  1
+   1  5   2  5   1  6   2  6
+ g  (g  ) ==>  n1    n1    d~    d        | mult=  1
+ g   d~   ==>  n1    n1    d~       | uborn, mult=  1
+   1  5   2  5   1  6   2  6
+(g  )g    ==>  n1    n1    d     d~       | mult=  1
+ d   g    ==>  n1    n1    d        | uborn, mult=  1
+   1  5   2  5   1  6   2  6
+ g  (g  ) ==>  n1    n1    d     d~       | mult=  1
+ g   d    ==>  n1    n1    d        | uborn, mult=  1
+   1  5   2  5   1  6   2  6
+(g  )g    ==>  n1    n1    u~    u        | mult=  1
+ u~  g    ==>  n1    n1    u~       | uborn, mult=  1
+   1  5   2  5   1  6   2  6
+ g  (g  ) ==>  n1    n1    u~    u        | mult=  1
+ g   u~   ==>  n1    n1    u~       | uborn, mult=  1
+   1  5   2  5   1  6   2  6
+(g  )g    ==>  n1    n1    u     u~       | mult=  1
+ u   g    ==>  n1    n1    u        | uborn, mult=  1
+   1  5   2  5   1  6   2  6
+ g  (g  ) ==>  n1    n1    u     u~       | mult=  1
+ g   u    ==>  n1    n1    u        | uborn, mult=  1
+   1  5   2  5   1  6   2  6
+ g   d    ==>  n1    n1   (d   ) g        | mult=  1
+ g   d    ==>  n1    n1    d        | uborn, mult=  1
+   5  6   1  5   0  6
+(g  )d    ==>  n1    n1    g     d        | mult=  1
+ d~  d    ==>  n1    n1    g        | uborn, mult=  1
+   5  6   0  5   1  6
+(g   d  ) ==>  n1    n1    d     g        | mult=  1
+ g   d    ==>  n1    n1    d        | uborn, mult=  1
+   5  6   1  5   0  6
+ g   u    ==>  n1    n1   (u   ) g        | mult=  1
+ g   u    ==>  n1    n1    u        | uborn, mult=  1
+   5  6   1  5   0  6
+(g  )u    ==>  n1    n1    g     u        | mult=  1
+ u~  u    ==>  n1    n1    g        | uborn, mult=  1
+   5  6   0  5   1  6
+(g   u  ) ==>  n1    n1    u     g        | mult=  1
+ g   u    ==>  n1    n1    u        | uborn, mult=  1
+   5  6   1  5   0  6
+(d  )u~   ==>  n1    n1    u~    d        | mult=  1
+ g   u~   ==>  n1    n1    u~       | uborn, mult=  1
+   2  5   1  6
+ d  (u~ ) ==>  n1    n1    d     u~       | mult=  1
+ d   g    ==>  n1    n1    d        | uborn, mult=  1
+   1  5   2  6
+ d   d~   ==>  n1    n1   (d   ) d~       | mult=  1
+ d   d~   ==>  n1    n1    g        | uborn, mult=  1
+   5  6   1  5   2  6
+(d  )d~   ==>  n1    n1    d~    d        | mult=  1
+ g   d~   ==>  n1    n1    d~       | uborn, mult=  1
+   5  6   2  5   1  6
+ d  (d~ ) ==>  n1    n1    d     d~       | mult=  1
+ d   g    ==>  n1    n1    d        | uborn, mult=  1
+   5  6   1  5   2  6
+ d   d~   ==>  n1    n1   (g   ) g        | mult=  1
+ d   d~   ==>  n1    n1    g        | uborn, mult=  1
+   5  6   0  5   0  6
+(d   d~ ) ==>  n1    n1    g     g        | mult=  2
+ d   d~   ==>  n1    n1    g        | uborn, mult=  1
+   5  6   0  5   0  6
+ d   d~   ==>  n1    n1   (u   ) u~       | mult=  1
+ d   d~   ==>  n1    n1    g        | uborn, mult=  1
+   5  6
+ d   g    ==>  n1    n1   (d   ) g        | mult=  1
+ d   g    ==>  n1    n1    d        | uborn, mult=  1
+   5  6   2  5   0  6
+ d  (g  ) ==>  n1    n1    g     d        | mult=  1
+ d   d~   ==>  n1    n1    g        | uborn, mult=  1
+   5  6   0  5   2  6
+(d   g  ) ==>  n1    n1    d     g        | mult=  1
+ d   g    ==>  n1    n1    d        | uborn, mult=  1
+   5  6   2  5   0  6
+(d  )d    ==>  n1    n1    d     d        | mult=  2
+ g   d    ==>  n1    n1    d        | uborn, mult=  1
+   1  5   2  5   1  6   2  6
+ d  (d  ) ==>  n1    n1    d     d        | mult=  2
+ d   g    ==>  n1    n1    d        | uborn, mult=  1
+   1  5   2  5   1  6   2  6
+(d  )u    ==>  n1    n1    u     d        | mult=  1
+ g   u    ==>  n1    n1    u        | uborn, mult=  1
+   2  5   1  6
+ d  (u  ) ==>  n1    n1    d     u        | mult=  1
+ d   g    ==>  n1    n1    d        | uborn, mult=  1
+   1  5   2  6
+ u   u~   ==>  n1    n1   (u   ) u~       | mult=  1
+ u   u~   ==>  n1    n1    g        | uborn, mult=  1
+   5  6   1  5   2  6
+(u  )u~   ==>  n1    n1    u~    u        | mult=  1
+ g   u~   ==>  n1    n1    u~       | uborn, mult=  1
+   5  6   2  5   1  6
+ u  (u~ ) ==>  n1    n1    u     u~       | mult=  1
+ u   g    ==>  n1    n1    u        | uborn, mult=  1
+   5  6   1  5   2  6
+ u   u~   ==>  n1    n1   (g   ) g        | mult=  1
+ u   u~   ==>  n1    n1    g        | uborn, mult=  1
+   5  6   0  5   0  6
+(u   u~ ) ==>  n1    n1    g     g        | mult=  2
+ u   u~   ==>  n1    n1    g        | uborn, mult=  1
+   5  6   0  5   0  6
+ u   u~   ==>  n1    n1   (d   ) d~       | mult=  1
+ u   u~   ==>  n1    n1    g        | uborn, mult=  1
+   5  6
+(u  )d~   ==>  n1    n1    d~    u        | mult=  1
+ g   d~   ==>  n1    n1    d~       | uborn, mult=  1
+   2  5   1  6
+ u  (d~ ) ==>  n1    n1    u     d~       | mult=  1
+ u   g    ==>  n1    n1    u        | uborn, mult=  1
+   1  5   2  6
+ u   g    ==>  n1    n1   (u   ) g        | mult=  1
+ u   g    ==>  n1    n1    u        | uborn, mult=  1
+   5  6   2  5   0  6
+ u  (g  ) ==>  n1    n1    g     u        | mult=  1
+ u   u~   ==>  n1    n1    g        | uborn, mult=  1
+   5  6   0  5   2  6
+(u   g  ) ==>  n1    n1    u     g        | mult=  1
+ u   g    ==>  n1    n1    u        | uborn, mult=  1
+   5  6   2  5   0  6
+ u  (d  ) ==>  n1    n1    u     d        | mult=  1
+ u   g    ==>  n1    n1    u        | uborn, mult=  1
+   1  5   2  6
+(u  )d    ==>  n1    n1    d     u        | mult=  1
+ g   d    ==>  n1    n1    d        | uborn, mult=  1
+   2  5   1  6
+(u  )u    ==>  n1    n1    u     u        | mult=  2
+ g   u    ==>  n1    n1    u        | uborn, mult=  1
+   1  5   2  5   1  6   2  6
+ u  (u  ) ==>  n1    n1    u     u        | mult=  2
+ u   g    ==>  n1    n1    u        | uborn, mult=  1
+   1  5   2  5   1  6   2  6

@@ -1,0 +1,13 @@
+<initrwgt>
+<weightgroup name='PDF/FAC' combine='envelope'>
+<weight id='3'>lhapdf=92000 renscfact=0.5 facscfact=0.5</weight>
+<weight id='4'>lhapdf=92000 renscfact=0.5 facscfact=1</weight>
+<weight id='5'>lhapdf=92000 renscfact=0.5 facscfact=2</weight>
+<weight id='6'>lhapdf=92000 renscfact=1 facscfact=0.5</weight>
+<weight id='7'>lhapdf=92000 renscfact=1 facscfact=1</weight>
+<weight id='8'>lhapdf=92000 renscfact=1 facscfact=2</weight>
+<weight id='9'>lhapdf=92000 renscfact=2 facscfact=0.5</weight>
+<weight id='10'>lhapdf=92000 renscfact=2 facscfact=1</weight>
+<weight id='11'>lhapdf=92000 renscfact=2 facscfact=2</weight>
+</weightgroup>
+</initrwgt>

@@ -71,7 +71,7 @@ c modifies the jacobian.
         
 #ifdef DSUB_II
         if(flg_btilde) then
-          print*, "the realresonant-routine should not cald for Btilde."
+          print*, "setosresreal should not called for Btilde."
           stop
         endif
 #endif

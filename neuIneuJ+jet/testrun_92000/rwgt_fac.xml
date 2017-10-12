@@ -1,0 +1,13 @@
+<initrwgt>
+<weightgroup name='FAC' combine='envelope'>
+<weight id='3'>renscfact=0.5 facscfact=0.5</weight>
+<weight id='4'>renscfact=0.5 facscfact=1</weight>
+<weight id='5'>renscfact=0.5 facscfact=2</weight>
+<weight id='6'>renscfact=1 facscfact=0.5</weight>
+<weight id='7'>renscfact=1 facscfact=1</weight>
+<weight id='8'>renscfact=1 facscfact=2</weight>
+<weight id='9'>renscfact=2 facscfact=0.5</weight>
+<weight id='10'>renscfact=2 facscfact=1</weight>
+<weight id='11'>renscfact=2 facscfact=2</weight>
+</weightgroup>
+</initrwgt>

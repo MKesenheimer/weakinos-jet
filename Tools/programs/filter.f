@@ -67,7 +67,7 @@
             ! if weight violates the limits, delete the event
             do i=1,nweights
               if(dabs(weight(i)).gt.upper .or.
-     &           dabs(weight(i)).lt.lower) then
+     &           dabs(weight(i)).lt.lower .or. isnan(weight(i))) then
                 print*,"Bound violation: ",weight(i),
      &                  "-> removing event."
                 badevent = .true.

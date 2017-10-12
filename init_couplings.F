@@ -835,5 +835,12 @@ c set the on shell regulator wreg1 (single) and wreg2 (double resonances)
           ewi2 = powheginput("ewi2")
         endif
         wreg2 = ewi2*m_avrg ! Prospino like definition        
+      
+        print*,"Masses for on-shell regulator scaling:"
+        print*,"MGl = ",MGl
+        print*,"msq = ",m_avrg
+        print*,"On-shell regulators used:"
+        print*,"ewi1 = ",ewi1,", wreg1 = ",wreg1
+        print*,"ewi1 = ",ewi2,", wreg2 = ",wreg2
       end
 c############### end subroutine set_os_regulator #######################
