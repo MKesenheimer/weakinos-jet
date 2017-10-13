@@ -1032,13 +1032,20 @@ echo "#!/bin/bash" > $WORKINGDIR/runmsub_${IDENT}.sh
 echo "# Command is $COMMAND" > $WORKINGDIR/runmsub_${IDENT}.sh
 
 # stage 1
+# submit all jobs for grid iteration
 if [ "$GRIDITER" = "" ]; then
-for iter in `seq 1 ${MAXGRIDIT}`; do
-DEPEND=""
-if [ "$iter" != "1" ] && [ "$SLEEP" = false ]; then
-  DEPEND=",depend=afterok:\${dependIDs1$((iter-1))[\$i]}"
-fi
-if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
+  for iter in `seq 1 ${MAXGRIDIT}`; do
+    DEPEND=""
+    if [ "$iter" != "1" ] && [ "$SLEEP" = false ]; then
+      # depend on all jobs
+      for i in `seq 1 $JOBS`; do
+        DEPEND="$DEPEND:\${dependIDs1$((iter-1))[$i]}"
+      done
+      DEPEND=",depend=afterany$DEPEND"
+      # depend only on the predecessor job with same $i
+      #DEPEND=",depend=afterany:\${dependIDs1$((iter-1))[\$i]}"
+    fi
+    if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/runmsub_${IDENT}.sh
 echo ""
 echo "Stage 1.${iter}: Generating Grids, iteration ${iter}"
@@ -1052,14 +1059,15 @@ for i in \`seq 1 $JOBS\`; do
   dependIDs1${iter}[\$i]=\${job[\$i]}
 done
 EOM
-# sleep during job submission (alternative to 'depend' parameter of msub)
-if [ "$SLEEP" = true ]; then
-  echo "sleep $WALLTIME1" >> $WORKINGDIR/runmsub_${IDENT}.sh
-fi
-fi
-done
+      # sleep during job submission (alternative to 'depend' parameter of msub)
+      if [ "$SLEEP" = true ]; then
+        echo "sleep $WALLTIME1" >> $WORKINGDIR/runmsub_${IDENT}.sh
+      fi
+    fi
+  done
+# submit only the jobs for a specific grid iteration
 else
-if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
+  if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/runmsub_${IDENT}.sh
 echo ""
 echo "Stage 1.${GRIDITER}: Generating Grids, iteration ${GRIDITER}"
@@ -1073,13 +1081,19 @@ for i in \`seq 1 $JOBS\`; do
   dependIDs1${GRIDITER}[\$i]=\${job[\$i]}
 done
 EOM
-fi
+  fi
 fi
 
 # stage 2
 DEPEND=""
 if [ "$STAGE" = "" ] && [ "$SLEEP" = false ]; then
-  DEPEND=",depend=afterok:\${dependIDs1$((iter-1))[\$i]}"
+  # depend on all jobs
+  for i in `seq 1 $JOBS`; do
+    DEPEND="$DEPEND:\${dependIDs1$((iter))[$i]}"
+  done
+  DEPEND=",depend=afterany$DEPEND"
+  # depend only on the predecessor job with same $i
+  #DEPEND=",depend=afterany:\${dependIDs1$((iter))[\$i]}"
 fi
 if [ "$STAGE" != "1" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/runmsub_${IDENT}.sh
@@ -1101,11 +1115,18 @@ if [ "$SLEEP" = true ]; then
 fi
 fi
 
+
 if [ "$GENEVENTS" = true ]; then
 # stage 3
 DEPEND=""
 if [ "$STAGE" = "" ] && [ "$SLEEP" = false ]; then
-  DEPEND=",depend=afterok:\${dependIDs2[\$i]}"
+  # depend on all jobs
+  for i in `seq 1 $JOBS`; do
+    DEPEND="$DEPEND:\${dependIDs2[$i]}"
+  done
+  DEPEND=",depend=afterany$DEPEND"
+  # depend only on the predecessor job with same $i
+  #DEPEND=",depend=afterany:\${dependIDs2[\$i]}"
 fi
 if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/runmsub_${IDENT}.sh
@@ -1130,7 +1151,13 @@ fi
 # stage 4
 DEPEND=""
 if [ "$STAGE" = "" ] && [ "$SLEEP" = false ]; then
-  DEPEND=",depend=afterok:\${dependIDs3[\$i]}"
+  # depend on all jobs
+  for i in `seq 1 $JOBS`; do
+    DEPEND="$DEPEND:\${dependIDs3[$i]}"
+  done
+  DEPEND=",depend=afterany$DEPEND"
+  # depend only on the predecessor job with same $i
+  #DEPEND=",depend=afterany:\${dependIDs3[\$i]}"
 fi
 if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/runmsub_${IDENT}.sh
@@ -1179,13 +1206,24 @@ echo "#!/bin/bash" > $WORKINGDIR/runcondor_${IDENT}.sh
 echo "# Command is $COMMAND" > $WORKINGDIR/runcondor_${IDENT}.sh
 
 # stage 1
+# submit all jobs for grid iteration
 if [ "$GRIDITER" = "" ]; then
-for iter in `seq 1 ${MAXGRIDIT}`; do
-DEPEND=""
-if [ "$iter" != "1" ] && [ "$SLEEP" = false ]; then
-  DEPEND="-hold_jid \${dependIDs1$((iter-1))[\$i]}"
-fi
-if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
+  for iter in `seq 1 ${MAXGRIDIT}`; do
+    DEPEND=""
+    if [ "$iter" != "1" ] && [ "$SLEEP" = false ]; then
+      # depend on all jobs
+      for i in `seq 1 $JOBS`; do
+        if [ "$i" == "1" ]; then
+          DEPEND="\${dependIDs1$((iter-1))[$i]}"
+        else
+          DEPEND="$DEPEND,\${dependIDs1$((iter-1))[$i]}"
+        fi
+      done
+      DEPEND="-hold_jid $DEPEND"
+      # depend only on the predecessor job with same $i
+      #DEPEND="-hold_jid \${dependIDs1$((iter))[\$i]}"
+    fi
+    if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/runcondor_${IDENT}.sh
 echo ""
 echo "Stage 1.${iter}: Generating Grids, iteration ${iter}"
@@ -1199,14 +1237,15 @@ for i in \`seq 1 $JOBS\`; do
   dependIDs1${iter}[\$i]=\${job[\$i]}
 done
 EOM
-# sleep during job submission (alternative to 'hold_jid' parameter of condor_qsub)
-if [ "$SLEEP" = true ]; then
-  echo "sleep $WALLTIME1" >> $WORKINGDIR/runcondor_${IDENT}.sh
-fi
-fi
-done
+      # sleep during job submission (alternative to 'hold_jid' parameter of condor_qsub)
+      if [ "$SLEEP" = true ]; then
+        echo "sleep $WALLTIME1" >> $WORKINGDIR/runcondor_${IDENT}.sh
+      fi
+    fi
+  done
+# submit only the jobs for a specific grid iteration
 else
-if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
+  if [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/runcondor_${IDENT}.sh
 echo ""
 echo "Stage 1.${GRIDITER}: Generating Grids, iteration ${GRIDITER}"
@@ -1220,13 +1259,23 @@ for i in \`seq 1 $JOBS\`; do
   dependIDs1${GRIDITER}[\$i]=\${job[\$i]}
 done
 EOM
-fi
+  fi
 fi
 
 # stage 2
 DEPEND=""
 if [ "$STAGE" = "" ] && [ "$SLEEP" = false ]; then
-  DEPEND="-hold_jid \${dependIDs1$((iter-1))[\$i]}"
+  # depend on all jobs
+  for i in `seq 1 $JOBS`; do
+    if [ "$i" == "1" ]; then
+      DEPEND="\${dependIDs1$((iter))[$i]}"
+    else
+      DEPEND="$DEPEND,\${dependIDs1$((iter))[$i]}"
+    fi
+  done
+  DEPEND="-hold_jid $DEPEND"
+  # depend only on the predecessor job with same $i
+  #DEPEND="-hold_jid \${dependIDs1$((iter))[\$i]}"
 fi
 if [ "$STAGE" != "1" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/runcondor_${IDENT}.sh
@@ -1252,7 +1301,17 @@ if [ "$GENEVENTS" = true ]; then
 # stage 3
 DEPEND=""
 if [ "$STAGE" = "" ] && [ "$SLEEP" = false ]; then
-  DEPEND="-hold_jid \${dependIDs2[\$i]}"
+  # depend on all jobs
+  for i in `seq 1 $JOBS`; do
+    if [ "$i" == "1" ]; then
+      DEPEND="\${dependIDs2[$i]}"
+    else
+      DEPEND="$DEPEND,\${dependIDs2[$i]}"
+    fi
+  done
+  DEPEND="-hold_jid $DEPEND"
+  # depend only on the predecessor job with same $i
+  #DEPEND="-hold_jid \${dependIDs2[\$i]}"
 fi
 if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "4" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/runcondor_${IDENT}.sh
@@ -1277,7 +1336,17 @@ fi
 # stage 4
 DEPEND=""
 if [ "$STAGE" = "" ] && [ "$SLEEP" = false ]; then
-  DEPEND="-hold_jid \${dependIDs3[\$i]}"
+  # depend on all jobs
+  for i in `seq 1 $JOBS`; do
+    if [ "$i" == "1" ]; then
+      DEPEND="\${dependIDs3[$i]}"
+    else
+      DEPEND="$DEPEND,\${dependIDs3[$i]}"
+    fi
+  done
+  DEPEND="-hold_jid $DEPEND"
+  # depend only on the predecessor job with same $i
+  #DEPEND="-hold_jid \${dependIDs3[\$i]}"
 fi
 if [ "$STAGE" != "1" ] && [ "$STAGE" != "2" ] && [ "$STAGE" != "3" ]  && [ "$STAGE" != "RW" ]; then
 cat <<EOM >> $WORKINGDIR/runcondor_${IDENT}.sh
@@ -1313,6 +1382,8 @@ done
 EOM
 fi
 fi #if GENEVENTS
+
+exit 0
 
 chmod +x $WORKINGDIR/runcondor_${IDENT}.sh
 # execute
