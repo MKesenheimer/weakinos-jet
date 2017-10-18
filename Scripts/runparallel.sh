@@ -1383,8 +1383,6 @@ EOM
 fi
 fi #if GENEVENTS
 
-exit 0
-
 chmod +x $WORKINGDIR/runcondor_${IDENT}.sh
 # execute
 $WORKINGDIR/runcondor_${IDENT}.sh
