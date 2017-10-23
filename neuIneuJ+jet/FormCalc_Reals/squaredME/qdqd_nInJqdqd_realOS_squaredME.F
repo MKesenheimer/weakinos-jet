@@ -8,14 +8,14 @@
         fc_result(:) = 0D0
         ! sfeij and sfekl get defined in subroutine set_channel
         if(ichan.ge.1 .and. ichan.le.4) then
-          Sq1 = osres_sfeij
-          Sq2 = osres_sfekl
+	Sq1 = osres_sfeij
+	Sq2 = osres_sfekl
           call qdqd_nInJqdqd_3546_Sq1Sq2_SquaredME(fc_result, helicities, flags)
           goto 10
         endif
         if(ichan.ge.5 .and. ichan.le.8) then
-          Sq1 = osres_sfeij
-          Sq2 = osres_sfekl
+	Sq1 = osres_sfeij
+	Sq2 = osres_sfekl
           call qdqd_nInJqdqd_3645_Sq1Sq2_SquaredME(fc_result, helicities, flags)
           goto 10
         endif

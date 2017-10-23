@@ -798,6 +798,12 @@ c sets the FormCalc parameters
         MHH2C = dcmplx(MHH2)
         MA02C = dcmplx(MA02)
         MHp2C = dcmplx(MHp2)
+        
+        ! Gauge parameters
+        GaugeXi(1) = 1
+        GaugeXi(2) = 1
+        GaugeXi(3) = 1
+        GaugeXi(4) = 1
       end
 c############### end subroutine set_formcalc_params ####################
 
