@@ -125,6 +125,13 @@ SetOptions[InsertFields, Model -> "MSSMCT",
 
 SetOptions[Paint, PaintLevel -> {Classes}, ColumnsXRows -> {4, 5}, AutoEdit -> False];
 
+(*Include the gauge dependency*)
+SetOptions[CreateFeynAmp, GaugeRules -> {}];
+GaugeXi[A] = GaugeXi[1];
+GaugeXi[Z] = GaugeXi[2];
+GaugeXi[W] = GaugeXi[3];
+GaugeXi[G] = GaugeXi[4];
+
 (*Reduce tensor to scalar integrals and choose regularization scheme*)
 (*D = dimensional regularization (default),*)
 (*4 = constrained differential renormalization,*)
