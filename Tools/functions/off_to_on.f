@@ -647,7 +647,7 @@ c############### function corrfac_ijk ##################################
 c the remapping requires a change in the PS integration
 c and every counter term which uses the on-shell momenta should be
 c rescaled by this correction factor
-      double precision function corrfac_ijk(shat,mi,mj,mk,sij,mij)
+      double precision function corrfac_ijk(shat,mi,mj,mk,ml,mijk,mij,sijk,sij)
         implicit none
         !input variables
         double precision shat,mi,mj,mk,sij,mij
@@ -656,11 +656,13 @@ c rescaled by this correction factor
         double precision kaellenSqrt
         external kaellenSqrt
         
-        denom = mij**2*kaellenSqrt(shat,sij,mk**2)
+        denom = mijk**2*mij**2*kaellenSqrt(shat,sijk,ml**2)
+     &          *kaellenSqrt(sijk,sij,mk**2)
      &          *kaellenSqrt(sij,mi**2,mj**2)
 
         if(denom.ne.0D0) then
-          corrfac_ijk = (sij*kaellenSqrt(shat,mij**2,mk**2)
+          corrfac_ijk = (sijk*sij*kaellenSqrt(shat,mijk**2,ml**2)
+     &                   *kaellenSqrt(mijk**2,mij**2,mk**2)
      &                   *kaellenSqrt(mij**2,mi**2,mj**2))
      &                   /denom
         else

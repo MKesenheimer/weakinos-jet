@@ -77,7 +77,7 @@ Print[vertUV];
 (*Calculate dZgg3*)
 abbr = Abbr[];
 subexpr = Subexpr[];
-rules = Join[subexpr, abbr];
+rules = Join[subexpr, abbr]
 
 gggb = Plus@@born//.rules//FullSimplify
 gggv = Plus@@vertUV//.rules//FullSimplify

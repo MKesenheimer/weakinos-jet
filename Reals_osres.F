@@ -150,8 +150,8 @@ c modifies the jacobian.
           call off_to_on_ijk(p,rflav,ichan,p_os,check)
           call getRealOSAmps(p_os,rflav,ichan,ampOS)
           ampCT = bwratio*ampOS
-          ! rescale the counter term to fit into the new PS
-          ampCT = corrfac_ijk(s12,mi,mj,mk,ml,mij,mkl,sij,skl)*ampCT
+          ! rescale the counter term to fit into the new PS (leave sij unconstraint)
+          ampCT = corrfac_ijk(s12,mi,mj,mk,ml,mijk,sij,sijk,sij)*ampCT
 #ifdef DSUB_II
           amp = amp - ampCT
 #else
