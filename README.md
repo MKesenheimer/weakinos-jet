@@ -1,5 +1,17 @@
 ## POWHEG-BOX-V2 Project Weakino Pair Production
 
+### IMPORTANT NOTE
+
+The code available was tested and developed for the POWHEG-BOX-V2 revision 3361. If you examine unexpected behavior 
+or if you have problems compiling and running the code, please rewind or update your POWHEG-BOX-V2 version to the 
+one it was developed for.
+To do this, use
+
+        $ svn info
+        $ svn up -r3361
+
+in your POWHEG-BOX-V2 main directory.
+
 ### Synopsis
 
 More informations about how to set up the project properly on http://powhegbox.mib.infn.it/.
