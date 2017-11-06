@@ -525,11 +525,6 @@ c############### subroutine getRealAmps ################################
 #endif
 
         amp = fc_result(1)/symfac
-
-#ifdef DEBUGQ
-        print*,amp
-        stop
-#endif
       end
 c############### subroutine getRealAmps ################################
 

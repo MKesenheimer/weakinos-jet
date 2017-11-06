@@ -230,18 +230,6 @@ c pick SUSY masses relevant for specific initial state
             stop
           endselect
         enddo
-        
-        !M(3) = par_Fin1mass
-        !M(4) = par_Fin2mass
-        
-#ifdef DEBUGQ
-        print*,"flav",flav
-        print*,"Gen",Gen
-        print*,"Neu",Neu
-        print*,"Cha",Cha
-        print*,"M",M
-        !stop
-#endif
       end
 c############### end subroutine set_process ############################
 
@@ -252,9 +240,7 @@ c convert the powheg flavor string to an character string
         integer nlegs, lstr, i
         integer flav(nlegs)
         character*(*) str
-        !do i=1,NCHARACTERS
-        !  str = " "
-        !enddo
+        
         lstr = 0
         do i=1,nlegs
         if(i.eq.3) then

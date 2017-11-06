@@ -68,24 +68,9 @@ c MK: added
       call momenta_lh(kn_preal,nlegreal) !always have radiation here
       ! id of the event
       idprup=lprup(1)
-#ifdef DEBUGQ
-      print*,"rad_realosres",rad_realosres
-#endif
-#ifdef DEBUGQ
-      alr=rad_realalr
-      print*,"[DEBUG] in LesHouchesreg_mod.f:75"
-      print*,"flst_alr(:,alr)",flst_alr(:,alr)
-      print*,"icolup(:,",1,")",icolup(:,1)
-      print*,"icolup(:,",2,")",icolup(:,2)
-      print*,"icolup(:,",5,")",icolup(:,5)
-      print*
-#endif
       do ireg=1,nup
          ! Remember: gluons are marked 0 here!
          idup(ireg)=flst_osres(ireg,rad_realosres)
-#ifdef DEBUGQ
-         print*,"idup",idup(ireg)
-#endif
          if (idup(ireg).eq.0) idup(ireg)=21
          if(ireg.le.2) then
             istup(ireg)=-1

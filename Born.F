@@ -22,11 +22,6 @@ c parton parton -> weakino weakino
         ! output control
         integer warncount1
         data warncount1/0/
-#ifdef DEBUGQ
-        double precision momsum2sq
-        external momsum2sq
-        double precision s35, s45
-#endif
 
         if(init_born) then
           print*
@@ -57,16 +52,6 @@ c parton parton -> weakino weakino
           endif
           born = 0D0
         endif
-
-#ifdef DEBUGQ
-        ! fill histograms
-        if(dsqrt(p(1,5)**2+p(2,5)**2).gt.10D0) then
-          s35 = momsum2sq(p(0:3,3),p(0:3,5))
-          s45 = momsum2sq(p(0:3,4),p(0:3,5))
-          call histogram("sqrt(s35)",90,100D0,1000D0,dsqrt(s35),born)
-          call histogram("sqrt(s45)",90,100D0,1000D0,dsqrt(s45),born)
-        endif
-#endif
       end
 c############### end setborn subroutine ################################
 

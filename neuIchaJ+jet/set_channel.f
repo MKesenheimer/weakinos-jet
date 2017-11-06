@@ -119,8 +119,6 @@ c
           endif
         endif
         
-        ! TODO: indices aus subroutine set_process(nlegs, id, M) verwenden!
-        
         ! set the masses, squark double resonances
         if(ichan.ge.1 .and. ichan.le.8) then
           osres_mi = par_Fin1mass
@@ -266,18 +264,5 @@ c
         osres_mijk = dabs(osres_mijk)
         osres_mij  = dabs(osres_mij)
         osres_mkl  = dabs(osres_mkl)
-        
-#ifdef DEBUGQ
-        print*,"ichan",ichan
-        print*,"flav",flav
-        print*,"i,j,k,l",osres_i,osres_j,osres_k,osres_l
-        print*,"mi,mj,mk,ml",osres_mi,osres_mj,osres_mk,osres_ml
-        print*,"mij,wij",osres_mij,osres_wij
-        print*,"mkl,wkl",osres_mkl,osres_wkl
-        print*,"mijk,wijk",osres_mijk,osres_wijk
-        print*,"par_FinMasses",par_Fin1mass,par_Fin2mass
-        print*
-        call nstop(nosres)
-#endif
       end
 c############### end subroutine set_channel ############################

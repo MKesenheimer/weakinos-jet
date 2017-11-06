@@ -5,17 +5,14 @@
 More informations about how to set up the project properly on http://powhegbox.mib.infn.it/.
 
 ### Compiling
+
 The first thing you should do is to compile the static libraries
 
 * libdhelas3.a
 
-* liblooptools.a
+* libcollier.a
 
 * libSLHA.a
-
-and if you want the Pythia8 static library
-
-* libpythia.a
 
 for your own operating system. To do this, call the configuration scripts in the main directory by simply typing
 
@@ -23,49 +20,46 @@ for your own operating system. To do this, call the configuration scripts in the
 
 where the optional parameter compiler is whether gfortran or ifort.
 
-Afterwards you can compile the libraries by typing
+You can compile the libraries by typing
 
         $ make libdhelas3.a
-        $ make liblooptools.a
+
+        $ make libcollier.a
+
         $ make libSLHA.a
-        $ [make libpythia.a]
-        
+
 or short
 
         $ make libs
-        $ [make libpythia.a]
-
-You can choose in the Makefile if you want use Pythia8 or Pythia6. If you choose to
-use Pythia8, you should compile the static library libpythia.a directly from the
-working directory by typing 
-
-        $ make libpythia.a
-        
-or you should provide a path to the pythia8-config script in the Makefile
-(this could be problematic for Mac OSX users, since Pythia8 is not using the 
-libstdc++ library as default, which is necessary for proper linking).
 
 If you want to use your own libraries, copy them into ./Tools/ or provide
 paths to the libraries in the Makefile.
 
-Afterwards, change into a desired process directory and type
+Then, change into a desired process directory and type
+
+        $ make -j4 libs
 
         $ make clean-results && make -j4 do
-        
-to compile and run the program.
+
+to compile the virtual and real matrix elements and run the program or use the script
+
+        $ ./make-all.sh -j4 libs
+
+to build the libraries and executables for all processes at once.
 
 Important note for Mac OSX and probably for some Linux users, too:
 In order to link the object files properly with newer compiler versions
 it might be advisable to recompile all libraries using the -lstdc++ flag.
 
-
 ### Precompiler Flags
+
 In the current version several C preprocessor (cpp) flags are implemented.
 The preprocessor runs in traditional mode for gfortran. Any restrictions of the 
 file-format, especially the limits on line length, apply for 
 preprocessed output as well, so it might be advisable to use the 
 
         -ffree-line-length-none 
+
 or 
 
         -ffixed-line-length-none
@@ -76,6 +70,7 @@ it is imperative to run
         $ make clean
 
 before recompiling the source code.
+
 The flags
 
 * FORM_BORN, MAD_BORN
@@ -96,7 +91,6 @@ With the implemented flags the C preprocessor sorts out all unnecessary
 code.
 
 Please refer to the Makefile for a detailed overview.
-
 
 ### Running
 
@@ -127,18 +121,14 @@ Please refer to the provided manual.
 
 ### Scripts
 
-We have added several helpful scripts to the whole package, which could be used to generate 
-results or clean old runs. The most important one is ./Scripts/runparallel.sh, which is used 
-to run the POWHEG-BOX-V2 executable totally automated in parallel mode. 
+We have added several helpful scripts, which could be used to generate results or clean 
+old runs. The most important one is ./Scripts/runparallel.sh, which is used to run the 
+POWHEG-BOX-V2 executable totally automated in parallel mode. 
 Type
-
         $ ./runparallel.sh -h
 
 to get an overview of the functionality of the script. This script works even with the MOAB 
-submitting system msub.
-
-If you want to run the Mathematica script ./Scripts/qqbchichib.m follow the instructions in ./Scripts/README.
-
+and condor submitting systems.
 
 ### License
 

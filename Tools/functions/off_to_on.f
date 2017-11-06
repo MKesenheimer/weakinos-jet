@@ -209,54 +209,6 @@ c
         p_OS(:,k) = pk_tilde(:)
         p_OS(:,l) = pl_tilde(:)
 
-#ifdef DEBUGQ
-        if(.not.flag_ij.or..not.flag_kl) then
-
-        norm = dsqrt(pkl_tilde(1)**2+pkl_tilde(2)**2+pkl_tilde(3)**2)
-        betaRkl   = norm/pkl_tilde(0)
-        vecRkl(1) = pkl_tilde(1)/norm
-        vecRkl(2) = pkl_tilde(2)/norm
-        vecRkl(3) = pkl_tilde(3)/norm
-        print*,vecRkl(:)
-        
-        norm = dsqrt(pkl(1)**2+pkl(2)**2+pkl(3)**2)
-        betaRkl   = norm/pkl(0)
-        vecRkl(1) = pkl(1)/norm
-        vecRkl(2) = pkl(2)/norm
-        vecRkl(3) = pkl(3)/norm
-        print*,vecRkl(:)
-        
-        print*,"p1",p(:,1), dsqrt(dabs(momsq(p(:,1))))
-        print*,"p2",p(:,2), dsqrt(dabs(momsq(p(:,2))))
-        print*,"pi",p(:,i), dsqrt(dabs(momsq(p(:,i))))
-        print*,"pj",p(:,j), dsqrt(dabs(momsq(p(:,j))))
-        print*,"pk",p(:,k), dsqrt(dabs(momsq(p(:,k))))
-        print*,"pl",p(:,l), dsqrt(dabs(momsq(p(:,l))))
-        print*,"piRij",piRij(:), dsqrt(dabs(momsq(piRij(:))))
-        print*,"pjRij",piRij(:), dsqrt(dabs(momsq(pjRij(:))))
-        print*,"pkRkl",pkRkl(:), dsqrt(dabs(momsq(pkRkl(:))))
-        print*,"plRkl",plRkl(:), dsqrt(dabs(momsq(plRkl(:))))
-        print*,"pt(i)",dsqrt(p(1,i)**2+p(2,i)**2)
-        print*,"pt(j)",dsqrt(p(1,j)**2+p(2,j)**2)
-        print*,"pt(k)",dsqrt(p(1,k)**2+p(2,k)**2)
-        print*,"pt(l)",dsqrt(p(1,l)**2+p(2,l)**2)
-        print*,"pij_tilde",pij_tilde(:),dsqrt(dabs(momsq(pij_tilde(:))))
-        print*,"pkl_tilde",pkl_tilde(:),dsqrt(dabs(momsq(pkl_tilde(:))))
-        print*,"p1_OS",p_OS(:,1), dsqrt(dabs(momsq(p_OS(:,1))))
-        print*,"p2_OS",p_OS(:,2), dsqrt(dabs(momsq(p_OS(:,2))))
-        print*,"pi_OS",p_OS(:,i), dsqrt(dabs(momsq(p_OS(:,i))))
-        print*,"pj_OS",p_OS(:,j), dsqrt(dabs(momsq(p_OS(:,j))))
-        print*,"pk_OS",p_OS(:,k), dsqrt(dabs(momsq(p_OS(:,k))))
-        print*,"pl_OS",p_OS(:,l), dsqrt(dabs(momsq(p_OS(:,l))))
-        print*,"|pij| = ", dsqrt(dabs(momsum2sq(p(:,i),p(:,j))))
-        print*,"|pkl| = ", dsqrt(dabs(momsum2sq(p(:,k),p(:,l))))
-        print*,"|pij_OS| = ", dsqrt(dabs(momsum2sq(p_OS(:,i),p_OS(:,j))))
-        print*,"|pkl_OS| = ", dsqrt(dabs(momsum2sq(p_OS(:,k),p_OS(:,l))))
-        print*
-        !stop
-        endif
-#endif
-        
         ! - checks -
         ! check on-shell condition
         if(flag_ij) then
@@ -636,10 +588,6 @@ c rescaled by this correction factor
         else
           corrfac_ijkl = 0D0
         endif
-
-#ifdef DEBUGQ
-        print*,"corrfac_ijkl",corrfac_ijkl
-#endif
       end  
 c############### end function corrfac_ijkl #############################
 
@@ -670,9 +618,5 @@ c rescaled by this correction factor
         else
           corrfac_ijk = 0D0
         endif
-
-#ifdef DEBUGQ
-        print*,"corrfac_ijk",corrfac_ijk
-#endif
       end  
 c############### end function corrfac_ijk ##############################

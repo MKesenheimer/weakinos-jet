@@ -48,7 +48,7 @@ c modifies the jacobian.
         ! output control
         integer warncount1
         data warncount1/0/
-#ifdef DEBUGQ
+#ifdef HISTOGRAMS
         double precision s35, s46, s356
         integer lstr
         character*50 str
@@ -178,7 +178,7 @@ c modifies the jacobian.
           amp = 0D0
         endif
 
-#ifdef DEBUGQ
+#ifdef HISTOGRAMS
         ! fill histograms
         if(dsqrt(p(1,5)**2+p(2,5)**2).gt.10D0 .and. dsqrt(p(1,6)**2+p(2,6)**2).gt.10D0) then
           call process_name(nlegreal,rflav(1:nlegreal),str,lstr)

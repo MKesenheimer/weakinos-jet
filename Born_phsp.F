@@ -45,12 +45,6 @@ c and the Jacobi factor for the phase space volume
         jac = 1D0
         kn_jacborn = 1d0
 
-#ifdef DEBUGQ
-        print*,"born_phsp: start"
-        print*,"xborn(:) = ", xborn(:)
-!#define DEBUG1
-#endif
-
         ! set masses for Born and real emission
         kn_masses(1) = 0D0
         kn_masses(2) = 0D0
@@ -61,12 +55,6 @@ c and the Jacobi factor for the phase space volume
 
         ! lower bound on the mass of the final state 2->3 process
         kn_minmass = kn_masses(3) + kn_masses(4) + kn_masses(5)
-
-
-#ifdef DEBUG1
-        print*,"minmass = ", kn_minmass
-        print*,"sbeams  = ", kn_sbeams
-#endif
 
         ! calculate the parton momentum fractions kn_xb1, kn_xb2
         ! the squared CM energy of the Born process sborn
@@ -147,34 +135,6 @@ c and the Jacobi factor for the phase space volume
         ! check four momentum conservation
         call check_4conservation(kn_pborn,nlegborn,2,lresult)
         if(.not.lresult) kn_jacborn = 0D0
-        
-#ifdef DEBUG1
-        print*,"bjorken x:"
-        print*,"kn_xb1 = ", kn_xb1
-        print*,"kn_xb2 = ", kn_xb2
-        print*,"energy and momenta in lab frame:"
-        print*,"E1, pz1  = ", kn_xb1*dsqrt(kn_sbeams)/2
-        print*,"E2, -pz2 = ", kn_xb2*dsqrt(kn_sbeams)/2
-        print*,"invariant masses"
-        print*,"sborn = ", kn_sborn
-        print*,"sborn = ", kn_xb1*kn_xb2*kn_sbeams
-        print*,"laboratory frame:"
-        print*,"kn_pborn(1) = ", kn_pborn(:,1)
-        print*,"kn_pborn(2) = ", kn_pborn(:,2)
-        print*,"kn_pborn(3) = ", kn_pborn(:,3)
-        print*,"kn_pborn(4) = ", kn_pborn(:,4)
-        print*,"kn_pborn(5) = ", kn_pborn(:,5)
-        print*,"center of mass frame:"
-        print*,"kn_cmpborn(1) = ", kn_cmpborn(:,1)
-        print*,"kn_cmpborn(2) = ", kn_cmpborn(:,2)
-        print*,"kn_cmpborn(3) = ", kn_cmpborn(:,3)
-        print*,"kn_cmpborn(4) = ", kn_cmpborn(:,4)
-        print*,"kn_cmpborn(5) = ", kn_cmpborn(:,5)
-        call check_4conservation(kn_pborn,nlegborn,2,lresult)
-        print*,"four momentum check in lab frame:", lresult
-        call check_4conservation(kn_pborn,nlegborn,2,lresult)
-        print*,"four momentum check in cm frame:", lresult
-#endif
       end
 c############### end subroutine born_phsp ##############################
 
@@ -203,11 +163,6 @@ c############### subroutine born_suppression ###########################
         endif
         
         if(fact.le.0d0) fact = 1d0
-        
-#ifdef DEBUGQ
-        print*, "bornsuppfact = ", fact
-        !stop
-#endif
       end
 c############### end subroutine born_suppression #######################
 
@@ -244,22 +199,6 @@ c############### subroutine set_fac_ren_scales #########################
           endif
         endif
        
-#ifdef DEBUGQ
-        print*,"p born:"
-        print*,kn_pborn(:,1)
-        print*,kn_pborn(:,2)
-        print*,kn_pborn(:,3)
-        print*,kn_pborn(:,4)
-        print*,kn_pborn(:,5)
-        print*,"p real:"
-        print*,kn_preal(:,1)
-        print*,kn_preal(:,2)
-        print*,kn_preal(:,3)
-        print*,kn_preal(:,4)
-        print*,kn_preal(:,5)
-        print*,kn_preal(:,6)
-#endif
-
 c choose the running scale
 c 1: invariant mass of weakino-pair
 c 2: sum of transverse energy of final states
@@ -319,4 +258,3 @@ c 2: sum of transverse energy of final states
         mur1 = muref
       end
 c############### end subroutine set_fac_ren_scales #####################
-

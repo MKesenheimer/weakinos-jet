@@ -161,12 +161,6 @@ c     loop on final-state massless partons
                      ! this automatically to sq and go 
                      Q = Q - c(mod(flst_born(leg,jb),pdgfac))*
      1                    (ll-0.5*Intm_ep(pborn(0,leg)))
-#ifdef DEBUG
-                     print*,"in sigsoftvirt_mod.f:165"
-                     print*,"uncomment to continue"
-                     print*,"Q",Q
-                     stop
-#endif
                   endif
                endif
 c WEW

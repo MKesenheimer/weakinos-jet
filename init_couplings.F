@@ -20,10 +20,6 @@ c requires encoded process ID in lprup(1)
 
         ! extract particle types from process id
         call decode_pair(lprup(1),id_fin1,id_fin2)
-#ifdef DEBUG
-        print*, "extracted from process ID: ", lprup(1)
-        print*, "the final state pair: ", id_fin1, ", ", id_fin2
-#endif
 
         ! set PhysPars parameters
         call set_phys_params
@@ -433,10 +429,6 @@ c version.
 
         ! extract particle types from process id
         call decode_pair(lprup(1),id_fin1,id_fin2)
-#ifdef DEBUG
-        print*, "extracted from process ID: ", lprup(1)
-        print*, "the final state pair: ", id_fin1, ", ", id_fin2
-#endif
         
         select case(abs(id_fin1))
           case (1000022) ! neutralino1
@@ -486,15 +478,6 @@ c version.
 
         ! mass of the jet (is used only for phsp)
         par_Fin3mass = 0D0
-        
-#ifdef DEBUGQ
-        print*, "sd_L width =", par_WSf(1,4,1)
-        print*, "sd_R width =", par_WSf(2,4,1)
-        print*, "sc_L width =", par_WSf(1,3,2)
-        print*, "sc_R width =", par_WSf(2,3,2)
-        print*, "go width   =", par_WGl
-        stop
-#endif
       end
 c############### end subroutine set_phys_params ########################
 

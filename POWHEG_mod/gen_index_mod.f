@@ -39,16 +39,6 @@ c bigger changes over a whole section are marked with !===...
       call pick_random(rad_alr_nlist,rad_real_arr,rad_realidx)
       rad_realalr=rad_alr_list(rad_realidx)
       kn_emitter = flst_emitter(rad_realalr)
-#ifdef DEBUGQ
-      print*,"rad_real_arr",rad_real_arr(1:rad_alr_nlist)
-      print*,"rad_alr_list",rad_alr_list(1:rad_alr_nlist)
-      !print*,"rad_realidx",rad_realidx
-      print*,"rad_realalr",rad_realalr
-      print*,"flst_emitter",flst_emitter(1:rad_alr_nlist)
-      print*,"kn_emitter",kn_emitter
-      !print*,"maxalr",maxalr
-      print*
-#endif
       end
 
       subroutine pick_random(n,r,jret)
@@ -166,7 +156,6 @@ c MK: added
       ran1 = random()
       ran2 = int(1+random()*(flst_nosres-1))
       
-c which version is better?
 #define GENOSRES1
 #ifdef GENOSRES1
       do ichan=1,nosres  
@@ -199,14 +188,5 @@ c which version is better?
         endif
       enddo
  10   continue
-#endif
-
-#ifdef DEBUGQ
-      print*,"in gen_index_mod.f: check and uncommnet"  
-      print*,ran1,ran2,flst_osres(:,ran2)
-      print*,rad_ubornidx,rad_realosres
-      print*,rad_totosres_sum,rad_totosres_frac_sum
-      print*,kn_emitter
-      print*,ichan,iret
 #endif
       end

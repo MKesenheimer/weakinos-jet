@@ -86,16 +86,6 @@ STATIC_FJ = no
 LOOPINT = collier
 USRFLAGS += -D$(LOOPINT)
 
-## Pythia8
-# if you want to use Pythia8 instead of Pythia6 uncomment the following
-#USE_PYTHIA8 = yes
-## static lingking? yes, no
-#STATIC_PYT8 = no
-# path or name of pythia8-config executable
-# (uncomment only if you want to use a locally installed Pythia8 and not
-# the pythia8 library in ../Tools)
-#PYTHIA8_CONFIG = pythia8-config
-
 ## warning for type-conversions -> basically useless, as those occur in
 ## too many places
 #WARN  = -Wconversion -Wall -Wtabs -Wall -Wimplicit-interface
@@ -277,25 +267,6 @@ ifdef USE_FASTJET
   PWHGANALYSIS+= fastjetfortran.o
 endif
 
-# the user choosed to use Pythia8
-ifeq ("$(USE_PYTHIA8)","yes")
-  # the user choosed to use a locally installed Pythia8
-  ifdef PYTHIA8_CONFIG
-    ifeq ("$(STATIC_PYT8)","yes")
-      PYT8PATH = $(shell $(PYTHIA8_CONFIG) --libdir)
-      LIBS += $(PYT8PATH)/libpythia8.a
-      PYCXXFLAGS  += $(shell $(PYTHIA8_CONFIG) --cxxflags)
-    else
-      LIBS += $(shell $(PYTHIA8_CONFIG) --libs --plugins )
-      PYCXXFLAGS  += $(shell $(PYTHIA8_CONFIG) --cxxflags)
-    endif
-  else
-    LIBS += $(TOOLS)/libpythia8.a
-    PYCXXFLAGS += -I$(PY8INCLUDE)
-  endif
-  PWHGANALYSIS+= pythiafortran.o
-endif
-
 ### USER Files ###
 USER = Born.o Born_phsp.o Reals.o Virtuals.o 	\
        init_processes.o init_couplings.o Reals_osres.o 		\
@@ -365,13 +336,8 @@ PYTHIA = boostrot.o powheginput.o init_couplings.o funcprocess.o 	\
 	pwhg_analysis_driver.o random.o cernroutines_mod.o opencount.o	\
 	bra_ket_subroutines.o off_to_on.o funcbasic.o Print.o \
 	pwhg_io_interface.o rwl_weightlists.o multi_plot.o 
-ifeq ("$(USE_PYTHIA8)","yes")
-  # TODO:
-  PYTHIA += main-PYTHIA_mod.o
-else
-  PYTHIA += main-PYTHIA.o setup-PYTHIA-lhef.o
-  PYTHIA += pythia-6.4.25-decay.o
-endif
+PYTHIA += main-PYTHIA.o setup-PYTHIA-lhef.o
+PYTHIA += pythia-6.4.25-decay.o
 
 ### Virtual Amplitudes in Formcalc_Virtuals/ ###
 VIRTUALS_F := $(wildcard $(FORMVIRTS)/squaredME/*.F)
