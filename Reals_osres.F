@@ -151,7 +151,7 @@ c modifies the jacobian.
           call getRealOSAmps(p_os,rflav,ichan,ampOS)
           ampCT = bwratio*ampOS
           ! rescale the counter term to fit into the new PS (leave sij unconstraint)
-          ampCT = corrfac_ijk(s12,mi,mj,mk,ml,mijk,sij,sijk,sij)*ampCT
+          ampCT = corrfac_ijk(s12,mi,mj,mk,ml,mijk,dsqrt(sij),sijk,sij)*ampCT
 #ifdef DSUB_II
           amp = amp - ampCT
 #else
