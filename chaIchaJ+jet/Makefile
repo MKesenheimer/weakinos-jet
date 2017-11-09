@@ -324,7 +324,7 @@ LHEF = lhef_analysis.o boostrot.o random.o cernroutines_mod.o \
 	lhefread.o newunit_mod.o pwhg_analysis_driver.o \
 	funcprocess.o init_couplings.o Print.o \
 	bra_ket_subroutines.o off_to_on.o funcbasic.o \
-	pwhg_io_interface.o rwl_weightlists.o multi_plot.o 
+	pwhg_io_interface.o rwl_weightlists_mod.o multi_plot.o 
 
 ### PYTHIA ###
 # target to read event file, shower events with PYTHIA + analysis
@@ -335,7 +335,7 @@ PYTHIA = boostrot.o powheginput.o init_couplings.o funcprocess.o 	\
 	pwhg_bookhist-multi.o lhefread.o newunit_mod.o pdfdummies.o	\
 	pwhg_analysis_driver.o random.o cernroutines_mod.o opencount.o	\
 	bra_ket_subroutines.o off_to_on.o funcbasic.o Print.o \
-	pwhg_io_interface.o rwl_weightlists.o multi_plot.o 
+	pwhg_io_interface.o rwl_weightlists_mod.o multi_plot.o 
 PYTHIA += main-PYTHIA.o setup-PYTHIA-lhef.o
 PYTHIA += pythia-6.4.25-decay.o
 
