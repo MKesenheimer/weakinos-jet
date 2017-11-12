@@ -635,7 +635,7 @@ c sets the FormCalc parameters
         S2B = 2*TB*CB2
         C2B = (CB - SB)*(CB + SB)
         
-        TA = 0.1D0 !MinPar_TA, TODO!
+        TA = dtan(dble(Alpha_Alpha))
         CA = dabs(1.D0/dsqrt(1+TA**2))
         SA = dabs(TA*CA)
         SA2 = SA**2
