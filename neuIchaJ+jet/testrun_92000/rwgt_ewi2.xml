@@ -1,0 +1,13 @@
+<initrwgt>
+<weightgroup name='EWI2' combine='envelope'>
+<weight id='3'>wreg2=1.83D-5</weight>
+<weight id='4'>wreg2=6.04D-5</weight>
+<weight id='5'>wreg2=1.83D-4</weight>
+<weight id='6'>wreg2=6.04D-4</weight>
+<weight id='7'>wreg2=1.83D-3</weight>
+<weight id='8'>wreg2=6.04D-3</weight>
+<weight id='9'>wreg2=1.83D-2</weight>
+<weight id='10'>wreg2=6.04D-2</weight>
+<weight id='11'>wreg2=1.83D-1</weight>
+</weightgroup>
+</initrwgt>

@@ -60,17 +60,17 @@ if [[ $# == 0 ]]; then
   #PROCDIR="neuIneuJ+jet/FormCalc_Reals"
   # nIxJ
   #PROCDIR="neuIchaJ+jet/FormCalc_Virtuals"
-  PROCDIR="chaIchaJ+jet/FormCalc_Reals"
+  #PROCDIR="chaIchaJ+jet/FormCalc_Reals"
   # xIxJ
-  #PROCDIR="chaIchaJ+jet/FormCalc_Virtuals"
+  PROCDIR="neuIchaJ+jet/FormCalc_Virtuals"
   #PROCDIR="chaIchaJ+jet/FormCalc_Reals"
 
   # where to copy the amplitudes to
   DEST=${PWD}/../../${PROCDIR}
 
   # number of particles (incoming + outgoing)
-  #NPART=5
-  NPART=6
+  NPART=5
+  #NPART=6
 
   # process list file
   # nInJ
@@ -79,7 +79,7 @@ if [[ $# == 0 ]]; then
   #PROCF="./proc_nInJjj_os"
   #PROCF="./proc_nInJjj_reg"
   # nIxJ
-  #PROCF="./proc_nIxJj"
+  PROCF="./proc_nIxJj"
   #PROCF="./proc_nIxJjj_nr"
   #PROCF="./proc_nIxJjj_os"
   #PROCF="./proc_nIxJjj_reg"
@@ -87,7 +87,7 @@ if [[ $# == 0 ]]; then
   #PROCF="./proc_xIxJj"
   #PROCF="./proc_xIxJjj_nr"
   #PROCF="./proc_xIxJjj_os"
-  PROCF="./proc_xIxJjj_reg"
+  #PROCF="./proc_xIxJjj_reg"
 
   # the name of Mathematica Scripts
   # nInJ
@@ -96,7 +96,7 @@ if [[ $# == 0 ]]; then
   #MSCRIPT="./nInJjj_os.m"
   #MSCRIPT=""
   # nIxJ
-  #MSCRIPT="./nIxJj_virt.m"
+  MSCRIPT="./nIxJj_virt.m"
   #MSCRIPT="./nIxJjj.m"
   #MSCRIPT="./nIxJjj_os.m"
   #MSCRIPT=""
@@ -105,14 +105,14 @@ if [[ $# == 0 ]]; then
   #MSCRIPT="./xIxJj_virt.m"
   #MSCRIPT="./xIxJjj.m"
   #MSCRIPT="./xIxJjj_os.m"
-  MSCRIPT=""
+  #MSCRIPT=""
 
   # the type of the amplitudes (born, virt, real, realOS)
   #TYPE="born"
-  #TYPE="virt"
+  TYPE="virt"
   #TYPE="real"
   #TYPE="realOS"
-  TYPE="real"
+  #TYPE="real"
 
 elif [[ $# == 5 ]]; then
   PROCDIR=$1
