@@ -145,6 +145,8 @@ DEBUG = -ggdb -pg -DDEBUG=$(LEVEL)
 USRFLAGS += -DDSUB_II
 # use the POWHEG modified files (yes, no)
 POWMOD = yes
+# use an additional jacobian rescaling factor for nested phase spaces
+USRFLAGS += -DRESCALE
 
 ## SkipHel
 # skip the calculation of formcalc helicity amplitudes if the amplitude

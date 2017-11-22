@@ -32,6 +32,8 @@ c modifies the jacobian.
         ! jacobian for the on-shell terms
         double precision corrfac_ijkl, corrfac_ijk
         external corrfac_ijkl, corrfac_ijk
+        double precision stilde, sijtilde, skltilde
+        external stilde
         ! kinematics
         double precision s12, sij, skl, sijk
         ! mass at resonance, mass of particle i,j,k,l
@@ -102,6 +104,11 @@ c modifies the jacobian.
         skl = momsum2sq(p(0:3,k),p(0:3,l)) ! invariant mass of particle k + l
         sijk = momsum3sq(p(0:3,i),p(0:3,j),p(0:3,k))
 
+        ! variable transformation to on-shell kinematics
+        skltilde = stilde(s12,mk,ml,mij,mkl,sij,skl)
+        !sijtilde = stilde(s12,mi,mj,mkl,mij,skl,sij)
+        sijtilde = sij
+
 #ifdef DSUB_II
         ! this is |M_R(res)|**2 (still with on-shell resonances)
         call getRealOSAmps(p,rflav,ichan,amp)
@@ -116,19 +123,19 @@ c modifies the jacobian.
      &     (s12.ge.(mij+mkl)**2).and.(mij.ge.(mi+mj)).and.(mkl.ge.(mk+ml))) then
           ! with natural widths in double pole part
           bwratio = (mij**2*mkl**2*wij**2*wkl**2*
-     &              (mij**4 + (-mkl**2 + sij + skl)**2 + 
-     &              mij**2*(2*mkl**2 - 2*(sij + skl) + 
+     &              (mij**4 + (-mkl**2 + sijtilde + skltilde)**2 + 
+     &              mij**2*(2*mkl**2 - 2*(sijtilde + skltilde) + 
      &              wij**2) + 2*mij*mkl*wij*wkl + 
      &              mkl**2*wkl**2)*
      &              (mij*(wij + wreg2) + mkl*(wkl + wreg2))**2)/
-     &              (((mij**2 - sij)**2 + mij**2*wij**2)*
+     &              (((mij**2 - sijtilde)**2 + mij**2*wij**2)*
      &              (mij*wij + mkl*wkl)**2*
-     &              ((mkl**2 - skl)**2 + mkl**2*wkl**2)*
-     &              (mij**4 + mkl**4 + (sij + skl)**2 + 
+     &              ((mkl**2 - skltilde)**2 + mkl**2*wkl**2)*
+     &              (mij**4 + mkl**4 + (sijtilde + skltilde)**2 + 
      &              2*mij*mkl*(wij + wreg2)*(wkl + wreg2) + 
-     &              mij**2*(2*mkl**2 - 2*sij - 2*skl + 
+     &              mij**2*(2*mkl**2 - 2*sijtilde - 2*skltilde + 
      &              (wij + wreg2)**2) + 
-     &              mkl**2*(-2*sij - 2*skl + (wkl + wreg2)**2)))
+     &              mkl**2*(-2*sijtilde - 2*skltilde + (wkl + wreg2)**2)))
           ! off_to_on the momenta p to on-shell momenta p_os
           call off_to_on_ijkl(p,rflav,ichan,.true.,.true.,p_os,check)
           call getRealOSAmps(p_os,rflav,ichan,ampOS)
