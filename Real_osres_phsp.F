@@ -5,14 +5,13 @@ c copied and modified version of disquark/Tools/Procindependent/
 c Real_phsp.f
 
 c############### subroutine real_osres_phsp_pwg ########################
-c the following subroutine creates a phase-space for 2 -> 3 with
-c a tan-mapping for the invariant mass between particles i and j is used
-c to calculate the resonant contributions with intermediate resonant squarks.
-c The numer "ichan" is an additional channel identifier "ichan" which
-c selects the resonance specified in init_processes.F.
+c the following subroutine creates a 2 -> 4 particle phase-space
+c a tan-mapping for the invariant mass between particles i,j & k,l is used
+c to calculate the resonant contributions with intermediate resonant particles.
+c The number "ichan" is an additional channel identifier which
+c selects the resonance specified in set_channel.F
 c Only perform a tan-mapping if there is a (possible) resonance, 
-c otherwise: flat sampling in sij
-c this subroutine uses subroutines defined in phsp_routines.f (with boosts).
+c otherwise: flat sampling in sij or skl
       subroutine real_osres_phsp(xx,flav,ichan)
         implicit none
 #include "PhysPars.h"
