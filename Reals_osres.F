@@ -105,8 +105,9 @@ c modifies the jacobian.
         sijk = momsum3sq(p(0:3,i),p(0:3,j),p(0:3,k))
 
         ! variable transformation to on-shell kinematics
-        skltilde = stilde(s12,mk,ml,mij,mkl,sij,skl)
+        !skltilde = stilde(s12,mk,ml,mij,mkl,sij,skl)
         !sijtilde = stilde(s12,mi,mj,mkl,mij,skl,sij)
+        skltilde = skl
         sijtilde = sij
 
 #ifdef DSUB_II
