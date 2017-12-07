@@ -573,15 +573,9 @@ c rescaled by this correction factor
         double precision shat,mi,mj,mk,ml,mkl,mij,sij,skl
         double precision denom
         double precision sklm, sklp, sklmos, sklpos
-        double precision sijm, sijp, sijmos, sijpos
         ! external functions
         double precision kaellenSqrt
         external kaellenSqrt
-
-        !sijm = (mi+mj)**2
-        !sijp = (dsqrt(shat)-dsqrt(skl))**2
-        !sijmos = (mi+mj)**2
-        !sijpos = (dsqrt(shat)-mkl)**2
 
         sklm = (mk+ml)**2
         sklp = (dsqrt(shat)-dsqrt(sij))**2
@@ -597,12 +591,11 @@ c rescaled by this correction factor
      &                    *kaellenSqrt(mij**2,mi**2,mj**2)
      &                    *kaellenSqrt(mkl**2,mk**2,ml**2))
      &                    /denom
-#ifdef RESCALE
           ! additional rescale factor which comes from the nested 
-          ! four particle phase space
-          !corrfac_ijkl = corrfac_ijkl*(sijpos-sijmos)/(sijp-sijm)
+          ! four particle phase space.
+          ! Note that this factor must be choosen such that it fits
+          ! to the on-shell phase-space integration.
           corrfac_ijkl = corrfac_ijkl*(sklpos-sklmos)/(sklp-sklm)
-#endif
         else
           corrfac_ijkl = 0D0
         endif
@@ -639,35 +632,13 @@ c rescaled by this correction factor
      &                   *kaellenSqrt(mijk**2,mij**2,mk**2)
      &                   *kaellenSqrt(mij**2,mi**2,mj**2))
      &                   /denom
-#ifdef RESCALE
           ! additional rescale factor which comes from the nested 
           ! four particle phase space
+          ! Note that this factor must be choosen such that it fits
+          ! to the on-shell phase-space integration.
          corrfac_ijk = corrfac_ijk*(sijpos-sijmos)/(sijp-sijm)
-#endif
         else
           corrfac_ijk = 0D0
         endif
       end  
 c############### end function corrfac_ijk ##############################
-
-c############### function stilde #######################################
-c transform the variable sij or skl of the four-particle phase space ijkl
-c to the restricted phase space variables \tilde{sij} and \tilde{skl}
-c where the on-shell conditions are applied
-      double precision function stilde(shat,mk,ml,mij,mkl,sij,skl)
-        implicit none
-        !input variables
-        double precision shat,mi,mj,mk,ml,mkl,mij,sij,skl
-        double precision denom, sklm, sklp, sklmos, sklpos       
-
-#ifdef RESCALE
-        sklm = (mk+ml)**2
-        sklp = (dsqrt(shat)-dsqrt(sij))**2
-        sklmos = (mk+ml)**2
-        sklpos = (dsqrt(shat)-mij)**2
-        stilde = sklmos+(skl-sklm)*(sklpos-sklmos)/(sklp-sklm)
-#else
-        stilde = skl
-#endif
-      end
-c############### end function stilde ###################################
