@@ -4,7 +4,8 @@
 
 This is FormCalc, Version 9.4
 Copyright by Thomas Hahn 1996-2016
-last modified 8 Jun 16 by Thomas Hahn
+
+last 2017 Matthias Kesenheimer
 
 Release notes:
 

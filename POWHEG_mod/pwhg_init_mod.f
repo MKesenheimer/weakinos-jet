@@ -1,3 +1,6 @@
+c MK: copied and modified version of pwhg_init.f, revision 3154
+c changes marked with "! MK:"
+
       subroutine pwhginit
       implicit none
       include 'LesHouches.h'

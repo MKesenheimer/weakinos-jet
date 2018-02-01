@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright (C) Matthias Kesenheimer - All Rights Reserved
+# Written by Matthias Kesenheimer <m.kesenheimer@gmx.net>, 2017
 
 if ([[ $# -ne 2 ]] && [[ $# -ne 3 ]]); then
   echo "Usage: ./canceljob.sh <name> <end>"

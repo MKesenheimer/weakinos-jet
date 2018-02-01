@@ -1,4 +1,6 @@
 #/bin/bash
+# Copyright (C) Matthias Kesenheimer - All Rights Reserved
+# Written by Matthias Kesenheimer <m.kesenheimer@gmx.net>, 2017
 
 filename="sreal_proc.f"
 final1="1000024-1000037"

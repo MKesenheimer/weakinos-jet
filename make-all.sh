@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright (C) Matthias Kesenheimer - All Rights Reserved
+# Written by Matthias Kesenheimer <m.kesenheimer@gmx.net>, 2017
 
 # This scripts provides a faster and simpler way to compile all sub programs at once.
 

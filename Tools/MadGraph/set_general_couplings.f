@@ -1,5 +1,5 @@
 c############### set_general_couplings.f ##################################
-c last modified by MK, date
+c last modified by MK, 2017
 
 c############### subroutine set_general_couplings #########################
       subroutine set_general_couplings(fin1,fin2)

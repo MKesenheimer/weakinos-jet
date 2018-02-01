@@ -1,4 +1,7 @@
 c############### subroutine off_to_on_ijkl #############################
+c Copyright (C) Matthias Kesenheimer - All Rights Reserved
+c Written by Matthias Kesenheimer <m.kesenheimer@gmx.net>, 2017
+c
 c remaps p to on-shell momenta for 4 particle final state
 c sufficient for diagram subtraction scheme
 c this subroutine is in principal a 4 particle phase-space generator 

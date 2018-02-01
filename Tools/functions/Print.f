@@ -1,5 +1,5 @@
 c#####################Print Model Parameters############################
-c prints all model paramters from madgraph and formcalc
+c MK: prints all model paramters from madgraph and formcalc
 
 c############### subroutine printFormcalcModelParameters ###############
 

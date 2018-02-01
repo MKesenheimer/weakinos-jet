@@ -1,3 +1,6 @@
+c MK: copied and modified version of rwl_setup_param_weights_user.f, revision 3154
+c changes marked with "! MK:"
+
       subroutine rwl_setup_params_weights_user(count)
       implicit none
       integer count

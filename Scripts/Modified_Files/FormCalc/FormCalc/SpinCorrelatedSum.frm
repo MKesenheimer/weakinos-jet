@@ -1,7 +1,7 @@
 * SpinCorrelatedSum.frm
 * the FORM part of the SpinCorrelatedSum function
 * this file is part of FormCalc
-* last modified 23 Mar 17 th
+* last modified 23 Mar 17 th by Matthias Kesenheimer
 * Copied and modified on the basis of PolarizationSum.frm with thanks to
 * Thomas Hahn.
 *

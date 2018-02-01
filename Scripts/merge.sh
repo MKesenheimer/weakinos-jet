@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright (C) Matthias Kesenheimer - All Rights Reserved
+# Written by Matthias Kesenheimer <m.kesenheimer@gmx.net>, 2017
+
 # Usage: ./merge.sh <directory> [<grid iteration>]
 WORKINGDIR=${PWD}
 RUNDIR=$WORKINGDIR/$1

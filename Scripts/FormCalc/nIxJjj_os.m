@@ -3,7 +3,7 @@
 (*
 generates the Fortran code for
 p p -> weakino weakino jet jet in the MSSM
-last modified May 2017
+last modified 2017 by Matthias Kesenheimer
 
 Note: Generating the non-resonant amplitudes might be version dependent.
 To be on the sure side use FeynArts 3.9 and FormCal 8.4.
@@ -720,7 +720,7 @@ If[Not[$DiagramsOnly],
     abbr = OptimizeAbbr[Abbr[]];
     subexpr = OptimizeAbbr[Subexpr[]];
   
-    (*fortran can´t handle arrays with dimensionality greater than 7*)
+    (*fortran can\.b4t handle arrays with dimensionality greater than 7*)
     (*apply back the subexpressions with number of arguments greater than 6*)
     subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
                  {i,1,Length[subexpr]}]/.Null->Sequence[];
@@ -749,7 +749,7 @@ If[Not[$DiagramsOnly],
     abbr = OptimizeAbbr[Abbr[]];
     subexpr = OptimizeAbbr[Subexpr[]];
   
-    (*fortran can´t handle arrays with dimensionality greater than 7*)
+    (*fortran can\.b4t handle arrays with dimensionality greater than 7*)
     (*apply back the subexpressions with number of arguments greater than 6*)
     subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
                  {i,1,Length[subexpr]}]/.Null->Sequence[];
@@ -778,7 +778,7 @@ If[Not[$DiagramsOnly],
     abbr = OptimizeAbbr[Abbr[]];
     subexpr = OptimizeAbbr[Subexpr[]];
   
-    (*fortran can´t handle arrays with dimensionality greater than 7*)
+    (*fortran can\.b4t handle arrays with dimensionality greater than 7*)
     (*apply back the subexpressions with number of arguments greater than 6*)
     subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
                  {i,1,Length[subexpr]}]/.Null->Sequence[];
@@ -807,7 +807,7 @@ If[Not[$DiagramsOnly],
     abbr = OptimizeAbbr[Abbr[]];
     subexpr = OptimizeAbbr[Subexpr[]];
   
-    (*fortran can´t handle arrays with dimensionality greater than 7*)
+    (*fortran can\.b4t handle arrays with dimensionality greater than 7*)
     (*apply back the subexpressions with number of arguments greater than 6*)
     subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
                  {i,1,Length[subexpr]}]/.Null->Sequence[];
@@ -836,7 +836,7 @@ If[Not[$DiagramsOnly],
     abbr = OptimizeAbbr[Abbr[]];
     subexpr = OptimizeAbbr[Subexpr[]];
   
-    (*fortran can´t handle arrays with dimensionality greater than 7*)
+    (*fortran can\.b4t handle arrays with dimensionality greater than 7*)
     (*apply back the subexpressions with number of arguments greater than 6*)
     subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
                  {i,1,Length[subexpr]}]/.Null->Sequence[];
@@ -865,7 +865,7 @@ If[Not[$DiagramsOnly],
     abbr = OptimizeAbbr[Abbr[]];
     subexpr = OptimizeAbbr[Subexpr[]];
   
-    (*fortran can´t handle arrays with dimensionality greater than 7*)
+    (*fortran can\.b4t handle arrays with dimensionality greater than 7*)
     (*apply back the subexpressions with number of arguments greater than 6*)
     subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
                  {i,1,Length[subexpr]}]/.Null->Sequence[];
@@ -894,7 +894,7 @@ If[Not[$DiagramsOnly],
     abbr = OptimizeAbbr[Abbr[]];
     subexpr = OptimizeAbbr[Subexpr[]];
   
-    (*fortran can´t handle arrays with dimensionality greater than 7*)
+    (*fortran can\.b4t handle arrays with dimensionality greater than 7*)
     (*apply back the subexpressions with number of arguments greater than 6*)
     subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
                  {i,1,Length[subexpr]}]/.Null->Sequence[];
@@ -923,7 +923,7 @@ If[Not[$DiagramsOnly],
     abbr = OptimizeAbbr[Abbr[]];
     subexpr = OptimizeAbbr[Subexpr[]];
   
-    (*fortran can´t handle arrays with dimensionality greater than 7*)
+    (*fortran can\.b4t handle arrays with dimensionality greater than 7*)
     (*apply back the subexpressions with number of arguments greater than 6*)
     subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
                  {i,1,Length[subexpr]}]/.Null->Sequence[];
@@ -952,7 +952,7 @@ If[Not[$DiagramsOnly],
     abbr = OptimizeAbbr[Abbr[]];
     subexpr = OptimizeAbbr[Subexpr[]];
   
-    (*fortran can´t handle arrays with dimensionality greater than 7*)
+    (*fortran can\.b4t handle arrays with dimensionality greater than 7*)
     (*apply back the subexpressions with number of arguments greater than 6*)
     subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
                  {i,1,Length[subexpr]}]/.Null->Sequence[];
@@ -980,7 +980,7 @@ If[Not[$DiagramsOnly],
     abbr = OptimizeAbbr[Abbr[]];
     subexpr = OptimizeAbbr[Subexpr[]];
   
-    (*fortran can´t handle arrays with dimensionality greater than 7*)
+    (*fortran can\.b4t handle arrays with dimensionality greater than 7*)
     (*apply back the subexpressions with number of arguments greater than 6*)
     subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
                  {i,1,Length[subexpr]}]/.Null->Sequence[];
@@ -1020,7 +1020,7 @@ If[Not[$DiagramsOnly],
   abbr = OptimizeAbbr[Abbr[]];
   subexpr = OptimizeAbbr[Subexpr[]];
   
-  (*fortran can´t handle arrays with dimensionality greater than 7*)
+  (*fortran can\.b4t handle arrays with dimensionality greater than 7*)
   (*apply back the subexpressions with number of arguments greater than 6*)
   subexpr6 = Table[If[(CountArgs[SubstitutionHead[subexpr[[i]]]]/.{}->Sequence[])[[1]]>6,subexpr[[i]]],
          {i,1,Length[subexpr]}]/.Null->Sequence[];

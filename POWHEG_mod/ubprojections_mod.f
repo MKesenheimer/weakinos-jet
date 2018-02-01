@@ -1,3 +1,6 @@
+c MK: copied and modified version of ubprojections.f, revision 3154
+c changes marked with "! MK:"
+
 c Find the underlying Born momenta from the real momenta and the
 c emitter-readiated pair
       subroutine compuborn(em,rad,reslist,cmppborn)

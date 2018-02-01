@@ -1,3 +1,6 @@
+c Copyright (C) Matthias Kesenheimer - All Rights Reserved
+c Written by Matthias Kesenheimer <m.kesenheimer@gmx.net>, 2017
+
       program topintegrator
         implicit none
         integer iun, cle, i, j, ac, maxlines

@@ -1,3 +1,6 @@
+c MK: copied and modified version of rwl_weightlists.f, revision 3154
+c changes marked with "! MK:"
+
       subroutine rwl_init
       implicit none
       include 'pwhg_rwl.h'

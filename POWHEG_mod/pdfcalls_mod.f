@@ -1,3 +1,6 @@
+c MK: copied and modified version of pdfcalls.f, revision 3154
+c changes marked with "! MK:"
+
       subroutine pdfcall(ih,x,pdf)
       implicit none
       include 'pwhg_pdf.h'

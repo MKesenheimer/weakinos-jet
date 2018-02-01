@@ -3,7 +3,7 @@
 (*
 generates the Fortran code for
 p p -> weakino weakino jet in the MSSM
-last modified December 2016
+last modified February 2017 by Matthias Kesenheimer
 *)
 
 

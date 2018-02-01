@@ -1,3 +1,6 @@
+c Copyright (C) Matthias Kesenheimer - All Rights Reserved
+c Written by Matthias Kesenheimer <m.kesenheimer@gmx.net>, 2017
+
 c subroutines to fill simple histograms. Example code to call and fill
 c the histograms:
 c

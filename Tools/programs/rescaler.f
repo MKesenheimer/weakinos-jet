@@ -1,3 +1,6 @@
+c Copyright (C) Matthias Kesenheimer - All Rights Reserved
+c Written by Matthias Kesenheimer <m.kesenheimer@gmx.net>, 2017
+
       program rescaler
         implicit none
         integer iun1,iun2, cle, i, j, ac, maxlines

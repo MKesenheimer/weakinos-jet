@@ -1,6 +1,8 @@
 c############### subroutine set_channel ################################
 c -6  -5  -4  -3  -2  -1  0  1  2  3  4  5  6
 c t~  b~  c~  s~  u~  d~  g  d  u  s  c  b  t
+c Copyright (C) Matthias Kesenheimer - All Rights Reserved
+c Written by Matthias Kesenheimer <m.kesenheimer@gmx.net>, 2017
 c
 c par_MSf(chir,type,gen)
 c chir = 1: left

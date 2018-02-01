@@ -3,7 +3,7 @@
 (*
 generates the Fortran code for
 p p -> weakino weakino jet jet in the MSSM
-last modified November 2016
+last modified 2017 by Matthias Kesenheimer
 
 Note: Generating the non-resonant amplitudes might be version dependent.
 To be on the sure side use FeynArts 3.9 and FormCal 8.4.
