@@ -1,4 +1,4 @@
-c
+c on the basis of VBF_Z_Z/phi1_2.f
 c modified and heavily extended by M. Kesenheimer
 c
 c the definitions used here are according to Byckling & Kajantie,
