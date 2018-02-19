@@ -27,6 +27,10 @@
 ! Version 3 (of 25-01-2018):
 !    * proper use of COLLIER cache system (requires some changes in the
 !      code created by FormCalc, see the supplied README_CL-FC_V3.txt file)
+! Version 4 (of 19-02-2018):
+!    * fixed segfault errors. 
+!    * clearcache clears now all available caches.
+!    * included checks which provide secure clearcache calls.
 
 
 #include "lt_types.h"
@@ -862,10 +866,14 @@ end function getepsi
 subroutine clearcache
   use COLLIER
   implicit none
-  call InitEvent_cll(1) ! CB: only one cache system, does in general NOT
-                        ! work for processes with different initial
-                        ! states since the order of integral calls might
-                        ! be different
+  integer i
+#include "lt_ff.h"
+  ! MK: clear all caches
+  if(NcacheSave.ne.0 .and. NmaxSave.ne.0) then
+    do i=1,NCacheSave
+      call InitEvent_cll(i)
+    enddo
+  endif
 end subroutine clearcache
 
 ! ----------------------------------------------------------------------
@@ -873,12 +881,15 @@ end subroutine clearcache
 subroutine clearcache_mult(cachenum)
   use COLLIER
   implicit none
-  integer, intent(in) :: cachenum
-!#define LTCLLINTV3
-#ifdef LTCLLINTV3
-  call InitEvent_cll(cachenum)
-#else
 #include "lt_ff.h"
+  integer, intent(in) :: cachenum
+! MK: switch from no cache system to multiple cache system
+#define LTCLLINTV4
+#ifdef LTCLLINTV4
+  if(NcacheSave.ne.0 .and. NmaxSave.ne.0) then
+    call InitEvent_cll(cachenum)
+  endif
+#else
   if(NcacheSave.ne.0 .and. NmaxSave.ne.0) then
     call InitCacheSystem_cll(NCacheSave,NmaxSave)
   endif
@@ -890,7 +901,8 @@ end subroutine clearcache_mult
 subroutine markcache ! CB: do not use this function anymore
   use COLLIER
   implicit none
-  call SwitchOffCacheSystem_cll ! check (this generates huge output)
+  ! MK: commented
+  !call SwitchOffCacheSystem_cll ! check (this generates huge output)
 end subroutine markcache
 
 ! ----------------------------------------------------------------------
@@ -898,7 +910,8 @@ end subroutine markcache
 subroutine restorecache ! CB: do not use this function anymore
   use COLLIER
   implicit none
-  call SwitchOnCacheSystem_cll ! check (this generates huge output)
+  ! MK: commented
+  !call SwitchOnCacheSystem_cll ! check (this generates huge output)
 end subroutine restorecache
 
 ! ----------------------------------------------------------------------
@@ -918,11 +931,12 @@ subroutine init_collier(Nmax,ncache)
   integer, intent(in) :: Nmax, ncache
   integer :: Rmax
   Rmax = Nmax+1
+  NCacheSave = ncache ! MK
   call Init_cll(Nmax,Rmax,"")
   call InitCacheSystem_cll(ncache,Nmax)
   ! 1: use COLI branch, 2: DD branch
   call SetMode_cll(1)
-#ifndef LTCLLINTV3
+#ifndef LTCLLINTV4
   call InitEvent_cll(ncache)
 #endif
 end subroutine init_collier

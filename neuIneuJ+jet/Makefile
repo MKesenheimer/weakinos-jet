@@ -280,7 +280,7 @@ USER = Born.o Born_phsp.o Reals.o Virtuals.o 	\
 ### Functions in Tools/functions/
 FUNC = funcprocess.o Print.o funcbasic.o off_to_on.o 
 ifeq ("$(LOOPINT)","collier")
-  FUNC += lt_collier_interface_complex.o
+  FUNC += lt_collier_interface_complex_V4.o
 endif
 
 ### MadGraph mandatory files
