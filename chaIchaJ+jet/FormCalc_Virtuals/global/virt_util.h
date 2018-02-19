@@ -113,8 +113,8 @@ c#define INI_S() call clearcache
 c#define INI_A() call markcache
 c#define DEINI() call restorecache
 #define INI_S(n) call clearcache_mult(n)
-#define INI_A()
-#define DEINI()
+#define INI_A() continue
+#define DEINI() continue
 
 #define Var(v) var(1,v)
 #define Show(v) var(2,v)

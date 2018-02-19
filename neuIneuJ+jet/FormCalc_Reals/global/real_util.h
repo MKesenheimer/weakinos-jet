@@ -113,9 +113,9 @@ c MK: no cache system for born and reals
 c#define INI_S() call clearcache
 c#define INI_A() call markcache
 c#define DEINI() call restorecache
-#define INI_S()
-#define INI_A()
-#define DEINI()
+#define INI_S() continue
+#define INI_A() continue
+#define DEINI() continue
 
 #define Var(v) var(1,v)
 #define Show(v) var(2,v)
