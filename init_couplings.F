@@ -367,14 +367,17 @@ c sets the PhysPars.h parameters
         par_MD = 0D0
         par_MS = 0D0
 
-        if(powheginput("#msbar").gt.0) then
-          if(powheginput("msbar").eq.1) then
+        if(powheginput("#msbar").gt.0 .or. powheginput("#masslessbottom").gt.0) then
+          if(powheginput("msbar").eq.1 .and. powheginput("masslessbottom").ne.1) then
             par_MB = dreal(SMInputs_Mb) 
             print*, "using msbar mass for b-quark: ", par_MB
           endif
-        else
+        elseif(powheginput("msbar").ne.1 .and. powheginput("masslessbottom").ne.1) then
           par_MB = dreal(Mass_Mf(4,3))
           print*, "using pole mass for b-quark: ", par_MB
+        elseif(powheginput("masslessbottom").eq.1) then
+          par_MB = 0D0
+          print*, "neglecting b-quark mass. "
         endif
 
         par_MT = dreal(SMInputs_Mt)
