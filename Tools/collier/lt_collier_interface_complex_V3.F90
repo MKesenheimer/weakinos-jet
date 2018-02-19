@@ -15,6 +15,19 @@
 !
 ! 4. Collier functions needed: SetDeltaIR_cll, SetMuUV2_cll,SetMuIR2_cll
 !    LT functions neeeded: setlambda
+!
+! ------------------------------------------------------------------------
+!
+! Version 2 (of 08-01-2018):
+!    * removed argument Rmax in init_collier subroutine and fix it to a
+!      value of Nmax+1 to avoid crashes when used incorrectly, because the
+!      rank in the Aput, Bput, ... functions is explicitely set to Nmax+1
+!      to take into account functions such as A_{\mu\nu} which are
+!      calculated by LoopTools, but not needed in UV-finite theories
+! Version 3 (of 25-01-2018):
+!    * proper use of COLLIER cache system (requires some changes in the
+!      code created by FormCalc, see the supplied README_CL-FC_V3.txt file)
+
 
 #include "lt_types.h"
 
@@ -849,29 +862,32 @@ end function getepsi
 subroutine clearcache
   use COLLIER
   implicit none
-#include "lt_ff.h"
-  !call InitEvent_cll(NCACHE) ! leads to memory issues!
-  ! reinitialize the cache system instead
-  if(NcacheSave.ne.0 .and. NmaxSave.ne.0) then
-    call InitCacheSystem_cll(NCacheSave,NmaxSave)
-  endif
+  call InitEvent_cll(1) ! CB: only one cache system, does in general NOT
+                        ! work for processes with different initial
+                        ! states since the order of integral calls might
+                        ! be different
 end subroutine clearcache
 
-subroutine clearcache_mult(ncache)
+! ----------------------------------------------------------------------
+
+subroutine clearcache_mult(cachenum)
   use COLLIER
   implicit none
-  integer ncache
+  integer, intent(in) :: cachenum
+!#define LTCLLINTV3
+#ifdef LTCLLINTV3
+  call InitEvent_cll(cachenum)
+#else
 #include "lt_ff.h"
-  !call InitEvent_cll(NCACHE) ! leads to memory issues!
-  ! reinitialize the cache system instead
   if(NcacheSave.ne.0 .and. NmaxSave.ne.0) then
     call InitCacheSystem_cll(NCacheSave,NmaxSave)
   endif
+#endif
 end subroutine clearcache_mult
 
 ! ----------------------------------------------------------------------
 
-subroutine markcache
+subroutine markcache ! CB: do not use this function anymore
   use COLLIER
   implicit none
   call SwitchOffCacheSystem_cll ! check (this generates huge output)
@@ -879,7 +895,7 @@ end subroutine markcache
 
 ! ----------------------------------------------------------------------
 
-subroutine restorecache
+subroutine restorecache ! CB: do not use this function anymore
   use COLLIER
   implicit none
   call SwitchOnCacheSystem_cll ! check (this generates huge output)
@@ -888,26 +904,27 @@ end subroutine restorecache
 ! ----------------------------------------------------------------------
 
 ! initialisation of Collier library
-subroutine init_collier(Nmax,Rmax)
+subroutine init_collier(Nmax,ncache)
   use COLLIER
   implicit none
 #include "lt_ff.h"
-  ! ncache = number of cache systems to be used (here ncache = 1)
   ! Nmax   = maximal N up to which N-point integrals are cached
-  ! Rmax   = maximal rank of loop integrals (usually = Nmax)
-  integer, intent(in) :: Nmax,Rmax
-  integer, parameter :: ncache = 1
-  ! save Nmax, Rmax and Ncache for later 
-  ! (for if we want to clear the cache)
-  NCacheSave = ncache
-  NmaxSave = Nmax
-  RmaxSave = Rmax
+  ! ncache = number of cache systems to be used (= number of different
+  !          initial-state channels)
+  ! Rmax   = maximal rank of loop integrals (usually = Nmax for UV-
+  !          finite theories); in this case, Rmax is fixed to Nmax+1 for
+  !          compatibility with LoopTools which can also compute loop
+  !          functions such as A_{\mu\nu}
+  integer, intent(in) :: Nmax, ncache
+  integer :: Rmax
+  Rmax = Nmax+1
   call Init_cll(Nmax,Rmax,"")
   call InitCacheSystem_cll(ncache,Nmax)
   ! 1: use COLI branch, 2: DD branch
   call SetMode_cll(1)
-  !
+#ifndef LTCLLINTV3
   call InitEvent_cll(ncache)
+#endif
 end subroutine init_collier
 
 ! ----------------------------------------------------------------------

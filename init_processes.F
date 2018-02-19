@@ -58,7 +58,7 @@ c     set process id using slepton types
 
         ! number of light quarks
         ! this number is used for computation of pwhg_alphas
-        st_nlight = 5
+        st_nlight = max_flav
 
         ! index of the first coloured particle in the final state
         ! (all subsequent particles are coloured)

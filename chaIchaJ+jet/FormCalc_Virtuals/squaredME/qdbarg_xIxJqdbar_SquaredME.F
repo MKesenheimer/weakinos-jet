@@ -212,7 +212,7 @@
         TEST(flags, BIT_RESET)
         hlast = 0
         seq(1) = seq(1) + 1
-        INI_S()
+        INI_S(1)
 * BEGIN ABBR_S
         call qdbarg_xIxJqdbar_abbr0s
         TEST(flags, BIT_LOOP)

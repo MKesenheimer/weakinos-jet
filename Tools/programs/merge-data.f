@@ -7,7 +7,7 @@ c one per line, to be merged. An empty lines terminates the list.
       program merge_data  
       implicit none
       integer maxfiles,maxlines
-      parameter (maxfiles=5000,maxlines=15000)
+      parameter (maxfiles=5000,maxlines=12884)
       character *(300) files(maxfiles)
       character *(100) line(maxlines,maxfiles)
       integer nlines(maxfiles)

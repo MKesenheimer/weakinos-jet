@@ -86,5 +86,8 @@ dZgg3 = -gggv/gggb//FullSimplify
 Export["dZgg3_MSSM.wdx",dZgg3,"WDX"];
 
 
+UVDivergentPart[FieldRC[V[5]]]
+
+
 Print["time used: ", SessionTime[] - time1]
 Exit[];

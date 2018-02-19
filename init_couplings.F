@@ -256,6 +256,7 @@ c sets the PhysPars.h parameters
         implicit none
 #include "PhysPars.h"
 #include "LesHouches.h"
+#include "pwhg_st.h"
         double precision powheginput
         external powheginput
         integer i,j,k   ! loops
@@ -367,17 +368,19 @@ c sets the PhysPars.h parameters
         par_MD = 0D0
         par_MS = 0D0
 
-        if(powheginput("#msbar").gt.0 .or. powheginput("#masslessbottom").gt.0) then
-          if(powheginput("msbar").eq.1 .and. powheginput("masslessbottom").ne.1) then
-            par_MB = dreal(SMInputs_Mb) 
-            print*, "using msbar mass for b-quark: ", par_MB
+        ! 4 or 5 flavor scheme
+        if(st_nlight.le.4) then
+          if(powheginput("#msbar").gt.0) then
+            if(powheginput("msbar").eq.1) then
+              par_MB = dreal(SMInputs_Mb)
+              print*, "using msbar mass for b-quark: ", par_MB
+            endif
+          else
+            par_MB = dreal(Mass_Mf(4,3))
+            print*, "using pole mass for b-quark: ", par_MB
           endif
-        elseif(powheginput("msbar").ne.1 .and. powheginput("masslessbottom").ne.1) then
-          par_MB = dreal(Mass_Mf(4,3))
-          print*, "using pole mass for b-quark: ", par_MB
-        elseif(powheginput("masslessbottom").eq.1) then
+        else
           par_MB = 0D0
-          print*, "neglecting b-quark mass. "
         endif
 
         par_MT = dreal(SMInputs_Mt)

@@ -130,6 +130,9 @@
 
         dZgs1 = dZgg3 - 3/2.D0*dZGG1UV
 
+        ! MK: add large logarithms to the counterterm of the strong coupling constant
+        call add_logs(dZgs1)
+
 #if DEBUG >= 4
         DEB("RenConst:dZgs1", dZgs1)
 #endif

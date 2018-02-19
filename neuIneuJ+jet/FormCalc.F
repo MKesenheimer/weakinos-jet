@@ -257,6 +257,8 @@ c############### subroutine getAmps ####################################
         ! set the formCalc vectors
         call formCalcVecSet(nlegborn,ps,flavs)
 
+        !call clearcache_mult(1)
+
 #define MATRIXELEMENT
 #ifdef MATRIXELEMENT
         ! F g -> F F F
