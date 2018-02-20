@@ -7,6 +7,7 @@ fin2  1000022   ! neu40 = 1000035, cha1+ = 1000024, cha2+ = 1000037
 SLHA 'input_p10MSSMd.slha'   
 incomingflavors 4    ! (default 4) max number of incoming flavor
 outgoingflavors 4    ! (default 4) max number of outgoing flavor
+flavorscheme 4       ! (default 4) the default flavorscheme to work in
 ih1     1            ! hadron 1 (1 for protons, -1 for antiprotons)
 ih2     1            ! hadron 2 (1 for protons, -1 for antiprotons)
 #ndns1  132          ! pdf set for hadron 1 (mlm numbering)

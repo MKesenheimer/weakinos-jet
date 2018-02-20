@@ -58,11 +58,22 @@ c     set process id using slepton types
 
         ! number of light quarks
         ! this number is used for computation of pwhg_alphas
-        st_nlight = max_flav
+        if(powheginput("#flavorscheme").gt.0) then
+          st_nlight = int(powheginput("flavorscheme"))
+          if(st_nlight.gt.5 .or. st_nlight.lt.4) then
+            print*, "Flavor scheme ", st_nlight, " not supported."
+            stop
+          endif
+        else
+          st_nlight = max_flav
+        endif
         if(st_nlight.eq.4) then
           print*,"Working in the 4 flavor scheme. Make sure to use 4 flavor PDFs."
-        elseif(st_nlight.eq.4) then
+        elseif(st_nlight.eq.5) then
           print*,"Working in the 5 flavor scheme. Make sure to use 5 flavor PDFs."
+        endif
+        if(st_nlight.ne.max_flav) then
+          print*,"Warning: max_flav not equal st_nlight."
         endif
 
         ! index of the first coloured particle in the final state
