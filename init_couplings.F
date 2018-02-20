@@ -381,6 +381,7 @@ c sets the PhysPars.h parameters
           endif
         else
           par_MB = 0D0
+          print*, "neglecting b-quark mass: ", par_MB
         endif
 
         par_MT = dreal(SMInputs_Mt)

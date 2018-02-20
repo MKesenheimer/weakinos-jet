@@ -54,7 +54,7 @@ c Written by Matthias Kesenheimer <m.kesenheimer@gmx.net>, 2018
         do i=1,2 ! sfermion index s
           do j=3,4 ! type (nu,e,u,d)
             do k=1,3 ! generation
-              dZgs = dZgs - Alfas/(8.D0*PI) * 1/3.D0*dlog(MSf2(i,j,k)/MUR2)
+              dZgs = dZgs - Alfas/(8.D0*PI) * 1/6.D0*dlog(MSf2(i,j,k)/MUR2)
             enddo
           enddo
         enddo

@@ -6,7 +6,7 @@
 # libraries to your home directoy. Compilation of these libraries
 # takes a long time and usually must be done only once.
 # Examples:
-# ./libraries.sh backup neuIneuJ+jet -> backup copy the compiled libraries from neuIneuJ+jet to your home directory
+# ./libraries.sh backup neuIneuJ+jet -> backup the compiled libraries from neuIneuJ+jet to your home directory
 # ./libraries.sh copy neuIneuJ+jet -> copy the libraries from your home directory to the project directory neuIneuJ+jet
 
 if [[ "$1" == "copy" ]]; then
