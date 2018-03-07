@@ -14,7 +14,7 @@ c Written by Matthias Kesenheimer <m.kesenheimer@gmx.net>, 2017
         logical badevent
 
         if(iargc().lt.3) then
-          print*,"Usage: ./filter <pwgevents.lhe> <upper> <lower>"
+          print*,"Usage: ./filter <pwgevents.lhe> <lower> <upper>"
           stop
         endif
         do i=1,iargc()
