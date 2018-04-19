@@ -776,7 +776,7 @@ c sets the FormCalc parameters
           enddo
         enddo
  
-        MGlC = dcmplx(MGlC)
+        MGlC = dcmplx(MGl)
         MGl2C = dcmplx(MGl2)
         MGl2W = MGl2C - ii*MGl*WGl
  
