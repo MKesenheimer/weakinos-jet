@@ -20,8 +20,8 @@
         parameter (MR=1D-10, MR2=MR**2)
 
         ! decide if finite terms should be taken into account
-        RealType xz0, xm0
-        parameter (xz0=0D0, xm0=0D0)
+        RealType xz0, xm0, xg0
+        parameter (xz0=0D0, xm0=0D0, xg0=0D0)
 
 #include "virt_decl.h"
 #include "RenConst.h"
@@ -92,7 +92,7 @@
      &          MGl2C - cI*(MGlC*WGl)) + 
      &        6*B0i(dbb00,dcmplx(0),dcmplx(0),dcmplx(0)) - 
      &        6*B0i(dbb00,dcmplx(0),MGl2C - cI*(MGlC*WGl),
-     &          MGl2C - cI*(MGlC*WGl)) + 1/2.D0*Finite + 
+     &          MGl2C - cI*(MGlC*WGl)) + 1/2.D0*Finite*xg0 + 
      &        15/4.D0*B0i(bb0,dcmplx(0),dcmplx(0),dcmplx(0)) + 
      &        3/2.D0*B0i(bb1,dcmplx(0),dcmplx(0),dcmplx(0))))
 

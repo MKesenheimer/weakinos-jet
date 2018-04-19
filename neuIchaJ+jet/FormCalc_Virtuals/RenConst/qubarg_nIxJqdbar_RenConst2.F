@@ -16,8 +16,8 @@
         implicit none
 
         ! decide if finite terms should be taken into account
-        RealType xz0, xm0
-        parameter (xz0=0D0, xm0=0D0)
+        RealType xz0, xm0, xg0
+        parameter (xz0=0D0, xm0=0D0, xg0=0D0)
 
         ! Regularize 1/MD Terms
         RealType MR, MR2
