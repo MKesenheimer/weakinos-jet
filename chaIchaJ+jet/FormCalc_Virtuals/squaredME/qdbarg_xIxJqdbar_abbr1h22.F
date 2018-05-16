@@ -2880,14 +2880,14 @@
 
         Sub13579(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7) = 
      &   -((Sub13575(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7)*
-     &         Sub543(HelAll(Cha(3)),Cha(4)))/(Mh02 - S34)) - 
+     &         Sub543(HelAll(Cha(3)),Cha(4)))/(Mh02C - S34)) - 
      &    (Sub13578(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7)*
-     &       Sub558(HelAll(Cha(3)),Cha(4)))/(MHH2 - S34)
+     &       Sub558(HelAll(Cha(3)),Cha(4)))/(MHH2C - S34)
 
         Sub13580(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7) = 
      &   2/CW*Sub13579(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7) - 
      &    (3*Sub13568(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7))/
-     &     (MA02 - S34)
+     &     (MA02C - S34)
 
         Sub13591(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7) = 
      &   AaD0i89(Epsi(dd33),Sfe7)*

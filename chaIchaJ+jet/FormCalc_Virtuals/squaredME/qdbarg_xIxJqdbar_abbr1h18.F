@@ -553,7 +553,7 @@
      &   (Sub13536(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Gen6)*
      &       Sub13537(HelAll(Cha(3)),Cha(4)))/SB + 
      &    (2*CB2*AaC0i55(Epsi(cc0),Gen6)*
-     &       Sub594(HelAll(Cha(3)),Cha(4),Gen(1)))/(S2B*(MA02 - S34))
+     &       Sub594(HelAll(Cha(3)),Cha(4),Gen(1)))/(S2B*(MA02C - S34))
 
         Sub13544(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Gen6) = 
      &   AaC0i55(Epsi(cc2),Gen6)*

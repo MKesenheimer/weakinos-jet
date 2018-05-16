@@ -561,7 +561,7 @@
      &       Sub13344(HelAll(Cha(3)),Cha(4),Gen(5),Sfe6,Sfe7)) - 
      &    (3*Sub13341(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7)*
      &       Sub534(HelAll(Cha(3)),Cha(4))*Sub577(Gen(5),Sfe6,Sfe7))/
-     &     (MA02 - S34)
+     &     (MA02C - S34)
 
         Sub13346(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7) = 
      &   AaC0i101(Epsi(cc1),Sfe6,Sfe7)*

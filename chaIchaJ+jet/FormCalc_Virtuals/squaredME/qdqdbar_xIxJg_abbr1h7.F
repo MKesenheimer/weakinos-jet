@@ -3312,7 +3312,7 @@
         Sub14432(HelAll(Cha(3)),Cha(4),Gen6) = 
      &   (Sub14430(HelAll(Gen6))*Sub14431(HelAll(Cha(3)),Cha(4)))/SB + 
      &    (2*CB2*AaC0i32(Epsi(cc0),Gen6)*
-     &       Sub670(HelAll(Cha(3)),Cha(4)))/(S2B*(MA02 - S34))
+     &       Sub670(HelAll(Cha(3)),Cha(4)))/(S2B*(MA02C - S34))
 
         Sub14437(HelAll(Cha(3)),Cha(4),Gen6) = 
      &   Sub14434(Gen6)*Sub728(HelAll(Cha(3)),Cha(4)) - 

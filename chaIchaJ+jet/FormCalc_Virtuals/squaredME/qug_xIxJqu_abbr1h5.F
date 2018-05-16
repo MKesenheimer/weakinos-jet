@@ -2174,8 +2174,8 @@
      &   F53*Pair4*MCha(Cha(3)) + Pair2*(F15 - F55*MCha(Cha(4)))
 
         Sub12974(HelAll(Cha(3)),Cha(4)) = 
-     &   -((CA*Sub563(HelAll(Cha(3)),Cha(4)))/(Mh02 - S34)) + 
-     &    (SA*Sub573(HelAll(Cha(3)),Cha(4)))/(MHH2 - S34)
+     &   -((CA*Sub563(HelAll(Cha(3)),Cha(4)))/(Mh02C - S34)) + 
+     &    (SA*Sub573(HelAll(Cha(3)),Cha(4)))/(MHH2C - S34)
 
         Opt13(HelAll(Cha(3)),Cha(4)) = 
      &   -((F33*F71 - F11*F9)*S34) + 2*F15*Sub4194 - 

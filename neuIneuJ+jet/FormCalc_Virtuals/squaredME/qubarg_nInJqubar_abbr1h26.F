@@ -2593,9 +2593,9 @@
 
         Sub17926(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,Sfe7) = 
      &   -((Sub17920(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,Sfe7)*
-     &         Sub551(HelAll(Neu(3)),Neu(4)))/(Mh02 - S34)) - 
+     &         Sub551(HelAll(Neu(3)),Neu(4)))/(Mh02C - S34)) - 
      &    (Sub17925(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,Sfe7)*
-     &       Sub566(HelAll(Neu(3)),Neu(4)))/(MHH2 - S34)
+     &       Sub566(HelAll(Neu(3)),Neu(4)))/(MHH2C - S34)
 
         Sub17927(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,Sfe7) = 
      &   1/(MW*MW2)*(16*MW*

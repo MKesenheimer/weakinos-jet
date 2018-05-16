@@ -1937,7 +1937,7 @@
      &   (Sub16774(HelAll(Gen(1)),Gen(5),Gen6,Neu(3),Neu(4))*
      &       Sub16775(HelAll(Neu(3)),Neu(4)))/SB + 
      &    (2*CB2*AaC0i73(Epsi(cc0),Gen6)*Sub441(HelAll(Neu(3)),Neu(4))*
-     &       Sub604(HelAll(Gen(1)),Neu(3),Neu(4)))/(S2B*(MA02 - S34))
+     &       Sub604(HelAll(Gen(1)),Neu(3),Neu(4)))/(S2B*(MA02C - S34))
 
         Sub16777(HelAll(Gen(1)),Gen(5),Gen6,Neu(3),Neu(4)) = 
      &   AaC0i73(Epsi(cc2),Gen6)*

@@ -20,7 +20,7 @@
      &    Alfa/SW2*(Alfas*GS*
      &       (1/(3.D0*Sqrt(2.D0)*MW)*
      &          Sub20543(HelAll(Cha(4)),Gen(1),Gen(5),Neu(3),Sfe6,Sfe7)/
-     &           (S2B*(MHp2 - S34)) - 
+     &           (S2B*(MHp2C - S34)) - 
      &         1/(36.D0*CW*MW2)*
      &          Sub20587(HelAll(Cha(4)),Gen(1),Gen(5),Neu(3),Sfe6,Sfe7) + 
      &         1/6.D0*Sub20621(HelAll(Cha(4)),Gen(1),Gen(5),Neu(3),Sfe6,

@@ -1837,7 +1837,7 @@
      &       Sub15409(HelAll(Gen(1)),Neu(3),Neu(4),Sfe6,Sfe7)) - 
      &    3/CW*(Sub15410(HelAll(Gen(1)),Gen(5),Sfe6,Sfe7)*
      &        Sub437(HelAll(Neu(3)),Neu(4))*Sub597(Gen(1),Sfe6,Sfe7))/
-     &      (MA02 - S34)
+     &      (MA02C - S34)
 
         Sub15417(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,Sfe7) = 
      &   AaC0i150(Epsi(cc2),Sfe6,Sfe7)*

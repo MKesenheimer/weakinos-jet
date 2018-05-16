@@ -1038,9 +1038,9 @@
 
         Sub12864(HelAll(Cha(3)),Cha(4),Gen(5),Sfe6,Sfe7) = 
      &   -((Sub1350(Gen(5),Sfe6,Sfe7)*Sub566(HelAll(Cha(3)),Cha(4)))/
-     &       (Mh02 - S34)) - 
+     &       (Mh02C - S34)) - 
      &    (Sub1388(Gen(5),Sfe6,Sfe7)*Sub576(HelAll(Cha(3)),Cha(4)))/
-     &     (MHH2 - S34)
+     &     (MHH2C - S34)
 
         ENDLOOP(Sfe6)
         ENDLOOP(Sfe7)

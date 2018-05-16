@@ -49,14 +49,14 @@
      &             (Mf(4,Gen(5))*
      &                Sub16608(HelAll(Gen(1)),Gen(5),Sfe6,Sfe7)*
      &                Sub441(HelAll(Neu(3)),Neu(4))*
-     &                Sub808(Gen(5),Sfe6,Sfe7))/(CB*(MA02 - S34)))/
+     &                Sub808(Gen(5),Sfe6,Sfe7))/(CB*(MA02C - S34)))/
      &          (S - Mf2(4,Gen(1))) + 
      &         (2/9.D0*Sub16526(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,
      &               Sfe7)/(MZ2 - S34 - cI*MZ*WZ) + 
      &            2/(3.D0*CW*MW)*
      &             (Sub16573(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,
      &                 Sfe7)*Sub441(HelAll(Neu(3)),Neu(4))*
-     &                Sub610(Gen(5),Sfe6,Sfe7))/(CB*(MA02 - S34)))/
+     &                Sub610(Gen(5),Sfe6,Sfe7))/(CB*(MA02C - S34)))/
      &          (Mf2(4,Gen(5)) + Sub1311(Gen(1),Gen(5),Neu(3),Neu(4)))))
 
 #if DEBUG >= 4

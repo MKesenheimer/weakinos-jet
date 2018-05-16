@@ -1864,13 +1864,13 @@
 
         Sub14857(HelAll(Cha(3)),Cha(4),Gen6,Sfe6) = 
      &   -((Sub14855(HelAll(Gen6),Sfe6)*Sub605(HelAll(Cha(3)),Cha(4)))/
-     &       (Mh02 - S34)) - 
+     &       (Mh02C - S34)) - 
      &    (Sub14856(HelAll(Gen6),Sfe6)*Sub621(HelAll(Cha(3)),Cha(4)))/
-     &     (MHH2 - S34)
+     &     (MHH2C - S34)
 
         Sub14858(HelAll(Cha(3)),Cha(4),Gen6,Sfe6) = 
      &   -(3*CW*(Sub14854(HelAll(Gen6),Sfe6)*
-     &          Sub597(HelAll(Cha(3)),Cha(4)))/(MA02 - S34)) + 
+     &          Sub597(HelAll(Cha(3)),Cha(4)))/(MA02C - S34)) + 
      &    Sub14857(HelAll(Cha(3)),Cha(4),Gen6,Sfe6)
 
         Sub14861(HelAll(Cha(3)),Cha(4),Gen6,Sfe6) = 

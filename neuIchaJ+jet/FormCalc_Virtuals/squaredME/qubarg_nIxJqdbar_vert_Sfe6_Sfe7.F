@@ -25,7 +25,7 @@
      &             4/3.D0*(Sub20143(HelAll(Cha(4)),Gen(1),Gen(5),Neu(3),Sfe6,
      &                  Sfe7)*Sub2491(Gen(1),Gen(5),Sfe6,Sfe7))/
      &               (Mf2(4,Gen(5)) + Sub1022(Cha(4),Gen(1),Gen(5),Neu(3))))/
-     &           (S2B*(MHp2 - S34)) + 
+     &           (S2B*(MHp2C - S34)) + 
      &         1/(CW*MW2)*(4/9.D0*
      &             Sub20091(HelAll(Cha(4)),Gen(1),Gen(5),Neu(3),Sfe6,Sfe7)+
      &              1/18.D0*

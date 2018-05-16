@@ -674,14 +674,14 @@
 
         Sub18593(HelAll(Gen6),Neu(3),Neu(4),Sfe6) = 
      &   -((Sub18591(HelAll(Gen6),Sfe6)*Sub552(HelAll(Neu(3)),Neu(4)))/
-     &       (Mh02 - S34)) - 
+     &       (Mh02C - S34)) - 
      &    (Sub18592(HelAll(Gen6),Sfe6)*Sub566(HelAll(Neu(3)),Neu(4)))/
-     &     (MHH2 - S34)
+     &     (MHH2C - S34)
 
         Sub18594(HelAll(Gen6),Neu(3),Neu(4),Sfe6) = 
      &   1/CW2*Sub18593(HelAll(Gen6),Neu(3),Neu(4),Sfe6) - 
      &    12/CW*(Sub18588(HelAll(Gen6),Sfe6)*
-     &        Sub535(HelAll(Neu(3)),Neu(4)))/(MA02 - S34)
+     &        Sub535(HelAll(Neu(3)),Neu(4)))/(MA02C - S34)
 
         Sub18599(HelAll(Gen6),Neu(3),Neu(4),Sfe6) = 
      &   CW2*(AaB0i60(Epsi(bb0),Gen6,Sfe6)*

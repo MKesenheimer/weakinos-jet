@@ -2437,7 +2437,7 @@
      &    9/(CW*MW)*(Mf(3,Gen(1))*
      &        Sub18621(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4),Sfe6,Sfe7)*
      &        Sub535(HelAll(Neu(3)),Neu(4))*Sub602(Gen(1),Sfe6,Sfe7))/
-     &      ((MA02 - S34)*SB)
+     &      ((MA02C - S34)*SB)
 
         Sub18641(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4),Sfe6,Sfe7) = 
      &   Sub18640(Gen(1),Gen(2),Neu(3),Neu(4),Sfe7)*

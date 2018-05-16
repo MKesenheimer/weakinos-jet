@@ -92,22 +92,22 @@
      &     (S - Mf2(3,Gen(1))) - 
      &    (Sub12866(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7)*
      &       Sub566(HelAll(Cha(3)),Cha(4))*Sub602(Gen(5),Sfe6,Sfe7))/
-     &     ((Mh02 - S34)*(Mf2(3,Gen(5)) + 
+     &     ((Mh02C - S34)*(Mf2(3,Gen(5)) + 
      &         Sub773(Cha(3),Cha(4),Gen(1),Gen(5))))
 
         Sub12868(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7) = 
      &   -(3*CW*(Mf(3,Gen(5))*Sub12863(HelAll(Gen(1)),Gen(5),Sfe6,Sfe7)*
      &          Sub1337(Gen(5),Sfe6,Sfe7)*Sub557(HelAll(Cha(3)),Cha(4)))/
-     &        ((MA02 - S34)*(S - Mf2(3,Gen(1))))) + 
+     &        ((MA02C - S34)*(S - Mf2(3,Gen(1))))) + 
      &    Sub12867(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7)
 
         Sub12871(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7) = 
      &   1/CW*(Sub12866(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7)*
      &        Sub576(HelAll(Cha(3)),Cha(4))*Sub612(Gen(5),Sfe6,Sfe7))/
-     &      (MHH2 - S34) + 
+     &      (MHH2C - S34) + 
      &    (3*Sub12870(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7)*
      &       Sub557(HelAll(Cha(3)),Cha(4))*Sub603(Gen(5),Sfe6,Sfe7))/
-     &     (MA02 - S34)
+     &     (MA02C - S34)
 
         Sub12872(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7) = 
      &   AaC0i94(Epsi(cc0),Sfe6,Sfe7)*

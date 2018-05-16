@@ -755,7 +755,7 @@
      &   (Sub12973(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Gen6)*
      &       Sub12974(HelAll(Cha(3)),Cha(4)))/SB - 
      &    (2*CB2*AaC0i55(Epsi(cc0),Gen6)*
-     &       Sub624(HelAll(Cha(3)),Cha(4),Gen(1)))/(S2B*(MA02 - S34))
+     &       Sub624(HelAll(Cha(3)),Cha(4),Gen(1)))/(S2B*(MA02C - S34))
 
         Sub12976(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Gen6) = 
      &   AaC0i56(Epsi(cc2),Gen6)*

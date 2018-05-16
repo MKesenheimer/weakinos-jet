@@ -21,20 +21,20 @@
         Sub14886(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Sfe6,Sfe7) = 
      &   -((Sub14885(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Sfe6,Sfe7)*
      &         Sub621(HelAll(Cha(3)),Cha(4))*Sub657(Gen(1),Sfe6,Sfe7))/
-     &       ((MHH2 - S34)*
+     &       ((MHH2C - S34)*
      &         (Mf2(3,Gen(1)) + Sub1120(Cha(3),Cha(4),Gen(1),Gen(2))))) + 
      &    (Sub14879(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Sfe6,Sfe7)*
      &       Sub605(HelAll(Cha(3)),Cha(4))*Sub663(Gen(1),Sfe6,Sfe7))/
-     &     ((Mh02 - S34)*(Mf2(3,Gen(2)) + 
+     &     ((Mh02C - S34)*(Mf2(3,Gen(2)) + 
      &         Sub14639(Cha(3),Cha(4),Gen(1),Gen(2))))
 
         Sub14887(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Sfe6,Sfe7) = 
      &   -(3*CW*Sub14883(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Sfe6,Sfe7)/
-     &        (MA02 - S34)) - 
+     &        (MA02C - S34)) - 
      &    Sub14886(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Sfe6,Sfe7) - 
      &    (Sub14879(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Sfe6,Sfe7)*
      &       Sub621(HelAll(Cha(3)),Cha(4))*Sub649(Gen(1),Sfe6,Sfe7))/
-     &     ((MHH2 - S34)*(Mf2(3,Gen(2)) + 
+     &     ((MHH2C - S34)*(Mf2(3,Gen(2)) + 
      &         Sub14639(Cha(3),Cha(4),Gen(1),Gen(2))))
 
         Sub14888(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Sfe6,Sfe7) = 

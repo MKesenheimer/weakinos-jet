@@ -917,7 +917,7 @@
      &   2/(CW2*MW2)*Sub18705(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4),Sfe6,
      &       Sfe7)/(SB2*(T24 - Sub18508(Gen(2),Sfe6))) + 
      &    9/(CW*MW)*(Sub18703(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4),Sfe6,
-     &         Sfe7)*Sub655(Gen(1),Sfe6,Sfe7))/((MA02 - S34)*SB) + 
+     &         Sfe7)*Sub655(Gen(1),Sfe6,Sfe7))/((MA02C - S34)*SB) + 
      &    (3*Sub18708(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4),Sfe6,Sfe7))/
      &     (MZ2 - S34 - cI*MZ*WZ)
 

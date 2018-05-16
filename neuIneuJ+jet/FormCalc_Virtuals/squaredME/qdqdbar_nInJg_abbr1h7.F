@@ -3133,8 +3133,8 @@
      &    F33*(2*F17*Pair2 - F20*MNeu(Neu(4)))
 
         Sub17474(HelAll(Neu(3)),Neu(4)) = 
-     &   -((SA*Sub473(HelAll(Neu(3)),Neu(4)))/(MHH2 - S34)) + 
-     &    (CA*Sub488(HelAll(Neu(3)),Neu(4)))/(Mh02 - S34)
+     &   -((SA*Sub473(HelAll(Neu(3)),Neu(4)))/(MHH2C - S34)) + 
+     &    (CA*Sub488(HelAll(Neu(3)),Neu(4)))/(Mh02C - S34)
 
         Opt16(HelAll(Neu(3)),Neu(4)) = 
      &   -(F21*(F19 - F27 - F30 + F33)) + 2*F16*F4 - 

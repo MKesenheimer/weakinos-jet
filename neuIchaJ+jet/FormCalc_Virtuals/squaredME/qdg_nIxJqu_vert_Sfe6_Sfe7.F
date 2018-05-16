@@ -22,7 +22,7 @@
      &            Sub19082(HelAll(Cha(4)),Gen(1),Gen(5),Neu(3),Sfe6,Sfe7))+
      &           4/3.D0*(Sqrt(2.D0)/MW*
      &             Sub19008(HelAll(Cha(4)),Gen(1),Gen(5),Neu(3),Sfe6,Sfe7)/
-     &              (S2B*(MHp2 - S34)) + 
+     &              (S2B*(MHp2C - S34)) + 
      &            Sub19089(HelAll(Cha(4)),Gen(1),Gen(5),Neu(3),Sfe6,Sfe7)/
      &             (MW2 - S34 - cI*MW*WW)))*IndexDelta(Gen(1),Gen(5)))
 

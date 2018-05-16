@@ -25,7 +25,7 @@
      &              SB2) + 
      &         1/(12.D0*CW*MW)*
      &          Sub17898(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,Sfe7)/
-     &           ((MA02 - S34)*SB) + 
+     &           ((MA02C - S34)*SB) + 
      &         1/36.D0*Sub18030(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,
      &            Sfe7)/(MZ2 - S34 - cI*MZ*WZ))*
      &       IndexDelta(Gen(1),Gen(5)))

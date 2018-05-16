@@ -1283,10 +1283,10 @@
      &   -(3/CW*(Mf(4,Gen(1))*
      &          Sub15740(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,Sfe7)*
      &          Sub437(HelAll(Neu(3)),Neu(4))*Sub681(Gen(1),Sfe6,Sfe7))/
-     &        (MA02 - S34)) - 
+     &        (MA02C - S34)) - 
      &    1/CW2*(Sub15742(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,Sfe7)*
      &        Sub454(HelAll(Neu(3)),Neu(4))*Sub708(Gen(1),Sfe6,Sfe7))/
-     &      (Mh02 - S34)
+     &      (Mh02C - S34)
 
         Sub15753(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,Sfe7) = 
      &   AaD0i138(Epsi(dd002),Sfe6,Sfe7)*
@@ -2455,7 +2455,7 @@
      &   2/MW2*Sub15816(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,Sfe7)/
      &      CB2 - 3/MW*(Sub15742(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,
      &         Sfe7)*Sub475(HelAll(Neu(3)),Neu(4))*
-     &        Sub724(Gen(1),Sfe6,Sfe7))/(CB*(MHH2 - S34))
+     &        Sub724(Gen(1),Sfe6,Sfe7))/(CB*(MHH2C - S34))
 
         Sub15917(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,Sfe7) = 
      &   AaE0i147(Epsi(ee1),Sfe6,Sfe7)*

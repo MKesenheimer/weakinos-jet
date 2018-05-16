@@ -3187,8 +3187,8 @@
      &    F23*MCha2(Cha(3))
 
         Sub14431(HelAll(Cha(3)),Cha(4)) = 
-     &   -((CA*Sub603(HelAll(Cha(3)),Cha(4)))/(Mh02 - S34)) + 
-     &    (SA*Sub623(HelAll(Cha(3)),Cha(4)))/(MHH2 - S34)
+     &   -((CA*Sub603(HelAll(Cha(3)),Cha(4)))/(Mh02C - S34)) + 
+     &    (SA*Sub623(HelAll(Cha(3)),Cha(4)))/(MHH2C - S34)
 
         Sub164(HelAll(Cha(3)),Cha(4)) = 
      &   (F1*F6 + F7*F8)*MCha(Cha(4)) - Sub163(HelAll(Cha(3)))

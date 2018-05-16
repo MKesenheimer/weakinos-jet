@@ -784,10 +784,19 @@ c sets the FormCalc parameters
         MHHC = dcmplx(MHH)
         MA0C = dcmplx(MA0)
         MHpC = dcmplx(MHp)
+
+#define HIGGSW
+#ifdef HIGGSW
+        Mh02C = dcmplx(Mh02) - ii*Mh0*1.2D0
+        MHH2C = dcmplx(MHH2) - ii*MHH*1.8D0
+        MA02C = dcmplx(MA02) - ii*MA0*3.0D0
+        MHp2C = dcmplx(MHp2) - ii*MHp*3.7D0
+#else
         Mh02C = dcmplx(Mh02)
         MHH2C = dcmplx(MHH2)
         MA02C = dcmplx(MA02)
         MHp2C = dcmplx(MHp2)
+#endif
         
         ! Gauge parameters
         GaugeXi(1) = 1

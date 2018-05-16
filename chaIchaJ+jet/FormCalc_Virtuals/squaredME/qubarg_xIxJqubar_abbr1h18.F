@@ -1190,7 +1190,7 @@
      &   (Sub13018(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Gen6)*
      &       Sub13019(HelAll(Cha(3)),Cha(4)))/SB + 
      &    (2*CB2*AaC0i54(Epsi(cc0),Gen6)*
-     &       Sub619(HelAll(Cha(3)),Cha(4),Gen(1)))/(S2B*(MA02 - S34))
+     &       Sub619(HelAll(Cha(3)),Cha(4),Gen(1)))/(S2B*(MA02C - S34))
 
         Sub13025(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Gen6) = 
      &   Sub13023(Gen6)*Sub632(HelAll(Cha(3)),Cha(4)) + 

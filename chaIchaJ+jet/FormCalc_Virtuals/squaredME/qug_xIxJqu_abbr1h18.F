@@ -952,15 +952,15 @@
 
         Sub12806(HelAll(Cha(3)),Cha(4),Gen(1),Sfe6,Sfe7) = 
      &   -((Sub1437(Gen(1),Sfe6,Sfe7)*Sub563(HelAll(Cha(3)),Cha(4)))/
-     &       (Mh02 - S34)) - 
+     &       (Mh02C - S34)) - 
      &    (Sub1447(Gen(1),Sfe6,Sfe7)*Sub573(HelAll(Cha(3)),Cha(4)))/
-     &     (MHH2 - S34)
+     &     (MHH2C - S34)
 
         Sub12812(HelAll(Cha(3)),Cha(4),Gen(1),Sfe6,Sfe7) = 
      &   -((Sub563(HelAll(Cha(3)),Cha(4))*Sub613(Gen(1),Sfe6,Sfe7))/
-     &       (Mh02 - S34)) - 
+     &       (Mh02C - S34)) - 
      &    (Sub573(HelAll(Cha(3)),Cha(4))*Sub620(Gen(1),Sfe6,Sfe7))/
-     &     (MHH2 - S34)
+     &     (MHH2C - S34)
 
         ENDLOOP(Sfe6)
         ENDLOOP(Sfe7)

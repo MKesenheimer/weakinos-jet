@@ -619,20 +619,20 @@
 
         Sub15409(HelAll(Gen(1)),Neu(3),Neu(4),Sfe6,Sfe7) = 
      &   -((Sub454(HelAll(Neu(3)),Neu(4))*Sub557(Gen(1),Sfe6,Sfe7))/
-     &       (Mh02 - S34)) - 
+     &       (Mh02C - S34)) - 
      &    (Sub475(HelAll(Neu(3)),Neu(4))*Sub583(Gen(1),Sfe6,Sfe7))/
-     &     (MHH2 - S34)
+     &     (MHH2C - S34)
 
         Sub15419(HelAll(Gen(1)),Neu(3),Neu(4),Sfe6,Sfe7) = 
      &   -((Sub454(HelAll(Neu(3)),Neu(4))*Sub708(Gen(1),Sfe6,Sfe7))/
-     &       (Mh02 - S34)) - 
+     &       (Mh02C - S34)) - 
      &    (Sub475(HelAll(Neu(3)),Neu(4))*Sub724(Gen(1),Sfe6,Sfe7))/
-     &     (MHH2 - S34)
+     &     (MHH2C - S34)
 
         Sub15420(HelAll(Gen(1)),Neu(3),Neu(4),Sfe6,Sfe7) = 
      &   CW*Sub15419(HelAll(Gen(1)),Neu(3),Neu(4),Sfe6,Sfe7) - 
      &    3*CW2*(Mf(4,Gen(1))*Sub437(HelAll(Neu(3)),Neu(4))*
-     &        Sub681(Gen(1),Sfe6,Sfe7))/(MA02 - S34)
+     &        Sub681(Gen(1),Sfe6,Sfe7))/(MA02C - S34)
 
         Sub2155(HelAll(Gen(1)),Neu(3),Neu(4),Sfe6,Sfe7) = 
      &   -(1/(CW*CW2*MW)*(3*CW2*
@@ -2013,14 +2013,14 @@
 
         Sub15655(HelAll(Gen(1)),Gen(5),Gen6,Neu(3),Neu(4),Sfe6) = 
      &   -((Sub15653(HelAll(Gen(1)),Gen(5),Gen6,Neu(3),Neu(4),Sfe6)*
-     &         Sub454(HelAll(Neu(3)),Neu(4)))/(Mh02 - S34)) - 
+     &         Sub454(HelAll(Neu(3)),Neu(4)))/(Mh02C - S34)) - 
      &    (Sub15654(HelAll(Gen(1)),Gen(5),Gen6,Neu(3),Neu(4),Sfe6)*
-     &       Sub475(HelAll(Neu(3)),Neu(4)))/(MHH2 - S34)
+     &       Sub475(HelAll(Neu(3)),Neu(4)))/(MHH2C - S34)
 
         Sub15656(HelAll(Gen(1)),Gen(5),Gen6,Neu(3),Neu(4),Sfe6) = 
      &   1/CW2*Sub15655(HelAll(Gen(1)),Gen(5),Gen6,Neu(3),Neu(4),Sfe6) - 
      &    12/CW*(Sub15650(HelAll(Gen(1)),Gen(5),Gen6,Neu(3),Neu(4),Sfe6)*
-     &        Sub437(HelAll(Neu(3)),Neu(4)))/(MA02 - S34)
+     &        Sub437(HelAll(Neu(3)),Neu(4)))/(MA02C - S34)
 
         ENDLOOP(Gen6)
         ENDLOOP(Sfe6)

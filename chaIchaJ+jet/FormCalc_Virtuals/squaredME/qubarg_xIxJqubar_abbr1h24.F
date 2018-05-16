@@ -142,14 +142,14 @@
 
         Sub13061(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7) = 
      &   -((Sub13057(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7)*
-     &         Sub566(HelAll(Cha(3)),Cha(4)))/(Mh02 - S34)) - 
+     &         Sub566(HelAll(Cha(3)),Cha(4)))/(Mh02C - S34)) - 
      &    (Sub13060(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7)*
-     &       Sub576(HelAll(Cha(3)),Cha(4)))/(MHH2 - S34)
+     &       Sub576(HelAll(Cha(3)),Cha(4)))/(MHH2C - S34)
 
         Sub13062(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7) = 
      &   -(2/CW*Sub13061(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7)) - 
      &    (3*Sub13050(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7))/
-     &     (MA02 - S34)
+     &     (MA02C - S34)
 
         Sub13071(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7) = 
      &   AaD0i103(Epsi(dd33),Sfe7)*

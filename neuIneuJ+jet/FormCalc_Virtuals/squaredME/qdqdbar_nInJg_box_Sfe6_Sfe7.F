@@ -25,7 +25,7 @@
      &         1/(12.D0*CW*MW)*
      &          (Mf(4,Gen(1))*
      &             Sub17794(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4),Sfe6,Sfe7)*
-     &             Sub572(Gen(1),Sfe6,Sfe7))/(CB*(MA02 - S34)))*
+     &             Sub572(Gen(1),Sfe6,Sfe7))/(CB*(MA02C - S34)))*
      &       IndexDelta(Gen(1),Gen(2)))
 
 #if DEBUG >= 4

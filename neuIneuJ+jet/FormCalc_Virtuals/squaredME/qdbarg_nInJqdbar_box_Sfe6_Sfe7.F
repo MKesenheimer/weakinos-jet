@@ -42,7 +42,7 @@
      &              Sfe7)) + 
      &         1/(12.D0*CW*MW)*
      &          Sub16859(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,Sfe7)/
-     &           (CB*(MA02 - S34)) + 
+     &           (CB*(MA02C - S34)) + 
      &         Sub16945(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,Sfe7)/
      &          (MZ2 - S34 - cI*MZ*WZ)))
 

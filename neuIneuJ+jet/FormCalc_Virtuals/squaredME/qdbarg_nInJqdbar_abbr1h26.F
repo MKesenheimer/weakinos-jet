@@ -1793,9 +1793,9 @@
 
         Sub16891(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,Sfe7) = 
      &   -((Sub16890(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,Sfe7)*
-     &         Sub456(HelAll(Neu(3)),Neu(4)))/(MHH2 - S34)) - 
+     &         Sub456(HelAll(Neu(3)),Neu(4)))/(MHH2C - S34)) - 
      &    (Sub16885(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,Sfe7)*
-     &       Sub468(HelAll(Neu(3)),Neu(4)))/(Mh02 - S34)
+     &       Sub468(HelAll(Neu(3)),Neu(4)))/(Mh02C - S34)
 
         Sub16892(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,Sfe7) = 
      &   1/(MW*MW2)*(16*MW*

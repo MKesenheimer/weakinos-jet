@@ -26,7 +26,7 @@
      &          (Mf(3,Gen(1))*
      &             Sub16455(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,Sfe7)*
      &             Sub511(HelAll(Neu(3)),Neu(4))*Sub735(Gen(1),Sfe6,Sfe7)
-     &             )/((MA02 - S34)*SB))*IndexDelta(Gen(1),Gen(5)))
+     &             )/((MA02C - S34)*SB))*IndexDelta(Gen(1),Gen(5)))
 
 #if DEBUG >= 4
         DEB("qug_nInJqu_box_Sfe6_Sfe7:Cloop(1)", Cloop(HelAll(1)))

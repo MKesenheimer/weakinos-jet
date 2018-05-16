@@ -2612,8 +2612,8 @@
      &    (-F55 + 2*F46*Pair3)*MNeu(Neu(4)) - F30*Sub16435(Neu(3),Neu(4))
 
         Sub16775(HelAll(Neu(3)),Neu(4)) = 
-     &   -((SA*Sub456(HelAll(Neu(3)),Neu(4)))/(MHH2 - S34)) + 
-     &    (CA*Sub468(HelAll(Neu(3)),Neu(4)))/(Mh02 - S34)
+     &   -((SA*Sub456(HelAll(Neu(3)),Neu(4)))/(MHH2C - S34)) + 
+     &    (CA*Sub468(HelAll(Neu(3)),Neu(4)))/(Mh02C - S34)
 
         Opt4(HelAll(Neu(3)),Neu(4)) = 
      &   F2*F42*MNeu(Neu(3)) + F67*(2*F73*Pair3 - F68*MNeu(Neu(3))) + 

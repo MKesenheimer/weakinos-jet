@@ -2425,11 +2425,11 @@
         Sub17615(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,Sfe7) = 
      &   3/CW*(Sub17613(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,Sfe7)*
      &        Sub539(HelAll(Neu(3)),Neu(4))*Sub769(Gen(5),Sfe6,Sfe7))/
-     &      ((MA02 - S34)*(Mf2(3,Gen(5)) + 
+     &      ((MA02C - S34)*(Mf2(3,Gen(5)) + 
      &          Sub1371(Gen(1),Gen(5),Neu(3),Neu(4)))) - 
      &    1/CW2*(Sub17614(HelAll(Gen(1)),Gen(5),Sfe6,Sfe7)*
      &        Sub551(HelAll(Neu(3)),Neu(4))*Sub827(Gen(5),Sfe6,Sfe7))/
-     &      ((Mh02 - S34)*(S - Mf2(3,Gen(1))))
+     &      ((Mh02C - S34)*(S - Mf2(3,Gen(1))))
 
         Sub17628(HelAll(Gen(1)),Gen(5),Neu(3),Neu(4),Sfe6,Sfe7) = 
      &   AaC0i61(Epsi(cc1))*

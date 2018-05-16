@@ -3227,8 +3227,8 @@
      &    F17*F29*(Pair2 - Pair4)*MCha(Cha(4))
 
         Sub14869(HelAll(Cha(3)),Cha(4)) = 
-     &   -((CA*Sub605(HelAll(Cha(3)),Cha(4)))/(Mh02 - S34)) + 
-     &    (SA*Sub621(HelAll(Cha(3)),Cha(4)))/(MHH2 - S34)
+     &   -((CA*Sub605(HelAll(Cha(3)),Cha(4)))/(Mh02C - S34)) + 
+     &    (SA*Sub621(HelAll(Cha(3)),Cha(4)))/(MHH2C - S34)
 
         Sub90(HelAll(Cha(3)),Cha(4)) = 
      &   (F3*F4 + F7*F8)*MCha(Cha(4)) - Sub89(HelAll(Cha(3)))

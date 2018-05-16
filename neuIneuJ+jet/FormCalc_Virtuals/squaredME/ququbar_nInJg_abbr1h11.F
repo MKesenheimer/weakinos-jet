@@ -2325,7 +2325,7 @@
         Sub18604(HelAll(Gen6),Neu(3),Neu(4)) = 
      &   (Sub18601(HelAll(Neu(3)),Neu(4))*Sub18603(HelAll(Gen6)))/SB + 
      &    (2*CB2*Sub762*AaC0i49(Epsi(cc0),Gen6)*
-     &       Sub535(HelAll(Neu(3)),Neu(4)))/(S2B*(MA02 - S34))
+     &       Sub535(HelAll(Neu(3)),Neu(4)))/(S2B*(MA02C - S34))
 
         Sub18609(HelAll(Gen6),Neu(3),Neu(4)) = 
      &   Sub18607(Gen6)*Sub817(HelAll(Neu(3)),Neu(4)) + 

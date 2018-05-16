@@ -1896,20 +1896,20 @@
 
         Sub17486(HelAll(Gen(1)),Neu(3),Neu(4),Sfe6,Sfe7) = 
      &   -((Sub488(HelAll(Neu(3)),Neu(4))*Sub532(Gen(1),Sfe6,Sfe7))/
-     &       (Mh02 - S34)) - 
+     &       (Mh02C - S34)) - 
      &    (Sub473(HelAll(Neu(3)),Neu(4))*Sub571(Gen(1),Sfe6,Sfe7))/
-     &     (MHH2 - S34)
+     &     (MHH2C - S34)
 
         Sub17489(HelAll(Gen(1)),Neu(3),Neu(4),Sfe6,Sfe7) = 
      &   CW*Sub17486(HelAll(Gen(1)),Neu(3),Neu(4),Sfe6,Sfe7) - 
      &    3*CW2*(Mf(4,Gen(1))*Sub458(HelAll(Neu(3)),Neu(4))*
-     &        Sub572(Gen(1),Sfe6,Sfe7))/(MA02 - S34)
+     &        Sub572(Gen(1),Sfe6,Sfe7))/(MA02C - S34)
 
         Sub17503(HelAll(Gen(1)),Neu(3),Neu(4),Sfe6,Sfe7) = 
      &   -((Sub488(HelAll(Neu(3)),Neu(4))*Sub551(Gen(1),Sfe6,Sfe7))/
-     &       (Mh02 - S34)) - 
+     &       (Mh02C - S34)) - 
      &    (Sub473(HelAll(Neu(3)),Neu(4))*Sub575(Gen(1),Sfe6,Sfe7))/
-     &     (MHH2 - S34)
+     &     (MHH2C - S34)
 
         Sub8219(HelAll(Gen(1)),Neu(3),Neu(4),Sfe6,Sfe7) = 
      &   1/(CW*CW2*MW)*(3*CW2*

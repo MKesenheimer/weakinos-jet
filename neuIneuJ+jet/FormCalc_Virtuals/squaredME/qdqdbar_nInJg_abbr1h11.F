@@ -2352,7 +2352,7 @@
         Sub17477(HelAll(Gen6),Neu(3),Neu(4)) = 
      &   (Sub17474(HelAll(Neu(3)),Neu(4))*Sub17476(HelAll(Gen6)))/SB - 
      &    (2*CB2*Sub635*AaC0i48(Epsi(cc0),Gen6)*
-     &       Sub458(HelAll(Neu(3)),Neu(4)))/(S2B*(MA02 - S34))
+     &       Sub458(HelAll(Neu(3)),Neu(4)))/(S2B*(MA02C - S34))
 
         Sub17482(HelAll(Gen6),Neu(3),Neu(4)) = 
      &   Sub17480(Gen6)*Sub541(HelAll(Neu(3)),Neu(4)) + 

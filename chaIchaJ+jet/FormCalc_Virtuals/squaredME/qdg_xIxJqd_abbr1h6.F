@@ -2230,8 +2230,8 @@
      &   F32*Pair2*MCha(Cha(3)) + Pair4*(F14 - F31*MCha(Cha(4)))
 
         Sub12712(HelAll(Cha(3)),Cha(4)) = 
-     &   -((CA*Sub555(HelAll(Cha(3)),Cha(4)))/(Mh02 - S34)) + 
-     &    (SA*Sub570(HelAll(Cha(3)),Cha(4)))/(MHH2 - S34)
+     &   -((CA*Sub555(HelAll(Cha(3)),Cha(4)))/(Mh02C - S34)) + 
+     &    (SA*Sub570(HelAll(Cha(3)),Cha(4)))/(MHH2C - S34)
 
         Opt6(HelAll(Cha(3)),Cha(4)) = 
      &   F13*F20 + F1*(F2 - 2*Abb185*F4) + F4*F49 + 

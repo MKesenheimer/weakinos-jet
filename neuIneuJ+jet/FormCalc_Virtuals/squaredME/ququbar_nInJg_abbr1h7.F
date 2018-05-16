@@ -3106,8 +3106,8 @@
      &   F24*F25 - F19*F52*MNeu(Neu(3)) - F3*Sub18384(HelAll(Neu(4)))
 
         Sub18601(HelAll(Neu(3)),Neu(4)) = 
-     &   -((CA*Sub552(HelAll(Neu(3)),Neu(4)))/(Mh02 - S34)) + 
-     &    (SA*Sub566(HelAll(Neu(3)),Neu(4)))/(MHH2 - S34)
+     &   -((CA*Sub552(HelAll(Neu(3)),Neu(4)))/(Mh02C - S34)) + 
+     &    (SA*Sub566(HelAll(Neu(3)),Neu(4)))/(MHH2C - S34)
 
         Sub131(HelAll(Neu(3)),Neu(4)) = 
      &   F5*(F16 - 2*F34*(Pair1 + Pair4)) + 

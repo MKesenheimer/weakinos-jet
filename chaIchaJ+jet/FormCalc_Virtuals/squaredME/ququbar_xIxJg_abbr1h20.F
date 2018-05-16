@@ -1894,9 +1894,9 @@
 
         Sub14961(HelAll(Cha(3)),Cha(4),Gen(1),Sfe6,Sfe7) = 
      &   -((Sub621(HelAll(Cha(3)),Cha(4))*Sub649(Gen(1),Sfe6,Sfe7))/
-     &       (MHH2 - S34)) - 
+     &       (MHH2C - S34)) - 
      &    (Sub605(HelAll(Cha(3)),Cha(4))*Sub663(Gen(1),Sfe6,Sfe7))/
-     &     (Mh02 - S34)
+     &     (Mh02C - S34)
 
         Sub7444(HelAll(Cha(3)),Cha(4),Gen(1),Sfe6,Sfe7) = 
      &   1/(CW2*MW)*(3*Sqrt(2.D0)*CW2*

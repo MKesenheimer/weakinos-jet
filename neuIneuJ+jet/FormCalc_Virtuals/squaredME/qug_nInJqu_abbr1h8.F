@@ -1985,8 +1985,8 @@
      &    F17*(F60*MNeu(Neu(4)) - F18*Sub15912(Neu(3),Neu(4)))
 
         Sub16369(HelAll(Neu(3)),Neu(4)) = 
-     &   -((CA*Sub527(HelAll(Neu(3)),Neu(4)))/(Mh02 - S34)) + 
-     &    (SA*Sub541(HelAll(Neu(3)),Neu(4)))/(MHH2 - S34)
+     &   -((CA*Sub527(HelAll(Neu(3)),Neu(4)))/(Mh02C - S34)) + 
+     &    (SA*Sub541(HelAll(Neu(3)),Neu(4)))/(MHH2C - S34)
 
         Opt2(HelAll(Neu(3)),Neu(4)) = 
      &   F1*(F121 + 2*Abb2*F2) + F2*F72 + F35*F69*MNeu(Neu(3)) - 

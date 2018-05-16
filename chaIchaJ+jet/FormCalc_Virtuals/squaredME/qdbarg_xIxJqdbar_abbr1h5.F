@@ -2490,8 +2490,8 @@
      &    F22*Sub11947(Cha(3),Cha(4))
 
         Sub13537(HelAll(Cha(3)),Cha(4)) = 
-     &   -((CA*Sub543(HelAll(Cha(3)),Cha(4)))/(Mh02 - S34)) + 
-     &    (SA*Sub558(HelAll(Cha(3)),Cha(4)))/(MHH2 - S34)
+     &   -((CA*Sub543(HelAll(Cha(3)),Cha(4)))/(Mh02C - S34)) + 
+     &    (SA*Sub558(HelAll(Cha(3)),Cha(4)))/(MHH2C - S34)
 
         Opt8(HelAll(Cha(3)),Cha(4)) = 
      &   F22*(F24 - F50) + F28*F5*MCha(Cha(4)) + 

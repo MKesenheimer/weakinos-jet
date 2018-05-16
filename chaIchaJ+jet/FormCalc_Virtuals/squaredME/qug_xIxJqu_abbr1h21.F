@@ -182,7 +182,7 @@
      &   1/CW*(Sub12812(HelAll(Cha(3)),Cha(4),Gen(1),Sfe6,Sfe7)*
      &       Sub12999(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7)) - 
      &    (3*Mf(3,Gen(1))*Sub13006(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,
-     &        Sfe7)*Sub600(Gen(1),Sfe6,Sfe7))/(MA02 - S34)
+     &        Sfe7)*Sub600(Gen(1),Sfe6,Sfe7))/(MA02C - S34)
 
         Sub13010(HelAll(Cha(3)),Cha(4),Gen(1),Gen(5),Sfe6,Sfe7) = 
      &   1/CW2*(-(CW2*(AaD0i91(Epsi(dd0),Sfe6,Sfe7)*
