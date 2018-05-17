@@ -194,7 +194,7 @@ c
       stop
 #endif
       
-c#define MAD_HIGGS
+#define MAD_HIGGS
 #ifndef MAD_HIGGS
       ! Set Higgs couplings manually to zero
       gh1bb = 0D0
