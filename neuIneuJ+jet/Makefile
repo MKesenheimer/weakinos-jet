@@ -509,7 +509,7 @@ clean:
 clean-results:
 	find ./testrun ! \( -name '*.slha' -o -name '*.input' -o -name 'pwgseeds.dat' -o -name '*.xml' \) \
 	-type f -exec rm -f {} +
-    
+
 clean-libs:
 	rm -f $(FORMREALS)/formcalc_reals.a $(FORMVIRTS)/formcalc_virtuals.a
 

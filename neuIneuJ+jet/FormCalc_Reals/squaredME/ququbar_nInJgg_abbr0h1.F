@@ -1342,13 +1342,13 @@
      &      Sub433(HelAll(Neu(3)),Neu(4)))
 
         Sub714(HelAll(Neu(3)),Neu(4)) = 
-     &   -((SA*Sub256(HelAll(Neu(3)),Neu(4)))/(MHH2 - S34)) + 
-     &    (CA*Sub269(HelAll(Neu(3)),Neu(4)))/(Mh02 - S34)
+     &   -((SA*Sub256(HelAll(Neu(3)),Neu(4)))/(MHH2C - S34)) + 
+     &    (CA*Sub269(HelAll(Neu(3)),Neu(4)))/(Mh02C - S34)
 
         Sub740(HelAll(Neu(3)),Neu(4)) = 
      &   Sub203(HelAll(Neu(3)),Neu(4))/
      &     (S34 + GaugeXi(2)*(-MZ2 + cI*MZ*WZ)) + 
-     &    (2*CB2*Sub238(HelAll(Neu(3)),Neu(4)))/(S2B*(MA02 - S34))
+     &    (2*CB2*Sub238(HelAll(Neu(3)),Neu(4)))/(S2B*(MA02C - S34))
 
         Sub132(HelAll(Neu(3)),Neu(4)) = 
      &   Sub130*Sub25(Neu(3),Neu(4)) - F130*Sub131*Sub26(Neu(3),Neu(4))

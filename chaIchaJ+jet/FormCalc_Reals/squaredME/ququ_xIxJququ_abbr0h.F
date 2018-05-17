@@ -1228,7 +1228,7 @@
      &       (Mf2(3,Gen(1)) + Sub235(Cha(3),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6)))*
      &       Sub238(Cha(3),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6))) + 
      &    (SA*Sub265(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6))*
-     &       Sub54(HelAll(Cha(3)),Cha(4)))/((MHH2 - S34)*SB)
+     &       Sub54(HelAll(Cha(3)),Cha(4)))/((MHH2C - S34)*SB)
 
         Sub267(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6)) = 
      &   -((Sub17*Mf(3,Gen(1)))/
@@ -1278,9 +1278,9 @@
 
         Sub276(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6)) = 
      &   -((SA*Mf(3,Gen(2))*Sub274(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),
-     &          Gen(6))*Sub54(HelAll(Cha(3)),Cha(4)))/(MHH2 - S34)) + 
+     &          Gen(6))*Sub54(HelAll(Cha(3)),Cha(4)))/(MHH2C - S34)) + 
      &    (CA*Sub275(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6))*
-     &       Sub69(HelAll(Cha(3)),Cha(4)))/(Mh02 - S34)
+     &       Sub69(HelAll(Cha(3)),Cha(4)))/(Mh02C - S34)
 
         Sub278(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6)) = 
      &   -((3*T15*IndexDelta(Gen(1),Gen(6))*IndexDelta(Gen(2),Gen(5))*
@@ -1437,7 +1437,7 @@
      &       (Mf2(3,Gen(1)) + Sub235(Cha(3),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6)))*
      &       Sub238(Cha(3),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6))) + 
      &    (SA*Sub302(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6))*
-     &       Sub54(HelAll(Cha(3)),Cha(4)))/((MHH2 - S34)*SB)
+     &       Sub54(HelAll(Cha(3)),Cha(4)))/((MHH2C - S34)*SB)
 
         Sub304(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6)) = 
      &   -((3*T25*IndexDelta(Gen(1),Gen(5))*IndexDelta(Gen(2),Gen(6))*
@@ -1462,9 +1462,9 @@
 
         Sub309(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6)) = 
      &   -((SA*Mf(3,Gen(2))*Sub307(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),
-     &          Gen(6))*Sub54(HelAll(Cha(3)),Cha(4)))/(MHH2 - S34)) + 
+     &          Gen(6))*Sub54(HelAll(Cha(3)),Cha(4)))/(MHH2C - S34)) + 
      &    (CA*Sub308(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6))*
-     &       Sub69(HelAll(Cha(3)),Cha(4)))/(Mh02 - S34)
+     &       Sub69(HelAll(Cha(3)),Cha(4)))/(Mh02C - S34)
 
         Sub310(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6)) = 
      &   Mf(3,Gen(1))*Sub303(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),
@@ -1558,7 +1558,7 @@
      &   Mf(3,Gen(1))*Sub266(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),
      &      Gen(6)) + (2*CB2*
      &       Sub271(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6)))/
-     &     (S2B*(MA02 - S34)) - 
+     &     (S2B*(MA02C - S34)) - 
      &    Sub276(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6))/SB + 
      &    (3*IndexDelta(Gen(1),Gen(6))*IndexDelta(Gen(2),Gen(5))*
      &       Mf(3,Gen(2))*Sub8(HelAll(Cha(3)),Cha(4)))/
@@ -1636,7 +1636,7 @@
 
         Sub311(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6)) = 
      &   (-2*CB2*Sub306(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6)))/
-     &     (S2B*(MA02 - S34)) + 
+     &     (S2B*(MA02C - S34)) + 
      &    Sub309(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6))/SB - 
      &    Sub310(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6))
 

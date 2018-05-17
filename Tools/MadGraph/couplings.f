@@ -170,44 +170,15 @@ c
       GG(1) = -G
       GG(2) = -G     
       call INIT_SUSY_QCD(g)
-       
-! Kesenheimer: overwrite here already initialized
-! parameters to gain better accordance to Formcalc amplitudes.
-
-! Neglect the squark widths!
-! UPDATE: neglecting the squark widths causes divergences in real
-! amplitudes! These divergences originate from on-shell produced
-! squark lines. The resonant contribution can easily exceed the full
-! NLO corrections. Keeping it as part of the real corrections would
-! spoil the predictivity of the NLO calculation. Therefore, these
-! contributions have to be removed in a consistent way.
-! There exist several methods to cope with them, the most relevant 
-! being the following:
-! - Diagram Removal type I, implemented with preprocessor flag DR_I
-! - Diagram Removal type II, implemented with preprocessor flag DR_II
-! - Diagram Subtraction, implemented with preprocessor flag DS
-#ifdef NEGLECT_SWIDTH
-      wdl = 0d0 ! 5.31278772
-      wdr = 0d0 ! 0.2858123
-      wul = 0d0
-      wur = 0d0
-      wsl = 0d0
-      wsr = 0d0
-      wcl = 0d0
-      wcr = 0d0
-      wb1 = 0d0
-      wb2 = 0d0
-      wt1 = 0d0
-      wt2 = 0d0
-#endif
       
 #ifdef DEBUGQ
       print*, "[DEBUG] zwidth = ", zwidth
       print*, "[DEBUG] wwidth = ", wwidth
       print*, "[DEBUG] twidth = ", twidth
-      print*, "[DEBUG] wh1    = ", wh1
-      print*, "[DEBUG] wh2    = ", wh2
-      print*, "[DEBUG] wh3    = ", wh3
+      print*, "[DEBUG] wh0    = ", wh1
+      print*, "[DEBUG] wH0    = ", wh2
+      print*, "[DEBUG] wA0    = ", wh3
+      print*, "[DEBUG] wHp    = ", whc
       print*, "[DEBUG] wdl    = ", wdl
       print*, "[DEBUG] wdr    = ", wdr
       print*, "[DEBUG] wul    = ", wul
@@ -216,38 +187,22 @@ c
       print*, "[DEBUG] wsr    = ", wsr
       print*, "[DEBUG] wcl    = ", wcl
       print*, "[DEBUG] wcr    = ", wcr
-      print*, "[DEBUG] wb1    = ", wb1
-      print*, "[DEBUG] wb2    = ", wb2
-      print*, "[DEBUG] wt1    = ", wt1
-      print*, "[DEBUG] wt2    = ", wt2
+      print*, "[DEBUG] wb1    = ", wbl
+      print*, "[DEBUG] wb2    = ", wbr
+      print*, "[DEBUG] wt1    = ", wtl
+      print*, "[DEBUG] wt2    = ", wtr
       stop
 #endif
       
-! Set Higgs couplings manually to zero
+c#define MAD_HIGGS
 #ifndef MAD_HIGGS
+      ! Set Higgs couplings manually to zero
       gh1bb = 0D0
       gh2bb = 0D0
       gh3bb = 0D0
       gh1tt = 0D0
       gh2tt = 0D0
       gh3tt = 0D0
-#endif
-
-#ifdef DEBUGQ
-      print*, "[DEBUG] gh1bb  = ", gh1bb
-      print*, "[DEBUG] gh2bb  = ", gh2bb
-      print*, "[DEBUG] gh3bb  = ", gh3bb
-      print*, "[DEBUG] gh1tt  = ", gh1tt
-      print*, "[DEBUG] gh2tt  = ", gh2tt
-      print*, "[DEBUG] gh3tt  = ", gh3tt
-#endif
-
-c#define NO_TU_CHANNELS
-#ifdef NO_TU_CHANNELS
-      GDLN1M = 0D0
-      GDLN1P = 0D0
-      GDRN1M = 0D0
-      GDRN1P = 0D0
 #endif
       
       return

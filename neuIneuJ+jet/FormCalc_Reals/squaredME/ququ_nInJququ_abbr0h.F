@@ -811,8 +811,8 @@
      &      Sub232(HelAll(Neu(3)),Neu(4)))
 
         Sub393(HelAll(Neu(3)),Neu(4)) = 
-     &   -((SA*Sub101(HelAll(Neu(3)),Neu(4)))/(MHH2 - S34)) + 
-     &    (CA*Sub125(HelAll(Neu(3)),Neu(4)))/(Mh02 - S34)
+     &   -((SA*Sub101(HelAll(Neu(3)),Neu(4)))/(MHH2C - S34)) + 
+     &    (CA*Sub125(HelAll(Neu(3)),Neu(4)))/(Mh02C - S34)
 
 
         LOOP(Sfe7, 1,2,1)
@@ -1544,7 +1544,7 @@
      &   (Sub392(HelAll(Gen(1)),Gen(2),Gen(5),Gen(6),Neu(3),Neu(4))*
      &       Sub393(HelAll(Neu(3)),Neu(4)))/SB - 
      &    (2*CB2*Sub400(HelAll(Gen(1)),Gen(2),Gen(5),Gen(6),Neu(3),Neu(4)))/
-     &     (S2B*(MA02 - S34)) - 
+     &     (S2B*(MA02C - S34)) - 
      &    Sub406(HelAll(Gen(1)),Gen(2),Gen(5),Gen(6),Neu(3),Neu(4))/
      &     (S34 + GaugeXi(2)*(-MZ2 + cI*MZ*WZ))
 
@@ -1646,7 +1646,7 @@
      &   (Sub393(HelAll(Neu(3)),Neu(4))*
      &       Sub412(HelAll(Gen(1)),Gen(2),Gen(5),Gen(6),Neu(3),Neu(4)))/SB - 
      &    (2*CB2*Sub417(HelAll(Gen(1)),Gen(2),Gen(5),Gen(6),Neu(3),Neu(4)))/
-     &     (S2B*(MA02 - S34)) - 
+     &     (S2B*(MA02C - S34)) - 
      &    Sub421(HelAll(Gen(1)),Gen(2),Gen(5),Gen(6),Neu(3),Neu(4))/
      &     (S34 + GaugeXi(2)*(-MZ2 + cI*MZ*WZ))
 

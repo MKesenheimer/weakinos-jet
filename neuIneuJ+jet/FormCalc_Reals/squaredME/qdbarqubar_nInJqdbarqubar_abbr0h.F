@@ -521,8 +521,8 @@
      &      Sub159(HelAll(Neu(3)),Neu(4)))
 
         Sub236(HelAll(Neu(3)),Neu(4)) = 
-     &   -((SA*Sub73(HelAll(Neu(3)),Neu(4)))/(MHH2 - S34)) + 
-     &    (CA*Sub89(HelAll(Neu(3)),Neu(4)))/(Mh02 - S34)
+     &   -((SA*Sub73(HelAll(Neu(3)),Neu(4)))/(MHH2C - S34)) + 
+     &    (CA*Sub89(HelAll(Neu(3)),Neu(4)))/(Mh02C - S34)
 
         Sub33(HelAll(Neu(3)),Neu(4)) = 
      &   F105*Sub21*Sub26(Neu(3),Neu(4)) + F106*Sub27*Sub32(Neu(3),Neu(4))
@@ -911,7 +911,7 @@
      &   Sub233(HelAll(Gen(1)),Gen(2),Gen(5),Gen(6),Neu(3),Neu(4))/
      &     (S34 + GaugeXi(2)*(-MZ2 + cI*MZ*WZ)) - 
      &    (2*CB2*Sub234(HelAll(Gen(1)),Gen(2),Gen(5),Gen(6),Neu(3),Neu(4)))/
-     &     (S2B*(MA02 - S34)) + 
+     &     (S2B*(MA02C - S34)) + 
      &    (Sub235(HelAll(Gen(1)),Gen(2),Gen(5),Gen(6),Neu(3),Neu(4))*
      &       Sub236(HelAll(Neu(3)),Neu(4)))/SB
 

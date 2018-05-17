@@ -495,11 +495,11 @@
         Sub225(HelAll(Neu(3)),Neu(4)) = 
      &   Sub32(HelAll(Neu(3)),Neu(4))/
      &     (S34 + GaugeXi(2)*(-MZ2 + cI*MZ*WZ)) + 
-     &    (2*CB2*Sub70(HelAll(Neu(3)),Neu(4)))/(S2B*(MA02 - S34))
+     &    (2*CB2*Sub70(HelAll(Neu(3)),Neu(4)))/(S2B*(MA02C - S34))
 
         Sub227(HelAll(Neu(3)),Neu(4)) = 
-     &   -((SA*Sub78(HelAll(Neu(3)),Neu(4)))/(MHH2 - S34)) + 
-     &    (CA*Sub86(HelAll(Neu(3)),Neu(4)))/(Mh02 - S34)
+     &   -((SA*Sub78(HelAll(Neu(3)),Neu(4)))/(MHH2C - S34)) + 
+     &    (CA*Sub86(HelAll(Neu(3)),Neu(4)))/(Mh02C - S34)
 
 
         LOOP(Sfe7, 1,2,1)

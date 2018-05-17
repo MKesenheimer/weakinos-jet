@@ -394,7 +394,6 @@ c version.
             select case(partid(1,channel))
               case (1000021) ! gluino
                 par_WGl = width(channel)
-#ifndef NEGLECT_SWIDTH
               case (1000001) ! sdown_L
                 par_WSf(1,4,1) = width(channel)
               case (2000001) ! sdown_R
@@ -419,20 +418,20 @@ c version.
                 par_WSf(1,3,3) = width(channel)
               case (2000006) ! stop_2
                 par_WSf(2,3,3) = width(channel)
+#define HIGGSW
+#ifdef HIGGSW
+              case (25) ! h0
+                par_Wh0 = width(channel)
+              case (35) ! H0
+                par_WHH = width(channel)
+              case (36) ! A0
+                par_WA0 = width(channel)
+              case (37) ! H+
+                par_WHp = width(channel)
 #endif
             endselect
           endif
         enddo
-#ifdef NEGLECT_SWIDTH
-        print*,"Warning: FormCalc does not use squark widths."
-        do i=1,2 ! sfermion index s
-          do j=3,4 ! type (u or d)
-            do k=1,3 ! generation
-              WSf(i,j,k) = 0d0
-            enddo
-          enddo
-        enddo
-#endif
 
         ! extract particle types from process id
         call decode_pair(lprup(1),id_fin1,id_fin2)
@@ -785,12 +784,11 @@ c sets the FormCalc parameters
         MA0C = dcmplx(MA0)
         MHpC = dcmplx(MHp)
 
-#define HIGGSW
 #ifdef HIGGSW
-        Mh02C = dcmplx(Mh02) - ii*Mh0*1.2D0
-        MHH2C = dcmplx(MHH2) - ii*MHH*1.8D0
-        MA02C = dcmplx(MA02) - ii*MA0*3.0D0
-        MHp2C = dcmplx(MHp2) - ii*MHp*3.7D0
+        Mh02C = dcmplx(Mh02) - ii*Mh0*par_Wh0
+        MHH2C = dcmplx(MHH2) - ii*MHH*par_WHH
+        MA02C = dcmplx(MA02) - ii*MA0*par_WA0
+        MHp2C = dcmplx(MHp2) - ii*MHp*par_WHp
 #else
         Mh02C = dcmplx(Mh02)
         MHH2C = dcmplx(MHH2)

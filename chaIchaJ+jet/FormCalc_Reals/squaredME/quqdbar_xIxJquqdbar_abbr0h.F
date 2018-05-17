@@ -537,8 +537,8 @@
      &     (MZ2 - S34 - cI*MZ*WZ)
 
         Sub176(HelAll(Cha(3)),Cha(4)) = 
-     &   -((SA*Sub44(HelAll(Cha(3)),Cha(4)))/(MHH2 - S34)) + 
-     &    (CA*Sub53(HelAll(Cha(3)),Cha(4)))/(Mh02 - S34)
+     &   -((SA*Sub44(HelAll(Cha(3)),Cha(4)))/(MHH2C - S34)) + 
+     &    (CA*Sub53(HelAll(Cha(3)),Cha(4)))/(Mh02C - S34)
 
 
         LOOP(Sfe7, 1,2,1)
@@ -791,7 +791,7 @@
 
         Sub177(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6)) = 
      &   (-2*CB2*Sub174(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6)))/
-     &     (S2B*(MA02 - S34)) - 
+     &     (S2B*(MA02C - S34)) - 
      &    (Sub175(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6))*
      &       Sub176(HelAll(Cha(3)),Cha(4)))/SB
 

@@ -445,7 +445,7 @@
 
         Sub156(HelAll(Cha(4)),Gen(1),Neu(3)) = 
      &   (-2*Sub129(HelAll(Gen(1)))*Sub130(HelAll(Cha(4)),Neu(3)))/
-     &     (MHp2 - S34) - (S2B*Sub121(HelAll(Cha(4)),Neu(3))*
+     &     (MHp2C - S34) - (S2B*Sub121(HelAll(Cha(4)),Neu(3))*
      &       Sub133(HelAll(Gen(1))))/
      &     (S34 + GaugeXi(3)*(-MW2 + cI*MW*WW))
 
@@ -453,11 +453,11 @@
      &   (Sub121(HelAll(Cha(4)),Neu(3))*Sub137(HelAll(Gen(1))))/
      &     (S34 + GaugeXi(3)*(-MW2 + cI*MW*WW)) + 
      &    (2*Sub130(HelAll(Cha(4)),Neu(3))*Sub142(HelAll(Gen(1))))/
-     &     (S2B*(MHp2 - S34))
+     &     (S2B*(MHp2C - S34))
 
         Sub173(HelAll(Cha(4)),Gen(1),Neu(3)) = 
      &   (-2*Sub129(HelAll(Gen(1)))*Sub130(HelAll(Cha(4)),Neu(3)))/
-     &     (S2B*(MHp2 - S34)) - 
+     &     (S2B*(MHp2C - S34)) - 
      &    (Sub121(HelAll(Cha(4)),Neu(3))*Sub133(HelAll(Gen(1))))/
      &     (S34 + GaugeXi(3)*(-MW2 + cI*MW*WW))
 
@@ -465,7 +465,7 @@
      &   (S2B*Sub121(HelAll(Cha(4)),Neu(3))*Sub137(HelAll(Gen(1))))/
      &     (S34 + GaugeXi(3)*(-MW2 + cI*MW*WW)) + 
      &    (2*Sub130(HelAll(Cha(4)),Neu(3))*Sub142(HelAll(Gen(1))))/
-     &     (MHp2 - S34)
+     &     (MHp2C - S34)
 
 
         LOOP(Sfe7, 1,2,1)
@@ -579,13 +579,13 @@
      &   (Sub120(HelAll(Gen(1)),Gen(5))*Sub121(HelAll(Cha(4)),Neu(3)))/
      &     (S34 + GaugeXi(3)*(-MW2 + cI*MW*WW)) + 
      &    (2*Sub130(HelAll(Cha(4)),Neu(3))*Sub134(HelAll(Gen(1)),Gen(5)))/
-     &     (S2B*(MHp2 - S34))
+     &     (S2B*(MHp2C - S34))
 
         Sub176(HelAll(Cha(4)),Gen(1),Gen(5),Neu(3)) = 
      &   (S2B*Sub120(HelAll(Gen(1)),Gen(5))*Sub121(HelAll(Cha(4)),Neu(3)))/
      &     (S34 + GaugeXi(3)*(-MW2 + cI*MW*WW)) + 
      &    (2*Sub130(HelAll(Cha(4)),Neu(3))*Sub134(HelAll(Gen(1)),Gen(5)))/
-     &     (MHp2 - S34)
+     &     (MHp2C - S34)
 
 
         LOOP(Sfe7, 1,2,1)
@@ -618,13 +618,13 @@
      &   (S2B*Sub121(HelAll(Cha(4)),Neu(3))*Sub140(HelAll(Gen(1)),Gen(6)))/
      &     (S34 + GaugeXi(3)*(-MW2 + cI*MW*WW)) + 
      &    (2*Sub130(HelAll(Cha(4)),Neu(3))*Sub141(HelAll(Gen(1)),Gen(6)))/
-     &     (MHp2 - S34)
+     &     (MHp2C - S34)
 
         Sub174(HelAll(Cha(4)),Gen(1),Gen(6),Neu(3)) = 
      &   (Sub121(HelAll(Cha(4)),Neu(3))*Sub140(HelAll(Gen(1)),Gen(6)))/
      &     (S34 + GaugeXi(3)*(-MW2 + cI*MW*WW)) + 
      &    (2*Sub130(HelAll(Cha(4)),Neu(3))*Sub141(HelAll(Gen(1)),Gen(6)))/
-     &     (S2B*(MHp2 - S34))
+     &     (S2B*(MHp2C - S34))
 
 
         LOOP(Sfe7, 1,2,1)

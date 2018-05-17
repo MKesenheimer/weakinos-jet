@@ -2542,7 +2542,7 @@
 
         Sub626(HelAll(Cha(4)),Gen(1),Gen(2),Neu(3)) = 
      &   Sqrt(2.D0)*Sub513(HelAll(Cha(4)),Gen(1),Gen(2),Neu(3))/
-     &      (S2B*(MHp2 - S34)*Sub617(Cha(4),Gen(1),Gen(2),Neu(3))) - 
+     &      (S2B*(MHp2C - S34)*Sub617(Cha(4),Gen(1),Gen(2),Neu(3))) - 
      &    (Sub424(HelAll(Cha(4)),Neu(3))*
      &       Sub523(HelAll(Cha(4)),Gen(1),Gen(2),Neu(3)))/
      &     ((S34 + GaugeXi(3)*(-MW2 + cI*MW*WW))*
@@ -2558,7 +2558,7 @@
 
         Sub632(HelAll(Cha(4)),Gen(1),Gen(2),Neu(3)) = 
      &   -(Sqrt(2.D0)*Sub631(HelAll(Cha(4)),Gen(1),Gen(2),Neu(3))/
-     &        (S2B*(MHp2 - S34))) + 
+     &        (S2B*(MHp2C - S34))) + 
      &    (Sub424(HelAll(Cha(4)),Neu(3))*
      &       Sub625(HelAll(Cha(4)),Gen(1),Gen(2),Neu(3)))/
      &     ((S34 + GaugeXi(3)*(-MW2 + cI*MW*WW))*
@@ -2581,7 +2581,7 @@
 
         Sub644(HelAll(Cha(4)),Gen(1),Gen(2),Neu(3)) = 
      &   -(Sqrt(2.D0)*Sub643(HelAll(Cha(4)),Gen(1),Gen(2),Neu(3))/
-     &        (MHp2 - S34)) + 
+     &        (MHp2C - S34)) + 
      &    (S2B*Sub424(HelAll(Cha(4)),Neu(3))*
      &       Sub640(HelAll(Cha(4)),Gen(1),Gen(2),Neu(3)))/
      &     (S34 + GaugeXi(3)*(-MW2 + cI*MW*WW))

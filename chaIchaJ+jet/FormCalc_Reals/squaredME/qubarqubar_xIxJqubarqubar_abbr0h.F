@@ -851,8 +851,8 @@
      &      (-1 + 4*CW2)*Sub237(HelAll(Cha(3)),Cha(4)))
 
         Sub278(HelAll(Cha(3)),Cha(4)) = 
-     &   -((SA*Sub39(HelAll(Cha(3)),Cha(4)))/(MHH2 - S34)) + 
-     &    (CA*Sub53(HelAll(Cha(3)),Cha(4)))/(Mh02 - S34)
+     &   -((SA*Sub39(HelAll(Cha(3)),Cha(4)))/(MHH2C - S34)) + 
+     &    (CA*Sub53(HelAll(Cha(3)),Cha(4)))/(Mh02C - S34)
 
         Sub5(HelAll(Cha(3)),Cha(4)) = 
      &   -(Sub3*(F79*Sub2(Cha(3),Cha(4)) - F80*Sub4(Cha(3),Cha(4))))
@@ -902,7 +902,7 @@
         Sub272(HelAll(Cha(3)),Cha(4)) = 
      &   Sub5(HelAll(Cha(3)),Cha(4))/
      &     (S34 + GaugeXi(2)*(-MZ2 + cI*MZ*WZ)) + 
-     &    (2*CB2*Sub50(HelAll(Cha(3)),Cha(4)))/(S2B*(MA02 - S34))
+     &    (2*CB2*Sub50(HelAll(Cha(3)),Cha(4)))/(S2B*(MA02C - S34))
 
 
         LOOP(Sfe7, 1,2,1)
@@ -1422,7 +1422,7 @@
      &   (Sub277(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6))*
      &       Sub278(HelAll(Cha(3)),Cha(4)))/SB - 
      &    (2*CB2*Sub283(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6)))/
-     &     (S2B*(MA02 - S34)) - 
+     &     (S2B*(MA02C - S34)) - 
      &    Sub284(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6))
 
         Sub286(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6)) = 
@@ -1519,7 +1519,7 @@
      &    (Sub278(HelAll(Cha(3)),Cha(4))*
      &       Sub305(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6)))/SB + 
      &    (2*CB2*Sub307(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6)))/
-     &     (S2B*(MA02 - S34)) + 
+     &     (S2B*(MA02C - S34)) + 
      &    (Sub306(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6))*
      &       Sub7(HelAll(Cha(3)),Cha(4)))/
      &     (S34 + GaugeXi(2)*(-MZ2 + cI*MZ*WZ))

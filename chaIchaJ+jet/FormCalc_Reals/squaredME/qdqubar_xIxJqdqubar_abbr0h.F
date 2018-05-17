@@ -504,11 +504,11 @@
         Sub169(HelAll(Cha(3)),Cha(4)) = 
      &   Sub31(HelAll(Cha(3)),Cha(4))/
      &     (S34 + GaugeXi(2)*(-MZ2 + cI*MZ*WZ)) + 
-     &    (2*CB2*Sub46(HelAll(Cha(3)),Cha(4)))/(S2B*(MA02 - S34))
+     &    (2*CB2*Sub46(HelAll(Cha(3)),Cha(4)))/(S2B*(MA02C - S34))
 
         Sub171(HelAll(Cha(3)),Cha(4)) = 
-     &   -((SA*Sub42(HelAll(Cha(3)),Cha(4)))/(MHH2 - S34)) + 
-     &    (CA*Sub49(HelAll(Cha(3)),Cha(4)))/(Mh02 - S34)
+     &   -((SA*Sub42(HelAll(Cha(3)),Cha(4)))/(MHH2C - S34)) + 
+     &    (CA*Sub49(HelAll(Cha(3)),Cha(4)))/(Mh02C - S34)
 
         Sub115(HelAll(Cha(3)),Cha(4)) = 
      &   Sub112*Sub66(Cha(3),Cha(4)) - Sub114*Sub67(Cha(3),Cha(4))

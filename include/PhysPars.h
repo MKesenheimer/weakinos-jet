@@ -30,10 +30,12 @@ c parameters will be read from SLHA file in init_couplings.F
         double precision par_MGl
         double precision par_WSf(2,4,3)
         double precision par_WGl
+        double precision par_Wh0,par_WHH,par_WA0,par_WHp
         common /par_process/  
      &          par_Fin1mass,par_Fin2mass,par_Fin3mass,
      &          par_MSf,par_MNeu,par_MCha,
-     &          par_MGl,par_WSf,par_WGl
+     &          par_MGl,par_WSf,par_WGl,
+     &          par_Wh0,par_WHH,par_WA0,par_WHp
 
 c MSSM parameters in SLHALib
         double complex slhadata(nslhadata)

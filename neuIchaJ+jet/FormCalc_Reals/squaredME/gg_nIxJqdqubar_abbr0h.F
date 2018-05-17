@@ -1837,7 +1837,7 @@
 
         Sub475(HelAll(Cha(4)),Gen(5),Gen(6),Neu(3)) = 
      &   -(Sqrt(2.D0)*Sub474(HelAll(Cha(4)),Gen(5),Gen(6),Neu(3))/
-     &        (S2B*(MHp2 - S34))) + 
+     &        (S2B*(MHp2C - S34))) + 
      &    (Sub345(HelAll(Cha(4)),Neu(3))*
      &       Sub470(HelAll(Cha(4)),Gen(5),Gen(6),Neu(3)))/
      &     (S34 + GaugeXi(3)*(-MW2 + cI*MW*WW))
@@ -1870,7 +1870,7 @@
         Sub492(HelAll(Cha(4)),Gen(5),Gen(6),Neu(3)) = 
      &   -(2*Sqrt(2.D0)*(Sub386(HelAll(Cha(4)),Neu(3))*
      &          Sub491(HelAll(Cha(4)),Gen(5),Gen(6),Neu(3)))/
-     &        (S2B*(MHp2 - S34))) - 
+     &        (S2B*(MHp2C - S34))) - 
      &    (Sub345(HelAll(Cha(4)),Neu(3))*
      &       Sub487(HelAll(Cha(4)),Gen(5),Gen(6),Neu(3)))/
      &     (S34 + GaugeXi(3)*(-MW2 + cI*MW*WW))

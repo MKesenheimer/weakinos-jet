@@ -741,7 +741,7 @@
      &     (S34 + GaugeXi(3)*(-MW2 + cI*MW*WW)) - 
      &    (2*Sub126(HelAll(Cha(4)),Neu(3))*
      &       Sub151(HelAll(Cha(4)),Gen(1),Gen(2),Gen(5),Gen(6),Neu(3)))/
-     &     (MHp2 - S34)
+     &     (MHp2C - S34)
 
         Sub153(HelAll(Cha(4)),Gen(1),Gen(2),Gen(5),Gen(6),Neu(3)) = 
      &   (3*IndexDelta(Gen(1),Gen(5))*IndexDelta(Gen(2),Gen(6))*
@@ -821,7 +821,7 @@
      &     (S34 + GaugeXi(3)*(-MW2 + cI*MW*WW)) - 
      &    (2*Sub126(HelAll(Cha(4)),Neu(3))*
      &       Sub161(HelAll(Cha(4)),Gen(1),Gen(2),Gen(5),Gen(6),Neu(3)))/
-     &     (MHp2 - S34)
+     &     (MHp2C - S34)
 
         Sub163(HelAll(Cha(4)),Gen(1),Gen(2),Gen(5),Gen(6),Neu(3)) = 
      &   (IndexDelta(Gen(1),Gen(5))*IndexDelta(Gen(2),Gen(6))*

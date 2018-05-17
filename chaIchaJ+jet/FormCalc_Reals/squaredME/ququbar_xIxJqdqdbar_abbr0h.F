@@ -749,14 +749,14 @@
      &   Sub166(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6))/
      &     (S34 + GaugeXi(2)*(-MZ2 + cI*MZ*WZ)) - 
      &    (SA*Sub167(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6))*
-     &       Sub41(HelAll(Cha(3)),Cha(4)))/((MHH2 - S34)*SB)
+     &       Sub41(HelAll(Cha(3)),Cha(4)))/((MHH2C - S34)*SB)
 
         Sub170(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6)) = 
      &   Sub168(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6)) + 
      &    (2*CB2*Sub169(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6)))/
-     &     (S2B*(MA02 - S34)) + 
+     &     (S2B*(MA02C - S34)) + 
      &    (CA*Sub167(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6))*
-     &       Sub49(HelAll(Cha(3)),Cha(4)))/((Mh02 - S34)*SB)
+     &       Sub49(HelAll(Cha(3)),Cha(4)))/((Mh02C - S34)*SB)
 
         Sub171(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6)) = 
      &   2/CW2*Sub165(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6))/

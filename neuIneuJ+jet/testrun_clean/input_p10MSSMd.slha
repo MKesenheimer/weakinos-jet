@@ -248,6 +248,10 @@ BLOCK MSOFT Q=  1.29910032E+03  # The soft SUSY breaking masses at the scale Q
 #         PDG            Width
 DECAY        23     2.41143316E+00   # Z width (SM calculation)
 DECAY        24     2.00282196E+00   # W width (SM calculation)
+DECAY        25     1.74240181E+00   # h width (hdecay)
+DECAY        35     1.23349706E+00   # H width (hdecay)
+DECAY        36     2.98093119E+00   # A decays (hdecay)
+DECAY        37     3.86265330E-01   # H+ decays (hdecay)
 #
 #         PDG            Width
 DECAY         6     1.47351908E+00   # top decays

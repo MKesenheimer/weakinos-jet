@@ -500,12 +500,12 @@
      &   Sub150 - (F63 + F64)*Sub15*(MCha(Cha(3)) - MCha(Cha(4)))
 
         Sub170(HelAll(Cha(3)),Cha(4)) = 
-     &   (-2*CB2*Sub44(HelAll(Cha(3)),Cha(4)))/(S2B*(MA02 - S34)) - 
-     &    (CA*Sub43*Sub47(HelAll(Cha(3)),Cha(4)))/((Mh02 - S34)*SB)
+     &   (-2*CB2*Sub44(HelAll(Cha(3)),Cha(4)))/(S2B*(MA02C - S34)) - 
+     &    (CA*Sub43*Sub47(HelAll(Cha(3)),Cha(4)))/((Mh02C - S34)*SB)
 
         Sub171(HelAll(Cha(3)),Cha(4)) = 
-     &   -((SA*Sub39(HelAll(Cha(3)),Cha(4)))/(MHH2 - S34)) + 
-     &    (CA*Sub47(HelAll(Cha(3)),Cha(4)))/(Mh02 - S34)
+     &   -((SA*Sub39(HelAll(Cha(3)),Cha(4)))/(MHH2C - S34)) + 
+     &    (CA*Sub47(HelAll(Cha(3)),Cha(4)))/(Mh02C - S34)
 
         Sub14(HelAll(Cha(3)),Cha(4)) = 
      &   F63*Sub10*Sub11(Cha(3),Cha(4)) + F64*Sub12*Sub13(Cha(3),Cha(4))
@@ -521,7 +521,7 @@
 
         Sub172(HelAll(Cha(3)),Cha(4)) = 
      &   (Sub36*Sub171(HelAll(Cha(3)),Cha(4)))/SB + 
-     &    (2*CB2*Sub42(HelAll(Cha(3)),Cha(4)))/(S2B*(MA02 - S34))
+     &    (2*CB2*Sub42(HelAll(Cha(3)),Cha(4)))/(S2B*(MA02C - S34))
 
 
         LOOP(Sfe7, 1,2,1)
@@ -774,7 +774,7 @@
      &       Sub23(Gen(1),Gen(2),Gen(5),Gen(6))) + 
      &    (3*Sqrt(2.D0))/(MW*SW2)*
      &     (SA*Sub43*IndexDelta(Gen(2),Gen(6))*Mf(3,Gen(2))*
-     &        Sub39(HelAll(Cha(3)),Cha(4)))/((MHH2 - S34)*SB)
+     &        Sub39(HelAll(Cha(3)),Cha(4)))/((MHH2C - S34)*SB)
 
         Sub187(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6)) = 
      &   Sub167(HelAll(Cha(3)),Cha(4),Gen(1),Gen(2),Gen(5),Gen(6))/

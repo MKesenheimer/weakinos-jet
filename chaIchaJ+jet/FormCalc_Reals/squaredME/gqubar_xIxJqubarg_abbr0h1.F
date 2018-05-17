@@ -1552,8 +1552,8 @@
      &    Pair1*Sub661(HelAll(Cha(3)),Cha(4))
 
         Sub736(HelAll(Cha(3)),Cha(4)) = 
-     &   -((CA*Sub359(HelAll(Cha(3)),Cha(4)))/(Mh02 - S34)) + 
-     &    (SA*Sub370(HelAll(Cha(3)),Cha(4)))/(MHH2 - S34)
+     &   -((CA*Sub359(HelAll(Cha(3)),Cha(4)))/(Mh02C - S34)) + 
+     &    (SA*Sub370(HelAll(Cha(3)),Cha(4)))/(MHH2C - S34)
 
         Sub542(HelAll(Cha(3)),Cha(4)) = 
      &   Sub541*(MCha(Cha(4))*Sub387(HelAll(Cha(3)),Cha(4)) - 

@@ -988,7 +988,7 @@
      &   Sub712(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4))/
      &     (S34 + GaugeXi(2)*(-MZ2 + cI*MZ*WZ)) + 
      &    (2*CB2*Sub713(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4)))/
-     &     (S2B*(MA02 - S34)) - 
+     &     (S2B*(MA02C - S34)) - 
      &    (Sub714(HelAll(Neu(3)),Neu(4))*
      &       Sub717(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4)))/SB
 
@@ -1035,7 +1035,7 @@
         Sub732(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4)) = 
      &   (2*CB2*Sub207(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4))*
      &       Sub238(HelAll(Neu(3)),Neu(4)))/
-     &     (S2B*(MA02 - S34)*Sub707(Gen(1),Gen(2),Neu(3),Neu(4))) - 
+     &     (S2B*(MA02C - S34)*Sub707(Gen(1),Gen(2),Neu(3),Neu(4))) - 
      &    Sub227(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4))/
      &     ((S34 + GaugeXi(2)*(-MZ2 + cI*MZ*WZ))*
      &       (Mf2(3,Gen(2)) + Sub727(Gen(1),Gen(2),Neu(3),Neu(4))))
@@ -1057,7 +1057,7 @@
      &    Sub732(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4))/
      &     (Mf2(3,Gen(1)) - Sub708(Gen(1),Neu(3),Neu(4))) + 
      &    (2*CB2*Sub733(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4)))/
-     &     (S2B*(MA02 - S34))
+     &     (S2B*(MA02C - S34))
 
         Sub735(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4)) = 
      &   -(Sub273(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4))/
@@ -1074,12 +1074,12 @@
 
         Sub737(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4)) = 
      &   -((CA*Sub287(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4)))/
-     &       (Mh02 - S34)) + 
-     &    (SA*Sub294(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4)))/(MHH2 - S34)
+     &       (Mh02C - S34)) + 
+     &    (SA*Sub294(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4)))/(MHH2C - S34)
 
         Sub738(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4)) = 
      &   (SA*Mf(3,Gen(2))*Sub301(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4)))/
-     &     ((MHH2 - S34)*(Mf2(3,Gen(2)) + 
+     &     ((MHH2C - S34)*(Mf2(3,Gen(2)) + 
      &         Sub706(Gen(1),Gen(2),Neu(3),Neu(4)))) + 
      &    (Mf(3,Gen(1))*Sub737(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4)))/
      &     (Mf2(3,Gen(2)) + Sub727(Gen(1),Gen(2),Neu(3),Neu(4)))
@@ -1097,7 +1097,7 @@
 
         Sub742(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4)) = 
      &   (CA*Mf(3,Gen(2))*Sub405(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4)))/
-     &     ((Mh02 - S34)*(Mf2(3,Gen(2)) + 
+     &     ((Mh02C - S34)*(Mf2(3,Gen(2)) + 
      &         Sub706(Gen(1),Gen(2),Neu(3),Neu(4)))) + 
      &    SB*Sub740(HelAll(Neu(3)),Neu(4))*
      &     Sub741(HelAll(Gen(1)),Gen(2),Neu(3),Neu(4))

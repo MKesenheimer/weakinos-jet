@@ -810,8 +810,8 @@
      &       Sub227(HelAll(Neu(3)),Neu(4)))
 
         Sub411(HelAll(Neu(3)),Neu(4)) = 
-     &   -((CA*Sub119(HelAll(Neu(3)),Neu(4)))/(Mh02 - S34)) + 
-     &    (SA*Sub96(HelAll(Neu(3)),Neu(4)))/(MHH2 - S34)
+     &   -((CA*Sub119(HelAll(Neu(3)),Neu(4)))/(Mh02C - S34)) + 
+     &    (SA*Sub96(HelAll(Neu(3)),Neu(4)))/(MHH2C - S34)
 
         Sub40(HelAll(Neu(3)),Neu(4)) = 
      &   -(Sub39*(F117*Sub31(Neu(3),Neu(4)) - F118*Sub36(Neu(3),Neu(4))))
@@ -1620,7 +1620,7 @@
 
         Sub412(HelAll(Gen(1)),Gen(2),Gen(5),Gen(6),Neu(3),Neu(4)) = 
      &   (-2*CB2*Sub402(HelAll(Gen(1)),Gen(2),Gen(5),Gen(6),Neu(3),Neu(4)))/
-     &     (S2B*(MA02 - S34)) - 
+     &     (S2B*(MA02C - S34)) - 
      &    Sub405(HelAll(Gen(1)),Gen(2),Gen(5),Gen(6),Neu(3),Neu(4))/
      &     (S34 + GaugeXi(2)*(-MZ2 + cI*MZ*WZ)) + 
      &    (Sub410(HelAll(Gen(1)),Gen(2),Gen(5),Gen(6),Neu(3),Neu(4))*
@@ -1676,7 +1676,7 @@
 
         Sub427(HelAll(Gen(1)),Gen(2),Gen(5),Gen(6),Neu(3),Neu(4)) = 
      &   (-2*CB2*Sub420(HelAll(Gen(1)),Gen(2),Gen(5),Gen(6),Neu(3),Neu(4)))/
-     &     (S2B*(MA02 - S34)) - 
+     &     (S2B*(MA02C - S34)) - 
      &    Sub421(HelAll(Gen(1)),Gen(2),Gen(5),Gen(6),Neu(3),Neu(4))/
      &     (S34 + GaugeXi(2)*(-MZ2 + cI*MZ*WZ)) + 
      &    (Sub411(HelAll(Neu(3)),Neu(4))*

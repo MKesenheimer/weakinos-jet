@@ -2446,7 +2446,7 @@
 
         Sub645(HelAll(Cha(4)),Gen(2),Gen(5),Neu(3)) = 
      &   Sqrt(2.D0)*Sub555(HelAll(Cha(4)),Gen(2),Gen(5),Neu(3))/
-     &      (S2B*(MHp2 - S34)*Sub587(Cha(4),Gen(2),Gen(5),Neu(3))) + 
+     &      (S2B*(MHp2C - S34)*Sub587(Cha(4),Gen(2),Gen(5),Neu(3))) + 
      &    (Sub448(HelAll(Cha(4)),Neu(3))*
      &       Sub547(HelAll(Cha(4)),Gen(2),Gen(5),Neu(3)))/
      &     ((S34 + GaugeXi(3)*(-MW2 + cI*MW*WW))*
@@ -2467,7 +2467,7 @@
         Sub648(HelAll(Cha(4)),Gen(2),Gen(5),Neu(3)) = 
      &   -(Sqrt(2.D0)*(Sub530(HelAll(Cha(4)),Neu(3))*
      &          Sub647(HelAll(Cha(4)),Gen(2),Gen(5),Neu(3)))/
-     &        (S2B*(MHp2 - S34))) - 
+     &        (S2B*(MHp2C - S34))) - 
      &    (Sub448(HelAll(Cha(4)),Neu(3))*
      &       Sub644(HelAll(Cha(4)),Gen(2),Gen(5),Neu(3)))/
      &     (S34 + GaugeXi(3)*(-MW2 + cI*MW*WW)) - 
@@ -2476,7 +2476,7 @@
 
         Sub649(HelAll(Cha(4)),Gen(2),Gen(5),Neu(3)) = 
      &   Sqrt(2.D0)/MW*Sub581(HelAll(Cha(4)),Gen(2),Gen(5),Neu(3))/
-     &      (S2B*(MHp2 - S34)*
+     &      (S2B*(MHp2C - S34)*
      &        (Mf2(3,Gen(2)) + Sub582(Cha(4),Gen(2),Gen(5),Neu(3)))) - 
      &    (2*Sub56(HelAll(Cha(4)),Gen(2),Gen(5),Neu(3)))/
      &     ((MW2 - S34 - cI*MW*WW)*
@@ -2530,7 +2530,7 @@
 
         Sub631(HelAll(Cha(4)),Gen(2),Gen(5),Neu(3)) = 
      &   -(Sqrt(2.D0)*Sub555(HelAll(Cha(4)),Gen(2),Gen(5),Neu(3))/
-     &        (S2B*(MHp2 - S34)*Sub587(Cha(4),Gen(2),Gen(5),Neu(3))*
+     &        (S2B*(MHp2C - S34)*Sub587(Cha(4),Gen(2),Gen(5),Neu(3))*
      &          (Mf2(4,Gen(2)) + Sub595(Cha(4),Gen(2),Gen(5),Neu(3))))) + 
      &    (Sub448(HelAll(Cha(4)),Neu(3))*
      &       Sub630(HelAll(Cha(4)),Gen(2),Gen(5),Neu(3)))/
@@ -2538,7 +2538,7 @@
 
         Sub635(HelAll(Cha(4)),Gen(2),Gen(5),Neu(3)) = 
      &   -(Sqrt(2.D0)*Sub634(HelAll(Cha(4)),Gen(2),Gen(5),Neu(3))/
-     &        (S2B*(MHp2 - S34))) + 
+     &        (S2B*(MHp2C - S34))) + 
      &    (Sub448(HelAll(Cha(4)),Neu(3))*
      &       Sub628(HelAll(Cha(4)),Gen(2),Gen(5),Neu(3)))/
      &     ((S34 + GaugeXi(3)*(-MW2 + cI*MW*WW))*
