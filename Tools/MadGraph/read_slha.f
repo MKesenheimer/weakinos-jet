@@ -1604,8 +1604,6 @@ c            array defined in Xsugra.f
          check_sq(8) = 1 
       elseif (dumi.eq.6) then  ! JA
          twidth = dumr
-         ! TODO:
-         ! twidth = 0d0
          check_sq(11) = 1 
       elseif (dumi.eq.23) then 
          zwidth = dumr

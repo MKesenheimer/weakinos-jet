@@ -1,8 +1,0 @@
-# These are processes with no resonant diagrams. No subtraction for
-# these processes is needed.
-         g             qd        nI     xJ-           qu              g
-         g             qdbar     nI     xJ+           qubar           g
-         g             qu        nI     xJ+           qd              g
-         g             qubar     nI     xJ-           qdbar           g
-         qu            qdbar     nI     xJ+           g               g
-         qd            qubar     nI     xJ-           g               g

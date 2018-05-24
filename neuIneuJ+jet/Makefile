@@ -105,10 +105,10 @@ OPT = -O2
 $(shell mkdir -p build)
 
 ### version control
-GV = $(shell git rev-parse --short HEAD)
-$(shell echo "      subroutine print_version" > ../version.f)
-$(shell echo "        print*,'        git version $(GV)'" >> ../version.f)
-$(shell echo "      end" >> ../version.f)
+#GV = $(shell git rev-parse --short HEAD)
+#$(shell echo "      subroutine print_version" > ../version.f)
+#$(shell echo "        print*,'        git version $(GV)'" >> ../version.f)
+#$(shell echo "      end" >> ../version.f)
 
 ########################################################################
 ## Runtime flags

@@ -13,7 +13,6 @@ c damping
 c retval is the function return value
 c retvavl0 is an 'avatar' function the has similar value, but is much
 c easier to compute (i.e. the Born term in this case)
-c TODO:
 c imode = 0 compute retval0 only.
 c imode = 1 compute retval, retval0
 c return value: output, 0: success; 1: retval0 was not computed
@@ -63,13 +62,9 @@ c keep this order
         retval = 0D0
         rad_osres_arr(:,:) = 0D0
         
-        ! TODO: use smartsig for sigosres_contr
-    
         ! use the generic phase-space here,
         ! provide tan-mapping for the resonant particles
         ! sum over the resonances
-#define VERSION1
-#ifdef VERSION1
         do ichan=1,nosres
           ! reset result
           sigosres_contr = 0D0
@@ -87,48 +82,6 @@ c keep this order
           ! retval is summed over all processes and over all channels
           retval = retval + dabs(sigosres_contr)
         enddo
-#endif
-! should be faster
-! TODO: gives wrong results!
-#ifdef VERSION2
-        do lset=1,flst_nosres
-          ! reset result
-          sigosres_contr = 0D0
-          ! check if gluino single resonances can occur (sum over nosres1 + nosres2)
-          ! if not, sum over double squark resonances only (sum over nosres1)
-#if defined(NINJ_JET)
-          if(flst_osres(1,lset).eq.-flst_osres(2,lset) .and.
-     &       flst_osres(5,lset).eq.-flst_osres(6,lset) .and.
-     &       flst_osres(1,lset).ne.0.and.flst_osres(5,lset).ne.0) then
-#elif defined(NIXJ_JET)
-          if((flst_osres(1,lset).lt.0.and.flst_osres(2,lset).gt.0) .or.
-     &       (flst_osres(1,lset).gt.0.and.flst_osres(2,lset).lt.0)) then
-#elif defined(XIXJ_JET)
-          if((((flst_osres(5,lset).gt.0.and.flst_osres(6,lset).lt.0) .or.
-     &         (flst_osres(5,lset).lt.0.and.flst_osres(6,lset).gt.0)) .and.
-     &          mod(flst_osres(5,lset)+flst_osres(6,lset),2).ne.0)) then
-#endif
-            nos = nosres1 + nosres2
-          else
-            nos = nosres1
-          endif
-          do ichan=1,nos
-            call real_osres_phsp(xx,flst_osres(:,lset),ichan)
-            xjac = kn_jacreal*ww1*hc2
-            call sigreal_osres(xjac,lset,ichan,rad_osres_arr(lset,ichan))
-            ! sigosres_contr is summed over all channels for a given process
-            sigosres_contr = sigosres_contr+rad_osres_arr(lset,ichan)
-            temp_arr(ichan) = rad_osres_arr(lset,ichan)
-          enddo
-          call transfersign(temp_arr(:),temp_sign(:),nosres)
-          rad_osres_sign(lset,:) = temp_sign(:)
-          if(flg_nlotest) then
-            call analysis_driver(sigosres_contr,1)
-          endif
-          ! retval is summed over all processes and over all channels
-          retval = retval + dabs(sigosres_contr)
-        enddo
-#endif
 
         ! -> return succes
         sigosres = 1
