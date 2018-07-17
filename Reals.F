@@ -147,3 +147,11 @@ c a (leading) color structure to an event.
         enddo
       end
 c############### end subroutine realcolour_lh ##########################
+
+c############### subroutine regularcolour_lh ###########################
+      subroutine regularcolour_lh
+        print*, ' regularcolour_lh: there are no regulars in this process'
+        print*, ' exiting ...'
+        stop
+      end
+c############### end subroutine regularcolour_lh #######################

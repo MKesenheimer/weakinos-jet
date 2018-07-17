@@ -30,7 +30,9 @@ for your own operating system. To do this, call the configuration scripts in the
 
         $ ./configure [compiler]
 
-where the optional parameter compiler is whether gfortran or ifort.
+where the optional parameter compiler is whether gfortran or ifort. 
+This program was both compiled successfully on a Linux and Mac OSX machine with the gnu-c compiler gcc version 5. 
+Keep in mind that older or newer compiler versions can lead to problems.
 
 You can compile the libraries by typing
 

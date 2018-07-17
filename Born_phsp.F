@@ -138,7 +138,7 @@ c and the Jacobi factor for the phase space volume
       end
 c############### end subroutine born_phsp ##############################
 
-c############### subroutine born_suppression ###########################
+c############### subroutines suppression factors #######################
       subroutine born_suppression(fact)
         implicit none
 #include "nlegborn.h"
@@ -164,7 +164,28 @@ c############### subroutine born_suppression ###########################
         
         if(fact.le.0d0) fact = 1d0
       end
-c############### end subroutine born_suppression #######################
+
+      subroutine rmn_suppression(fact)
+        implicit none
+        double precision fact
+        fact=1d0
+      end
+
+
+      subroutine regular_suppression(fact)
+        implicit none
+        double precision fact
+        call rmn_suppression(fact)
+      end
+
+
+      subroutine global_suppression(c,fact)
+        implicit none
+        character*1 c
+        double precision fact
+        fact=1d0
+      end
+c############### end subroutines suppression factors ###################
 
 c############### subroutine set_fac_ren_scales #########################
       subroutine set_fac_ren_scales(muf1,mur1)

@@ -18,7 +18,7 @@ c imode = 0 compute retval0 only.
 c imode = 1 compute retval, retval0
 c return value: output, 0: success; 1: retval0 was not computed
 c                   (this function does not support an avatar function)
-      function sigosres(xx,ww1,ifirst,imode,retval,retval0)
+      function sigosres(iresgroup,xx,ww1,ifirst,imode,retval,retval0)
         implicit none
 #include "nlegborn.h"
 #include "pwhg_flst.h"
@@ -30,7 +30,7 @@ c keep this order
 #include "osres.h"
 #include "pwhg_flst_add.h"
 #include "pwhg_rad_add.h"
-        integer sigosres,imode
+        integer sigosres,iresgroup,imode
         double precision retval,retval0,xx(ndiminteg),ww1
         integer ifirst,ichan,idi
         integer lset
@@ -42,6 +42,10 @@ c keep this order
         integer temp_sign(nosres)
         ! sum only over relevant on-shell channels
         integer nos
+
+        ! MK: added for POWHEG-RES version
+        flst_ibornresgroup = iresgroup
+        call setup_resgroupstuff
         
         ! set this to zero: radiation is always generated from production 
         ! process for osres contributions

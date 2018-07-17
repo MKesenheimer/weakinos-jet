@@ -1,5 +1,5 @@
 c############### init_processes.f ######################################
-c last modified by MK, 05.12.2015
+c last modified by MK, 11.07.2018
 c weakino pair production
 
 c############### subroutine init_processes #############################
@@ -20,6 +20,7 @@ c     set process id using slepton types
         equivalence (i1,ii(1)),(i2,ii(2)),(i3,ii(3)),(i4,ii(4)),
      &              (i5,ii(5)),(i6,ii(6))
         integer i,j,k, temp, flst_max
+        integer iun
         real*8 powheginput
         external powheginput
         logical check, isnInJ, isnIxJ, isxIxJ
@@ -75,10 +76,6 @@ c     set process id using slepton types
         if(st_nlight.ne.max_flav) then
           print*,"Warning: max_flav not equal st_nlight."
         endif
-
-        ! index of the first coloured particle in the final state
-        ! (all subsequent particles are coloured)
-        flst_lightpart = 5
 
         ! choose process
         i3 = int(powheginput("fin1"))
@@ -347,6 +344,19 @@ c     set process id using slepton types
         
         call remove_duplicates(flst_real,nlegreal,flst_nreal)
         
+        ! setup the resonant flavor list
+        do k=1,nlegborn
+          do i=1,flst_nborn
+            flst_bornres(k,i) = 0
+          enddo
+        enddo
+        do k=1,nlegreal
+          do i=1,flst_nreal
+            flst_realres(k,i) = 0
+          enddo
+        enddo
+
+
 #ifdef DEBUGQ
         nflst_select = 1
         ! Real process
@@ -369,14 +379,33 @@ c     set process id using slepton types
         flst_real(6,1) = -2
 #endif
 
-#ifdef DEBUG
+        call newunit(iun)
+        open(unit=iun, file='DetailedFlavList.txt', status='unknown')
+        write(iun,*) ' ###########   FINAL POWHEG    ########### '
+        write(iun,*) ' ###########     BORN          ########### '
+        write(iun,'(a,100i8)')'                  ',(/(i, i=1,nlegborn, 1)/)
+        do i=1,flst_nborn
+          write(iun,'(a,i3,a,100i8)')'flst_born(',i,')   =',flst_born(1:nlegborn,i)
+          write(iun,'(a,i3,a,100i8)')'flst_bornres(',i,')=',flst_bornres(1:nlegborn,i)
+          write(iun,*)
+        enddo
+
+        write(iun,*) ' ###########     REAL          ########### '
+        write(iun,'(a,100i8)')'                  ',(/(i, i=1,nlegreal, 1)/)
+        do i=1,flst_nreal
+          write(iun,'(a,i3,a,100i8)')'flst_real(',i,')   =',flst_real(1:nlegreal,i)
+          write(iun,'(a,i3,a,100i8)')'flst_realres(',i,')=',flst_realres(1:nlegreal,i)
+          write(iun,*)
+        enddo
+
+#ifdef DEBUGQ
         print*,' born processes',flst_nborn
         do j=1,flst_nborn
           print*,(flst_born(k,j),k=1,nlegborn)
         enddo
 #endif
 
-#ifdef DEBUG
+#ifdef DEBUGQ
         print*,' real processes',flst_nreal
         do j=1,flst_nreal
           print*,(flst_real(k,j),k=1,nlegreal)
@@ -415,13 +444,19 @@ c     set process id using slepton types
           endif
         enddo
 
-#ifdef DEBUG
+#ifdef DEBUGQ
         print*,' on-shell resonant real processes',flst_nosres
         do j=1,flst_nosres
           print*,(flst_osres(k,j),k=1,nlegreal)
         enddo
         !stop
 #endif
+
+        write(iun,*) ' ###########     REAL OS-RES   ########### '
+        write(iun,'(a,100i8)')'                  ',(/(i, i=1,nlegreal, 1)/)
+        do i=1,flst_nosres
+          write(iun,'(a,i3,a,100i8)')'flst_real(',i,')   =',flst_osres(1:nlegreal,i)
+        enddo
 #endif
 
         return

@@ -2,7 +2,7 @@
 #                          -*- Makefile -*-                            #
 ########################################################################
 # Copyright (C) Matthias Kesenheimer - All Rights Reserved             #
-# Written by Matthias Kesenheimer <m.kesenheimer@gmx.net>, 2017        #
+# Written by Matthias Kesenheimer <m.kesenheimer@gmx.net>, 2018        #
 ########################################################################
 #
 # General Conventions for Makefiles
@@ -36,10 +36,10 @@ FCFLAGS  = -pg
 CXXFLAGS = -g
 CFLAGS   = -pg
 
-# warnings, no -Wtabs, -Wunused
-WARNINGS  = -Waliasing -Wampersand -Wconversion -Wsurprising -Wc-binding-type
+# warnings, no -Wtabs, -Wunused -Wconversion -Wc-binding-type
+WARNINGS  = -Waliasing -Wampersand -Wsurprising
 WARNINGS += -Wintrinsics-std -Wintrinsic-shadow -Wline-truncation -Wtarget-lifetime
-WARNINGS += -Wreal-q-constant 
+#WARNINGS += -Wreal-q-constant 
   
 # recommended compiler flags
 ifeq ($(FC), ifort)
@@ -63,8 +63,8 @@ REC_CFLAGS   += $(CFLAGS)
 UNAME = $(shell uname)
 ifeq ($(UNAME), Darwin)
   #Mac OSX
-  REC_CFLAGS   += -stdlib=libstdc++ -mmacosx-version-min=10.6 -Qunused-arguments
-  REC_CXXFLAGS += -stdlib=libstdc++ -mmacosx-version-min=10.6 -Qunused-arguments
+  REC_CFLAGS   += -static-libstdc++ -mmacosx-version-min=10.6
+  REC_CXXFLAGS += -static-libstdc++ -mmacosx-version-min=10.6
 endif
 
 ## choose analysis: none, default, decay
@@ -145,10 +145,10 @@ DEBUG = -ggdb -pg -DDEBUG=$(LEVEL)
 #   integrated separately in sigosres.f and is included at a later point
 #   to the main result.
 #USRFLAGS += -DDR_II
-#USRFLAGS += -DDSUB_I
-USRFLAGS += -DDSUB_II
+USRFLAGS += -DDSUB_I
+#USRFLAGS += -DDSUB_II
 # use the POWHEG modified files (yes, no)
-POWMOD = yes
+POWMOD = no
 
 ## SkipHel
 # skip the calculation of formcalc helicity amplitudes if the amplitude
@@ -291,34 +291,39 @@ MADGRAPH = couplings.o hardstop.o printout.o read_slha.o \
 FORMCALC = VecSet.o
 
 ### PWHG FILES in ../ ###
-PWHG = btilde.o utils.o gen_Born_phsp.o	\
-	test_Sudakov.o pt2maxreg.o maxrat.o Bornzerodamp.o \
-	random.o boostrot.o bra_ket_subroutines.o \
-	init_phys.o powheginput.o sigcollremn.o \
-	pwhg_bookhist-multi.o pwhg_analysis_driver.o checkmomzero.o \
-	setstrongcoupl.o integrator.o mwarn.o \
-	sigcollsoft.o validflav.o decidemerging.o \
-	loadstorenlo.o setlocalscales.o multi_plot.o \
-	mint_upb.o reshufflemoms.o opencount.o \
-	lhefread.o pwhg_io_interface.o
+PWHG = btilde.o utils.o gen_Born_phsp.o \
+  test_Sudakov.o pt2maxreg.o maxrat.o Bornzerodamp.o \
+  random.o boostrot.o bra_ket_subroutines.o \
+  init_phys_mod.o powheginput.o sigcollremn.o \
+  pwhg_bookhist-multi.o pwhg_analysis_driver.o checkmomzero.o \
+  setstrongcoupl.o integrator.o mwarn.o \
+  sigcollsoft.o validflav.o \
+  setlocalscales.o multi_plot.o \
+  mint_upb.o reshufflemoms.o opencount.o \
+  lhefread.o pwhg_io_interface.o fill_res_histories.o sigregular.o \
+  build_resonance_hists.o resize_arrays.o mintwrapper.o \
+  resweights.o locks.o genericphsp.o PhaseSpaceUtils.o \
+  boostrot4.o fullrwgt.o \
+  rwl_setup_param_weights_user.o \
+  cache_similar.o cernroutines_mod.o
 
 # modified POWHEG-files
 ifeq ("$(POWMOD)","no")
-  PWHG += pwhg_init.o cernroutines.o find_regions.o gen_real_phsp.o\
-	sigborn.o sigreal.o sigsoftvirt.o \
-	sigvirtual.o bbinit.o LesHouches.o \
-	LesHouchesreg.o gen_index.o lhefwrite.o \
-	gen_radiation.o sigremnants.o pwhgreweight.o \
-	pdfcalls.o newunit.o pwhg_main.o rwl_weightlists.o \
-	ubprojections.o rwl_setup_param_weights.o
+  PWHG += pwhg_init.o find_regions.o gen_real_phsp.o\
+  sigborn.o sigreal.o sigsoftvirt.o \
+  sigvirtual.o bbinit.o LesHouches.o \
+  LesHouchesreg.o gen_index.o lhefwrite.o \
+  gen_radiation.o sigremnants.o \
+  pdfcalls.o newunit.o pwhg_main.o rwl_weightlists.o \
+  ubprojections-new.o rwl_setup_param_weights.o
 else
-  PWHG += pwhg_init_mod.o cernroutines_mod.o find_regions_mod.o gen_real_phsp_mod.o \
-	sigborn_mod.o sigreal_mod.o sigsoftvirt_mod.o \
-	sigvirtual_mod.o bbinit_mod.o LesHouches_mod.o \
-	LesHouchesreg_mod.o gen_index_mod.o lhefwrite_mod.o \
-	gen_radiation_mod.o sigremnants_mod.o pwhgreweight_mod.o \
-	pdfcalls_mod.o newunit_mod.o pwhg_main_mod.o rwl_weightlists_mod.o \
-	ubprojections_mod.o rwl_setup_param_weights_mod.o rwl_setup_param_weights_user.o
+  PWHG += pwhg_init_mod.o find_regions_mod.o gen_real_phsp_mod.o \
+  sigborn_mod.o sigreal_mod.o sigsoftvirt_mod.o \
+  sigvirtual_mod.o bbinit_mod.o LesHouches_mod.o \
+  LesHouchesreg_mod.o gen_index_mod.o lhefwrite_mod.o \
+  gen_radiation_mod.o sigremnants_mod.o pwhgreweight_mod.o \
+  pdfcalls_mod.o newunit_mod.o pwhg_main_mod.o rwl_weightlists_mod.o \
+  ubprojections-new_mod.o rwl_setup_param_weights_mod.o
 endif
 
 ### LHEF ###
