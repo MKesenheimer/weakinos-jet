@@ -20,6 +20,7 @@ c     set process id using slepton types
         equivalence (i1,ii(1)),(i2,ii(2)),(i3,ii(3)),(i4,ii(4)),
      &              (i5,ii(5)),(i6,ii(6))
         integer i,j,k, temp, flst_max
+        integer nmaxres_real,nmaxres_born,dim_integ
         integer iun
         real*8 powheginput
         external powheginput
@@ -345,13 +346,15 @@ c     set process id using slepton types
         call remove_duplicates(flst_real,nlegreal,flst_nreal)
         
         ! setup the resonant flavor list
-        do k=1,nlegborn
-          do i=1,flst_nborn
+        do i=1,flst_nborn
+          flst_bornlength(i) = nlegborn
+          do k=1,nlegborn
             flst_bornres(k,i) = 0
           enddo
         enddo
-        do k=1,nlegreal
-          do i=1,flst_nreal
+        do i=1,flst_nreal
+          flst_reallength(i) = nlegreal
+          do k=1,nlegreal
             flst_realres(k,i) = 0
           enddo
         enddo
@@ -383,34 +386,27 @@ c     set process id using slepton types
         open(unit=iun, file='DetailedFlavList.txt', status='unknown')
         write(iun,*) ' ###########   FINAL POWHEG    ########### '
         write(iun,*) ' ###########     BORN          ########### '
-        write(iun,'(a,100i8)')'                  ',(/(i, i=1,nlegborn, 1)/)
+        write(iun,'(a,100i8)')'                  ',(/(i, i=1,flst_bornlength(i), 1)/)
         do i=1,flst_nborn
-          write(iun,'(a,i3,a,100i8)')'flst_born(',i,')   =',flst_born(1:nlegborn,i)
-          write(iun,'(a,i3,a,100i8)')'flst_bornres(',i,')=',flst_bornres(1:nlegborn,i)
+          write(iun,'(a,i3,a,100i8)')'flst_born(',i,')   =',flst_born(1:flst_bornlength(i),i)
+          write(iun,'(a,i3,a,100i8)')'flst_bornres(',i,')=',flst_bornres(1:flst_bornlength(i),i)
           write(iun,*)
         enddo
 
         write(iun,*) ' ###########     REAL          ########### '
-        write(iun,'(a,100i8)')'                  ',(/(i, i=1,nlegreal, 1)/)
+        write(iun,'(a,100i8)')'                  ',(/(i, i=1,flst_reallength(i), 1)/)
         do i=1,flst_nreal
-          write(iun,'(a,i3,a,100i8)')'flst_real(',i,')   =',flst_real(1:nlegreal,i)
-          write(iun,'(a,i3,a,100i8)')'flst_realres(',i,')=',flst_realres(1:nlegreal,i)
+          write(iun,'(a,i3,a,100i8)')'flst_real(',i,')   =',flst_real(1:flst_reallength(i),i)
+          write(iun,'(a,i3,a,100i8)')'flst_realres(',i,')=',flst_realres(1:flst_reallength(i),i)
           write(iun,*)
         enddo
 
-#ifdef DEBUGQ
-        print*,' born processes',flst_nborn
-        do j=1,flst_nborn
-          print*,(flst_born(k,j),k=1,nlegborn)
-        enddo
-#endif
+        call buildresgroups(flst_nborn,nlegborn,flst_bornlength,
+     &     flst_born,flst_bornres,flst_bornresgroup,flst_nbornresgroup)
 
-#ifdef DEBUGQ
-        print*,' real processes',flst_nreal
-        do j=1,flst_nreal
-          print*,(flst_real(k,j),k=1,nlegreal)
-        enddo
-#endif
+
+        call buildresgroups(flst_nreal,nlegreal,flst_reallength,
+     &     flst_real,flst_realres,flst_realresgroup,flst_nrealresgroup)
 
 #if defined(DSUB_I) || defined(DSUB_II) || defined(DR_II)
         ! setup the flavor list of on-shell resonant diagrams
@@ -444,20 +440,34 @@ c     set process id using slepton types
           endif
         enddo
 
-#ifdef DEBUGQ
-        print*,' on-shell resonant real processes',flst_nosres
-        do j=1,flst_nosres
-          print*,(flst_osres(k,j),k=1,nlegreal)
-        enddo
-        !stop
-#endif
-
         write(iun,*) ' ###########     REAL OS-RES   ########### '
         write(iun,'(a,100i8)')'                  ',(/(i, i=1,nlegreal, 1)/)
         do i=1,flst_nosres
           write(iun,'(a,i3,a,100i8)')'flst_real(',i,')   =',flst_osres(1:nlegreal,i)
         enddo
 #endif
+
+        write(iun,*) 
+        write(iun,*) '###########   SUMMARY  ###########'
+        write(iun,*) 'set nlegborn to: ',maxval(flst_bornlength(1:flst_nborn))
+        write(iun,*) 'set nlegreal to: ',maxval(flst_reallength(1:flst_nreal))
+      
+        nmaxres_real = maxval(flst_realres(1:flst_reallength(flst_nreal),1:flst_nreal)) - 2
+        nmaxres_born = maxval(flst_bornres(1:flst_bornlength(flst_nborn),1:flst_nborn)) - 2
+        write(iun,*) 'max number of resonances: ',max(nmaxres_real,nmaxres_born)
+      
+        ! add (-1) for overall azimuthal rotation of the event around the beam axis
+        dim_integ = (flst_numfinal+1)*3 - 4 + 2 + max(nmaxres_real,nmaxres_born)
+        write(iun,*) 'set ndiminteg to: ',dim_integ 
+
+
+        write(iun,*) 'flst_nbornresgroup ',flst_nbornresgroup 
+        write(iun,*) 'flst_nrealresgroup ',flst_nrealresgroup
+
+        write(iun,*) '###########   END SUMMARY  ###########'
+        write(iun,*)
+
+        close(iun)
 
         return
  998    print*,'init_processes: increase maxprocreal'
