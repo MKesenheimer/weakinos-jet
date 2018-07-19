@@ -552,14 +552,24 @@ c############### subroutine check_on_shell #############################
         double precision momsq
         external momsq
         logical lresult
+        ! output control
+        integer warncount1
+        data warncount1/0/
         lresult = .true.
         relerror = (momsq(p_OS(:))-m**2)
      &             /(momsq(p_OS(:))+m**2) 
         if( dabs(relerror) .gt. 1D-6 ) then
-          print*,"error: no on-shell condition was found."
-          print*,"|p_OS| = ",dsqrt(momsq(p_OS(:)))
-          print*,"m      = ", m
-          print*,"relerror = ", relerror
+          if(warncount1.lt.10) then
+            warncount1 = warncount1 + 1
+            print*,"error: no on-shell condition has been found."
+            print*,"|p_OS| = ",dsqrt(momsq(p_OS(:)))
+            print*,"m      = ", m
+            print*,"relerror = ", relerror
+          elseif(warncount1.eq.10) then
+            warncount1 = 11
+            print*, "check_on_shell: Further output will be "//
+     &              "suppressed."
+          endif
           lresult = .false.
         endif
       end
