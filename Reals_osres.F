@@ -131,7 +131,11 @@ c modifies the jacobian.
      &              mkl**2*(-2*sij - 2*skl + (wkl + wreg2)**2)))
           ! off_to_on the momenta p to on-shell momenta p_os
           call off_to_on_ijkl(p,rflav,ichan,.true.,.true.,p_os,check)
-          call getRealOSAmps(p_os,rflav,ichan,ampOS)
+          if(check) then
+            call getRealOSAmps(p_os,rflav,ichan,ampOS)
+          else
+            ampOS = 0D0
+          endif
           ampCT = bwratio*ampOS
           ! rescale the counter term to fit into the new PS
           ampCT = corrfac_ijkl(s12,mi,mj,mk,ml,mij,mkl,sij,skl)*ampCT
@@ -148,7 +152,11 @@ c modifies the jacobian.
           bwratio = (mijk*(wijk+wreg1))**2/((sijk-mijk**2)**2+(mijk*(wijk+wreg1))**2)
           ! off_to_on the momenta p to on-shell momenta p_os
           call off_to_on_ijk(p,rflav,ichan,p_os,check)
-          call getRealOSAmps(p_os,rflav,ichan,ampOS)
+          if(check) then
+            call getRealOSAmps(p_os,rflav,ichan,ampOS)
+          else
+            ampOS = 0D0
+          endif
           ampCT = bwratio*ampOS
           ! rescale the counter term to fit into the new PS (leave sij unconstraint)
           ampCT = corrfac_ijk(s12,mi,mj,mk,ml,mijk,dsqrt(sij),sijk,sij)*ampCT
