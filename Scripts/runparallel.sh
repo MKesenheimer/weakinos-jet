@@ -152,7 +152,7 @@ JOBS=4
 CLEAN=false
 NSEEDOFFSET=0
 NICENESS=10
-MAXGRIDIT=2
+MAXGRIDIT=3
 USEMSUB=false
 USECONDOR=false
 GENEVENTS=false
@@ -766,6 +766,7 @@ if [ "$STAGE" != "1" ] && [ "$STAGE" != "3" ] && [ "$STAGE" != "4" ]  && [ "$STA
   overwrite_var "$RUNDIR/powheg_st2.input" "parallelstage" 2
   overwrite_var "$RUNDIR/powheg_st2.input" "numevts" 0
   overwrite_var "$RUNDIR/powheg_st2.input" "nubound" 0
+  overwrite_var "$RUNDIR/powheg_st2.input" "xgriditeration" ${MAXGRIDIT}
   if [ "$CHECKLIM" = true ]; then
     overwrite_var "$RUNDIR/powheg_st2.input" "softtest" 1
     overwrite_var "$RUNDIR/powheg_st2.input" "colltest" 1
@@ -798,6 +799,7 @@ if [ "$GENEVENTS" = true ]; then
       overwrite_var "$RUNDIR/powheg_st3.input" "nubound" $NUBOUNDOLD
     fi
     overwrite_var "$RUNDIR/powheg_st3.input" "numevts" 0
+    overwrite_var "$RUNDIR/powheg_st3.input" "xgriditeration" ${MAXGRIDIT}
     echo -e "#!/bin/bash\ncd $RUNDIR" > $WORKINGDIR/run_st3_${IDENT}.sh
     if [ "$SLEEP" = false ] && [ "$STAGE" = "" ] && ( [ "$USEMSUB" = true ] || [ "$USECONDOR" = true ] ); then
       echo "cp $RUNDIR/powheg_st3.input $RUNDIR/powheg.input" >> $WORKINGDIR/run_st3_${IDENT}.sh
@@ -828,6 +830,7 @@ if [ "$GENEVENTS" = true ]; then
     else
       overwrite_var "$RUNDIR/powheg_st4.input" "numevts" $NEVENTSOLD
     fi
+    overwrite_var "$RUNDIR/powheg_st4.input" "xgriditeration" ${MAXGRIDIT}
     echo -e "#!/bin/bash\ncd $RUNDIR" > $WORKINGDIR/run_st4_${IDENT}.sh
     if [ "$SLEEP" = false ] && [ "$STAGE" = "" ] && ( [ "$USEMSUB" = true ] || [ "$USECONDOR" = true ] ); then
       echo "cp $RUNDIR/powheg_st4.input $RUNDIR/powheg.input" >> $WORKINGDIR/run_st4_${IDENT}.sh

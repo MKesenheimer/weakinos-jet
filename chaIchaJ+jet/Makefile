@@ -144,11 +144,9 @@ DEBUG = -ggdb -pg -DDEBUG=$(LEVEL)
 #   are added: |M_R|**2 - BW*corrfac*|M_R^OS|**2. The latter gets 
 #   integrated separately in sigosres.f and is included at a later point
 #   to the main result.
-#USRFLAGS += -DDR_II
+#USRFLAGS += -DDR_II # (TODO: not implemented yet!)
 USRFLAGS += -DDSUB_I
-#USRFLAGS += -DDSUB_II
-# use the POWHEG modified files (yes, no)
-POWMOD = no
+#USRFLAGS += -DDSUB_II # (TODO: not implemented yet!)
 
 ## SkipHel
 # skip the calculation of formcalc helicity amplitudes if the amplitude
@@ -294,7 +292,7 @@ FORMCALC = VecSet.o
 PWHG = btilde.o utils.o gen_Born_phsp.o \
   test_Sudakov.o pt2maxreg.o maxrat.o Bornzerodamp.o \
   random.o boostrot.o bra_ket_subroutines.o \
-  init_phys_mod.o powheginput.o sigcollremn.o \
+  init_phys.o powheginput.o sigcollremn.o \
   pwhg_bookhist-multi.o pwhg_analysis_driver.o checkmomzero.o \
   setstrongcoupl.o integrator.o mwarn.o \
   sigcollsoft.o validflav.o \
@@ -305,35 +303,23 @@ PWHG = btilde.o utils.o gen_Born_phsp.o \
   resweights.o locks.o genericphsp.o PhaseSpaceUtils.o \
   boostrot4.o fullrwgt.o \
   rwl_setup_param_weights_user.o \
-  cache_similar.o cernroutines_mod.o
-
-# modified POWHEG-files
-ifeq ("$(POWMOD)","no")
-  PWHG += pwhg_init.o find_regions.o gen_real_phsp.o\
+  cache_similar.o cernroutines_mod.o \
+  pwhg_init.o find_regions.o gen_real_phsp.o\
   sigborn.o sigreal.o sigsoftvirt.o \
   sigvirtual.o bbinit.o LesHouches.o \
   LesHouchesreg.o gen_index.o lhefwrite.o \
   gen_radiation.o sigremnants.o \
   pdfcalls.o newunit.o pwhg_main.o rwl_weightlists.o \
   ubprojections-new.o rwl_setup_param_weights.o
-else
-  PWHG += pwhg_init_mod.o find_regions_mod.o gen_real_phsp_mod.o \
-  sigborn_mod.o sigreal_mod.o sigsoftvirt_mod.o \
-  sigvirtual_mod.o bbinit_mod.o LesHouches_mod.o \
-  LesHouchesreg_mod.o gen_index_mod.o lhefwrite_mod.o \
-  gen_radiation_mod.o sigremnants_mod.o pwhgreweight_mod.o \
-  pdfcalls_mod.o newunit_mod.o pwhg_main_mod.o rwl_weightlists_mod.o \
-  ubprojections-new_mod.o rwl_setup_param_weights_mod.o
-endif
 
 ### LHEF ###
 # analyze LHEF output
 LHEF = lhef_analysis.o boostrot.o random.o cernroutines_mod.o \
 	opencount.o powheginput.o pwhg_bookhist-multi.o \
-	lhefread.o newunit_mod.o pwhg_analysis_driver.o \
+	lhefread.o newunit.o pwhg_analysis_driver.o \
 	funcprocess.o init_couplings.o Print.o \
 	bra_ket_subroutines.o off_to_on.o funcbasic.o \
-	pwhg_io_interface.o rwl_weightlists_mod.o multi_plot.o 
+	pwhg_io_interface.o rwl_weightlists.o multi_plot.o 
 
 ### PYTHIA ###
 # target to read event file, shower events with PYTHIA + analysis
@@ -341,10 +327,10 @@ LHEF = lhef_analysis.o boostrot.o random.o cernroutines_mod.o \
 # to which we applied a simple patch to enable slepton decays
 # (for clarity a separate patch file is included which is not needed otherwise)
 PYTHIA = boostrot.o powheginput.o init_couplings.o funcprocess.o 	\
-	pwhg_bookhist-multi.o lhefread.o newunit_mod.o pdfdummies.o	\
-	pwhg_analysis_driver.o random.o cernroutines_mod.o opencount.o	\
+	pwhg_bookhist-multi.o lhefread.o newunit.o pdfdummies.o	\
+	pwhg_analysis_driver.o random.o cernroutines.o opencount.o	\
 	bra_ket_subroutines.o off_to_on.o funcbasic.o Print.o \
-	pwhg_io_interface.o rwl_weightlists_mod.o multi_plot.o 
+	pwhg_io_interface.o rwl_weightlists.o multi_plot.o 
 PYTHIA += main-PYTHIA.o setup-PYTHIA-lhef.o
 PYTHIA += pythia-6.4.25-decay.o
 
@@ -514,7 +500,7 @@ clean:
 clean-results:
 	find ./testrun ! \( -name '*.slha' -o -name '*.input' -o -name 'pwgseeds.dat' -o -name '*.xml' \) \
 	-type f -exec rm -f {} +
-    
+
 clean-libs:
 	rm -f $(FORMREALS)/formcalc_reals.a $(FORMVIRTS)/formcalc_virtuals.a
 

@@ -877,7 +877,7 @@ c (this was not possible in dislepton_jet)
         enddo
         found1 = -1
         found2 = -1
-        do ihep=1,nhep
+        do ihep=nhep,1,-1
           if(.not.(found2 .eq. found1)) then
             if(PDG_ID2.eq.idhep(ihep)) then
               call get4momentum_ihep(ihep,p2)

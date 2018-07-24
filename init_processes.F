@@ -7,7 +7,6 @@ c     setup Born and real subprocesses
 c     set process id using slepton types
       subroutine init_processes
         implicit none
-        
 #include "nlegborn.h"
 #include "pwhg_flst.h"
 #include "LesHouches.h"
@@ -15,7 +14,6 @@ c     set process id using slepton types
 #include "pwhg_st.h"
 #include "pwhg_flst_add.h"
 #include "osres.h"
-
         integer i1,i2,i3,i4,i5,i6,ii(6)
         equivalence (i1,ii(1)),(i2,ii(2)),(i3,ii(3)),(i4,ii(4)),
      &              (i5,ii(5)),(i6,ii(6))
@@ -31,10 +29,20 @@ c     set process id using slepton types
         integer qgen
         external qgen
         double precision elc
+        logical called
+        data called/.false./
+        save called
         external elc
 #ifdef DEBUG
         integer nflst_select
 #endif
+
+        ! return if this routine was called before
+        if(called) then
+          return
+        else
+          called=.true.
+        endif
 
         ! set number of active flavors for incoming partons
         max_flav = int(powheginput('incomingflavors'))

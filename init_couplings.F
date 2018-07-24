@@ -18,6 +18,10 @@ c requires encoded process ID in lprup(1)
         ! final state IDs
         integer id_fin1, id_fin2
 
+        ! init processes (this is necessary since the order in 
+        ! init_phys.f has changed from powheg-v2 to powheg-res)
+        call init_processes
+
         ! extract particle types from process id
         call decode_pair(lprup(1),id_fin1,id_fin2)
 
