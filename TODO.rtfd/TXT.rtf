@@ -1,0 +1,91 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1404\cocoasubrtf470
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww21680\viewh21000\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\b\fs24 \cf0 WHAT WE FOUND OUT
+\b0 \
+- Indeed, the new POWHEG-RES version could be used to improve certain processes with resonant squarks in s-channel diagrams. However, the POWHEG-RES version does not subtract the on-shell resonances which are present in weakino-pair and weakino-pair plus jet production. POWHEG-RES accounts for the "bad" behavior of resonances when interfacing the processes to the parton-shower (the parton-shower could modify the four-momentum of a resonant particle which would move the particle away from the resonance).\
+- To profit from POWHEG-RES the resonances must be present even at the Born-level, which is only the case for weakino-pair production plus jet. Furthermore, only real diagrams with one gluon in the final state can become resonant in regard to the POWHEG-RES idea since the gluon can then be radiated from the resonant particle (squark). Relevant processes are for example (unsure, untested!):\
+- (remember: a '0' in flst_bornres or flst_bornres means that the particle does not come from a resonance)\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\tx7377\tx7914\tx8443\tx9056\pardirnatural\partightenfactor0
+
+\b \cf0 \
+				Born (non resonant):	
+\b0 					
+\b Born (resonant):\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\tx7910\pardirnatural\partightenfactor0
+
+\f1\b0 \cf0 particle #: 	1 2    3 4  5  6 7					1 2    3 4  5  6 7\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\tx7911\pardirnatural\partightenfactor0
+\cf0 flst_born:	 	q g -> q sq x2 q n1 				q g -> q sq x2 q n1\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\tx7944\pardirnatural\partightenfactor0
+\cf0 flst_bornres:	0 0 -> 0 0  0  0 0					0 0 -> 0 0  0  4 4\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0 \cf0 				(unsure since multiple diagrams with different \
+				layouts are present. Should all different diagrams\
+				be listed?)
+\f1 \
+
+\f0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 				{{\NeXTGraphic born_nr.png \width5480 \height4480
+}¬}{{\NeXTGraphic born_r.png \width5380 \height4280
+}¬}\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\tx7377\tx7914\tx8443\tx9056\pardirnatural\partightenfactor0
+
+\b \cf0 				real (non resonant):	
+\b0 						
+\b real (resonant):\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\tx7910\pardirnatural\partightenfactor0
+
+\f1\b0 \cf0 particle #: 	1 2    3 4 5  6  7 8  9				1 2    3 4  5  6  7 8  9\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\tx7911\pardirnatural\partightenfactor0
+\cf0 flst_born:	 	q g -> g q sq x2 q n1 g				q g -> q sq sq x2 q n1 g\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\tx7944\pardirnatural\partightenfactor0
+\cf0 flst_bornres:	0 0 -> 0 0 0  0  0 0  0				0 0 -> 0 0  4  5  5 0  4\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0 \cf0 				(unsure since multiple diagrams with different \
+				layouts are present)
+\f1 \
+
+\f0 				{{\NeXTGraphic real_nr.png \width5300 \height4220
+}¬}{{\NeXTGraphic real_r.png \width4860 \height4260
+}¬}\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+
+\b TODO
+\b0 \
+- implement the DSUB_II scheme for subtracting the on-shell resonances. Note that the DSUB_II scheme requires modifying a lot of the POWHEG procedures. Therefore the required files should be copied into the folder POWHEG_mod and modified accordingly. Up to now, these are following files/routines (but more for sure):\
+	* loadgrids -> mintwrapper.f\
+	* mintwrapper ->   - * -\
+	* storegrids\
+	* genwrapper\
+	* loadgridsn\
+	* loadmintupbwrapper\
+	* storegrids\
+	* deletelock\
+	* ...\
+- In the DSUB_II scheme the on-shell contribution to the real cross-section are integrated over a separate phase-space, see weakinos-jet for more details and which files should be updated.\
+- The procedures to handle the flavor lists for the resonance history (flst_bornres, flst_realres ) should be adapted to process SUSY particles. Is this necessary or are the POWHEG-RES procedures written general enough? Check!\
+- understand how the flavor lists for the resonance history for non resonant processes can be set up for multiple processes/diagrams with different layouts.\
+- build the flavor lists for the resonance history automatically in init_processes. Is this possible? \
+- for now, the arrays flst_bornres and flst_realres are set to zero and the arrays flst_born and flst_real contain only the external particles. However, for building the resonance history all intermediate particles have to be considered, too. If the arrays are modified, modify include/nlegborn.h, too!\
+- problem in Analysis.f subroutine get4momentum_fin_pair. The wrong momenta of the final state particles are extracted from the ihep list. \
+\
+
+\b FINISHED
+\b0 \
+- created new branch https://github.com/MKesenheimer/weakinos-jet/tree/powheg-res\
+- removed all files in POWHEG_mod for now, since we are using the DSUB_I scheme for on-shell subtraction. The modified POWHEG files should be added back later if DSUB_II is used. \
+- organized the Makefiles to account for the new version POWHEG-RES and sorted out unnecessary stuff.\
+- solved the issue that init_processes is called before init_couplings in POWHEG-RES. Note that the calls to the subroutines init_processes and init_couplings was swapped in init_phys.f which resulted in errors during the initialization procedure.\
+- introduced the arrays flst_bornres and flst_realres (which are currently set to zero) and the handling of the resonance history in init_processes. Additionally a file is now generated during the initialization procedure of the POWHEG-executable that contains the flavor lists and the resonance history lists (DetailedFlavList.txt).\
+- finished modifying bbinit_mod.f}
